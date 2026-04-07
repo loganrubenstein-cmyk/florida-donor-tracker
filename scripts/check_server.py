@@ -16,7 +16,7 @@ from pathlib import Path
 import requests
 
 sys.path.insert(0, str(Path(__file__).parent))
-from config import CONTRIB_CGI, CONTRIB_SEL, EXPEND_CGI
+from config import CONTRIB_CGI, CONTRIB_SEL, EXPEND_CGI, TRANSFER_CGI
 
 _HEADERS = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36",
@@ -24,7 +24,7 @@ _HEADERS = {
 }
 
 # TreFin.exe params — same as what the browser POSTs
-_TEST_PARAMS = {
+_CONTRIB_PARAMS = {
     "account":    "4700",
     "comname":    "Republican Party of Florida",
     "CanCom":     "Comm",
@@ -35,13 +35,44 @@ _TEST_PARAMS = {
     "query":      "Submit+Query+Now",
 }
 
+# FundXfers.exe params — must match browser form exactly (election=All is required)
+_TRANSFER_PARAMS = {
+    "election":        "All",
+    "search_on":       "1",
+    "CanFName":        "",
+    "CanLName":        "",
+    "CanNameSrch":     "2",
+    "office":          "All",
+    "cdistrict":       "",
+    "cgroup":          "",
+    "party":           "All",
+    "ComName":         "Republican Party of Florida",
+    "ComNameSrch":     "2",
+    "committee":       "All",
+    "clname":          "",
+    "namesearch":      "2",
+    "ccity":           "",
+    "cstate":          "",
+    "czipcode":        "",
+    "cdollar_minimum": "",
+    "cdollar_maximum": "",
+    "rowlimit":        "10",
+    "csort1":          "DAT",
+    "csort2":          "CAN",
+    "cdatefrom":       "",
+    "cdateto":         "",
+    "queryformat":     "2",
+    "Submit":          "Submit",
+}
 
-def check(label: str, url: str) -> bool:
+
+def check(label: str, url: str, params: dict, warmup: bool = False) -> bool:
     try:
         s = requests.Session()
         s.headers.update(_HEADERS)
-        s.get(CONTRIB_SEL, timeout=10)  # warmup — establish session cookies
-        r = s.post(url, data=_TEST_PARAMS, timeout=20)
+        if warmup:
+            s.get(CONTRIB_SEL, timeout=10)  # establish session cookies for TreFin.exe
+        r = s.post(url, data=params, timeout=20)
         if r.status_code == 502:
             print(f"  {label}: DOWN (502 Bad Gateway — server outage, not a code problem)")
             return False
@@ -49,16 +80,17 @@ def check(label: str, url: str) -> bool:
             print(f"  {label}: UNEXPECTED STATUS {r.status_code}")
             return False
         text = r.content.decode("latin-1", errors="replace")
-        lower = text.lower()
-        if "<table" in lower and ("contributor" in lower or "amount" in lower):
-            print(f"  {label}: UP — data table received")
-            return True
-        elif "\t" in (text.splitlines()[0] if text.strip() else ""):
+        first_line = text.strip().splitlines()[0] if text.strip() else ""
+        if "\t" in first_line and not first_line.startswith("<"):
             print(f"  {label}: UP — tab-delimited data received")
             return True
-        else:
-            print(f"  {label}: UP but response format unexpected (first 100 chars: {text[:100]!r})")
+        lower = text.lower()
+        if "<table" in lower and ("contributor" in lower or "amount" in lower
+                                  or "transfer" in lower or "fund" in lower):
+            print(f"  {label}: UP — HTML data table received")
             return True
+        print(f"  {label}: UP but response format unexpected (first 100 chars: {text[:100]!r})")
+        return True
     except Exception as e:
         print(f"  {label}: ERROR — {e}")
         return False
@@ -66,12 +98,15 @@ def check(label: str, url: str) -> bool:
 
 def main() -> int:
     print("Checking FL DOE CGI server status...\n")
-    contrib_up = check("Contributions CGI (TreFin.exe)", CONTRIB_CGI)
-    expend_up  = check("Expenditures CGI  (expend.exe) ", EXPEND_CGI)
+    contrib_up  = check("Contributions CGI (TreFin.exe) ", CONTRIB_CGI,  _CONTRIB_PARAMS,  warmup=True)
+    transfer_up = check("Fund Transfers CGI (FundXfers.exe)", TRANSFER_CGI, _TRANSFER_PARAMS, warmup=False)
+    expend_up   = check("Expenditures CGI  (expend.exe)  ", EXPEND_CGI,   _CONTRIB_PARAMS,  warmup=True)
 
     print()
     if contrib_up:
         print("Contributions CGI is UP — pipeline can run.")
+        if not transfer_up:
+            print("Fund Transfers CGI is DOWN — skip script 11 for now.")
         if not expend_up:
             print("Expenditures CGI is DOWN (502) — known issue, skip script 04/07.")
         return 0
