@@ -6,8 +6,17 @@ Runs the full data collection pipeline in the correct order:
   1. Download committee + candidate registry files
   2. Import registry files into processed CSVs
   3. Scrape contributions for every committee (resumable)
-  4. Scrape expenditures for every committee (resumable)
-  5. Run the contributions ETL (consolidate into one CSV)
+  4. Scrape expenditures for every committee (resumable, expend.exe may be down)
+  5. Scrape fund transfers for every committee (resumable, ~40 min first run)
+  6. Run the contributions and expenditures ETL (consolidate into CSVs)
+  7. Import fund transfers into transfers.csv
+  8. Deduplicate donor names
+  9. Export JSON for the website
+  10. Build network graph
+  11. Detect entity connections
+  12. Download lobbyist registration files
+  13. Import lobbyist data into processed CSVs
+  14. Match lobbyist principals to campaign finance contributors
 
 Each step streams its output to the terminal in real time.
 If a step fails, the pipeline stops and tells you which step failed.
@@ -29,11 +38,19 @@ STEPS = [
     ("Import registry",           "05_import_registry.py",      []),
     ("Scrape contributions",      "03_scrape_contributions.py",  []),
     ("Scrape expenditures",       "04_scrape_expenditures.py",   []),
+    ("Scrape fund transfers",     "11_scrape_transfers.py",      []),  # resumable, ~40 min first run
     ("Import contributions ETL",  "01_import_finance.py",        []),
     ("Import expenditures ETL",   "07_import_expenditures.py",   []),
+    ("Import transfers ETL",      "12_import_transfers.py",      []),
     ("Deduplicate donors",        "09_deduplicate_donors.py",    []),
     ("Export JSON",               "08_export_json.py",           []),
     ("Spider network graph",      "10_spider_graph.py",          []),
+    ("Detect entity connections", "13_detect_entity_connections.py", ["--force"]),
+    ("Download lobbyists",        "14_download_lobbyists.py",        []),
+    ("Import lobbyists",          "15_import_lobbyists.py",          []),
+    ("Match principals",          "16_match_principals.py",          []),
+    ("Export lobbyist connections","17_export_lobbyists.py",          []),
+    ("Link candidates to PCs",    "18_link_candidates_to_pcs.py",    []),
 ]
 
 
@@ -72,7 +89,7 @@ def main() -> int:
             print(f"\n{'='*60}")
             print(f"  PIPELINE FAILED at step {i}: {step_name}")
             print(f"  Fix the error above and re-run.")
-            print(f"  Scraping steps 3 and 4 are resumable — already-downloaded")
+            print(f"  Scraping steps 3, 4, and 5 are resumable — already-downloaded")
             print(f"  committees will be skipped automatically.")
             print(f"{'='*60}\n")
             return 1
