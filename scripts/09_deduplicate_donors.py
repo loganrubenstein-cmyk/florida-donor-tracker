@@ -20,7 +20,8 @@ from thefuzz import fuzz
 sys.path.insert(0, str(Path(__file__).parent))
 from config import PROCESSED_DIR
 
-SIMILARITY_THRESHOLD = 75  # token_sort_ratio score (0–100) to consider a match
+SIMILARITY_THRESHOLD          = 90  # token_sort_ratio score for non-corporate names
+SIMILARITY_THRESHOLD_CORPORATE = 80  # looser threshold for corporate/PAC names (handles punctuation variants)
 
 # Output paths
 DEDUPED_CSV   = PROCESSED_DIR / "contributions_deduped.csv"
@@ -36,15 +37,28 @@ def clean_name(name: str) -> str:
     return " ".join(no_punct.split())
 
 
+_CORP_KEYWORDS = frozenset([
+    "INC", "LLC", "CORP", "CO.", "COMPANY", "ASSOCIATION",
+    "FOUNDATION", "PAC", "FUND", "TRUST", "GROUP", "ENTERPRISES",
+    "SERVICES", "INDUSTRIES", "PARTNERS", "HOLDINGS",
+])
+
+
+def is_corporate_name(cleaned: str) -> bool:
+    """Return True if the cleaned name looks like a corporation or PAC."""
+    words = set(cleaned.split())
+    return bool(words & _CORP_KEYWORDS)
+
+
 def get_blocks(cleaned_to_key: dict) -> dict:
     """
-    Group raw names by the first 3 characters of their cleaned form.
+    Group raw names by the first 5 characters of their cleaned form.
     cleaned_to_key maps raw_name -> cleaned_name.
     Returns dict: block_key -> [raw_name, ...]
     """
     blocks: dict = {}
     for raw, cleaned in cleaned_to_key.items():
-        key = cleaned[:3] if len(cleaned) >= 3 else cleaned
+        key = cleaned[:5] if len(cleaned) >= 5 else cleaned
         blocks.setdefault(key, []).append(raw)
     return blocks
 
@@ -80,6 +94,12 @@ def build_clusters(
 
     name_stats: {raw_name: {"total": float, "count": int, "cleaned": str}}
     Returns list of clusters (each cluster is a list of raw names).
+
+    Matching rules:
+    - Corporate/PAC names: SIMILARITY_THRESHOLD_CORPORATE, no length guard
+      (handles "TECO ENERGY INC" vs "TECO ENERGY, INC." and similar punctuation variants)
+    - Individual names: SIMILARITY_THRESHOLD (higher), plus length-ratio guard
+      (prevents "JOHN SMITH" merging with "JOHN WILLIAM SMITH")
     """
     all_names = list(name_stats.keys())
     cleaned_map = {n: name_stats[n]["cleaned"] for n in all_names}
@@ -93,11 +113,25 @@ def build_clusters(
         for i in range(len(block_names)):
             for j in range(i + 1, len(block_names)):
                 a, b = block_names[i], block_names[j]
-                score = fuzz.token_sort_ratio(
-                    name_stats[a]["cleaned"],
-                    name_stats[b]["cleaned"],
-                )
-                if score >= threshold:
+                a_cleaned = name_stats[a]["cleaned"]
+                b_cleaned = name_stats[b]["cleaned"]
+
+                corp_a = is_corporate_name(a_cleaned)
+                corp_b = is_corporate_name(b_cleaned)
+                either_corporate = corp_a or corp_b
+
+                # Length-ratio guard for individual names:
+                # skip pairs where one name is >33% longer than the other
+                if not either_corporate:
+                    len_a, len_b = len(a_cleaned), len(b_cleaned)
+                    if len_a > 0 and len_b > 0:
+                        len_ratio = min(len_a, len_b) / max(len_a, len_b)
+                        if len_ratio < 0.67:
+                            continue
+
+                score = fuzz.token_sort_ratio(a_cleaned, b_cleaned)
+                required = SIMILARITY_THRESHOLD_CORPORATE if either_corporate else SIMILARITY_THRESHOLD
+                if score >= required:
                     uf.union(a, b)
 
     return uf.clusters()
@@ -144,7 +178,7 @@ def main(force: bool = False) -> int:
     print(f"Unique contributor names before dedup: {unique_before:,}")
 
     # Cluster
-    print(f"Clustering with {SIMILARITY_THRESHOLD}% threshold ...", flush=True)
+    print(f"Clustering (individual threshold={SIMILARITY_THRESHOLD}%, corporate threshold={SIMILARITY_THRESHOLD_CORPORATE}%, block=5-char) ...", flush=True)
     clusters = build_clusters(name_stats)
 
     # Build canonical map
