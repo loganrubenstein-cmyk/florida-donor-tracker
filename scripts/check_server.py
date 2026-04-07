@@ -70,12 +70,13 @@ def main() -> int:
     expend_up  = check("Expenditures CGI  (expend.exe) ", EXPEND_CGI)
 
     print()
-    if contrib_up and expend_up:
-        print("Server is UP. You can run: python scripts/06_orchestrate.py")
+    if contrib_up:
+        print("Contributions CGI is UP — pipeline can run.")
+        if not expend_up:
+            print("Expenditures CGI is DOWN (502) — known issue, skip script 04/07.")
         return 0
     else:
-        print("Server is DOWN. Wait a few hours, then re-run this check.")
-        print("When both show UP, run: python scripts/06_orchestrate.py")
+        print("Contributions CGI is DOWN — cannot scrape. Wait and try again.")
         return 1
 
 

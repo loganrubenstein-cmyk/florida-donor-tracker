@@ -28,7 +28,7 @@ echo "=== FL Donor Tracker Pipeline ===" | tee "$LOG"
 echo "Started: $(date)" | tee -a "$LOG"
 echo "" | tee -a "$LOG"
 
-# Health check
+# Health check — contributions CGI only (expend.exe 502 is expected, not a blocker)
 echo "--- Checking FL DoE server ---" | tee -a "$LOG"
 python scripts/check_server.py 2>&1 | tee -a "$LOG"
 echo "" | tee -a "$LOG"
