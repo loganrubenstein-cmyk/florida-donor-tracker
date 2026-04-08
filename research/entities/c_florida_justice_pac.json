@@ -1,0 +1,150 @@
+{
+  "id": "c_florida_justice_pac",
+  "canonical_name": "FLORIDA JUSTICE PAC",
+  "type": "committee",
+  "parent_entity": "Florida Justice Association",
+  "industry": "trial-lawyers",
+  "themes": ["trial-lawyers", "tort-reform", "insurance", "legislative-battles", "bipartisan-giving"],
+  "summary": "Florida Justice PAC is the political action committee of the Florida Justice Association (FJA), the state's plaintiffs' trial lawyers association and the organized opposition to every tort reform initiative in Tallahassee. In 2022, Florida Justice PAC spent $6.06 million and contributed $5.84 million — making it one of the largest single-industry PACs in Florida state politics. The PAC's primary adversaries are the Florida Chamber of Commerce, Associated Industries of Florida, and the insurance industry, which have pushed successive rounds of tort reform through the DeSantis-era Republican supermajority. The biggest recent defeat was HB 837 (2023), a sweeping tort reform bill DeSantis signed that eliminated one-way attorney's fees, moved Florida to a modified comparative negligence standard, curtailed bad faith claims against insurers, and cut the statute of limitations for personal injury cases. In the days before HB 837 took effect, Morgan & Morgan alone filed approximately 25,000 insurance claim cases — a dramatic illustration of the stakes involved. Florida Justice PAC continues to fund challenger campaigns against legislators who backed the reforms, and FJA serves as the institutional home of Florida's most powerful plaintiffs' firms.",
+  "key_facts": [
+    {
+      "fact": "Florida Justice PAC spent $6,062,510 and contributed $5,842,719 in the 2022 election cycle — making it one of the largest PACs in Florida state politics. Contributions went to both Democratic and Republican candidates, reflecting the trial lawyers' bipartisan hedging strategy.",
+      "source": "Transparency USA",
+      "url": "https://www.transparencyusa.org/fl/committee/florida-justice-pac-60702-pac",
+      "date": "2022-12-31"
+    },
+    {
+      "fact": "HB 837, signed by DeSantis on March 24, 2023, fundamentally reshaped Florida civil litigation: it eliminated one-way attorney's fees and fee multipliers, moved Florida from pure to modified comparative negligence (barring recovery if plaintiff is more than 50% at fault), curtailed bad faith claims against insurers, cut the negligence statute of limitations from 4 to 2 years, and reformed premises liability standards.",
+      "source": "Florida Politics",
+      "url": "https://floridapolitics.com/archives/598141-first-bill-of-2023-session-signed-florida-has-new-tort-law/",
+      "date": "2023-03-24"
+    },
+    {
+      "fact": "In anticipation of HB 837's passage, plaintiffs' law firm Morgan & Morgan filed approximately 25,000 insurance claim cases in Florida in the days before the bill took effect — the largest pre-deadline litigation rush in state history, illustrating the financial stakes of the tort reform for the trial bar.",
+      "source": "Insurance Journal",
+      "url": "https://www.insurancejournal.com/news/southeast/2023/05/22/721589.htm",
+      "date": "2023-05-22"
+    },
+    {
+      "fact": "FJA President Curry Pajcic stated on HB 837's passage: 'The new law does nothing to protect Floridians and everything to protect the profits of billionaire insurance corporations.' The FJA argued the bill was a gift to insurers that would make it harder for injured Floridians to hold corporations accountable.",
+      "source": "FJA (Florida Justice Association)",
+      "url": "https://www.myfja.org/statement-from-florida-justice-association-fja-president-curry-pajcic-regarding-the-passage-of-hb-837-by-the-florida-senate/",
+      "date": "2023-03-15"
+    },
+    {
+      "fact": "The Florida Legislature considered but did not advance a second round of tort reform in subsequent sessions. Florida House members were 'thwarted' from rolling back the DeSantis-supported HB 837 reforms by pro-business interests, suggesting the 2023 legislation has effectively locked in a new litigation landscape for the foreseeable future.",
+      "source": "Florida Justice Reform Institute",
+      "url": "https://www.fljustice.org/florida-house-members-thwarted-from-rolling-back-desantis-supported-legal-reforms/",
+      "date": "2024-01-01"
+    },
+    {
+      "fact": "The Florida Chamber of Commerce described the tort reform effort on its website as 'Fixing Florida's Broken Legal Climate,' framing the state's litigation environment as a systemic economic crisis — the same framing that justified HB 837 and earlier reforms including assignment of benefits (AOB) changes. The Chamber and FJA represent opposite ends of Florida's most durable political conflict.",
+      "source": "Florida Chamber of Commerce",
+      "url": "https://www.flchamber.com/lawsuitreform/",
+      "date": "2023-01-01"
+    },
+    {
+      "fact": "Florida Justice Association braced for the 2023 legislative session knowing tort reform was coming, spending heavily on legislative candidate campaigns in 2022. The FJA spent millions trying to defeat Republican candidates — including DeSantis in 2022 — but the Republican supermajority made their legislative opposition largely ineffective.",
+      "source": "Florida Politics",
+      "url": "https://floridapolitics.com/archives/592785-legislative-session-preview-florida-justice-association-braces-for-tort-reform-battle/",
+      "date": "2022-12-01"
+    }
+  ],
+  "notable_connections": [
+    {
+      "entity_id": "morgan_morgan",
+      "entity_name": "Morgan & Morgan",
+      "relationship": "Florida's largest plaintiffs' firm and the most prominent institutional member of FJA. John Morgan, the firm's founder, is a major Democratic donor and has funded ballot initiatives including the 2016 minimum wage amendment. Morgan & Morgan filed 25,000+ cases before HB 837 took effect.",
+      "amount_approx": 0,
+      "notes": "John Morgan is both a political donor and a significant public persona in Florida politics"
+    },
+    {
+      "entity_id": "florida_chamber",
+      "entity_name": "Florida Chamber of Commerce",
+      "relationship": "Primary institutional adversary. The Chamber coordinated the tort reform campaign that produced HB 837, framing it as fixing a 'broken legal climate.' The Chamber and FJA are the two poles of Florida's most persistent legislative conflict.",
+      "amount_approx": 0,
+      "notes": "Chamber's Secure Florida's Future 501(c)(4) also coordinates anti-FJA political spending"
+    },
+    {
+      "entity_id": "d_FRIENDS_OF_RON_DESANTIS",
+      "entity_name": "Friends of Ron DeSantis / DeSantis network",
+      "relationship": "Primary political adversary. FJA and Florida Justice PAC spent heavily opposing DeSantis in 2022 and opposing his tort reform legislation in 2023. DeSantis signed HB 837 as his first bill of the 2023 session.",
+      "amount_approx": 0,
+      "notes": "DeSantis signed HB 837 on March 24, 2023 — the first bill of the legislative session"
+    },
+    {
+      "entity_id": "insurance_industry_fl",
+      "entity_name": "Florida Insurance Industry",
+      "relationship": "The insurance industry's political money powered the HB 837 campaign, working in coordination with the Chamber. FJA frames every tort reform battle as a giveaway to insurers at consumers' expense.",
+      "amount_approx": 0,
+      "notes": "Florida's homeowner insurance crisis (premiums nearly tripling) runs parallel to tort reform — insurers claim litigation drove costs; FJA argues insurer misconduct drove costs"
+    }
+  ],
+  "articles": [
+    {
+      "title": "Legislative Session Preview: Florida Justice Association braces for tort reform battle",
+      "url": "https://floridapolitics.com/archives/592785-legislative-session-preview-florida-justice-association-braces-for-tort-reform-battle/",
+      "outlet": "Florida Politics",
+      "date": "2022-12-01",
+      "summary": "Preview of the 2023 session showing FJA preparing to fight a major tort reform push from the DeSantis administration and the Republican supermajority, with the outcome clearly foreshadowed.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Gov. DeSantis signs sweeping legal reforms passed by Legislature",
+      "url": "https://floridapolitics.com/archives/598141-first-bill-of-2023-session-signed-florida-has-new-tort-law/",
+      "outlet": "Florida Politics",
+      "date": "2023-03-24",
+      "summary": "Reports on DeSantis signing HB 837 as the first bill of the 2023 legislative session — a deliberate signal of its priority status — and includes the FJA's immediate condemnation.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Florida HB 837: A Political Stunt or Legitimate Civil Justice Reform?",
+      "url": "https://cumberlandtrialjournal.com/florida-hb-837-a-political-stunt-or-legitimate-civil-justice-reform/",
+      "outlet": "American Journal of Trial Advocacy",
+      "date": "2023-06-01",
+      "summary": "Academic legal analysis of HB 837's major provisions, contextualizing Florida's tort reform within national trends and evaluating the competing business and consumer arguments.",
+      "approved_for_public": false
+    },
+    {
+      "title": "As Lawyers Warned, Florida Courts Flooded with Suits Before Tort-Reform Bill Signed",
+      "url": "https://www.insurancejournal.com/news/southeast/2023/05/22/721589.htm",
+      "outlet": "Insurance Journal",
+      "date": "2023-05-22",
+      "summary": "Documents the pre-HB 837 litigation rush, with Morgan & Morgan alone filing approximately 25,000 insurance cases in the days before the law took effect — a measure of how much the trial bar stood to lose.",
+      "approved_for_public": false
+    },
+    {
+      "title": "After tort reform, Morgan & Morgan declares war on defense lawyers",
+      "url": "https://www.cityandstatefl.com/policy/2023/03/after-tort-reform-morgan-morgan-declares-war-defense-lawyers-their-clients/384521/",
+      "outlet": "City & State Florida",
+      "date": "2023-03-01",
+      "summary": "Reports on Morgan & Morgan's aggressive post-HB 837 litigation strategy, including refusing to grant defense counsels courtesies and extensions — a signal that the firm intended to make tort reform as operationally difficult as possible for insurers.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Florida Justice Association Inc — InfluenceWatch",
+      "url": "https://www.influencewatch.org/non-profit/florida-justice-association-inc/",
+      "outlet": "InfluenceWatch",
+      "date": "2023-01-01",
+      "summary": "Profile of the Florida Justice Association nonprofit, its structure, funding, and relationship to the Florida Justice PAC and broader trial lawyer political network.",
+      "approved_for_public": false
+    }
+  ],
+  "rabbit_holes": [
+    "Assignment of benefits (AOB) reform preceded HB 837 — Florida's Legislature passed AOB restrictions in 2019 after years of FJA opposition. Map the full timeline of Florida tort reform battles from 2018-2026, including which specific legislators changed sides after receiving FJA or Chamber money.",
+    "Morgan & Morgan's John Morgan is a major Democratic donor who also funds ballot initiatives (2016 minimum wage, marijuana legalization efforts). His personal political spending intersects with but is distinct from FJA institutional spending — map the full Morgan political money universe.",
+    "Post-HB 837 insurance premium trends: The insurance industry argued that litigation was driving Florida homeowner premium increases. Since HB 837 passed in 2023, have premiums actually declined? A comparison of premium data before and after could confirm or refute the industry's core argument for the reform.",
+    "The FJA's bipartisan giving: Florida Justice PAC gives to both parties. Which Republicans have received FJA money, and have any of them voted against tort reform? Identifying crossover legislators would reveal the limits of the reform coalition.",
+    "Workers' compensation: Florida's workers' comp system is another front in the tort reform war. The FJA has historically opposed limits on workers' comp attorney fees and benefit caps. Map that battlefield separately from the personal injury/property insurance context."
+  ],
+  "open_questions": [
+    "What was Florida Justice PAC's total spending in the 2024 cycle, and which specific candidates and committees did it support?",
+    "Has HB 837 measurably reduced Florida homeowner insurance premiums or litigation filings — and has either side produced empirical data to support their 2023 predictions?",
+    "Which Florida legislators who voted for HB 837 received significant FJA contributions in prior cycles — and did any lose their seats in 2024 elections as a result of FJA-funded opposition?",
+    "Are there pending legal challenges to HB 837's constitutionality, and what is their status in Florida courts?",
+    "How much has the Florida Chamber of Commerce and Associated Industries of Florida spent specifically on tort reform advocacy (lobbying + campaign contributions) since 2018, compared to FJA's spending?"
+  ],
+  "approved_for_public": false,
+  "research_confidence": "high",
+  "last_updated": "2026-04-08"
+}

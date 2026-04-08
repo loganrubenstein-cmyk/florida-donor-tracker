@@ -1,0 +1,137 @@
+{
+  "id": "c_realtors_pac",
+  "canonical_name": "REALTORS POLITICAL ADVOCACY COMMITTEE",
+  "type": "committee",
+  "parent_entity": "Florida Realtors",
+  "industry": "real-estate",
+  "themes": ["real-estate", "insurance", "growth-machine", "property-rights", "bipartisan-giving", "affordable-housing"],
+  "summary": "The Realtors Political Advocacy Committee (RPAC) is the political arm of Florida Realtors, the trade association representing 238,000+ licensed real estate professionals statewide. With $65+ million in total receipts in our dataset, it is one of the largest receiving political committees in Florida. RPAC operates on the 'friendly incumbent' principle — endorsing and funding officials of both parties who support property rights, homeownership, and real estate industry interests. In 2024, more than 98% of RPAC-endorsed candidates won their elections, a testament to the PAC's targeting effectiveness. RPAC's core legislative concerns include: property insurance reform (the Florida insurance crisis directly suppresses home sales), the Live Local Act affordable housing framework (a 2023 legislative win), rent control preemption, homestead exemption expansion, and opposition to any development or land-use restrictions that would limit property transactions. Unlike most corporate PACs, RPAC is funded by voluntary member contributions from the association's dues-paying members — making it a broad-based real estate industry vehicle rather than a handful of large developers.",
+  "key_facts": [
+    {
+      "fact": "More than 98% of Florida Realtors PAC-endorsed candidates won their 2024 elections — one of the highest endorsement success rates of any major Florida PAC — reflecting the organization's disciplined targeting of winnable races and its avoidance of hopeless causes.",
+      "source": "Florida Realtors",
+      "url": "https://www.floridarealtors.org/advocacy/pac",
+      "date": "2024-11-05"
+    },
+    {
+      "fact": "Florida Realtors has made property insurance reform its top legislative priority since 2022. The association praised the December 2022 special session insurance reforms, the 2023 consumer protection enhancements, and the 2024 measures that produced a 'modest reduction' in most Florida insurance premiums — tracking insurance legislation as directly tied to real estate market health.",
+      "source": "Florida Realtors",
+      "url": "https://www.floridarealtors.org/news-media/news-articles/2023/04/lawmakers-try-accountability-insurance-reform",
+      "date": "2023-04-01"
+    },
+    {
+      "fact": "The 2023 Live Local Act — which Florida Realtors called 'the most comprehensive and far-reaching housing legislation seen in the last three decades' — was a signature RPAC-supported win. The law makes significant investments in affordable rental housing, provides tax incentives for affordable units, and preempts local zoning restrictions that block multifamily development near transit corridors.",
+      "source": "Florida Realtors",
+      "url": "https://www.floridarealtors.org/advocacy/2024-legislative-priorities",
+      "date": "2023-01-01"
+    },
+    {
+      "fact": "RPAC adheres to the 'Friendly Incumbent' principle: if an incumbent has consistently supported Realtor issues, RPAC endorses their reelection regardless of party. This bipartisan strategy has made RPAC a political force across party lines, with contributions going to both Republican and Democratic candidates in competitive districts.",
+      "source": "Florida Realtors / Orlando Regional REALTOR Association",
+      "url": "https://www.orlandorealtors.org/advocacy",
+      "date": "2024-01-01"
+    },
+    {
+      "fact": "RPAC's funding structure is member-driven: 70% of each voluntary member contribution is used at the state level to support Florida candidates; 30% is sent to the National Association of Realtors RPAC for federal candidates. This distributed funding model — drawing from 238,000+ member agents and brokers — makes Florida RPAC's financial base broader than most single-corporation PACs.",
+      "source": "Florida Realtors",
+      "url": "https://www.floridarealtors.org/about/governance/committees",
+      "date": "2024-01-01"
+    },
+    {
+      "fact": "Florida Realtors supports preemptions of local rent control ordinances, arguing that rent control suppresses housing supply by deterring new construction. This aligns with the 2023 Live Local Act and broader legislative preemption of local housing regulations — effectively using state law to override city and county tenant protections.",
+      "source": "Florida Realtors — 2024 Legislative Priorities",
+      "url": "https://www.floridarealtors.org/advocacy/2024-legislative-priorities",
+      "date": "2024-01-01"
+    }
+  ],
+  "notable_connections": [
+    {
+      "entity_id": "national_association_realtors",
+      "entity_name": "National Association of Realtors",
+      "relationship": "Parent organization; 30% of each RPAC contribution is sent to the national PAC, which gave $4M+ to federal candidates in the 2021-2022 cycle. NAR is consistently one of the largest federal PACs in the United States.",
+      "amount_approx": 4000000,
+      "notes": "NAR is the umbrella for all state RPAC chapters; Florida Realtors' state-level activity is separately managed"
+    },
+    {
+      "entity_id": "florida_homebuilders",
+      "entity_name": "Florida Home Builders Association",
+      "relationship": "Aligned industry ally on development, zoning, and growth management issues. Both RPAC and FHBA support the Live Local Act, oppose rent control, and lobby for reduced development impact fees.",
+      "amount_approx": 0,
+      "notes": "The growth machine coalition of Realtors, homebuilders, and developers is one of Florida's most durable political alliances"
+    },
+    {
+      "entity_id": "citizens_property_insurance",
+      "entity_name": "Citizens Property Insurance Corporation",
+      "relationship": "Florida's state-backed insurer of last resort; ballooning Citizens policyholder count is directly linked to the private insurance crisis that suppresses home sales. Florida Realtors has actively lobbied to stabilize Citizens and attract private carriers back to the market.",
+      "amount_approx": 0,
+      "notes": "Citizens reached 1.4M+ policies before the 2022-2024 reform cycle began reducing its book"
+    }
+  ],
+  "articles": [
+    {
+      "title": "2024 Legislative Final Report",
+      "url": "https://www.floridarealtors.org/advocacy/2024-legislative-final-report",
+      "outlet": "Florida Realtors",
+      "date": "2024-06-01",
+      "summary": "Florida Realtors' official summary of 2024 legislative wins and losses, documenting the association's priorities and outcomes including insurance reform, housing affordability, and property rights measures.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Lawmakers Try 'Accountability' Insurance Reform",
+      "url": "https://www.floridarealtors.org/news-media/news-articles/2023/04/lawmakers-try-accountability-insurance-reform",
+      "outlet": "Florida Realtors",
+      "date": "2023-04-01",
+      "summary": "Florida Realtors' coverage of the 2023 insurance reform push, framing the insurance crisis as a housing market crisis and tracking legislative progress toward stabilizing the property insurance market.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Realtors Political Advocacy Committee — Transparency USA",
+      "url": "https://www.transparencyusa.org/fl/committee/realtors-political-advocacy-committee-60584-pac",
+      "outlet": "Transparency USA",
+      "date": "2024-01-01",
+      "summary": "Florida campaign finance database entry for RPAC, showing contribution totals, expenditures, and recipient candidates — primary source for quantifying RPAC's state-level political spending.",
+      "approved_for_public": false
+    },
+    {
+      "title": "High-Impact Legislative Recommendations for Florida Insurance Reform",
+      "url": "https://www.rstreet.org/commentary/high-impact-legislative-recommendations-for-florida-insurance-reform/",
+      "outlet": "R Street Institute",
+      "date": "2023-01-01",
+      "summary": "Policy analysis of the Florida property insurance crisis and reform options, contextualizing the legislative environment in which Florida Realtors has been lobbying — provides the policy backdrop for RPAC's insurance-related advocacy.",
+      "approved_for_public": false
+    },
+    {
+      "title": "2025 Legislative Priorities",
+      "url": "https://www.floridarealtors.org/advocacy/2025-legislative-priorities",
+      "outlet": "Florida Realtors",
+      "date": "2025-01-01",
+      "summary": "Florida Realtors' 2025 legislative agenda, documenting current priorities including continued insurance reform, housing supply expansion, and property rights protections — useful for tracking the association's evolving policy focus.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Florida Realtors PAC 2024/25 Endorsed Candidates",
+      "url": "https://www.floridarealtors.org/advocacy/pac/endorsements",
+      "outlet": "Florida Realtors",
+      "date": "2024-11-01",
+      "summary": "Full list of Florida Realtors PAC-endorsed candidates for the 2024-25 cycle, showing the bipartisan spread of endorsements and the geographic targeting of the PAC's spending.",
+      "approved_for_public": false
+    }
+  ],
+  "rabbit_holes": [
+    "The insurance-housing connection: Florida's property insurance crisis — with average homeowner premiums rising to $6,000+ annually — is directly suppressing home sales and affordability. RPAC's insurance lobbying is fundamentally self-interested: cheaper insurance means more home sales means more Realtor commissions. Map the specific insurance legislation RPAC has supported and the financial interests behind each provision.",
+    "The growth machine: Florida's development industry (Realtors, homebuilders, large developers) has historically dominated county commission and city council elections across the state. Examine RPAC's spending at the local level — county commission and school board races — where land use decisions are made.",
+    "The rent control preemption history: Florida has a statewide preemption of rent control ordinances, with limited exceptions. Several Florida cities attempted to reinstate rent control during the COVID-era housing surge; the Legislature tightened the preemption. RPAC was a key lobby for preemption — trace the legislative history and RPAC's role.",
+    "The Live Local Act and affordable housing: The 2023 Live Local Act requires local governments to allow multifamily development near transit at densities matching surrounding commercial uses. Examine who benefits most from Live Local — large developers and REITs, or genuinely affordable housing — and whether RPAC's support for the bill aligned with tenant interests or primarily served its developer members.",
+    "NAR's national bribery/antitrust settlement (2024): The National Association of Realtors settled a major antitrust case over buyer agent commissions, agreeing to eliminate the traditional commission-sharing structure. This restructured the entire US real estate commission model. Examine how Florida Realtors and RPAC have responded, and whether the settlement has reduced the financial base for RPAC's political activities."
+  ],
+  "open_questions": [
+    "What is RPAC's total spending on state legislative races by cycle (2018, 2020, 2022, 2024), and has its giving increased or decreased relative to the size of the Florida Realtors membership base?",
+    "Which specific Florida legislators have received the most RPAC money over the past decade, and what legislation have they sponsored or supported that aligns with Florida Realtors' priorities?",
+    "Has the 2022-2024 insurance reform package actually reduced homeowner premiums in Florida — and if not, what additional legislative remedies is RPAC pursuing?",
+    "How has the 2024 NAR antitrust settlement affected Florida Realtors' revenues, membership, and consequently RPAC's fundraising capacity?",
+    "Does RPAC coordinate political spending with the Florida Home Builders Association or major developer-funded PACs, and if so, what is the total combined real estate industry political investment in Florida elections?"
+  ],
+  "approved_for_public": false,
+  "research_confidence": "medium",
+  "last_updated": "2026-04-08"
+}

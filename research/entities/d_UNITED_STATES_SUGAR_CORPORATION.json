@@ -1,0 +1,173 @@
+{
+  "id": "d_UNITED_STATES_SUGAR_CORPORATION",
+  "canonical_name": "UNITED STATES SUGAR CORPORATION",
+  "type": "corporate",
+  "parent_entity": null,
+  "industry": "sugar",
+  "themes": ["sugar", "everglades", "water-quality", "agricultural-lobby", "federal-lobbying", "dark-money"],
+  "summary": "United States Sugar Corporation and Florida Crystals Corp. (owned by the Fanjul family) are the two dominant sugar producers in the Everglades Agricultural Area (EAA), together owning more than 400,000 acres south of Lake Okeechobee. They constitute 'Big Sugar' — one of Florida's most durable and bipartisan political money operations. Between 1994 and 2016 the sugar industry gave $57.8 million in direct and in-kind state campaign contributions; in the 2022 cycle alone they gave $6 million in Florida state races. The core political transaction: campaign money in exchange for protection from Everglades restoration requirements, phosphorus water quality standards, and any effort to acquire or convert sugar farmland to water storage. The industry deploys 64+ lobbyists in Tallahassee, funds front groups like Associated Industries of Florida (US Sugar: $4.5M, Florida Crystals: $6.7M), and has successfully delayed Everglades restoration for decades while the state's phosphorus treatment marshes are 'already maxed out.' In 2025, Big Sugar inserted a provision into Trump's 'One Big Beautiful Bill' raising the federal sugar price support from 19.75 to 24 cents per pound — delivering a windfall worth hundreds of millions annually.",
+  "key_facts": [
+    {
+      "fact": "Between 1994 and 2016, the Florida sugar industry — led by US Sugar and Florida Crystals — gave $57.8 million in direct and in-kind state campaign contributions. In the 2022 cycle alone, Big Sugar gave $6 million in Florida state races, making it one of the largest single-industry donor blocs in state history.",
+      "source": "Tampa Bay Times",
+      "url": "https://www.tampabay.com/news/florida-politics/2022/05/12/florida-big-sugars-campaign-donations-reach-6m-in-state-races/",
+      "date": "2022-05-12"
+    },
+    {
+      "fact": "US Sugar contributed $4.5 million and Florida Crystals contributed $6.7 million to Associated Industries of Florida — a business lobby pass-through — making the two sugar companies among AIF's largest funders and giving them indirect influence over AIF's political spending and legislative agenda.",
+      "source": "Seeking Rents (Jason Garcia)",
+      "url": "https://jasongarcia.substack.com/p/the-voice-of-florida-business-is",
+      "date": "2022-01-01"
+    },
+    {
+      "fact": "The South Florida Water Management District issued a letter removing a legal barrier to a rock mine US Sugar Corp. and Florida Crystals want to open south of Lake Okeechobee — on land that was historically part of the Everglades River of Grass. Internal records obtained by Seeking Rents showed Big Sugar lobbyists were actively working on the mining plans while publicly claiming commitment to Everglades restoration.",
+      "source": "Seeking Rents (Jason Garcia)",
+      "url": "https://jasongarcia.substack.com/p/records-show-big-sugar-lobbyists",
+      "date": "2023-01-01"
+    },
+    {
+      "fact": "Everglades restoration cleanup is 'not even close' to meeting targets: phosphorus-laden water from sugar farms has overwhelmed existing treatment marshes, which are described as 'already maxed out.' The overall restoration plan has not delivered the promised water volumes, and unless Big Sugar cedes more EAA acreage for water storage, the restoration may remain permanently stalled.",
+      "source": "WLRN",
+      "url": "https://www.wlrn.org/environment/2023-12-06/everglades-restoration-sugar-farms-phosphorous-water",
+      "date": "2023-12-06"
+    },
+    {
+      "fact": "The 'One Big Beautiful Bill' signed by President Trump in July 2025 increased the federal sugar price support loan rate from 19.75 cents per pound to 24 cents per pound. With the sugar industry producing approximately 8 million tons per year, the increase represents a massive annual subsidy windfall — obtained after Big Sugar spent millions supporting Trump-aligned candidates.",
+      "source": "Florida Phoenix",
+      "url": "https://floridaphoenix.com/2025/06/05/the-one-big-beautiful-bill-contains-an-ugly-favor-for-floridas-sugar-industry/",
+      "date": "2025-06-05"
+    },
+    {
+      "fact": "DeSantis took 'backdoor sugar money' through AIF and other pass-through vehicles. VoteWater documented the chain: Florida Crystals and US Sugar → Associated Industries of Florida → DeSantis-aligned PACs. DeSantis also joined forces with Big Sugar in 2022 to help elect a key South Florida legislative ally, as documented by Jason Garcia.",
+      "source": "Seeking Rents (Jason Garcia) / VoteWater",
+      "url": "https://jasongarcia.substack.com/p/ron-desantis-and-big-sugar-join-forces",
+      "date": "2022-08-01"
+    },
+    {
+      "fact": "Florida politicians advanced legislation that would make it easier for US Sugar Corp. and Florida Crystals to file defamation lawsuits against environmental groups, journalists, and others who criticize the companies over Everglades restoration and air pollution — a direct attempt to use legal threats to silence critics.",
+      "source": "Seeking Rents (Jason Garcia)",
+      "url": "https://jasongarcia.substack.com/p/florida-politicians-may-give-big",
+      "date": "2023-01-01"
+    },
+    {
+      "fact": "Big Sugar deploys 64+ lobbyists in Tallahassee — a larger lobbying force than many state agencies — creating what environmental groups call a 'closed loop system' in which the industry's political money shapes the composition of regulatory boards, the content of environmental legislation, and the enforcement posture of state water management districts.",
+      "source": "Friends of the Everglades",
+      "url": "https://www.everglades.org/big_sugar_64/",
+      "date": "2017-01-01"
+    }
+  ],
+  "notable_connections": [
+    {
+      "entity_id": "fanjul_family",
+      "entity_name": "Fanjul Family (Alfonso and Jose 'Pepe')",
+      "relationship": "Controlling owners of Florida Crystals Corp. and Fanjul Corp.; Cuban-exile billionaire family that controls nearly 200,000 EAA acres; major donors to both Republican and Democratic presidential campaigns — the Fanjuls are famous for their bipartisan access",
+      "amount_approx": 0,
+      "notes": "Pepe Fanjul is aligned with Republicans; Alfonso Fanjul has given to Democrats including Clinton. The family's ability to maintain access regardless of which party wins is central to Big Sugar's durability."
+    },
+    {
+      "entity_id": "associated_industries_florida",
+      "entity_name": "Associated Industries of Florida",
+      "relationship": "Major pass-through vehicle for Big Sugar dark money; US Sugar gave $4.5M and Florida Crystals gave $6.7M to AIF, which redistributes to candidates and committees without directly attributing source",
+      "amount_approx": 11200000,
+      "notes": "AIF is described by Jason Garcia as operating as a pass-through for six major Florida corporations including Big Sugar"
+    },
+    {
+      "entity_id": "sfwmd",
+      "entity_name": "South Florida Water Management District",
+      "relationship": "Primary state regulatory body governing Everglades restoration; Big Sugar's political spending shapes governor's appointments to SFWMD's governing board, which controls water storage, treatment standards, and land acquisition decisions",
+      "amount_approx": 0,
+      "notes": "SFWMD removed a legal barrier to Big Sugar's proposed Everglades-area mine in 2023"
+    },
+    {
+      "entity_id": "c_4700",
+      "entity_name": "Republican Party of Florida",
+      "relationship": "Major recipient of Big Sugar direct and indirect contributions",
+      "amount_approx": 0,
+      "notes": "Big Sugar's giving is concentrated but bipartisan at the federal level; at the Florida state level it skews heavily Republican"
+    }
+  ],
+  "articles": [
+    {
+      "title": "Florida Big Sugar's campaign donations reach $6M in state races",
+      "url": "https://www.tampabay.com/news/florida-politics/2022/05/12/florida-big-sugars-campaign-donations-reach-6m-in-state-races/",
+      "outlet": "Tampa Bay Times",
+      "date": "2022-05-12",
+      "summary": "Documents the $6 million in Florida state political contributions from US Sugar and Florida Crystals in the 2022 cycle, contextualizing it within the industry's decades-long dominance as a Florida campaign finance force.",
+      "approved_for_public": false
+    },
+    {
+      "title": "'Not even close': Clean-up of Everglades water polluted by Big Sugar struggles to keep up",
+      "url": "https://www.wlrn.org/environment/2023-12-06/everglades-restoration-sugar-farms-phosphorous-water",
+      "outlet": "WLRN",
+      "date": "2023-12-06",
+      "summary": "Documents how phosphorus from sugar farms continues to overwhelm Everglades treatment marshes — which are 'already maxed out' — while overall restoration targets remain unmet despite decades of effort.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Records show Big Sugar lobbyists are working on plans for an Everglades-area mine",
+      "url": "https://jasongarcia.substack.com/p/records-show-big-sugar-lobbyists",
+      "outlet": "Seeking Rents (Jason Garcia)",
+      "date": "2023-01-01",
+      "summary": "Internal documents reveal US Sugar and Florida Crystals lobbyists working on plans to open a rock mine on former Everglades land south of Lake Okeechobee, while SFWMD removed legal barriers to the project.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Ron DeSantis and Big Sugar join forces in key South Florida campaign",
+      "url": "https://jasongarcia.substack.com/p/ron-desantis-and-big-sugar-join-forces",
+      "outlet": "Seeking Rents (Jason Garcia)",
+      "date": "2022-08-01",
+      "summary": "Documents active coordination between DeSantis and Big Sugar to elect a key South Florida legislative ally, illustrating the transactional relationship between the governor's office and the sugar industry.",
+      "approved_for_public": false
+    },
+    {
+      "title": "The 'One Big Beautiful Bill' contains an ugly favor for Florida's sugar industry",
+      "url": "https://floridaphoenix.com/2025/06/05/the-one-big-beautiful-bill-contains-an-ugly-favor-for-floridas-sugar-industry/",
+      "outlet": "Florida Phoenix",
+      "date": "2025-06-05",
+      "summary": "Reveals that Big Sugar embedded a federal sugar price support increase (19.75 to 24 cents/lb) into Trump's omnibus tax and spending bill, worth hundreds of millions annually to the industry.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Florida politicians may give Big Sugar legal power to go after activists and silence critics",
+      "url": "https://jasongarcia.substack.com/p/florida-politicians-may-give-big",
+      "outlet": "Seeking Rents (Jason Garcia)",
+      "date": "2023-01-01",
+      "summary": "Investigation into Florida legislation that would expand Big Sugar's ability to file defamation suits against environmental groups and journalists who criticize the industry's Everglades record.",
+      "approved_for_public": false
+    },
+    {
+      "title": "A Fire in the River: Big Sugar and 'Black Snow' in the Everglades",
+      "url": "https://www.rollingstone.com/culture/culture-features/sugar-crop-pollutants-florida-1234924707/",
+      "outlet": "Rolling Stone",
+      "date": "2023-01-01",
+      "summary": "Long-form investigation into the environmental toll of sugar farming in the EAA, including 'black snow' from sugarcane burning, phosphorus runoff, and the systematic political obstacles to Everglades cleanup.",
+      "approved_for_public": false
+    },
+    {
+      "title": "As U.S. Sugar expands north of Lake O, Everglades cleanup struggles",
+      "url": "https://www.floridabulldog.org/2021/05/as-us-sugar-expands-north-of-lake-o-environmentalists-fear-everglades-cleanup-losing-out-to-farming/",
+      "outlet": "Florida Bulldog",
+      "date": "2021-05-01",
+      "summary": "Reports on US Sugar's northward expansion of farming operations while Everglades restoration to the south remains stalled — raising questions about whether the company's public commitment to restoration is consistent with its business decisions.",
+      "approved_for_public": false
+    }
+  ],
+  "rabbit_holes": [
+    "The Fanjul family bipartisan access machine: Alfonso Fanjul famously took a Bill Clinton phone call while golfing as Clinton was considering ending sugar subsidies; Pepe Fanjul is a Republican donor. Map the full Fanjul family political giving history across both parties and federal/state levels to understand how they've maintained influence regardless of who's in power.",
+    "The EAA reservoir: A reservoir south of Lake Okeechobee was supposed to be a centerpiece of Everglades restoration. How much of the delay can be traced directly to Big Sugar's political resistance to ceding acreage? Map SFWMD board votes against Big Sugar donor histories.",
+    "Sugarcane burning and 'black snow': Communities near Clewiston and Belle Glade experience seasonal sugarcane burns that create air quality emergencies. What regulatory exemptions exist for sugarcane burning, and how has Big Sugar used political influence to maintain them against EPA and state DEP pressure?",
+    "The AIF pass-through: Jason Garcia's reporting identified Big Sugar as major funders of Associated Industries of Florida, which then redistributes to candidates. What is the full list of AIF-funded candidates and committees since 2018, and which environmental or agricultural regulations did they support or kill?",
+    "Federal sugar program: US import quotas and price supports for domestic sugar cost American consumers an estimated $2.4–4 billion annually in higher sugar prices. The 'One Big Beautiful Bill' increase to 24 cents/lb extended this subsidy. Track the Florida congressional delegation's votes on the federal farm bill sugar program against their Big Sugar donation histories.",
+    "The proposed EAA mine: US Sugar and Florida Crystals want to strip-mine limestone from former Everglades land for construction aggregate. If approved, this would make permanent a non-agricultural use of land that environmentalists want restored. What is the status of the permitting process and what political obstacles remain?"
+  ],
+  "open_questions": [
+    "What is the true combined total of US Sugar + Florida Crystals + Fanjul family direct and indirect Florida political contributions since 2018, including AIF and other pass-throughs?",
+    "Who are the current members of the South Florida Water Management District governing board, when were they appointed, and what are their donor relationships with Big Sugar?",
+    "Has Big Sugar ever faced criminal or civil enforcement action for water quality violations at the Everglades Agricultural Area level, or has political influence effectively immunized the industry from regulatory consequences?",
+    "The 2008 'Big Sugar buyout' — DeSantis's predecessor Charlie Crist negotiated a $1.75B deal to buy US Sugar's lands for Everglades restoration, which was later scaled back dramatically. What happened to the remaining acreage that was never acquired, and who currently owns it?",
+    "What is the current status of the EAA rock mine proposal, and has it cleared all required state and federal permitting hurdles?"
+  ],
+  "approved_for_public": false,
+  "research_confidence": "high",
+  "last_updated": "2026-04-08"
+}

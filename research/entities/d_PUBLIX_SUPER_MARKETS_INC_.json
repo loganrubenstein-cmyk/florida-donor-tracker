@@ -1,0 +1,143 @@
+{
+  "id": "d_PUBLIX_SUPER_MARKETS_INC_",
+  "canonical_name": "PUBLIX SUPER MARKETS INC.",
+  "type": "corporate",
+  "parent_entity": null,
+  "industry": "retail",
+  "themes": ["retail", "jenkins-family", "january-6", "regulatory-access", "labor", "pay-to-play"],
+  "summary": "Publix Super Markets is Florida's dominant grocery chain — the state's top-ranked Fortune 500 company — and one of the largest corporate political donors in Tallahassee. In 2023, Publix made nearly $3.2 million in Florida campaign contributions, making it the largest corporate donor in Florida politics that year. Publix is employee-owned and controlled by the Jenkins family (descendants of founder George Jenkins), whose members make large additional personal contributions. The company's political giving directly correlates with favorable legislative outcomes: Jason Garcia's Seeking Rents documented that the Republican-controlled Legislature advanced bills in 2023 that made it harder for workers to secure benefits, forced the Florida Lottery to pay higher commissions to retailers, increased sentences for shoplifters, and blocked local plastic bag bans — all aligning with Publix's commercial interests. The sharpest controversy: Publix donated $100,000 to DeSantis's political committee in late 2020, and within five days DeSantis announced a COVID vaccine distribution pilot exclusively through Publix — a no-bid arrangement that 60 Minutes reported as pay-to-play. Beyond the corporate PAC, Jenkins family heiress Julie Jenkins Fancelli contributed $300,000+ to organizing the January 6, 2021 'Stop the Steal' rally, with the House Select Committee estimating her total January 6-related giving at $3 million.",
+  "key_facts": [
+    {
+      "fact": "Publix Super Markets became the largest corporate donor in Florida politics in 2023, contributing nearly $3.2 million to state-level politicians, political committees, and political parties — surpassing utilities and other traditional large donors in a single cycle.",
+      "source": "Seeking Rents (Jason Garcia)",
+      "url": "https://jasongarcia.substack.com/p/the-florida-legislature-where-shopping",
+      "date": "2023-06-01"
+    },
+    {
+      "fact": "Publix donated $100,000 to Friends of Ron DeSantis in late December 2020 (in two installments of $25,000 each on December 7 and December 31). Within five days of the final donation, DeSantis announced a COVID-19 vaccine distribution pilot program exclusively through Publix — giving the company a critical early foothold in the $10+ billion COVID vaccine logistics market without competitive bidding.",
+      "source": "Florida Bulldog",
+      "url": "https://www.floridabulldog.org/2021/02/publix-where-political-giving-helped-get-no-bid-covid-vaccine-business/",
+      "date": "2021-02-01"
+    },
+    {
+      "fact": "CBS News 60 Minutes reported in April 2021 that DeSantis's vaccine distribution deal with Publix followed the $100,000 donation and bypassed competing pharmacy chains like CVS and Walgreens — framing it as potential pay-to-play. DeSantis called the report 'a ridiculous smear narrative.' Publix also denied any connection between its donations and the vaccine contract.",
+      "source": "CBS News / 60 Minutes",
+      "url": "https://www.cbsnews.com/news/covid-vaccine-distribution-florida-de-santis-60-minutes-2021-04-02/",
+      "date": "2021-04-02"
+    },
+    {
+      "fact": "Julie Jenkins Fancelli — heiress to the Publix fortune and daughter of founder George Jenkins — spent $300,000 organizing the January 6, 2021 'Stop the Steal' rally at The Ellipse, covering more than half its costs. She additionally gave $150,000 to the Republican Attorneys General Association for robocalls promoting the march, and the House January 6 Select Committee estimated her total January 6-related giving at approximately $3 million.",
+      "source": "Washington Post",
+      "url": "https://www.washingtonpost.com/investigations/publix-heiress-capitol-insurrection-fancelli/2021/12/08/5144fe1c-5229-11ec-8ad5-b5c50c1fb4d9_story.html",
+      "date": "2021-12-08"
+    },
+    {
+      "fact": "OpenSecrets tax record analysis found Fancelli made additional contributions to dark money groups that co-sponsored the January 6 rally beyond the widely reported $300,000 figure — with total giving to January 6-linked organizations estimated by investigators at over $650,000 in disclosed contributions and potentially $3 million total.",
+      "source": "OpenSecrets",
+      "url": "https://www.opensecrets.org/news/2023/06/tax-records-reveal-more-contributions-from-publix-heiress-to-dark-money-groups-sponsoring-jan-6-rally/",
+      "date": "2023-06-01"
+    },
+    {
+      "fact": "The Florida Legislature advanced bills in 2023 that aligned with Publix's commercial interests: making it harder for workers to secure employer-provided benefits, forcing the Florida Lottery to pay higher commissions to retailers like Publix, increasing sentences for shoplifters, and blocking cities from regulating plastic shopping bags and single-use containers — all in a session when Publix was the state's largest corporate political donor.",
+      "source": "Seeking Rents (Jason Garcia)",
+      "url": "https://jasongarcia.substack.com/p/the-florida-legislature-where-shopping",
+      "date": "2023-06-01"
+    },
+    {
+      "fact": "Publix is the largest employee-owned company in the United States, with most of its stock held by employees through an ESOP. However, the Jenkins family retains significant ownership and exercises effective control. The company is not publicly traded, making its financial disclosures more limited than comparable publicly traded competitors.",
+      "source": "Wikipedia / Publix investor relations",
+      "url": "https://en.wikipedia.org/wiki/Publix",
+      "date": "2024-01-01"
+    }
+  ],
+  "notable_connections": [
+    {
+      "entity_id": "p_JULIE_JENKINS_FANCELLI",
+      "entity_name": "Julie Jenkins Fancelli",
+      "relationship": "Publix heiress (daughter of founder George Jenkins) and the largest individual donor to the January 6, 2021 rally organization. Her political giving is personal, not corporate, but she is publicly identified as a member of America's 39th richest family and a Publix major stockholder.",
+      "amount_approx": 650000,
+      "notes": "Publix distanced itself from Fancelli after Jan. 6 revelations, stating it 'cannot control the actions of individual stockholders'"
+    },
+    {
+      "entity_id": "d_FRIENDS_OF_RON_DESANTIS",
+      "entity_name": "Friends of Ron DeSantis",
+      "relationship": "Recipient of $100K in late 2020 donations; DeSantis gave Publix exclusive COVID vaccine distribution deal within days of the final donation",
+      "amount_approx": 100000,
+      "notes": "Both Publix and DeSantis denied any pay-to-play connection; 60 Minutes reported the correlation in April 2021"
+    },
+    {
+      "entity_id": "florida_lottery",
+      "entity_name": "Florida Lottery",
+      "relationship": "Publix is one of the largest Florida Lottery retailers; the 2023 Legislature advanced a bill to increase Lottery retailer commissions, benefiting Publix, in the same session when Publix was the largest corporate political donor",
+      "amount_approx": 0,
+      "notes": "Identified by Jason Garcia as one of several Publix-aligned bills advanced by the 2023 Legislature"
+    }
+  ],
+  "articles": [
+    {
+      "title": "The Florida Legislature: Where shopping is a pleasure",
+      "url": "https://jasongarcia.substack.com/p/the-florida-legislature-where-shopping",
+      "outlet": "Seeking Rents (Jason Garcia)",
+      "date": "2023-06-01",
+      "summary": "Documents how Publix became Florida's largest corporate political donor in 2023 and tracks the specific legislation advanced that cycle aligning with Publix's retail interests — lottery commissions, anti-labor provisions, shoplifting sentencing, and plastic bag bans.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Publix: Where political giving helped get no-bid Covid vaccine business",
+      "url": "https://www.floridabulldog.org/2021/02/publix-where-political-giving-helped-get-no-bid-covid-vaccine-business/",
+      "outlet": "Florida Bulldog",
+      "date": "2021-02-01",
+      "summary": "Documents the timeline: Publix $100K donation in December 2020 → DeSantis COVID vaccine pilot announcement five days later → exclusive early distribution deal worth potentially hundreds of millions in logistics contracts.",
+      "approved_for_public": false
+    },
+    {
+      "title": "How the wealthy cut the line during Florida's COVID vaccine rollout",
+      "url": "https://www.cbsnews.com/news/covid-vaccine-distribution-florida-de-santis-60-minutes-2021-04-02/",
+      "outlet": "CBS News / 60 Minutes",
+      "date": "2021-04-02",
+      "summary": "60 Minutes investigation alleging that DeSantis's COVID vaccine distribution decision favored Publix and wealthy Palm Beach County zip codes after a Publix $100K donation — triggering a national controversy and DeSantis's sharp public rebuttal.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Low-profile heiress who 'played a strong role' in financing Jan. 6 rally is thrust into spotlight",
+      "url": "https://www.washingtonpost.com/investigations/publix-heiress-capitol-insurrection-fancelli/2021/12/08/5144fe1c-5229-11ec-8ad5-b5c50c1fb4d9_story.html",
+      "outlet": "Washington Post",
+      "date": "2021-12-08",
+      "summary": "Investigative profile of Julie Jenkins Fancelli documenting her $300K+ in January 6 rally funding, her prior political giving history, and the implications for Publix's brand.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Tax records reveal more contributions from Publix heiress to dark money groups sponsoring Jan. 6 rally",
+      "url": "https://www.opensecrets.org/news/2023/06/tax-records-reveal-more-contributions-from-publix-heiress-to-dark-money-groups-sponsoring-jan-6-rally/",
+      "outlet": "OpenSecrets",
+      "date": "2023-06-01",
+      "summary": "IRS 990 analysis revealing additional Fancelli contributions to dark money nonprofits that co-sponsored the January 6 rally, beyond the widely reported $300K direct donation.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Publix: Where shopping — and making hefty political contributions — are a pleasure",
+      "url": "https://floridapolitics.com/archives/220065-publix-shopping-making-hefty-political-contributions-pleasure/",
+      "outlet": "Florida Politics",
+      "date": "2019-01-01",
+      "summary": "Earlier investigation documenting Publix's long-standing pattern of large political contributions to Florida politicians and parties across party lines, establishing the company's history as a major political force.",
+      "approved_for_public": false
+    }
+  ],
+  "rabbit_holes": [
+    "The full Publix legislative return on investment: Jason Garcia documented five specific 2023 bills that aligned with Publix's interests. A comprehensive audit of every Florida bill since 2018 that could have benefited Publix — lottery commissions, shoplifting sentencing, plastic bag preemption, anti-union provisions, food labeling — mapped against Publix's donation history, would quantify the ROI.",
+    "Julie Jenkins Fancelli's broader political giving: Beyond January 6, Fancelli donated to a Republican candidate (Joe Kent) who had connections to the Patriot Prayer movement. Her full political giving history — federal and state, disclosed and dark money — is worth comprehensive mapping.",
+    "The COVID vaccine deal's full financial value: DeSantis gave Publix early exclusive distribution rights in multiple Florida counties. How many vaccines did Publix ultimately distribute, what was the per-dose dispensing fee, and what was the total dollar value of the arrangement? This quantifies the potential return on the $100K donation.",
+    "Publix labor practices: Publix is aggressively non-union and has successfully resisted unionization efforts for decades. Map Publix's lobbying and political spending on specific labor bills — minimum wage, collective bargaining, employee benefits — in Florida and federally.",
+    "The employee ownership question: Publix claims to be employee-owned, but Jenkins family members retain control through share structures. Examine the actual ownership percentages, how employees can access their stock, and whether the ESOP structure genuinely gives workers economic power or primarily serves as a PR framing."
+  ],
+  "open_questions": [
+    "What was the total financial value of Publix's COVID vaccine distribution deal — dispensing fees, logistics, pharmacy revenue — and how does it compare to the $100K donated to DeSantis?",
+    "Has any Florida or federal agency investigated the COVID vaccine distribution arrangement for potential pay-to-play violations?",
+    "What is the Jenkins family's current ownership stake in Publix, and which family members (beyond Julie Fancelli) are politically active?",
+    "Has Julie Jenkins Fancelli faced any legal consequences for her January 6 funding, and is she still an active political donor?",
+    "What specific bills did Publix's Tallahassee lobbyists work on in the 2024 and 2025 legislative sessions, and were any of them passed?"
+  ],
+  "approved_for_public": false,
+  "research_confidence": "high",
+  "last_updated": "2026-04-08"
+}

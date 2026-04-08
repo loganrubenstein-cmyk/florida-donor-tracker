@@ -1,0 +1,150 @@
+{
+  "id": "d_HCA_WEST_FLORIDA",
+  "canonical_name": "HCA WEST FLORIDA",
+  "type": "corporate",
+  "parent_entity": "HCA Healthcare, Inc.",
+  "industry": "healthcare",
+  "themes": ["healthcare", "hospital-industry", "medicaid", "rick-scott", "federal-fraud", "regulatory-capture"],
+  "summary": "HCA West Florida is the Florida Gulf Coast division of HCA Healthcare — the largest for-profit hospital chain in the United States, operating 185+ hospitals in 20 states. HCA's Florida political strategy is concentrated and consequential: since 2017, HCA's PACs have given at least $7 million to Florida right-wing political committees that collectively donated over $2 million to Governor DeSantis — with at least 75% of HCA's Florida political spending directed to PACs that funded DeSantis. The central tension: HCA Healthcare's financial performance improves when more patients are insured, yet the company funds politicians who actively oppose Medicaid expansion — keeping Florida one of the last holdout states and leaving an estimated 800,000+ Floridians without coverage. HCA's political investment in Florida cannot be separated from the company's founding history: co-founder Rick Scott presided over the largest Medicare fraud settlement in US history ($1.7B by Columbia/HCA in 2000), then became Florida's Governor (2011-2019) and US Senator. HCA Healthcare shareholders — backed by major unions — have repeatedly demanded greater transparency into the company's Florida political spending, arguing it conflicts with HCA's own financial interests by supporting politicians who block insurance expansion.",
+  "key_facts": [
+    {
+      "fact": "Since 2017, HCA Healthcare's Florida PACs have contributed at least $7 million to five right-wing Florida political action committees — Florida Prosperity Fund, Voices of Florida Business PAC, Associated Industries of Florida Political Action Committee, Floridians United for Our Children's Futures, and Floridians for a Stronger Democracy — which collectively donated more than $2 million to Ron DeSantis's campaign.",
+      "source": "HCA Care Crisis / Broward.US",
+      "url": "https://hcacarecrisis.org/at-hca-shareholder-meeting-nurses-other-workers-call-for-transparency-into-political-spending-by-nations-largest-hospital-corporation/",
+      "date": "2022-04-01"
+    },
+    {
+      "fact": "At least 75% of HCA Healthcare's political spending in Florida since 2017 has been directed to the five PACs that donated to DeSantis's campaign — a concentration of political investment in a single candidate's network that is unusual even for major corporate donors.",
+      "source": "HCA Care Crisis",
+      "url": "https://hcacarecrisis.org/at-hca-shareholder-meeting-nurses-other-workers-call-for-transparency-into-political-spending-by-nations-largest-hospital-corporation/",
+      "date": "2022-04-01"
+    },
+    {
+      "fact": "Rick Scott, HCA's co-founder and CEO from 1987 until he was pressured to resign in 1997, presided over Columbia/HCA when the company committed the largest Medicare and Medicaid fraud in US history. Columbia/HCA paid $840 million in criminal fines in 2000 and an additional $881 million in civil penalties in 2002 — a total settlement of $1.7 billion. Scott was not personally charged.",
+      "source": "PolitiFact",
+      "url": "https://www.politifact.com/article/2010/jun/11/rick-scott-and-fraud-case-columbiahca/",
+      "date": "2010-06-11"
+    },
+    {
+      "fact": "Florida is one of the last states that has not expanded Medicaid under the ACA — keeping an estimated 800,000+ Floridians uninsured. DeSantis, heavily funded by HCA-linked PACs, has been 'a fierce opponent' of Medicaid expansion. A push to expand Medicaid through ballot initiative was delayed until 2028 by a new Florida law restricting the petition process.",
+      "source": "WUSF / HuffPost",
+      "url": "https://www.wusf.org/politics-issues/2025-09-25/push-for-medicaid-expansion-in-florida-delayed-until-2028-due-to-new-state-law",
+      "date": "2025-09-25"
+    },
+    {
+      "fact": "HCA Healthcare shareholders backed by the Teamsters, CWA, UFW, and SEIU proposed transparency resolutions at HCA's annual shareholder meetings, arguing that HCA's political funding of Medicaid expansion opponents conflicts with HCA's financial interest in having more insured patients — and therefore more paying hospital customers.",
+      "source": "Nashville Post / HCA Care Crisis",
+      "url": "https://www.nashvillepost.com/business/area_stocks/resolutions-calling-for-hca-political-funding-transparency-fail/article_f03a4a3e-c25a-11ec-ba30-776a31a04389.html",
+      "date": "2022-04-01"
+    },
+    {
+      "fact": "Columbia/HCA's fraud involved attaching false diagnosis codes to patient records to increase Medicare reimbursement, claiming non-reimbursable marketing costs as community education, and billing for home health visits for ineligible patients. The scheme ran during the years Scott served as CEO — though Scott invoked his Fifth Amendment right against self-incrimination 75 times during depositions.",
+      "source": "Britannica / PolitiFact",
+      "url": "https://www.politifact.com/factchecks/2014/mar/03/florida-democratic-party/rick-scott-rick-scott-oversaw-largest-medicare-fra/",
+      "date": "2014-03-03"
+    },
+    {
+      "fact": "In the 2024 federal election cycle, HCA Inc. contributed $1,599,154 through its federal PAC and spent $3,040,000 on federal lobbying — reflecting a two-track strategy of state-level pass-through political donations and direct federal lobbying on hospital payment rates, Medicaid/Medicare reimbursement, and scope of practice issues.",
+      "source": "OpenSecrets",
+      "url": "https://www.opensecrets.org/orgs/hca-inc/summary?id=D000000445",
+      "date": "2025-01-01"
+    }
+  ],
+  "notable_connections": [
+    {
+      "entity_id": "p_RICK_SCOTT",
+      "entity_name": "Rick Scott",
+      "relationship": "HCA co-founder and CEO 1987-1997; resigned under board pressure during Medicare fraud investigation; used personal wealth from HCA shares to self-fund Florida Governor campaigns (2010, 2014); elected US Senator 2018, re-elected 2024. Scott's HCA history has been a recurring political liability.",
+      "amount_approx": 0,
+      "notes": "Scott invoked Fifth Amendment 75 times in depositions during HCA fraud investigation; departed with $300M+ in stock and options"
+    },
+    {
+      "entity_id": "d_FRIENDS_OF_RON_DESANTIS",
+      "entity_name": "Friends of Ron DeSantis / DeSantis network",
+      "relationship": "Indirect major beneficiary of HCA political spending via five Florida PAC intermediaries. HCA gave $7M+ to DeSantis-aligned PACs; DeSantis in turn opposed Medicaid expansion and signed legislation favorable to hospital industry.",
+      "amount_approx": 7000000,
+      "notes": "The pass-through structure obscures direct HCA→DeSantis giving in public records"
+    },
+    {
+      "entity_id": "florida_hospital_association",
+      "entity_name": "Florida Hospital Association",
+      "relationship": "Industry trade group representing HCA and other Florida hospitals. FHA coordinates hospital industry lobbying on Medicaid, Certificate of Need, scope of practice, and insurance reimbursement issues in Tallahassee.",
+      "amount_approx": 0,
+      "notes": "HCA West Florida is among FHA's largest and most politically active members"
+    },
+    {
+      "entity_id": "associated_industries_florida",
+      "entity_name": "Associated Industries of Florida",
+      "relationship": "One of the five PACs identified as receiving HCA money that then gave to DeSantis; AIF functions as a business lobby pass-through for multiple large Florida corporations",
+      "amount_approx": 0,
+      "notes": "AIF is a common hub for corporate pass-through giving in Florida"
+    }
+  ],
+  "articles": [
+    {
+      "title": "HCA Healthcare shareholders rally against political donations to Gov. DeSantis",
+      "url": "https://broward.us/2022/04/21/hca-healthcare-shareholders-rally-against-political-donations-to-gov-desantis/",
+      "outlet": "Broward.US",
+      "date": "2022-04-21",
+      "summary": "Reports on union-backed shareholder resolutions demanding HCA disclose its Florida political spending, after shareholders discovered the company had funneled $7M+ to DeSantis-aligned PACs through five intermediary committees.",
+      "approved_for_public": false
+    },
+    {
+      "title": "At HCA Shareholder Meeting, Nurses, Other Workers Call for Transparency",
+      "url": "https://hcacarecrisis.org/at-hca-shareholder-meeting-nurses-other-workers-call-for-transparency-into-political-spending-by-nations-largest-hospital-corporation/",
+      "outlet": "HCA Care Crisis",
+      "date": "2022-04-01",
+      "summary": "Detailed account of the shareholder meeting activism, documenting the specific five Florida PACs that received HCA money and their connections to DeSantis's campaign.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Rick Scott and the fraud case of Columbia/HCA",
+      "url": "https://www.politifact.com/article/2010/jun/11/rick-scott-and-fraud-case-columbiahca/",
+      "outlet": "PolitiFact",
+      "date": "2010-06-11",
+      "summary": "Comprehensive fact-check of Rick Scott's role in the Columbia/HCA Medicare fraud, documenting the $1.7B settlement, Scott's Fifth Amendment invocations, and the timeline of his departure from the company.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Push for Medicaid expansion in Florida delayed until 2028",
+      "url": "https://www.wusf.org/politics-issues/2025-09-25/push-for-medicaid-expansion-in-florida-delayed-until-2028-due-to-new-state-law",
+      "outlet": "WUSF",
+      "date": "2025-09-25",
+      "summary": "Reports on Florida legislation restricting ballot initiatives pushing Medicaid expansion efforts to at least 2028, while Florida remains one of the last non-expansion states with 800,000+ uninsured residents.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Rick Scott's Connection to Massive Medicare Fraud Scandal Resurfaces",
+      "url": "https://www.newsweek.com/rick-scotts-connection-massive-medicare-fraud-scandal-resurfaces-1780279",
+      "outlet": "Newsweek",
+      "date": "2023-01-01",
+      "summary": "Updates the Columbia/HCA fraud story with current context as Scott serves as a US Senator, documenting continuing relevance of his HCA history to his political career.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Ron DeSantis Has Opposed Medicaid Expansion For Florida",
+      "url": "https://www.huffpost.com/entry/ron-desantis-medicaid-florida-uninsured_n_63d37fbde4b04d4d18e52a03",
+      "outlet": "HuffPost",
+      "date": "2023-01-01",
+      "summary": "Documents DeSantis's sustained opposition to Medicaid expansion, which has kept Florida one of the last holdout states — while hospital companies including HCA fund his political network.",
+      "approved_for_public": false
+    }
+  ],
+  "rabbit_holes": [
+    "The self-defeating political investment: HCA funds politicians who block Medicaid expansion, but expanding Medicaid would increase the number of insured patients — directly improving HCA's revenue by converting uncompensated care into reimbursed care. What is HCA's internal analysis of this apparent conflict? Are there executive communications or board minutes that reveal the logic behind supporting Medicaid expansion opponents?",
+    "Rick Scott's HCA windfall: Scott departed HCA with approximately $300 million in stock and options despite overseeing the largest Medicare fraud in US history. He used this wealth to self-fund his governor campaigns. The connection between HCA's 1990s fraud, Scott's personal enrichment, and his subsequent political career is a direct line from corporate crime to political power.",
+    "The Certificate of Need (CON) system: Florida has a CON law requiring hospitals to get state approval before building new facilities. Hospital incumbents like HCA benefit from CON as a competitive barrier. Map HCA's lobbying on CON reform versus its political giving to legislators who control CON legislation.",
+    "HCA's charity care and uncompensated care reporting: As a for-profit, HCA is required to report charity care. Compare HCA's Florida charity care levels against for-profit competitors and nonprofit hospital systems — and map how DeSantis administration reimbursement policies have affected HCA's uncompensated care burden.",
+    "The five-PAC pass-through structure: HCA gave $7M+ to five specific Florida PACs that then gave to DeSantis. This is the same pass-through structure used by FPL, Big Sugar, and GEO Group. Mapping all corporate donors who use these same five PACs as intermediaries would reveal a common dark money infrastructure for Florida's largest corporate political interests."
+  ],
+  "open_questions": [
+    "What is the full dollar amount HCA West Florida specifically (as distinct from HCA Healthcare nationally) has contributed to Florida state political committees since 2018?",
+    "Has Florida's failure to expand Medicaid cost HCA Florida hospitals measurable uncompensated care revenue — and does HCA's internal financial reporting quantify this loss?",
+    "Did any of HCA's $7M+ in Florida PAC contributions flow to candidates or committees that specifically worked to block Medicaid expansion ballot initiatives in 2024-2025?",
+    "What specific Florida legislation has HCA lobbied for or against since DeSantis became governor — and what were the outcomes?",
+    "The shareholder transparency resolutions failed at HCA's 2022 meeting. Have subsequent resolutions been filed, and has HCA changed its political spending disclosure practices?"
+  ],
+  "approved_for_public": false,
+  "research_confidence": "high",
+  "last_updated": "2026-04-08"
+}

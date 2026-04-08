@@ -36,10 +36,11 @@ Matches network graph node IDs exactly:
 | Republican Party of Florida | `entities/c_4700.json` | republican-machine, dark-money | draft |
 | Las Vegas Sands | `entities/d_LAS_VEGAS_SANDS_CO_.json` | gaming, ballot-initiative | draft |
 | GEO Group | `entities/d_THE_GEO_GROUP_INC_.json` | private-prisons, immigration | draft |
-| US Sugar Corporation | `entities/d_UNITED_STATES_SUGAR_CORPORATION.json` | sugar | pending |
-| Publix Super Markets | `entities/d_PUBLIX_SUPER_MARKETS_INC_.json` | real-estate | pending |
-| Florida Justice PAC | `entities/c_florida_justice_pac.json` | trial-lawyers | pending |
-| Realtors PAC | `entities/c_realtors_pac.json` | real-estate | pending |
+| US Sugar Corporation | `entities/d_UNITED_STATES_SUGAR_CORPORATION.json` | sugar, everglades, dark-money | draft |
+| Publix Super Markets | `entities/d_PUBLIX_SUPER_MARKETS_INC_.json` | retail, jenkins-family, january-6 | draft |
+| Florida Justice PAC | `entities/c_florida_justice_pac.json` | trial-lawyers, tort-reform | draft |
+| Realtors PAC | `entities/c_realtors_pac.json` | real-estate, insurance | draft |
+| HCA West Florida | `entities/d_HCA_WEST_FLORIDA.json` | healthcare, medicaid, rick-scott | draft |
 
 ## Sources
 
