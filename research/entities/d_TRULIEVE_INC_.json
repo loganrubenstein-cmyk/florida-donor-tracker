@@ -4,7 +4,13 @@
   "type": "corporate",
   "parent_entity": null,
   "industry": "cannabis",
-  "themes": ["cannabis", "ballot-initiative", "regulatory-capture", "monopoly-defense", "federal-lobbying"],
+  "themes": [
+    "cannabis",
+    "ballot-initiative",
+    "regulatory-capture",
+    "monopoly-defense",
+    "federal-lobbying"
+  ],
   "summary": "Trulieve Inc. is Florida's dominant medical marijuana operator — holding roughly 50% of the state's smokable flower market and 156+ in-state dispensaries — that spent approximately $150 million to fund Smart & Safe Florida, the committee behind Amendment 3, a 2024 ballot initiative to legalize recreational marijuana. Amendment 3 received 56% of the vote on November 5, 2024, falling short of Florida's 60% constitutional supermajority threshold, making it the most expensive failed drug legalization campaign in U.S. history. After that defeat, Trulieve pivoted to federal lobbying, donating $750,000 to Trump's inaugural committee, and CEO Kim Rivers played a key role in the Trump administration's December 2025 decision to reschedule marijuana to Schedule III.",
   "key_facts": [
     {
@@ -100,7 +106,7 @@
       "outlet": "WUSF Public Media",
       "date": "2024-10-08",
       "summary": "Deep-dive on Trulieve's near-total funding of the Smart & Safe Florida committee and the business rationale behind the spending.",
-      "approved_for_public": false
+      "approved_for_public": true
     },
     {
       "title": "Florida Amendment 3, Marijuana Legalization Initiative (2024)",
@@ -108,7 +114,7 @@
       "outlet": "Ballotpedia",
       "date": "2024-11-05",
       "summary": "Comprehensive reference page covering amendment text, campaign finance totals, vote results (56%), and timeline.",
-      "approved_for_public": false
+      "approved_for_public": true
     },
     {
       "title": "DeSantis promised to 'drain the swamp' in Florida. But his record on medical marijuana raises questions",

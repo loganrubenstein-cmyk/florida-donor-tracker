@@ -4,7 +4,13 @@
   "type": "corporate",
   "parent_entity": null,
   "industry": "private-prisons",
-  "themes": ["private-prisons", "immigration", "government-contracts", "pay-to-play", "dark-money"],
+  "themes": [
+    "private-prisons",
+    "immigration",
+    "government-contracts",
+    "pay-to-play",
+    "dark-money"
+  ],
   "summary": "The GEO Group, headquartered in Boca Raton, FL, is the largest private prison and immigration detention company in the United States. With $28 million in documented Florida political spending, GEO has been the dominant corporate political donor in Florida's private-prison sector, accounting for roughly 76% of all private-prison lobbying expenditure in the state. The company's Florida political investment is explicitly transactional: GEO derived more than $110 million annually from Florida government contracts as of 2022, and that figure has grown dramatically since. GEO funneled money directly to Governor DeSantis and indirectly through the Republican Governors Association, which gave DeSantis over $14 million in 2022. Under DeSantis, the state spent $573 million on immigration enforcement in 2025, including at least $100+ million billed by GEO-CDR Baker LLC — a joint venture formed specifically to build the 'Alligator Alcatraz' Everglades detention facility. At the federal level, GEO donated $500,000 to Trump's 2025 inauguration, then received $2.1 billion in ICE contract obligations in fiscal 2025 — a 700% jump in profits. The company's primary Florida detention asset is the Broward Transitional Center in Pompano Beach, a 720-bed ICE facility that has faced repeated allegations of medical neglect, sexual assault, and forced labor of detainees. GEO's political strategy is a textbook pay-to-play loop: political donations secure favorable legislation and emergency no-bid contracts; those contracts produce profits that fund further donations.",
   "key_facts": [
     {
@@ -100,7 +106,7 @@
       "outlet": "Seeking Rents (Jason Garcia / Substack)",
       "date": "2022-11-01",
       "summary": "Investigates how GEO Group circumvented Florida's direct contribution limits by funneling $740,000+ to the Republican Governors Association in 2022, which then gave DeSantis $14 million. Coins the 'backdoor donation' framing and documents GEO's $110 million in annual Florida contracts as the financial motive.",
-      "approved_for_public": false
+      "approved_for_public": true
     },
     {
       "title": "Some major Trump donors are now reaping billions in ICE contracts",
@@ -108,7 +114,7 @@
       "outlet": "OpenSecrets",
       "date": "2026-03-01",
       "summary": "Documents the direct correlation between GEO Group's $500,000 inaugural donation and the subsequent $2.1 billion in ICE contract obligations GEO received in fiscal 2025. Part of OpenSecrets' broader tracking of the pay-to-play dynamic between Trump-era donors and federal contract awards.",
-      "approved_for_public": false
+      "approved_for_public": true
     },
     {
       "title": "New Documents Reveal Florida Paid Over $573 Million to DeSantis-Connected Immigrant Detention Contractors in 2025",

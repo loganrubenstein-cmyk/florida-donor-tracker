@@ -4,7 +4,15 @@
   "type": "corporate",
   "parent_entity": "NextEra Energy, Inc.",
   "industry": "utilities",
-  "themes": ["utilities", "rate-cases", "PSC", "regulatory-capture", "dark-money", "ghost-candidates", "media-manipulation"],
+  "themes": [
+    "utilities",
+    "rate-cases",
+    "PSC",
+    "regulatory-capture",
+    "dark-money",
+    "ghost-candidates",
+    "media-manipulation"
+  ],
   "summary": "Florida Power & Light (FPL), a subsidiary of NextEra Energy, is the largest electric utility in Florida and the all-time #1 corporate donor in Florida state politics, with over $330 million in disclosed state campaign contributions. FPL uses a multi-layered influence operation — direct campaign contributions, dark-money 501(c)(4) pass-throughs, covert media control, and ghost-candidate schemes — to shape the appointments of its primary regulator (the Florida Public Service Commission) and secure rate increases that extract billions from 12 million captive customers. The company's parent NextEra files campaign contributions separately under its own name, obscuring the combined total, while both entities spend heavily at the state and federal level.",
   "key_facts": [
     {
@@ -113,7 +121,7 @@
       "outlet": "Seeking Rents (Jason Garcia)",
       "date": "2022-10-01",
       "summary": "Documents how DeSantis personally shaped PSC appointments to favor FPL and received over $3 million from FPL and its dark-money network, enabling a massive rate increase.",
-      "approved_for_public": false
+      "approved_for_public": true
     },
     {
       "title": "Florida just approved the largest electric rate increase in history. Here's how it happened.",
@@ -121,7 +129,7 @@
       "outlet": "Seeking Rents (Jason Garcia)",
       "date": "2025-11-20",
       "summary": "Explains how FPL's $6.9 billion rate hike — largest in U.S. utility history — was approved by DeSantis-appointed PSC commissioners, sidelining the public's consumer advocate.",
-      "approved_for_public": false
+      "approved_for_public": true
     },
     {
       "title": "Amid Connections to Ongoing Election Scandals, NextEra Pours Millions into Florida's 2022 Election Cycle",

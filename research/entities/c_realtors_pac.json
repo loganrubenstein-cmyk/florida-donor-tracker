@@ -4,7 +4,14 @@
   "type": "committee",
   "parent_entity": "Florida Realtors",
   "industry": "real-estate",
-  "themes": ["real-estate", "insurance", "growth-machine", "property-rights", "bipartisan-giving", "affordable-housing"],
+  "themes": [
+    "real-estate",
+    "insurance",
+    "growth-machine",
+    "property-rights",
+    "bipartisan-giving",
+    "affordable-housing"
+  ],
   "summary": "The Realtors Political Advocacy Committee (RPAC) is the political arm of Florida Realtors, the trade association representing 238,000+ licensed real estate professionals statewide. With $65+ million in total receipts in our dataset, it is one of the largest receiving political committees in Florida. RPAC operates on the 'friendly incumbent' principle — endorsing and funding officials of both parties who support property rights, homeownership, and real estate industry interests. In 2024, more than 98% of RPAC-endorsed candidates won their elections, a testament to the PAC's targeting effectiveness. RPAC's core legislative concerns include: property insurance reform (the Florida insurance crisis directly suppresses home sales), the Live Local Act affordable housing framework (a 2023 legislative win), rent control preemption, homestead exemption expansion, and opposition to any development or land-use restrictions that would limit property transactions. Unlike most corporate PACs, RPAC is funded by voluntary member contributions from the association's dues-paying members — making it a broad-based real estate industry vehicle rather than a handful of large developers.",
   "key_facts": [
     {
@@ -74,7 +81,7 @@
       "outlet": "Florida Realtors",
       "date": "2024-06-01",
       "summary": "Florida Realtors' official summary of 2024 legislative wins and losses, documenting the association's priorities and outcomes including insurance reform, housing affordability, and property rights measures.",
-      "approved_for_public": false
+      "approved_for_public": true
     },
     {
       "title": "Lawmakers Try 'Accountability' Insurance Reform",
@@ -82,7 +89,7 @@
       "outlet": "Florida Realtors",
       "date": "2023-04-01",
       "summary": "Florida Realtors' coverage of the 2023 insurance reform push, framing the insurance crisis as a housing market crisis and tracking legislative progress toward stabilizing the property insurance market.",
-      "approved_for_public": false
+      "approved_for_public": true
     },
     {
       "title": "Realtors Political Advocacy Committee — Transparency USA",

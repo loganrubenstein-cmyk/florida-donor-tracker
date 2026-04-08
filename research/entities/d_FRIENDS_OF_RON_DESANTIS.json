@@ -4,7 +4,12 @@
   "type": "committee",
   "parent_entity": null,
   "industry": "political-committee",
-  "themes": ["desantis-network", "republican-machine", "pay-to-play", "corporate-influence"],
+  "themes": [
+    "desantis-network",
+    "republican-machine",
+    "pay-to-play",
+    "corporate-influence"
+  ],
   "summary": "Friends of Ron DeSantis was the state-level political committee (PC) that served as the primary fundraising vehicle for Governor Ron DeSantis from 2018 through mid-2023. Operating under Florida's unlimited contribution rules for PCs, it shattered every gubernatorial fundraising record in U.S. history — raising approximately $176.8 million for the 2022 reelection cycle alone, out of a combined $217 million haul. The committee attracted billionaire donors, utility conglomerates, insurance companies, private equity firms, and state contractors, many of whom received favorable state policy or contracts in return. In May 2023 the committee was renamed 'Empower Parents PAC,' and on May 31, 2023 it transferred $82.5 million to Never Back Down, the pro-DeSantis presidential super PAC run by Jeff Roe's Axiom Strategies, in a legally contested move. When DeSantis dropped out of the 2024 presidential race in January 2024, the rump funds from Never Back Down (~$5.25 million) were transferred back to RON PAC (Restore Our Nation), the renamed federal committee. Investigative reporting by The Intercept, Jason Garcia's Seeking Rents, and OpenSecrets documented systematic pay-to-play patterns connecting the committee's largest donors to state contracts, utility rate increases, insurance deregulation, and favorable PSC appointments.",
   "key_facts": [
     {
@@ -93,7 +98,7 @@
       "outlet": "The Intercept",
       "date": "2022-09-27",
       "summary": "Investigative piece documenting 18 companies that donated to Friends of Ron DeSantis and received a combined $1.68 billion in state contracts. Identifies Herzog Contracting as a marquee example — $350K in donations, $32.7M in FDOT contracts.",
-      "approved_for_public": false
+      "approved_for_public": true
     },
     {
       "title": "Ron DeSantis Has Raked in $3.9 Million From Insurance Industry, New Report Reveals",
@@ -101,7 +106,7 @@
       "outlet": "The Intercept",
       "date": "2023-05-03",
       "summary": "Documents $3.9M in insurance industry contributions to DeSantis/Friends of Ron DeSantis, mapping the donations against three insurance-friendly bills DeSantis signed and the doubling of Florida homeowner premium averages.",
-      "approved_for_public": false
+      "approved_for_public": true
     },
     {
       "title": "DeSantis' former state political committee transfers $82.5 million to allied super PAC",

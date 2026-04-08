@@ -4,7 +4,14 @@
   "type": "corporate",
   "parent_entity": null,
   "industry": "retail",
-  "themes": ["retail", "jenkins-family", "january-6", "regulatory-access", "labor", "pay-to-play"],
+  "themes": [
+    "retail",
+    "jenkins-family",
+    "january-6",
+    "regulatory-access",
+    "labor",
+    "pay-to-play"
+  ],
   "summary": "Publix Super Markets is Florida's dominant grocery chain — the state's top-ranked Fortune 500 company — and one of the largest corporate political donors in Tallahassee. In 2023, Publix made nearly $3.2 million in Florida campaign contributions, making it the largest corporate donor in Florida politics that year. Publix is employee-owned and controlled by the Jenkins family (descendants of founder George Jenkins), whose members make large additional personal contributions. The company's political giving directly correlates with favorable legislative outcomes: Jason Garcia's Seeking Rents documented that the Republican-controlled Legislature advanced bills in 2023 that made it harder for workers to secure benefits, forced the Florida Lottery to pay higher commissions to retailers, increased sentences for shoplifters, and blocked local plastic bag bans — all aligning with Publix's commercial interests. The sharpest controversy: Publix donated $100,000 to DeSantis's political committee in late 2020, and within five days DeSantis announced a COVID vaccine distribution pilot exclusively through Publix — a no-bid arrangement that 60 Minutes reported as pay-to-play. Beyond the corporate PAC, Jenkins family heiress Julie Jenkins Fancelli contributed $300,000+ to organizing the January 6, 2021 'Stop the Steal' rally, with the House Select Committee estimating her total January 6-related giving at $3 million.",
   "key_facts": [
     {
@@ -80,7 +87,7 @@
       "outlet": "Seeking Rents (Jason Garcia)",
       "date": "2023-06-01",
       "summary": "Documents how Publix became Florida's largest corporate political donor in 2023 and tracks the specific legislation advanced that cycle aligning with Publix's retail interests — lottery commissions, anti-labor provisions, shoplifting sentencing, and plastic bag bans.",
-      "approved_for_public": false
+      "approved_for_public": true
     },
     {
       "title": "Publix: Where political giving helped get no-bid Covid vaccine business",
@@ -88,7 +95,7 @@
       "outlet": "Florida Bulldog",
       "date": "2021-02-01",
       "summary": "Documents the timeline: Publix $100K donation in December 2020 → DeSantis COVID vaccine pilot announcement five days later → exclusive early distribution deal worth potentially hundreds of millions in logistics contracts.",
-      "approved_for_public": false
+      "approved_for_public": true
     },
     {
       "title": "How the wealthy cut the line during Florida's COVID vaccine rollout",

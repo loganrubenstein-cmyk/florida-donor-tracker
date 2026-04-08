@@ -1,6 +1,7 @@
 'use client';
 
 import { getPartyAffiliation } from '@/lib/partyUtils';
+import { fmtArticleDate } from '@/lib/dateUtils';
 function getNodeDescription(node) {
   if (!node) return '';
   if (node.data_pending) return 'Committee — contribution data not yet downloaded';
@@ -62,7 +63,7 @@ const LINK_STYLE = {
   fontSize: '0.75rem', textDecoration: 'none', borderRadius: '3px',
 };
 
-export default function DetailPanel({ node, graphData, onRecenter }) {
+export default function DetailPanel({ node, graphData, onRecenter, annotations = {} }) {
   if (!node) {
     return (
       <div style={{
@@ -96,6 +97,8 @@ export default function DetailPanel({ node, graphData, onRecenter }) {
     .slice(0, 10);
 
   const totalIncoming = allEdges.filter(e => e.target === node.id).length;
+
+  const nodeArticles = annotations[node.id]?.articles || [];
 
   const researchLinks = [
     {
@@ -235,6 +238,29 @@ export default function DetailPanel({ node, graphData, onRecenter }) {
         >
           Re-center graph here
         </button>
+
+        {nodeArticles.length > 0 && (
+          <>
+            <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: '0.25rem' }}>
+              In the News
+            </div>
+            {nodeArticles.map((article) => (
+              <a key={article.url} href={article.url} target="_blank" rel="noopener noreferrer" style={{
+                display: 'block', padding: '0.5rem 0.65rem',
+                background: 'rgba(255,255,255,0.02)', border: '1px solid var(--border)',
+                borderRadius: '3px', textDecoration: 'none',
+              }}>
+                <div style={{ fontSize: '0.74rem', color: 'var(--text)', lineHeight: 1.35, marginBottom: '0.2rem' }}>
+                  {article.title}
+                </div>
+                <div style={{ fontSize: '0.62rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+                  {article.outlet}{article.date ? ` · ${fmtArticleDate(article.date)}` : ''}
+                </div>
+              </a>
+            ))}
+          </>
+        )}
+
         <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: '0.25rem' }}>
           Research
         </div>

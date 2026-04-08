@@ -1,6 +1,7 @@
 // components/committee/CommitteeProfile.js
 
 import { getPartyFromName } from '@/lib/partyUtils';
+import { fmtArticleDate } from '@/lib/dateUtils';
 
 function fmt(n) {
   if (n == null) return '—';
@@ -18,7 +19,9 @@ function fmtDate(s) {
 
 const TYPE_COLOR = { committee: 'var(--teal)', corporate: '#94a3b8', individual: 'var(--blue)' };
 
-export default function CommitteeProfile({ data }) {
+export default function CommitteeProfile({ data, annotations = {} }) {
+  const annotation = annotations[`c_${data.acct_num}`];
+  const articles = annotation?.articles || [];
   const party = getPartyFromName(data.committee_name, data.acct_num);
   const partyColor = party === 'R' ? 'var(--republican)' : party === 'D' ? 'var(--democrat)' : null;
 
@@ -38,7 +41,7 @@ export default function CommitteeProfile({ data }) {
   ];
 
   return (
-    <main style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
+    <main className="m-padx" style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
 
       {/* Back links */}
       <div style={{ display: 'flex', gap: '1.25rem', marginBottom: '1.5rem' }}>
@@ -88,8 +91,7 @@ export default function CommitteeProfile({ data }) {
       </div>
 
       {/* Stats grid */}
-      <div style={{
-        display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)',
+      <div className="rg-4" style={{
         gap: '1px', background: 'var(--border)',
         border: '1px solid var(--border)', borderRadius: '3px',
         marginBottom: '2rem', overflow: 'hidden',
@@ -176,6 +178,31 @@ export default function CommitteeProfile({ data }) {
           ))}
         </div>
       </div>
+
+      {/* In the News */}
+      {articles.length > 0 && (
+        <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.25rem', marginBottom: '2rem' }}>
+          <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
+            In the News
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+            {articles.map((article) => (
+              <a key={article.url} href={article.url} target="_blank" rel="noopener noreferrer" style={{
+                display: 'block', padding: '0.65rem 0.85rem',
+                border: '1px solid var(--border)', borderRadius: '3px',
+                textDecoration: 'none', background: 'rgba(255,255,255,0.02)',
+              }}>
+                <div style={{ fontSize: '0.82rem', color: 'var(--text)', lineHeight: 1.4, marginBottom: '0.25rem' }}>
+                  {article.title}
+                </div>
+                <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+                  {article.outlet}{article.date ? ` · ${fmtArticleDate(article.date, { includeDay: true })}` : ''}
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Disclaimer */}
       <div style={{

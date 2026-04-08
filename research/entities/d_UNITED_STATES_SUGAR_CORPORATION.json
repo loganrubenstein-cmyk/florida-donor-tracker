@@ -4,7 +4,14 @@
   "type": "corporate",
   "parent_entity": null,
   "industry": "sugar",
-  "themes": ["sugar", "everglades", "water-quality", "agricultural-lobby", "federal-lobbying", "dark-money"],
+  "themes": [
+    "sugar",
+    "everglades",
+    "water-quality",
+    "agricultural-lobby",
+    "federal-lobbying",
+    "dark-money"
+  ],
   "summary": "United States Sugar Corporation and Florida Crystals Corp. (owned by the Fanjul family) are the two dominant sugar producers in the Everglades Agricultural Area (EAA), together owning more than 400,000 acres south of Lake Okeechobee. They constitute 'Big Sugar' — one of Florida's most durable and bipartisan political money operations. Between 1994 and 2016 the sugar industry gave $57.8 million in direct and in-kind state campaign contributions; in the 2022 cycle alone they gave $6 million in Florida state races. The core political transaction: campaign money in exchange for protection from Everglades restoration requirements, phosphorus water quality standards, and any effort to acquire or convert sugar farmland to water storage. The industry deploys 64+ lobbyists in Tallahassee, funds front groups like Associated Industries of Florida (US Sugar: $4.5M, Florida Crystals: $6.7M), and has successfully delayed Everglades restoration for decades while the state's phosphorus treatment marshes are 'already maxed out.' In 2025, Big Sugar inserted a provision into Trump's 'One Big Beautiful Bill' raising the federal sugar price support from 19.75 to 24 cents per pound — delivering a windfall worth hundreds of millions annually.",
   "key_facts": [
     {
@@ -93,7 +100,7 @@
       "outlet": "Tampa Bay Times",
       "date": "2022-05-12",
       "summary": "Documents the $6 million in Florida state political contributions from US Sugar and Florida Crystals in the 2022 cycle, contextualizing it within the industry's decades-long dominance as a Florida campaign finance force.",
-      "approved_for_public": false
+      "approved_for_public": true
     },
     {
       "title": "'Not even close': Clean-up of Everglades water polluted by Big Sugar struggles to keep up",
@@ -101,7 +108,7 @@
       "outlet": "WLRN",
       "date": "2023-12-06",
       "summary": "Documents how phosphorus from sugar farms continues to overwhelm Everglades treatment marshes — which are 'already maxed out' — while overall restoration targets remain unmet despite decades of effort.",
-      "approved_for_public": false
+      "approved_for_public": true
     },
     {
       "title": "Records show Big Sugar lobbyists are working on plans for an Everglades-area mine",

@@ -4,7 +4,13 @@
   "type": "committee",
   "parent_entity": "Florida Justice Association",
   "industry": "trial-lawyers",
-  "themes": ["trial-lawyers", "tort-reform", "insurance", "legislative-battles", "bipartisan-giving"],
+  "themes": [
+    "trial-lawyers",
+    "tort-reform",
+    "insurance",
+    "legislative-battles",
+    "bipartisan-giving"
+  ],
   "summary": "Florida Justice PAC is the political action committee of the Florida Justice Association (FJA), the state's plaintiffs' trial lawyers association and the organized opposition to every tort reform initiative in Tallahassee. In 2022, Florida Justice PAC spent $6.06 million and contributed $5.84 million — making it one of the largest single-industry PACs in Florida state politics. The PAC's primary adversaries are the Florida Chamber of Commerce, Associated Industries of Florida, and the insurance industry, which have pushed successive rounds of tort reform through the DeSantis-era Republican supermajority. The biggest recent defeat was HB 837 (2023), a sweeping tort reform bill DeSantis signed that eliminated one-way attorney's fees, moved Florida to a modified comparative negligence standard, curtailed bad faith claims against insurers, and cut the statute of limitations for personal injury cases. In the days before HB 837 took effect, Morgan & Morgan alone filed approximately 25,000 insurance claim cases — a dramatic illustration of the stakes involved. Florida Justice PAC continues to fund challenger campaigns against legislators who backed the reforms, and FJA serves as the institutional home of Florida's most powerful plaintiffs' firms.",
   "key_facts": [
     {
@@ -87,7 +93,7 @@
       "outlet": "Florida Politics",
       "date": "2022-12-01",
       "summary": "Preview of the 2023 session showing FJA preparing to fight a major tort reform push from the DeSantis administration and the Republican supermajority, with the outcome clearly foreshadowed.",
-      "approved_for_public": false
+      "approved_for_public": true
     },
     {
       "title": "Gov. DeSantis signs sweeping legal reforms passed by Legislature",
@@ -95,7 +101,7 @@
       "outlet": "Florida Politics",
       "date": "2023-03-24",
       "summary": "Reports on DeSantis signing HB 837 as the first bill of the 2023 legislative session — a deliberate signal of its priority status — and includes the FJA's immediate condemnation.",
-      "approved_for_public": false
+      "approved_for_public": true
     },
     {
       "title": "Florida HB 837: A Political Stunt or Legitimate Civil Justice Reform?",

@@ -4,7 +4,13 @@
   "type": "corporate",
   "parent_entity": null,
   "industry": "gaming",
-  "themes": ["gaming", "ballot-initiative", "petition-fraud", "tribal-gaming", "Adelson-network"],
+  "themes": [
+    "gaming",
+    "ballot-initiative",
+    "petition-fraud",
+    "tribal-gaming",
+    "Adelson-network"
+  ],
   "summary": "Las Vegas Sands Corp. (LVS) — the casino empire founded by the late Sheldon Adelson, now controlled by his widow Miriam Adelson — spent $73.59 million in Florida campaign finance between 2021 and 2022, virtually all of it funneled through a single political committee called Florida Voters in Charge (FVIC). The goal: pass a constitutional amendment that would have allowed Las Vegas-style casinos at existing North Florida card rooms at least 130 miles from Seminole Tribe land, effectively cracking open a state where the Seminole Tribe has a near-monopoly on full casino gaming under a 2021 compact with Gov. DeSantis. The campaign became one of the most expensive — and most contested — ballot initiative efforts in Florida history, ultimately failing in early 2022 after a widespread petition fraud scandal, a Seminole-funded counter-campaign exceeding $39 million, and a shortfall of roughly 77,000 verified signatures. Florida Voters in Charge dropped its remaining legal appeals in April 2022. LVS CEO Rob Goldstein declared in 2023 that the company would 'be in Florida… it's just a question of when,' but no new campaign has materialized. The conflict is a direct collision between two of Florida's most powerful donor blocs — LVS/Adelson on one side and the Seminole Tribe (which also co-financed Florida's 2018 Amendment 3 requiring voter approval for new casinos) on the other.",
   "key_facts": [
     {
@@ -93,7 +99,7 @@
       "outlet": "Florida Politics",
       "date": "2022-04-01",
       "summary": "Comprehensive recap of the full $73M LVS spend on Florida Voters in Charge, the failed petition drive, fraud allegations, and LVS dropping its legal challenges in April 2022.",
-      "approved_for_public": false
+      "approved_for_public": true
     },
     {
       "title": "Florida elections offices seeing suspected fraudulent petitions in gambling effort",
@@ -101,7 +107,7 @@
       "outlet": "Tampa Bay Times",
       "date": "2022-01-20",
       "summary": "Joint Tampa Bay Times/Miami Herald investigation into widespread petition fraud in the LVS-backed casino expansion drive, including dead voters' signatures and potential referral to the Attorney General.",
-      "approved_for_public": false
+      "approved_for_public": true
     },
     {
       "title": "Las Vegas Sands drops bid for North Florida casinos on 2022 ballot",

@@ -4,7 +4,13 @@
   "type": "committee",
   "parent_entity": null,
   "industry": "political-party",
-  "themes": ["republican-machine", "desantis-network", "corporate-influence", "utility-money", "dark-money"],
+  "themes": [
+    "republican-machine",
+    "desantis-network",
+    "corporate-influence",
+    "utility-money",
+    "dark-money"
+  ],
   "summary": "The Republican Party of Florida (RPOF), registered as committee #4700 with the Florida Division of Elections, is the dominant financial and organizational hub of Florida Republican politics. With $930+ million in total receipts in our dataset, it functions as the central pass-through node for corporate political money flowing from utility companies, insurance conglomerates, real estate developers, and lobbyist-connected PACs into legislative races, constitutional amendment fights, and statewide candidates. RPOF received massive contributions from NextEra/FPL ($2.2M+), Duke Energy ($4M+), the Republican Governors Association, and the DeSantis donor network. In turn it distributes funds to House and Senate candidate committees, allied outside groups, and party infrastructure — enabling it to maintain supermajorities in both chambers of the Florida Legislature. Under chair Christian Ziegler (2023–2024, later embroiled in personal scandal) and then Evan Power, RPOF coordinated closely with the DeSantis operation. Disney — historically a major RPOF donor ($125K to RPOF in early 2022 alone) — paused donations after the Reedy Creek fight but signaled willingness to resume after the 2023 settlement. The party's interlocking relationship with Ballard Partners (Brian Ballard chairs major donor events and is considered its de facto super-lobbyist) makes it both a fundraising vehicle and a legislative-access marketplace for Florida's most powerful industries.",
   "key_facts": [
     {
@@ -93,7 +99,7 @@
       "outlet": "Energy and Policy Institute",
       "date": "2022-11-01",
       "summary": "Documents NextEra/FPL's nearly $6M in Florida political spending in the 2022 cycle, with the majority flowing to RPOF and GOP-aligned committees. Connects the utility's giving to favorable regulatory treatment and DeSantis PSC appointments.",
-      "approved_for_public": false
+      "approved_for_public": true
     },
     {
       "title": "How Florida lobbyist Brian Ballard is turning close ties to Trump into big business",
@@ -101,7 +107,7 @@
       "outlet": "Tampa Bay Times",
       "date": "2017-12-01",
       "summary": "Profile of Ballard Partners and Brian Ballard's role as Florida's most connected GOP lobbyist — Trump's Florida fundraiser, DeSantis inauguration co-chair, and access broker for dozens of major corporate clients.",
-      "approved_for_public": false
+      "approved_for_public": true
     },
     {
       "title": "Dark lobbying in the Florida Legislature",

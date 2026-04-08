@@ -4,7 +4,14 @@
   "type": "corporate",
   "parent_entity": "HCA Healthcare, Inc.",
   "industry": "healthcare",
-  "themes": ["healthcare", "hospital-industry", "medicaid", "rick-scott", "federal-fraud", "regulatory-capture"],
+  "themes": [
+    "healthcare",
+    "hospital-industry",
+    "medicaid",
+    "rick-scott",
+    "federal-fraud",
+    "regulatory-capture"
+  ],
   "summary": "HCA West Florida is the Florida Gulf Coast division of HCA Healthcare — the largest for-profit hospital chain in the United States, operating 185+ hospitals in 20 states. HCA's Florida political strategy is concentrated and consequential: since 2017, HCA's PACs have given at least $7 million to Florida right-wing political committees that collectively donated over $2 million to Governor DeSantis — with at least 75% of HCA's Florida political spending directed to PACs that funded DeSantis. The central tension: HCA Healthcare's financial performance improves when more patients are insured, yet the company funds politicians who actively oppose Medicaid expansion — keeping Florida one of the last holdout states and leaving an estimated 800,000+ Floridians without coverage. HCA's political investment in Florida cannot be separated from the company's founding history: co-founder Rick Scott presided over the largest Medicare fraud settlement in US history ($1.7B by Columbia/HCA in 2000), then became Florida's Governor (2011-2019) and US Senator. HCA Healthcare shareholders — backed by major unions — have repeatedly demanded greater transparency into the company's Florida political spending, arguing it conflicts with HCA's own financial interests by supporting politicians who block insurance expansion.",
   "key_facts": [
     {
@@ -87,7 +94,7 @@
       "outlet": "Broward.US",
       "date": "2022-04-21",
       "summary": "Reports on union-backed shareholder resolutions demanding HCA disclose its Florida political spending, after shareholders discovered the company had funneled $7M+ to DeSantis-aligned PACs through five intermediary committees.",
-      "approved_for_public": false
+      "approved_for_public": true
     },
     {
       "title": "At HCA Shareholder Meeting, Nurses, Other Workers Call for Transparency",
@@ -95,7 +102,7 @@
       "outlet": "HCA Care Crisis",
       "date": "2022-04-01",
       "summary": "Detailed account of the shareholder meeting activism, documenting the specific five Florida PACs that received HCA money and their connections to DeSantis's campaign.",
-      "approved_for_public": false
+      "approved_for_public": true
     },
     {
       "title": "Rick Scott and the fraud case of Columbia/HCA",

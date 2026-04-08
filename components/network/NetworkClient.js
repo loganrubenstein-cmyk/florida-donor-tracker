@@ -13,7 +13,7 @@ function fmtCount(n) {
   return `${n}`;
 }
 
-function NetworkClientInner({ data }) {
+function NetworkClientInner({ data, annotations }) {
   // data is guaranteed non-null here
   const router       = useRouter();
   const searchParams = useSearchParams();
@@ -129,20 +129,27 @@ function NetworkClientInner({ data }) {
             centeredNodeId={centeredNodeId}
           />
         </div>
-        <DetailPanel node={selectedNode} graphData={data} onRecenter={handleRecenter} />
+        <DetailPanel node={selectedNode} graphData={data} onRecenter={handleRecenter} annotations={annotations} />
       </div>
     </div>
   );
 }
 
 export default function NetworkClient() {
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(false);
+  const [data,        setData]        = useState(null);
+  const [annotations, setAnnotations] = useState({});
+  const [error,       setError]       = useState(false);
 
   useEffect(() => {
-    fetch('/data/network_graph.json')
-      .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
-      .then(setData)
+    Promise.all([
+      fetch('/data/network_graph.json').then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }),
+      // Annotations are enrichment — degrade gracefully if missing; graph failure is fatal.
+      fetch('/data/research/annotations.json').then(r => r.ok ? r.json() : null).catch(() => null),
+    ])
+      .then(([graph, ann]) => {
+        setData(graph);
+        setAnnotations(ann?.entities || {});
+      })
       .catch(() => setError(true));
   }, []);
 
@@ -164,7 +171,7 @@ export default function NetworkClient() {
         Loading...
       </div>
     }>
-      <NetworkClientInner data={data} />
+      <NetworkClientInner data={data} annotations={annotations} />
     </Suspense>
   );
 }
