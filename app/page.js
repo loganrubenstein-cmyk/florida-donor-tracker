@@ -301,6 +301,24 @@ export default function Home() {
             </div>
           </a>
 
+          <a href="/principals" style={{ textDecoration: 'none' }}>
+            <div style={{
+              border: '1px solid rgba(128,255,160,0.2)',
+              borderRadius: '3px',
+              padding: '1.25rem',
+              background: 'rgba(128,255,160,0.02)',
+              height: '100%',
+              cursor: 'pointer',
+            }}>
+              <div style={{ fontSize: '0.72rem', color: 'var(--green)', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
+                → lobbying principals
+              </div>
+              <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
+                Organizations registered as lobbying principals — matched to their campaign donations.
+              </div>
+            </div>
+          </a>
+
           <a href="/connections" style={{ textDecoration: 'none' }}>
             <div style={{
               border: '1px solid rgba(255,176,96,0.12)',

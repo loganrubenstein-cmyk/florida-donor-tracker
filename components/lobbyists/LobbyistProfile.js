@@ -42,13 +42,6 @@ export default function LobbyistProfile({ data }) {
   const activePrincipals = principals.filter(p => p.is_active);
   const inactivePrincipals = principals.filter(p => !p.is_active);
 
-  const hasBoth = data.branches?.includes('legislative') && data.branches?.includes('executive');
-  const branchLabel = hasBoth ? 'Both branches'
-    : data.branches?.includes('legislative') ? 'Legislative'
-    : data.branches?.includes('executive')   ? 'Executive'
-    : '—';
-  const branchColor = hasBoth ? 'var(--orange)' : 'var(--teal)';
-
   const location = [data.city, data.state].filter(Boolean).join(', ');
 
   const researchLinks = [
@@ -77,13 +70,15 @@ export default function LobbyistProfile({ data }) {
           }}>
             LOBBYIST
           </span>
-          <span style={{
-            fontSize: '0.65rem', padding: '0.15rem 0.5rem',
-            border: `1px solid ${branchColor}`, color: branchColor,
-            borderRadius: '2px', fontFamily: 'var(--font-mono)',
-          }}>
-            {branchLabel.toUpperCase()}
-          </span>
+          {data.total_donation_influence > 0 && (
+            <span style={{
+              fontSize: '0.65rem', padding: '0.15rem 0.5rem',
+              border: '1px solid var(--orange)', color: 'var(--orange)',
+              borderRadius: '2px', fontFamily: 'var(--font-mono)',
+            }}>
+              DONATION MATCH
+            </span>
+          )}
         </div>
         <h1 style={{
           fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.5rem, 4vw, 2.4rem)',
@@ -92,7 +87,7 @@ export default function LobbyistProfile({ data }) {
           {data.name}
         </h1>
         <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-          {(data.firm_name || data.firm) && <span>{data.firm_name || data.firm}</span>}
+          {data.firm && <span>{data.firm}</span>}
           {location && <span>{location}</span>}
           {data.phone && <span>{data.phone}</span>}
         </div>
@@ -106,18 +101,14 @@ export default function LobbyistProfile({ data }) {
         <StatBox label="Total Principals" value={(data.num_principals || 0).toLocaleString()} />
         <StatBox label="Active Registrations" value={(data.num_active || 0).toLocaleString()}
           color="var(--teal)" />
-        {data.total_donation_influence > 0 ? (
-          <StatBox label="Donation Influence"
-            value={`$${(data.total_donation_influence / 1_000_000).toFixed(1)}M`}
-            sub="Matched principal donations"
-            color="var(--orange)" />
-        ) : (
-          <StatBox label="Inactive / Withdrawn" value={(inactivePrincipals.length).toLocaleString()}
-            color="var(--text-dim)" />
-        )}
-        <StatBox label="Branch" value={branchLabel}
-          sub={hasBoth ? 'Lobbies both branches' : null}
-          color={branchColor} />
+        <StatBox label="Donation Influence"
+          value={data.total_donation_influence > 0
+            ? `$${(data.total_donation_influence / 1_000_000).toFixed(1)}M`
+            : '—'}
+          sub={data.total_donation_influence > 0 ? 'Matched principal donations' : null}
+          color={data.total_donation_influence > 0 ? 'var(--orange)' : 'var(--text-dim)'} />
+        <StatBox label="Inactive / Withdrawn" value={(inactivePrincipals.length).toLocaleString()}
+          color="var(--text-dim)" />
       </div>
 
       {/* Active principals */}
@@ -139,14 +130,14 @@ export default function LobbyistProfile({ data }) {
               </thead>
               <tbody>
                 {activePrincipals.map((p, i) => (
-                  <tr key={`${p.principal_name}-${p.branch}`} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
+                  <tr key={`${p.name}-${p.branch}`} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
                     <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2rem' }}>
                       {i + 1}
                     </td>
                     <td style={{ padding: '0.4rem 0.6rem', maxWidth: '360px', wordBreak: 'break-word' }}>
-                      <a href={`/principal/${slugify(p.principal_name)}`}
+                      <a href={`/principal/${slugify(p.name)}`}
                         style={{ color: 'var(--teal)', textDecoration: 'none' }}>
-                        {p.principal_name}
+                        {p.name}
                       </a>
                     </td>
                     <td style={{ padding: '0.4rem 0.6rem', textAlign: 'center' }}>
@@ -159,7 +150,7 @@ export default function LobbyistProfile({ data }) {
                       </span>
                     </td>
                     <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.7rem', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap' }}>
-                      {fmtDate(p.reg_eff_date) || '—'}
+                      {fmtDate(p.since) || '—'}
                     </td>
                   </tr>
                 ))}
@@ -188,12 +179,12 @@ export default function LobbyistProfile({ data }) {
               </thead>
               <tbody>
                 {inactivePrincipals.map((p, i) => (
-                  <tr key={`${p.principal_name}-${p.branch}-${p.reg_eff_date}`} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)', opacity: 0.65 }}>
+                  <tr key={`${p.name}-${p.branch}-${p.since}`} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)', opacity: 0.65 }}>
                     <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2rem' }}>
                       {i + 1}
                     </td>
                     <td style={{ padding: '0.4rem 0.6rem', maxWidth: '320px', wordBreak: 'break-word', color: 'var(--text)' }}>
-                      {p.principal_name}
+                      {p.name}
                     </td>
                     <td style={{ padding: '0.4rem 0.6rem', textAlign: 'center' }}>
                       <span style={{
@@ -205,10 +196,10 @@ export default function LobbyistProfile({ data }) {
                       </span>
                     </td>
                     <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.7rem', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap' }}>
-                      {fmtDate(p.reg_eff_date) || '—'}
+                      {fmtDate(p.since) || '—'}
                     </td>
                     <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.7rem', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap' }}>
-                      {fmtDate(p.reg_wd_date) || '—'}
+                      {fmtDate(p.until) || '—'}
                     </td>
                   </tr>
                 ))}
