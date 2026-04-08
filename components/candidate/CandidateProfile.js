@@ -1,6 +1,7 @@
 // components/candidate/CandidateProfile.js
 import dynamic from 'next/dynamic';
 import BackLinks from '@/components/BackLinks';
+import { slugify } from '@/lib/slugify';
 
 const QuarterlyChart = dynamic(() => import('./QuarterlyChart'), { ssr: false });
 
@@ -208,8 +209,10 @@ export default function CandidateProfile({ data }) {
                   <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2rem' }}>
                     {i + 1}
                   </td>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text)', wordBreak: 'break-word' }}>
-                    {donor.name}
+                  <td style={{ padding: '0.45rem 0.6rem', wordBreak: 'break-word' }}>
+                    <a href={`/donor/${slugify(donor.name)}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+                      {donor.name}
+                    </a>
                   </td>
                   <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.68rem', maxWidth: '160px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {donor.occupation || '—'}

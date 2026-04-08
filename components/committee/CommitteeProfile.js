@@ -3,6 +3,7 @@
 import { getPartyFromName } from '@/lib/partyUtils';
 import BackLinks from '@/components/BackLinks';
 import { fmtArticleDate } from '@/lib/dateUtils';
+import { slugify } from '@/lib/slugify';
 
 function fmt(n) {
   if (n == null) return '—';
@@ -130,8 +131,10 @@ export default function CommitteeProfile({ data, annotations = {} }) {
                   <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2rem' }}>
                     {i + 1}
                   </td>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text)', wordBreak: 'break-word' }}>
-                    {donor.name}
+                  <td style={{ padding: '0.45rem 0.6rem', wordBreak: 'break-word' }}>
+                    <a href={`/donor/${slugify(donor.name)}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+                      {donor.name}
+                    </a>
                   </td>
                   <td style={{ padding: '0.45rem 0.6rem', color: TYPE_COLOR[donor.type] || 'var(--text-dim)', fontSize: '0.68rem' }}>
                     {donor.type}

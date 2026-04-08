@@ -227,8 +227,9 @@ def main(force: bool = False) -> int:
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    # Process each candidate account
-    accounts = df["acct_num"].unique()
+    # Group once up-front — avoids O(n*k) repeated full-frame scans
+    grouped = dict(tuple(df.groupby("acct_num")))
+    accounts = list(grouped.keys())
     stats_list = []
     written = skipped = 0
 
@@ -240,7 +241,7 @@ def main(force: bool = False) -> int:
             skipped += 1
             continue
 
-        cdf = df[df["acct_num"] == acct]
+        cdf = grouped[acct]
         if cdf.empty:
             continue
 
