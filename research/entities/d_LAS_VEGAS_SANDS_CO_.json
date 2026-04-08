@@ -1,0 +1,175 @@
+{
+  "id": "d_LAS_VEGAS_SANDS_CO_",
+  "canonical_name": "LAS VEGAS SANDS CO.",
+  "type": "corporate",
+  "parent_entity": null,
+  "industry": "gaming",
+  "themes": ["gaming", "ballot-initiative", "petition-fraud", "tribal-gaming", "Adelson-network"],
+  "summary": "Las Vegas Sands Corp. (LVS) — the casino empire founded by the late Sheldon Adelson, now controlled by his widow Miriam Adelson — spent $73.59 million in Florida campaign finance between 2021 and 2022, virtually all of it funneled through a single political committee called Florida Voters in Charge (FVIC). The goal: pass a constitutional amendment that would have allowed Las Vegas-style casinos at existing North Florida card rooms at least 130 miles from Seminole Tribe land, effectively cracking open a state where the Seminole Tribe has a near-monopoly on full casino gaming under a 2021 compact with Gov. DeSantis. The campaign became one of the most expensive — and most contested — ballot initiative efforts in Florida history, ultimately failing in early 2022 after a widespread petition fraud scandal, a Seminole-funded counter-campaign exceeding $39 million, and a shortfall of roughly 77,000 verified signatures. Florida Voters in Charge dropped its remaining legal appeals in April 2022. LVS CEO Rob Goldstein declared in 2023 that the company would 'be in Florida… it's just a question of when,' but no new campaign has materialized. The conflict is a direct collision between two of Florida's most powerful donor blocs — LVS/Adelson on one side and the Seminole Tribe (which also co-financed Florida's 2018 Amendment 3 requiring voter approval for new casinos) on the other.",
+  "key_facts": [
+    {
+      "fact": "Las Vegas Sands Corp. contributed $73,589,000 to Florida Voters in Charge (FVIC), making it the largest non-candidate PAC by revenue in Florida's 2021–2022 cycle. FVIC raised $75,564,100 total, with LVS accounting for roughly 97% of all donations.",
+      "source": "Ballotpedia News / Florida Politics",
+      "url": "https://news.ballotpedia.org/2022/04/15/florida-voters-in-charge-outraises-every-other-florida-pac-with-75-56-million/",
+      "date": "2022-04-15"
+    },
+    {
+      "fact": "The FVIC-backed initiative would have allowed Las Vegas-style table games (craps, roulette) at existing Florida card rooms located at least 130 miles from Seminole Tribe land in South Florida, requiring operators to invest a minimum of $250 million. The primary target market was North Florida and Jacksonville.",
+      "source": "Ballotpedia",
+      "url": "https://ballotpedia.org/Florida_Casino_Gaming_Expansion_Initiative_(2022)",
+      "date": "2022-04-01"
+    },
+    {
+      "fact": "The petition drive collapsed after a major fraud scandal: Florida elections offices reported hundreds to thousands of fraudulent petition forms — including signatures of dead voters — in what a joint Tampa Bay Times/Miami Herald investigation described as potentially 'one of the largest cases of election-related fraud in recent history.' The Secretary of State referred the matter to Attorney General Ashley Moody in December 2021.",
+      "source": "Tampa Bay Times",
+      "url": "https://www.tampabay.com/news/florida-politics/2022/01/20/florida-elections-offices-seeing-suspected-fraudulent-petitions-in-gambling-effort/",
+      "date": "2022-01-20"
+    },
+    {
+      "fact": "FVIC gathered only 814,212 verified signatures by the February 1, 2022 deadline — roughly 77,000 short of the 891,589 required. Las Vegas Sands filed suit seeking a deadline extension, the suit was dismissed, LVS appealed, then dropped the appeal on April 1, 2022.",
+      "source": "Tampa Bay Times",
+      "url": "https://www.tampabay.com/news/florida-politics/2022/04/01/las-vegas-sands-drops-bid-for-north-florida-casinos-on-2022-ballot/",
+      "date": "2022-04-01"
+    },
+    {
+      "fact": "The Seminole Tribe, which controls six of Florida's seven casinos and signed a $500 million/year revenue-sharing compact with Gov. DeSantis in 2021, spent at least $40 million (via the PAC 'Standing Up for Florida') fighting FVIC — running TV ads, launching a petition counter-campaign, and alleging that FVIC signature gatherers were being paid per signature in violation of state law.",
+      "source": "Florida Politics",
+      "url": "https://floridapolitics.com/archives/478661-temporary-restraining-order-denied-in-las-vegas-sands-seminole-tribe-court-battle/",
+      "date": "2022-01-01"
+    },
+    {
+      "fact": "Florida's 2018 Amendment 3 — passed with 71% of the vote and backed by the Seminole Tribe and Disney (who spent $31+ million on it) — gave voters the exclusive right to authorize new casino gambling, removing the Legislature's authority to expand gaming by statute. This constitutional framework was the reason LVS had to pursue a ballot initiative rather than lobby the legislature directly.",
+      "source": "Ballotpedia",
+      "url": "https://ballotpedia.org/Florida_Amendment_3,_Voter_Approval_of_Casino_Gambling_Initiative_(2018)",
+      "date": "2018-11-06"
+    },
+    {
+      "fact": "Sheldon Adelson, who founded Las Vegas Sands, died January 11, 2021. His widow, Miriam Adelson, inherited LVS and has continued as its controlling stakeholder. She was an early backer of DeSantis' 2018 gubernatorial campaign and donated $100 million to Trump's 2024 campaign.",
+      "source": "NPR",
+      "url": "https://www.npr.org/2021/01/12/693679109/sheldon-adelson-conservative-donor-and-casino-titan-dies-at-87",
+      "date": "2021-01-12"
+    },
+    {
+      "fact": "LVS CEO Rob Goldstein stated in a March 2023 interview: 'We will be in Florida, in my opinion. It's just a question of when it happens.' As of 2026, no new ballot or legislative campaign has launched. LVS's primary development focus has shifted to Singapore's Marina Bay Sands expansion and potential Texas casino entry.",
+      "source": "The Nevada Independent",
+      "url": "https://thenevadaindependent.com/article/indy-gaming-florida-continues-to-attract-stymie-las-vegas-sands",
+      "date": "2023-01-01"
+    }
+  ],
+  "notable_connections": [
+    {
+      "entity_id": "c_FLORIDA_VOTERS_IN_CHARGE",
+      "entity_name": "Florida Voters in Charge",
+      "relationship": "LVS-funded ballot initiative vehicle; received $73.59M of its $75.56M total from LVS",
+      "amount_approx": 73590000,
+      "notes": "Registered May 2021, dissolved after failed 2022 ballot drive"
+    },
+    {
+      "entity_id": "p_MIRIAM_ADELSON",
+      "entity_name": "Miriam Adelson",
+      "relationship": "Controlling owner and chairman of Las Vegas Sands Corp. since Sheldon Adelson's death in January 2021; GOP megadonor and early DeSantis backer",
+      "amount_approx": 0,
+      "notes": "Donated $100M to Trump 2024 campaign; dined with DeSantis in Israel April 2023 during his presidential campaign"
+    },
+    {
+      "entity_id": "seminole_tribe_florida",
+      "entity_name": "Seminole Tribe of Florida",
+      "relationship": "Primary opposition; spent $40M+ via Standing Up for Florida PAC to kill FVIC initiative; also co-funded 2018 Amendment 3 to block legislative casino expansion",
+      "amount_approx": 40000000,
+      "notes": "Both LVS and Seminole Tribe are major Republican donors in Florida, normally political allies — the gaming expansion fight was an exception"
+    },
+    {
+      "entity_id": "p_RON_DESANTIS",
+      "entity_name": "Ron DeSantis",
+      "relationship": "Governor who signed Seminole Tribe gaming compact in 2021 (worth $500M/year to state); Adelson-backed in 2018 gubernatorial run; dined with Miriam Adelson in Israel April 2023",
+      "amount_approx": 0,
+      "notes": "The 2021 compact DeSantis signed was later struck down by a federal court in November 2021 for violating the Indian Gaming Regulatory Act"
+    }
+  ],
+  "articles": [
+    {
+      "title": "Las Vegas Sands dropped $73M on failed Florida casino drive",
+      "url": "https://floridapolitics.com/archives/495932-las-vegas-sands-dropped-73m-on-failed-florida-casino-drive/",
+      "outlet": "Florida Politics",
+      "date": "2022-04-01",
+      "summary": "Comprehensive recap of the full $73M LVS spend on Florida Voters in Charge, the failed petition drive, fraud allegations, and LVS dropping its legal challenges in April 2022.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Florida elections offices seeing suspected fraudulent petitions in gambling effort",
+      "url": "https://www.tampabay.com/news/florida-politics/2022/01/20/florida-elections-offices-seeing-suspected-fraudulent-petitions-in-gambling-effort/",
+      "outlet": "Tampa Bay Times",
+      "date": "2022-01-20",
+      "summary": "Joint Tampa Bay Times/Miami Herald investigation into widespread petition fraud in the LVS-backed casino expansion drive, including dead voters' signatures and potential referral to the Attorney General.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Las Vegas Sands drops bid for North Florida casinos on 2022 ballot",
+      "url": "https://www.tampabay.com/news/florida-politics/2022/04/01/las-vegas-sands-drops-bid-for-north-florida-casinos-on-2022-ballot/",
+      "outlet": "Tampa Bay Times",
+      "date": "2022-04-01",
+      "summary": "LVS abandons its remaining legal appeal just before it was to be heard, ending the Florida casino ballot initiative campaign after collecting only 814,212 of the required 891,589 signatures.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Florida Voters in Charge outraises every other Florida PAC with $75.56 million",
+      "url": "https://news.ballotpedia.org/2022/04/15/florida-voters-in-charge-outraises-every-other-florida-pac-with-75-56-million/",
+      "outlet": "Ballotpedia News",
+      "date": "2022-04-15",
+      "summary": "Finance summary showing FVIC raised $75.56M and spent $73.84M — 19% of all Florida PAC fundraising in the cycle — with LVS as near-sole funder.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Indy Gaming: Florida continues to attract, stymie Las Vegas Sands",
+      "url": "https://thenevadaindependent.com/article/indy-gaming-florida-continues-to-attract-stymie-las-vegas-sands",
+      "outlet": "The Nevada Independent",
+      "date": "2023-01-01",
+      "summary": "Analysis of LVS's persistent but failed Florida strategy going back to 2012, including CEO Goldstein's 2023 statement that LVS will eventually enter Florida. Notes the Seminole Tribe as LVS's primary structural obstacle.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Florida Casino Gaming Expansion Initiative (2022)",
+      "url": "https://ballotpedia.org/Florida_Casino_Gaming_Expansion_Initiative_(2022)",
+      "outlet": "Ballotpedia",
+      "date": "2022-04-01",
+      "summary": "Full initiative text, donor lists, timeline of petition and legal challenges, and final outcome. Documents the 130-mile buffer rule, $250M investment minimum, and opposition structure.",
+      "approved_for_public": false
+    },
+    {
+      "title": "The Seminole Tribe of Florida is working to block rival gambling proposals",
+      "url": "https://news.wfsu.org/state-news/2021-11-02/the-seminole-tribe-of-florida-is-working-to-block-rival-gambling-proposals",
+      "outlet": "WFSU News (NPR Florida)",
+      "date": "2021-11-02",
+      "summary": "Profiles Seminole Tribe strategy to protect its 2021 DeSantis compact and block FVIC/LVS petition drive, including Standing Up for Florida's TV ad campaign.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Woman arrested after a dead voter's information was used for Florida petition drive",
+      "url": "https://www.tampabay.com/news/crime/2023/05/31/gambling-petition-casinos-dead-voters-arrest-pinellas/",
+      "outlet": "Tampa Bay Times",
+      "date": "2023-05-31",
+      "summary": "Criminal follow-up: an arrest in Pinellas County linked to the fraudulent LVS casino petition drive, over a year after the campaign ended.",
+      "approved_for_public": false
+    }
+  ],
+  "rabbit_holes": [
+    "Consultants named in Florida's 'ghost candidate' election fraud scandal (2020) also had roles in the LVS gaming petition drive — investigate the overlap between Republican dark-money operatives and the paid petition-gathering apparatus LVS used.",
+    "Amendment 3 (2018) was co-funded by the Seminole Tribe and Disney. Disney's continued role in shaping Florida gambling policy via constitutional barriers is underexplored — what is their ongoing relationship with the Seminole Tribe and anti-casino interests?",
+    "LVS has tried Florida multiple times: a downtown Miami resort proposal was killed by state lawmakers ca. 2012, the FVIC initiative failed in 2022, CEO Goldstein signaled return in 2023. What changed structurally in the 2024–2025 Seminole Tribe compact renewal process, and does it foreclose LVS's options entirely?",
+    "Miriam Adelson's purchase of the Dallas Mavericks NBA franchise (2023) and concurrent push for a Texas casino may indicate Florida has been deprioritized — but her $100M donation to Trump in 2024 raises the question of whether federal gaming policy or a Trump second term could reshape FL gaming law.",
+    "Standing Up for Florida accused LVS's signature gatherers of violating FL law by paying per-signature rather than per-hour. The Secretary of State referred fraud claims to AG Ashley Moody (a DeSantis ally). Did the AG's office pursue or kill these referrals, and what political calculus was involved?",
+    "The 2021 Seminole Compact was struck down by a federal court in November 2021 for violating the Indian Gaming Regulatory Act. The subsequent legal history of that compact and sports betting rights is directly entangled with LVS's window of opportunity — if the compact is in litigation, LVS's proposed 130-mile buffer rule could have been an opening.",
+    "LVS has no US casino operations (sold The Venetian Las Vegas in 2021) and derives all revenue from Macau and Singapore. The Florida play was a major US domestic re-entry bid — examine how Sheldon Adelson's death affected the urgency of US domestic casino reentry and whether Miriam Adelson has the same appetite."
+  ],
+  "open_questions": [
+    "Did the fraud in the petition drive originate from LVS-hired consultants, rogue subcontractors, or Seminole Tribe-paid saboteurs? The criminal investigation that led to at least one 2023 arrest has not fully resolved this question publicly.",
+    "LVS's 2022 failure cost $73M with zero assets acquired. What is their current internal timeline and trigger for a new Florida push — legislative, another ballot initiative, or waiting for Seminole Tribe compact renegotiation?",
+    "Which specific Florida legislators, if any, received donations traceable to Adelson-linked PACs during the 2021–2022 cycle in connection with the gaming expansion effort?",
+    "Did DeSantis ever directly communicate with Miriam Adelson or LVS lobbyists about the gaming compact or the FVIC initiative? The April 2023 Israel dinner between DeSantis and Miriam Adelson occurred after the campaign ended — was Florida gaming on the agenda?",
+    "What happened to the Florida Voters in Charge leaders and lobbyists who managed the campaign — were any sanctioned or prosecuted in connection with the petition fraud?",
+    "Florida currently has no commercial casinos outside Seminole properties. If the Seminole compact is ever voided or renegotiated, does LVS have a standing legislative strategy, or are they fully dependent on the ballot initiative path established by Amendment 3?"
+  ],
+  "approved_for_public": false,
+  "research_confidence": "high",
+  "last_updated": "2026-04-08"
+}

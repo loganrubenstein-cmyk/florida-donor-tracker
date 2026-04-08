@@ -1,0 +1,210 @@
+{
+  "id": "d_FLORIDA_POWER_LIGHT_COMPANY",
+  "canonical_name": "FLORIDA POWER & LIGHT COMPANY",
+  "type": "corporate",
+  "parent_entity": "NextEra Energy, Inc.",
+  "industry": "utilities",
+  "themes": ["utilities", "rate-cases", "PSC", "regulatory-capture", "dark-money", "ghost-candidates", "media-manipulation"],
+  "summary": "Florida Power & Light (FPL), a subsidiary of NextEra Energy, is the largest electric utility in Florida and the all-time #1 corporate donor in Florida state politics, with over $330 million in disclosed state campaign contributions. FPL uses a multi-layered influence operation — direct campaign contributions, dark-money 501(c)(4) pass-throughs, covert media control, and ghost-candidate schemes — to shape the appointments of its primary regulator (the Florida Public Service Commission) and secure rate increases that extract billions from 12 million captive customers. The company's parent NextEra files campaign contributions separately under its own name, obscuring the combined total, while both entities spend heavily at the state and federal level.",
+  "key_facts": [
+    {
+      "fact": "FPL gave more than $3 million to political consultants at Matrix LLC to promote 'ghost' spoiler candidates in three Florida Senate races in 2020, funneled through a dark-money nonprofit called Grow United. The scheme helped Republicans win two seats by razor-thin margins, including one by 32 votes.",
+      "source": "Energy and Policy Institute / Floodlight News",
+      "url": "https://energyandpolicy.org/records-show-senior-florida-power-light-execs-closely-connected-to-election-scandals/",
+      "date": "2021-12-01"
+    },
+    {
+      "fact": "DeSantis received $25,000 from dark-money nonprofit 'Broken Promises' secretly funded by FPL money in the 2018 election cycle, passed through a chain: FPL → Matrix → Broken Promises → Consumers for Energy Fairness → Friends of Ron DeSantis.",
+      "source": "Seattle Times / Miami Herald",
+      "url": "https://www.seattletimes.com/nation-world/nation-politics/desantis-got-25k-from-nonprofit-secretly-funded-florida-utility/",
+      "date": "2022-01-01"
+    },
+    {
+      "fact": "DeSantis appointed all five current PSC commissioners. In 2020 he replaced PSC Commissioner Donald Polmann with state Rep. Mike La Rosa, an FPL legislative ally who had helped kill a 2015 bill making it harder for utilities to ram rate increases through the PSC. Jason Garcia (Seeking Rents) reported DeSantis raised more than $3 million from FPL and FPL-funded dark-money front groups.",
+      "source": "Seeking Rents (Jason Garcia)",
+      "url": "https://jasongarcia.substack.com/p/how-ron-desantis-helped-florida-power",
+      "date": "2022-10-01"
+    },
+    {
+      "fact": "In November 2025, the DeSantis-appointed PSC approved a $6.9–$7 billion rate increase for FPL customers — the largest utility rate hike in U.S. history — over the objections of the Office of Public Counsel. Twelve million Floridians will pay an average of $14/month more starting January 2026.",
+      "source": "Florida Phoenix / Seeking Rents",
+      "url": "https://floridaphoenix.com/2025/11/20/psc-approves-contentious-7-billion-rate-hike-for-florida-power-light-customers/",
+      "date": "2025-11-20"
+    },
+    {
+      "fact": "FPL CEO Eric Silagy used a pseudonymous email account under the name 'Theodore Hayes' to communicate with Matrix operatives. Matrix also conducted 72-page surveillance dossiers on a Florida Times-Union columnist who had written critically of FPL, including a surreptitious photo of him and his wife walking their dog near their home.",
+      "source": "First Coast News / WUSF",
+      "url": "https://www.firstcoastnews.com/article/news/local/eric-silagy-fpls-chief-brawler-leaves-legacy-of-high-profits-but-low-trust/77-752da815-2f1b-42e0-8a02-d0eba6ee2217",
+      "date": "2023-01-25"
+    },
+    {
+      "fact": "FPL funded The Capitolist, a Tallahassee-based political news site presented as independent, through shell corporations tied to Matrix. Publisher Brian Burgess received $12,000/month from FPL-connected entities, and FPL vice presidents were given the opportunity to review unpublished story drafts.",
+      "source": "Floodlight News",
+      "url": "https://floodlightnews.org/firm-working-for-fpl-took-control-of-news-site-let-execs-influence-coverage-records-show/",
+      "date": "2022-07-01"
+    },
+    {
+      "fact": "FPL lobbyists personally drafted the text of an anti-net metering bill, delivered it to first-term state Sen. Jennifer Bradley's office in 2021, and NextEra then donated $10,000 to Bradley's political committee two days later. The bill passed both chambers but was ultimately vetoed by DeSantis in April 2022.",
+      "source": "Energy and Policy Institute",
+      "url": "https://energyandpolicy.org/strings-attached-how-utilities-use-charitable-giving-to-influence-politics-increase-investor-profits-nextera-energy/",
+      "date": "2022-01-21"
+    },
+    {
+      "fact": "A Tampa Bay Times investigation found that at least 49 individuals who testified in favor of FPL's rate hike request had undisclosed financial ties to FPL, including charitable donations or contracts.",
+      "source": "Tampa Bay Times",
+      "url": "https://www.tampabay.com/news/business/2025/09/03/fpl-florida-power-light-nextera-charity-rate-bill-increase/",
+      "date": "2025-09-03"
+    },
+    {
+      "fact": "NextEra Energy spent $7,992,500 on federal lobbying in 2024 and $7,570,000 in 2022, according to Senate filings tracked by OpenSecrets — making it one of the largest utility federal lobbyists in the country.",
+      "source": "OpenSecrets",
+      "url": "https://www.opensecrets.org/orgs/nextera-energy/lobbying?id=D000000321",
+      "date": "2025-01-01"
+    }
+  ],
+  "notable_connections": [
+    {
+      "entity_id": "p_RON_DESANTIS",
+      "entity_name": "Ron DeSantis",
+      "relationship": "FPL and its dark-money network donated more than $3 million to DeSantis over his political career; DeSantis appointed all five PSC commissioners who approved the largest rate hike in U.S. history",
+      "amount_approx": 3000000,
+      "notes": "Includes direct contributions plus indirect giving through front groups Broken Promises, Consumers for Energy Fairness, and other 501(c)(4) vehicles funded by Matrix-connected entities"
+    },
+    {
+      "entity_id": "c_4700",
+      "entity_name": "Republican Party of Florida",
+      "relationship": "Largest single recipient of FPL/NextEra direct state campaign contributions",
+      "amount_approx": 0,
+      "notes": "Majority of FPL disclosed contributions historically directed to FL GOP and GOP-aligned political committees"
+    },
+    {
+      "entity_id": "psc_florida",
+      "entity_name": "Florida Public Service Commission",
+      "relationship": "Primary regulator of FPL; all five current commissioners appointed by DeSantis; approved $6.9B rate hike in November 2025",
+      "amount_approx": 0,
+      "notes": "Governor appoints all five PSC members from a list submitted by a nominating council; PSC is widely described as captured by utilities it regulates"
+    },
+    {
+      "entity_id": "matrix_llc",
+      "entity_name": "Matrix LLC",
+      "relationship": "Primary political operations contractor for FPL; orchestrated ghost-candidate scheme, journalist surveillance, and Capitolist media operation",
+      "amount_approx": 3000000,
+      "notes": "CEO Jeff Pitts and FPL CEO Silagy communicated via Silagy's 'Theodore Hayes' alias email; Silagy retired January 2023 amid scandal"
+    },
+    {
+      "entity_id": "grow_united",
+      "entity_name": "Grow United, Inc.",
+      "relationship": "501(c)(4) dark-money nonprofit apparently controlled by Matrix consultants; received $3M+ from FPL to fund ghost-candidate spoiler scheme in 2020 FL Senate races",
+      "amount_approx": 3000000,
+      "notes": "FEC deadlocked in 2024 on complaint that FPL used this conduit to make illegal campaign contributions; shareholder lawsuit also names this entity"
+    },
+    {
+      "entity_id": "p_WILTON_SIMPSON",
+      "entity_name": "Wilton Simpson",
+      "relationship": "FPL ally in legislature; personally sponsored utility-friendly legislation as Senate President, then received hundreds of thousands in FPL contributions for Agriculture Commissioner run",
+      "amount_approx": 0,
+      "notes": "Described in Seeking Rents reporting as one of FPL's most important legislative allies during 2021-2022 rate increase push"
+    }
+  ],
+  "articles": [
+    {
+      "title": "How Ron DeSantis helped Florida Power & Light raise electricity rates by $5 billion",
+      "url": "https://jasongarcia.substack.com/p/how-ron-desantis-helped-florida-power",
+      "outlet": "Seeking Rents (Jason Garcia)",
+      "date": "2022-10-01",
+      "summary": "Documents how DeSantis personally shaped PSC appointments to favor FPL and received over $3 million from FPL and its dark-money network, enabling a massive rate increase.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Florida just approved the largest electric rate increase in history. Here's how it happened.",
+      "url": "https://jasongarcia.substack.com/p/florida-just-approved-the-largest",
+      "outlet": "Seeking Rents (Jason Garcia)",
+      "date": "2025-11-20",
+      "summary": "Explains how FPL's $6.9 billion rate hike — largest in U.S. utility history — was approved by DeSantis-appointed PSC commissioners, sidelining the public's consumer advocate.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Amid Connections to Ongoing Election Scandals, NextEra Pours Millions into Florida's 2022 Election Cycle",
+      "url": "https://energyandpolicy.org/nextera-pours-millions-into-floridas-2022-election-cycle/",
+      "outlet": "Energy and Policy Institute",
+      "date": "2022-09-01",
+      "summary": "Tracks nearly $6 million in NextEra/FPL state-level contributions in the 2022 cycle, contextualized against the ongoing ghost-candidate scandal and FPL's $1.3B rate increase request.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Firm working for FPL took control of news site, let execs influence coverage, records show",
+      "url": "https://floodlightnews.org/firm-working-for-fpl-took-control-of-news-site-let-execs-influence-coverage-records-show/",
+      "outlet": "Floodlight News",
+      "date": "2022-07-19",
+      "summary": "Leaked Matrix documents reveal FPL secretly funded and editorially controlled The Capitolist, a Tallahassee political news outlet, paying its publisher $12,000/month through shell companies.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Records Show Senior Florida Power & Light Execs Closely Connected to Election Scandals",
+      "url": "https://energyandpolicy.org/records-show-senior-florida-power-light-execs-closely-connected-to-election-scandals/",
+      "outlet": "Energy and Policy Institute",
+      "date": "2021-12-06",
+      "summary": "Internal records connect FPL CEO Eric Silagy and VP Daniel Martell directly to the Matrix operatives who ran the ghost-candidate scheme in three 2020 Florida Senate races.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Dozens backed FPL's $10B rate hike. But many get money from the utility.",
+      "url": "https://www.tampabay.com/news/business/2025/09/03/fpl-florida-power-light-nextera-charity-rate-bill-increase/",
+      "outlet": "Tampa Bay Times",
+      "date": "2025-09-03",
+      "summary": "Investigates how at least 49 witnesses who testified in support of FPL's rate hike before the PSC had undisclosed financial relationships with FPL, including grants and contracts.",
+      "approved_for_public": false
+    },
+    {
+      "title": "FPL parent company did internal investigation in response to dark money controversy",
+      "url": "https://www.tampabay.com/news/florida-politics/2022/01/27/fpl-parent-company-investigates-after-dark-money-controversy/",
+      "outlet": "Tampa Bay Times",
+      "date": "2022-01-27",
+      "summary": "Reports that NextEra Energy launched an internal investigation after its subsidiary FPL was linked to ghost-candidate schemes and dark-money political operations through Matrix LLC.",
+      "approved_for_public": false
+    },
+    {
+      "title": "FEC deadlocks on allegations that FPL broke the law by using Matrix conduits to hide political contributions to 'ghost candidates'",
+      "url": "https://www.floridabulldog.org/2024/03/fec-deadlocks-allegations-fpl-broke-law-conduits-hide-to-ghost-candidates/",
+      "outlet": "Florida Bulldog",
+      "date": "2024-03-01",
+      "summary": "The FEC split on partisan lines and failed to act on a complaint that FPL illegally used Matrix-controlled nonprofits to funnel dark money into the 2020 ghost-candidate operation.",
+      "approved_for_public": false
+    },
+    {
+      "title": "This Florida 'ghost candidates' scandal puts the entire utility sector on trial",
+      "url": "https://floodlightnews.org/florida-ghost-candidates-scandal-puts-the-entire-utility-sector-on-trial/",
+      "outlet": "Floodlight News",
+      "date": "2022-07-01",
+      "summary": "Broad investigation of how the 2020 ghost-candidate scheme was engineered, connecting FPL's political spending to deliberate election interference in three state Senate races.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Resurrected lawsuit puts FPL's past controversies back in the spotlight",
+      "url": "https://floodlightnews.org/resurrected-lawsuit-puts-fpls-past-controversies-back-in-the-spotlight/",
+      "outlet": "Floodlight News",
+      "date": "2025-11-28",
+      "summary": "The 11th Circuit revived a shareholder lawsuit against NextEra in late 2025, alleging the company misled investors about its role in the ghost-candidate scheme; a settlement is expected by summer 2026.",
+      "approved_for_public": false
+    }
+  ],
+  "rabbit_holes": [
+    "The dual-filing structure: FPL files under 'Florida Power & Light Company' AND parent NextEra Energy files separately — total combined FL state giving may be $342M+. Is this an intentional strategy to obscure scale, or a mechanical artifact of how each entity has separate PAC registrations? Compare with how other utility holding companies file.",
+    "The PSC nominating council pipeline: Who serves on the nominating council that generates the governor's appointment list for PSC commissioners? Are any nominating council members affiliated with utilities or utility-funded organizations? This is a pre-selection chokepoint before the governor even acts.",
+    "Matrix LLC's full client list across the Southeast: Alabama Power is also reported to have paid Matrix millions; this appears to be a utility-industry-wide dark-money operation. How many regulated monopoly utilities used Matrix, and do the tactics — ghost candidates, journalist surveillance, fake news sites — appear elsewhere?",
+    "The NextEra Foundation charitable giving strategy: IRS 990s show nearly $2M to United Way chapters in FPL service territory from 2013-2017, with FPL CEO as a regular speaker at United Way events. The charitable giving correlates with PSC rate case cycles — map foundation grants against rate case timelines to see if giving spikes before filings.",
+    "The Office of Public Counsel was excluded from the 2025 $6.9B rate settlement. Who were the actual parties that signed: Walmart, RaceTrac, Wawa, Florida Retail Federation. Why did large commercial customers agree to a deal that locks in residential rate increases through 2029? What did they receive in return?",
+    "FPL's attempt to acquire Jacksonville Electric Authority (JEA): NextEra's 'inside track' with the Curry administration in Jacksonville and murky spending/lobbying around the failed JEA acquisition bid. How much did FPL spend on this effort and what political favors were involved?"
+  ],
+  "open_questions": [
+    "What is the combined total of FPL + NextEra state-level campaign contributions when both filers are aggregated? Our database shows $330M (FPL) + $11.9M (NextEra) = ~$342M — but is there additional giving under subsidiaries like Florida City Gas or NextEra Energy Resources?",
+    "Who specifically are the five current DeSantis-appointed PSC commissioners, when were they appointed, and what were their prior professional affiliations? Have any previously worked for or with FPL, NextEra, or related entities?",
+    "Has Eric Silagy (retired FPL CEO, January 2023) taken any role at NextEra-affiliated organizations, lobbying firms, or political committees since departing?",
+    "The shareholder lawsuit settlement expected by summer 2026 — what is NextEra expected to pay, and does the settlement include any admissions of liability or behavioral changes regarding political spending disclosure?",
+    "FPL pocketed ~$1 billion in corporate tax savings from the 2017 Tax Cuts and Jobs Act but did not pass savings to customers — then used the higher rate base to justify future rate increases. Has any regulatory body formally challenged this accounting treatment?",
+    "Does NextEra use any federal 527 organizations or SuperPACs in addition to its disclosed state contributions and FEC-registered PAC? The CREW FEC complaint on Grow United suggests federal conduits exist — how much flows through them?"
+  ],
+  "approved_for_public": false,
+  "research_confidence": "high",
+  "last_updated": "2026-04-08"
+}

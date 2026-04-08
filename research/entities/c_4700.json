@@ -1,0 +1,173 @@
+{
+  "id": "c_4700",
+  "canonical_name": "REPUBLICAN PARTY OF FLORIDA",
+  "type": "committee",
+  "parent_entity": null,
+  "industry": "political-party",
+  "themes": ["republican-machine", "desantis-network", "corporate-influence", "utility-money", "dark-money"],
+  "summary": "The Republican Party of Florida (RPOF), registered as committee #4700 with the Florida Division of Elections, is the dominant financial and organizational hub of Florida Republican politics. With $930+ million in total receipts in our dataset, it functions as the central pass-through node for corporate political money flowing from utility companies, insurance conglomerates, real estate developers, and lobbyist-connected PACs into legislative races, constitutional amendment fights, and statewide candidates. RPOF received massive contributions from NextEra/FPL ($2.2M+), Duke Energy ($4M+), the Republican Governors Association, and the DeSantis donor network. In turn it distributes funds to House and Senate candidate committees, allied outside groups, and party infrastructure — enabling it to maintain supermajorities in both chambers of the Florida Legislature. Under chair Christian Ziegler (2023–2024, later embroiled in personal scandal) and then Evan Power, RPOF coordinated closely with the DeSantis operation. Disney — historically a major RPOF donor ($125K to RPOF in early 2022 alone) — paused donations after the Reedy Creek fight but signaled willingness to resume after the 2023 settlement. The party's interlocking relationship with Ballard Partners (Brian Ballard chairs major donor events and is considered its de facto super-lobbyist) makes it both a fundraising vehicle and a legislative-access marketplace for Florida's most powerful industries.",
+  "key_facts": [
+    {
+      "fact": "RPOF raised $39.55 million in the 2021–2022 federal election cycle alone, with individual donors accounting for 14,348 large ($200+) contributions. Combined with state-level receipts, it is the central redistribution hub for Florida Republican money.",
+      "source": "OpenSecrets",
+      "url": "https://www.opensecrets.org/political-action-committees-pacs/republican-party-of-florida/C00099259/summary/2022",
+      "date": "2022-12-31"
+    },
+    {
+      "fact": "NextEra Energy and its subsidiaries (FPL, Florida City Gas) poured nearly $6 million into Florida state-level campaign funds and political committees in the 2022 cycle, with the majority going to RPOF, GOP committees, and candidates. Duke Energy gave $4 million to the Florida GOP since 2019.",
+      "source": "Energy and Policy Institute",
+      "url": "https://energyandpolicy.org/nextera-pours-millions-into-floridas-2022-election-cycle/",
+      "date": "2022-11-01"
+    },
+    {
+      "fact": "Disney gave $125,000 to RPOF and $65,000 to the Florida Republican Senatorial Campaign Committee in early 2022 — just weeks before CEO Bob Chapek publicly opposed the 'Don't Say Gay' bill, after which DeSantis dissolved Disney's Reedy Creek special district. Disney then paused political donations statewide.",
+      "source": "Florida Politics",
+      "url": "https://floridapolitics.com/archives/543429-next-wave-disney-donations-republicans/",
+      "date": "2022-05-01"
+    },
+    {
+      "fact": "Brian Ballard of Ballard Partners — Florida's most powerful lobbyist, with 334 federal clients in 2025 — has been selected by three successive Florida governors including DeSantis to co-chair their inaugurations. The firm has lobbied bills through the Legislature that DeSantis subsequently signed into law, while representing some of RPOF's largest corporate donors.",
+      "source": "Tampa Bay Times",
+      "url": "https://www.tampabay.com/news/politics/stateroundup/how-florida-lobbyist-brian-ballard-is-turning-close-ties-to-trump-into-big/2326662/",
+      "date": "2017-12-01"
+    },
+    {
+      "fact": "Republicans hold supermajorities in both chambers of the Florida Legislature — a 20-seat advantage in the U.S. House delegation, both U.S. Senate seats, the governorship, and all other statewide offices — with RPOF's financial infrastructure central to achieving and maintaining those margins.",
+      "source": "Wikipedia / Ballotpedia",
+      "url": "https://en.wikipedia.org/wiki/Republican_Party_of_Florida",
+      "date": "2024-11-05"
+    },
+    {
+      "fact": "The Florida Chamber of Commerce's dark-money arm, Secure Florida's Future (chaired by Chamber CEO Mark Wilson), spent $7M+ in last-minute 2022 contributions directed at Florida races — functioning as a dark-money amplifier for RPOF-aligned interests that allowed corporations to influence elections outside disclosed contribution limits.",
+      "source": "Seeking Rents (Jason Garcia)",
+      "url": "https://jasongarcia.substack.com/p/a-corporate-dark-money-group-just",
+      "date": "2022-11-01"
+    },
+    {
+      "fact": "The Hope Florida scandal (2025) revealed that $10M from a Medicaid settlement with Centene was routed through Casey DeSantis's charity to dark-money nonprofits and then to 'Keep Florida Clean' PAC — chaired by then-DeSantis ally James Uthmeier — to defeat a marijuana legalization ballot measure. A grand jury convened and a criminal investigation opened by State Attorney Jack Campbell in May 2025.",
+      "source": "WUSF / Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Hope_Florida_scandal",
+      "date": "2025-04-28"
+    },
+    {
+      "fact": "Ballard Partners lobbied three pieces of legislation through the Florida Legislature on behalf of the Florida Coalition for Modern Laws — bills that made it easier for wealthy families to hide assets from public records and federal taxes — all three of which DeSantis signed into law.",
+      "source": "Seeking Rents (Jason Garcia)",
+      "url": "https://jasongarcia.substack.com/p/dark-lobbying-in-the-florida-legislature",
+      "date": "2023-05-01"
+    }
+  ],
+  "notable_connections": [
+    {
+      "entity_id": "d_FRIENDS_OF_RON_DESANTIS",
+      "entity_name": "Friends of Ron DeSantis",
+      "relationship": "Coordinated fundraising and donor-sharing. The Republican Governors Association gave $17.4M to Friends of Ron DeSantis while also being a top RPOF donor, creating a cross-pollinating donor network. Both entities shared corporate mega-donors including NextEra, Duke Energy, and the insurance industry.",
+      "amount_approx": 0,
+      "notes": "Exact RPOF → Friends of Ron DeSantis transfers available in FL state campaign finance database"
+    },
+    {
+      "entity_id": "d_FLORIDA_POWER_LIGHT_COMPANY",
+      "entity_name": "NextEra Energy / Florida Power & Light",
+      "relationship": "Major donor. NextEra and subsidiaries gave approximately $6M to RPOF and GOP committees in the 2022 cycle. DeSantis-appointed PSC commissioners subsequently approved a $7B FPL rate hike.",
+      "amount_approx": 6000000,
+      "notes": "Duke Energy gave an additional $4M to Florida GOP since 2019"
+    },
+    {
+      "entity_id": "disney_pac",
+      "entity_name": "Walt Disney Company / Disney PAC",
+      "relationship": "Historical major donor that paused giving after DeSantis dissolved Reedy Creek in retaliation for Disney's opposition to the 'Don't Say Gay' bill. Disney had given $125K to RPOF just weeks before the conflict erupted.",
+      "amount_approx": 125000,
+      "notes": "Disney's long-term giving history to RPOF predates DeSantis; the 2022 pause was a break from a multi-decade pattern. RPOF chair Evan Power signaled willingness to resume the relationship after the 2023 settlement."
+    },
+    {
+      "entity_id": "ballard_partners",
+      "entity_name": "Ballard Partners",
+      "relationship": "Brian Ballard is the de facto super-lobbyist of the RPOF ecosystem — co-chairing DeSantis and prior governors' inaugurations, serving as Trump's chief FL fundraiser, and lobbying legislation through the DeSantis-controlled legislature on behalf of corporate clients.",
+      "amount_approx": 0,
+      "notes": "Ballard's firm represented 334 federal clients in 2025; his influence is relational rather than solely transactional"
+    }
+  ],
+  "articles": [
+    {
+      "title": "Amid Connections to Ongoing Election Scandals, NextEra Pours Millions into Florida's 2022 Election Cycle",
+      "url": "https://energyandpolicy.org/nextera-pours-millions-into-floridas-2022-election-cycle/",
+      "outlet": "Energy and Policy Institute",
+      "date": "2022-11-01",
+      "summary": "Documents NextEra/FPL's nearly $6M in Florida political spending in the 2022 cycle, with the majority flowing to RPOF and GOP-aligned committees. Connects the utility's giving to favorable regulatory treatment and DeSantis PSC appointments.",
+      "approved_for_public": false
+    },
+    {
+      "title": "How Florida lobbyist Brian Ballard is turning close ties to Trump into big business",
+      "url": "https://www.tampabay.com/news/politics/stateroundup/how-florida-lobbyist-brian-ballard-is-turning-close-ties-to-trump-into-big/2326662/",
+      "outlet": "Tampa Bay Times",
+      "date": "2017-12-01",
+      "summary": "Profile of Ballard Partners and Brian Ballard's role as Florida's most connected GOP lobbyist — Trump's Florida fundraiser, DeSantis inauguration co-chair, and access broker for dozens of major corporate clients.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Dark lobbying in the Florida Legislature",
+      "url": "https://jasongarcia.substack.com/p/dark-lobbying-in-the-florida-legislature",
+      "outlet": "Seeking Rents (Jason Garcia)",
+      "date": "2023-05-01",
+      "summary": "Investigates Ballard Partners lobbying legislation through the Florida Legislature on behalf of the Florida Coalition for Modern Laws — a corporate dark-money group — to help wealthy families shield assets from disclosure. All three bills DeSantis signed.",
+      "approved_for_public": false
+    },
+    {
+      "title": "A corporate dark money group just spent millions to help Ron DeSantis",
+      "url": "https://jasongarcia.substack.com/p/a-corporate-dark-money-group-just",
+      "outlet": "Seeking Rents (Jason Garcia)",
+      "date": "2022-11-01",
+      "summary": "Exposes the Florida Chamber's Secure Florida's Future 501(c)(4) as a dark-money pass-through that spent $7M+ in last-minute 2022 contributions — coordinating with RPOF-aligned interests outside visible campaign finance disclosures.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Hope Florida scandal",
+      "url": "https://en.wikipedia.org/wiki/Hope_Florida_scandal",
+      "outlet": "Wikipedia (synthesizing Tampa Bay Times / Miami Herald / WUSF reporting)",
+      "date": "2025-04-28",
+      "summary": "Documents the routing of $10M in Medicaid settlement money through Casey DeSantis's charity and dark-money nonprofits to 'Keep Florida Clean' PAC — chaired by future AG Uthmeier — to defeat marijuana legalization. Triggered a criminal investigation.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Next wave of Disney campaign donations could signal whether the Mouse is mad at Florida Republicans",
+      "url": "https://floridapolitics.com/archives/543429-next-wave-disney-donations-republicans/",
+      "outlet": "Florida Politics",
+      "date": "2022-05-01",
+      "summary": "Analyzes Disney's $190K in pre-session Republican donations (including $125K to RPOF) just weeks before the Reedy Creek fight, and what its donation pause signaled about the corporate-party relationship.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Florida just approved the largest electric rate increase in history. Here's how it happened.",
+      "url": "https://jasongarcia.substack.com/p/florida-just-approved-the-largest",
+      "outlet": "Seeking Rents (Jason Garcia)",
+      "date": "2025-11-01",
+      "summary": "Traces the DeSantis PSC appointment process and the $7B FPL rate hike approval, situating it within the broader pattern of utility company donations to RPOF and the DeSantis network.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Florida GOP tries to crack down after Ron DeSantis' state staff helped raise political cash",
+      "url": "https://www.nbcnews.com/politics/elections/florida-gop-crack-ron-desantis-political-cash-rcna201115",
+      "outlet": "NBC News",
+      "date": "2025-01-01",
+      "summary": "Reports that DeSantis's taxpayer-funded government staff solicited campaign contributions during work hours — prompting a legislative backlash and revealing the blurred line between the governor's office and RPOF's fundraising apparatus.",
+      "approved_for_public": false
+    }
+  ],
+  "rabbit_holes": [
+    "RPOF as a legislative candidate ATM: Florida law allows the state party to give $50K per election to state Senate candidates and $50K to state House candidates. Mapping which candidates received RPOF money in 2020, 2022, and 2024 — and which then voted for DeSantis priority legislation — would quantify the party's control of the Legislature.",
+    "Utility corridor: NextEra, Duke Energy, and Tampa Electric collectively gave tens of millions to RPOF and GOP-aligned committees since 2019. Cross-referencing those donations with PSC rate case outcomes, RPOF-connected commissioners, and legislative utility-friendly bills could produce a comprehensive utility-influence map.",
+    "The Ballard Partners client → RPOF donor → favorable legislation pipeline: Ballard represents 334 federal clients and an even larger Florida state roster. Identifying which clients also donated to RPOF and then received favorable legislation or regulatory outcomes would map the full access-money-policy circuit.",
+    "RPOF and the constitutional amendment wars: Florida allows citizen-initiated constitutional amendments, which corporate interests and RPOF have repeatedly worked to defeat (marijuana, minimum wage, solar, etc.). Tracing RPOF's spending on amendment opposition — including through front groups and dark-money vehicles — is an underreported story.",
+    "Post-Hope Florida criminal fallout: As of late 2025, a grand jury had convened and State Attorney Jack Campbell had opened a criminal investigation into the Hope Florida money circuit. The outcome of that investigation could directly implicate RPOF-linked operatives including AG Uthmeier.",
+    "Christian Ziegler / RPOF chair scandal: Ziegler was RPOF chair in 2023 before a personal scandal forced his removal. His wife Bridget co-founded Moms for Liberty and was appointed by DeSantis to the reconstructed Disney/Reedy Creek board. The intertwining of party leadership and DeSantis personal networks warrants deeper examination."
+  ],
+  "open_questions": [
+    "What is the total dollar amount RPOF transferred to individual state legislative candidate committees in the 2022 cycle, and which seats were targeted?",
+    "How much did RPOF receive directly from Friends of Ron DeSantis or Empower Parents PAC over the full DeSantis governorship, and what was it spent on?",
+    "Did Disney resume donations to RPOF after the 2023 Reedy Creek settlement, and if so at what level compared to pre-fight giving?",
+    "What is the full accounting of RPOF expenditures on constitutional amendment opposition campaigns — particularly on marijuana legalization (2024), solar energy, and minimum wage — and which dark-money vehicles were used?",
+    "How does RPOF coordinate with the Republican Governors Association on Florida spending, and did the RGA's $17.4M donation to Friends of Ron DeSantis in 2022 flow back through RPOF in any form?"
+  ],
+  "approved_for_public": false,
+  "research_confidence": "high",
+  "last_updated": "2026-04-08"
+}

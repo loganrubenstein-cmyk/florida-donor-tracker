@@ -1,0 +1,181 @@
+{
+  "id": "d_TRULIEVE_INC_",
+  "canonical_name": "TRULIEVE INC.",
+  "type": "corporate",
+  "parent_entity": null,
+  "industry": "cannabis",
+  "themes": ["cannabis", "ballot-initiative", "regulatory-capture", "monopoly-defense", "federal-lobbying"],
+  "summary": "Trulieve Inc. is Florida's dominant medical marijuana operator — holding roughly 50% of the state's smokable flower market and 156+ in-state dispensaries — that spent approximately $150 million to fund Smart & Safe Florida, the committee behind Amendment 3, a 2024 ballot initiative to legalize recreational marijuana. Amendment 3 received 56% of the vote on November 5, 2024, falling short of Florida's 60% constitutional supermajority threshold, making it the most expensive failed drug legalization campaign in U.S. history. After that defeat, Trulieve pivoted to federal lobbying, donating $750,000 to Trump's inaugural committee, and CEO Kim Rivers played a key role in the Trump administration's December 2025 decision to reschedule marijuana to Schedule III.",
+  "key_facts": [
+    {
+      "fact": "Trulieve contributed approximately $141.9 million of the $149.7 million raised by Smart & Safe Florida — the political committee backing Amendment 3 — making it the most expensive marijuana legalization campaign in U.S. history.",
+      "source": "MJBizDaily",
+      "url": "https://mjbizdaily.com/trulieve-cannabis-spending-in-florida-adult-use-campaign-tops-140-million/",
+      "date": "2024-10-01"
+    },
+    {
+      "fact": "Amendment 3 received approximately 56% of the vote on November 5, 2024, falling short of the 60% supermajority required to amend the Florida Constitution — defeating recreational marijuana despite record spending.",
+      "source": "WUSF Public Media",
+      "url": "https://www.wusf.org/politics-issues/2024-11-05/florida-voters-reject-ballot-initiative-legalize-recreational-marijuana",
+      "date": "2024-11-05"
+    },
+    {
+      "fact": "Trulieve holds roughly 50% of Florida's smokable medical marijuana flower market — a dominance unmatched by any single cannabis operator in any other U.S. state — giving the company a powerful financial interest in shaping the regulatory environment.",
+      "source": "MJBizDaily",
+      "url": "https://mjbizdaily.com/floridas-medical-cannabis-industry-only-one-dominant-player/",
+      "date": "2024-01-01"
+    },
+    {
+      "fact": "Kim Rivers' then-husband John T. Burnette was convicted in 2021 on five federal public corruption charges including racketeering and extortion. FBI recordings captured Burnette bragging about working with a state legislator to embed 'little tweaks' in the 2014 medical marijuana licensing law to keep out Trulieve's competitors.",
+      "source": "MJBizDaily",
+      "url": "https://mjbizdaily.com/bribery-trial-husband-of-trulieve-ceo-bragged-about-medical-cannabis-influence/",
+      "date": "2021-07-24"
+    },
+    {
+      "fact": "Trulieve donated $750,000 to Donald Trump's inaugural committee in December 2024. CEO Kim Rivers leveraged personal access to Trump — including a 2024 meeting at Bedminster — to influence federal marijuana rescheduling policy, which led to Trump ordering cannabis rescheduled to Schedule III in December 2025.",
+      "source": "Tallahassee Reports",
+      "url": "https://tallahasseereports.com/2026/01/03/tallahassees-kim-rivers-had-major-influence-on-trumps-marijuana-decision/",
+      "date": "2026-01-03"
+    },
+    {
+      "fact": "Florida's DeSantis administration allegedly diverted more than $35 million in taxpayer funds — including $10 million from a Medicaid settlement routed through Casey DeSantis's Hope Florida Foundation — to dark money groups that funded the anti-Amendment 3 campaign. A state grand jury investigation is ongoing.",
+      "source": "Marijuana Moment",
+      "url": "https://www.marijuanamoment.net/members-of-congress-want-federal-investigation-into-use-of-florida-medicaid-funds-to-oppose-marijuana-legalization-by-group-tied-to-desantis/",
+      "date": "2025-01-01"
+    },
+    {
+      "fact": "Trulieve reported $1.2 billion in full-year 2024 revenue, with 95% from retail sales — demonstrating the core medical marijuana business generates substantial cash flow even as it spends aggressively on political campaigns.",
+      "source": "Cannabis Business Times",
+      "url": "https://www.cannabisbusinesstimes.com/business-issues-benchmarks/finance/news/15738530/trulieve-reports-12-billion-in-2024-revenue",
+      "date": "2025-02-27"
+    },
+    {
+      "fact": "Smart & Safe Florida's 2026 ballot campaign was killed in March 2026 when the Florida Supreme Court declined to restore approximately 71,000 invalidated petition signatures, leaving the campaign short of the 880,062 signatures required for ballot placement.",
+      "source": "Marijuana Moment",
+      "url": "https://www.marijuanamoment.net/florida-supreme-court-rejects-marijuana-campaigns-appeal-to-restore-legalization-ballot-signatures-effectively-ending-2026-push/",
+      "date": "2026-03-09"
+    }
+  ],
+  "notable_connections": [
+    {
+      "entity_id": "c_SMART_AND_SAFE_FLORIDA",
+      "entity_name": "Smart & Safe Florida",
+      "relationship": "Primary funder — Trulieve provided 94.8% of the committee's $149.7M total raised",
+      "amount_approx": 141900000,
+      "notes": "Political committee that ran the Amendment 3 campaign. Trulieve is widely described as the committee's de facto operator as well as its bankroller."
+    },
+    {
+      "entity_id": "p_RON_DESANTIS",
+      "entity_name": "Ron DeSantis",
+      "relationship": "Adversary — DeSantis actively campaigned against Amendment 3; his administration allegedly diverted state funds to the opposition campaign",
+      "amount_approx": 0,
+      "notes": "DeSantis called Amendment 3's defeat a 'major victory.' His administration is the subject of a state grand jury investigation over the Medicaid funds diversion."
+    },
+    {
+      "entity_id": "p_JOHN_BURNETTE",
+      "entity_name": "John T. Burnette",
+      "relationship": "Former husband of CEO Kim Rivers; convicted of federal public corruption charges tied to Tallahassee bribery scheme that benefited Trulieve's early licensing",
+      "amount_approx": 0,
+      "notes": "Convicted 2021 on racketeering, extortion, fraud. FBI tapes recorded him discussing how licensing rules were shaped to exclude competitors. Rivers and Trulieve were not charged."
+    },
+    {
+      "entity_id": "p_DONALD_TRUMP",
+      "entity_name": "Donald Trump",
+      "relationship": "Recipient of $750,000 inaugural donation; ordered marijuana rescheduled to Schedule III in December 2025 following Kim Rivers lobbying",
+      "amount_approx": 750000,
+      "notes": "Schedule III rescheduling eliminates the Section 280E tax burden — a major financial benefit to Trulieve worth tens of millions annually."
+    },
+    {
+      "entity_id": "p_HALSEY_BESHEARS",
+      "entity_name": "Halsey Beshears",
+      "relationship": "Former FL state legislator implicated in FBI recordings as having worked with Burnette to embed Trulieve-favorable language into Florida's 2014 medical marijuana licensing statute",
+      "amount_approx": 0,
+      "notes": "Beshears was not charged. Later became Secretary of the Florida Department of Business and Professional Regulation under DeSantis."
+    }
+  ],
+  "articles": [
+    {
+      "title": "Campaign to legalize marijuana in Florida is mostly bankrolled by one company",
+      "url": "https://www.wusf.org/politics-issues/2024-10-08/campaign-legalize-marijuana-florida-amendment-3-mostly-bankrolled-one-company-trulieve",
+      "outlet": "WUSF Public Media",
+      "date": "2024-10-08",
+      "summary": "Deep-dive on Trulieve's near-total funding of the Smart & Safe Florida committee and the business rationale behind the spending.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Florida Amendment 3, Marijuana Legalization Initiative (2024)",
+      "url": "https://ballotpedia.org/Florida_Amendment_3,_Marijuana_Legalization_Initiative_(2024)",
+      "outlet": "Ballotpedia",
+      "date": "2024-11-05",
+      "summary": "Comprehensive reference page covering amendment text, campaign finance totals, vote results (56%), and timeline.",
+      "approved_for_public": false
+    },
+    {
+      "title": "DeSantis promised to 'drain the swamp' in Florida. But his record on medical marijuana raises questions",
+      "url": "https://www.cnn.com/2023/12/19/politics/desantis-medical-marijuana-invs/index.html",
+      "outlet": "CNN Politics",
+      "date": "2023-12-19",
+      "summary": "Investigative piece linking DeSantis's political allies to the medical marijuana regulatory apparatus that shaped Trulieve's dominant market position.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Bribery trial: Husband of Trulieve CEO bragged about medical cannabis pull",
+      "url": "https://mjbizdaily.com/bribery-trial-husband-of-trulieve-ceo-bragged-about-medical-cannabis-influence/",
+      "outlet": "MJBizDaily",
+      "date": "2021-07-01",
+      "summary": "FBI recordings from the Burnette trial in which he describes manipulating the original Florida medical marijuana licensing statute to benefit Trulieve.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Tallahassee's Kim Rivers had Major Influence on Trump's Marijuana Decision",
+      "url": "https://tallahasseereports.com/2026/01/03/tallahassees-kim-rivers-had-major-influence-on-trumps-marijuana-decision/",
+      "outlet": "Tallahassee Reports",
+      "date": "2026-01-03",
+      "summary": "Details Kim Rivers's 18-month lobbying campaign culminating in Trump's December 2025 executive order rescheduling marijuana to Schedule III.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Florida Supreme Court Rejects Marijuana Campaign's Appeal To Restore Legalization Ballot Signatures, Effectively Ending 2026 Push",
+      "url": "https://www.marijuanamoment.net/florida-supreme-court-rejects-marijuana-campaigns-appeal-to-restore-legalization-ballot-signatures-effectively-ending-2026-push/",
+      "outlet": "Marijuana Moment",
+      "date": "2026-03-09",
+      "summary": "Florida Supreme Court refuses to restore ~71,000 invalidated petition signatures, ending Smart & Safe Florida's 2026 ballot effort.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Trulieve Applauds Trump Administration Decision To Reschedule Marijuana to Schedule III",
+      "url": "https://investors.trulieve.com/2025-12-18-Trulieve-Applauds-Trump-Administration-Decision-To-Reschedule-Marijuana-to-Schedule-III",
+      "outlet": "Trulieve Investor Relations",
+      "date": "2025-12-18",
+      "summary": "Official company statement celebrating federal rescheduling, which eliminates the Section 280E tax burden and dramatically improves Trulieve's financial position.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Florida's marijuana ballot measure keeps breaking fundraising records",
+      "url": "https://www.opensecrets.org/news/2024/06/floridas-marijuana-ballot-measure-keeps-breaking-fundraising-records/",
+      "outlet": "OpenSecrets",
+      "date": "2024-06-01",
+      "summary": "Tracks the escalating fundraising totals for the Amendment 3 campaign, contextualizing it within the history of ballot measure spending nationwide.",
+      "approved_for_public": false
+    }
+  ],
+  "rabbit_holes": [
+    "The Hope Florida / Medicaid funds diversion scandal — DeSantis's administration allegedly sent $10M in opioid settlement funds through Casey DeSantis's charity into dark money anti-Amendment 3 groups. A state grand jury is investigating. Direct collision between Trulieve's political spending and state government using public money to fight it.",
+    "John T. Burnette's federal corruption conviction and the 2014 medical marijuana licensing statute — FBI tapes show the licensing rules were engineered to lock out competitors and cement Trulieve's monopoly. Full extent of coordination between Rivers, Burnette, and legislators has never been fully mapped.",
+    "Section 280E tax relief from Schedule III rescheduling — cannabis companies cannot currently deduct ordinary business expenses under federal tax law, costing Trulieve tens of millions annually. The $750,000 Trump inaugural donation and subsequent rescheduling order raises a direct question: did political donations purchase a specific regulatory outcome worth far more than the donation itself?",
+    "Smart & Safe Florida 2026 signature invalidation — FL election officials invalidated 200,000+ signatures under disputed legal theories. Worth examining whether the legal standards applied to cannabis petition signatures were selectively enforced compared to other ballot initiative campaigns in the same cycle.",
+    "Trulieve's Canadian incorporation and CSE listing — incorporated in British Columbia, trades on the Canadian Securities Exchange because U.S. federal law bars cannabis companies from major U.S. exchanges. Creates different disclosure requirements and a distinct investor base. Who owns Trulieve and what are their political interests?",
+    "The ROI calculation — analysts projected Florida adult-use market at $6B annually. With ~50% market share already, Trulieve's $150M spend can be modeled as a capital allocation bet: spend $150M to unlock multi-billions in a market where you start with a structural advantage. The spend failed — but was the strategic logic sound, and is it being repeated at the federal level?"
+  ],
+  "open_questions": [
+    "Did Trulieve receive any direct or indirect regulatory benefit in exchange for the $750,000 Trump inaugural donation and the Schedule III rescheduling that followed?",
+    "What is the actual dollar value to Trulieve of Section 280E elimination following Schedule III rescheduling — what was the effective ROI of the Trump lobbying campaign?",
+    "To what extent was Kim Rivers personally involved in the 2014 licensing statute manipulation documented in FBI recordings? She was never charged, but the recordings implicate her directly.",
+    "Will the state grand jury investigation into the Medicaid funds diversion produce indictments, and could findings create legal openings to challenge the 2024 result or the signature invalidation process?",
+    "Is Trulieve preparing a third ballot initiative push, or has repeated failure caused the company to shift entirely to a federal/legislative strategy?",
+    "How did Florida's other medical marijuana licensees (Curaleaf, MÜV, Ayr, Surterra) respond to Trulieve's near-unilateral funding of Amendment 3 — did they free-ride on Trulieve's spending or did any actively oppose it?"
+  ],
+  "approved_for_public": false,
+  "research_confidence": "high",
+  "last_updated": "2026-04-08"
+}

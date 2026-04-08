@@ -1,0 +1,173 @@
+{
+  "id": "d_FRIENDS_OF_RON_DESANTIS",
+  "canonical_name": "FRIENDS OF RON DESANTIS",
+  "type": "committee",
+  "parent_entity": null,
+  "industry": "political-committee",
+  "themes": ["desantis-network", "republican-machine", "pay-to-play", "corporate-influence"],
+  "summary": "Friends of Ron DeSantis was the state-level political committee (PC) that served as the primary fundraising vehicle for Governor Ron DeSantis from 2018 through mid-2023. Operating under Florida's unlimited contribution rules for PCs, it shattered every gubernatorial fundraising record in U.S. history — raising approximately $176.8 million for the 2022 reelection cycle alone, out of a combined $217 million haul. The committee attracted billionaire donors, utility conglomerates, insurance companies, private equity firms, and state contractors, many of whom received favorable state policy or contracts in return. In May 2023 the committee was renamed 'Empower Parents PAC,' and on May 31, 2023 it transferred $82.5 million to Never Back Down, the pro-DeSantis presidential super PAC run by Jeff Roe's Axiom Strategies, in a legally contested move. When DeSantis dropped out of the 2024 presidential race in January 2024, the rump funds from Never Back Down (~$5.25 million) were transferred back to RON PAC (Restore Our Nation), the renamed federal committee. Investigative reporting by The Intercept, Jason Garcia's Seeking Rents, and OpenSecrets documented systematic pay-to-play patterns connecting the committee's largest donors to state contracts, utility rate increases, insurance deregulation, and favorable PSC appointments.",
+  "key_facts": [
+    {
+      "fact": "Friends of Ron DeSantis raised approximately $176.8 million for the 2022 reelection cycle — the most ever raised by a non-self-funded gubernatorial candidate in U.S. history. Combined with the official campaign account, total 2022 fundraising exceeded $217 million.",
+      "source": "OpenSecrets",
+      "url": "https://www.opensecrets.org/news/2022/09/florida-gov-ron-desantis-breaks-gubernatorial-fundraising-record/",
+      "date": "2022-09-01"
+    },
+    {
+      "fact": "On May 31, 2023, the committee (renamed Empower Parents PAC) transferred $82.5 million to the Never Back Down presidential super PAC. The Campaign Legal Center filed an FEC complaint calling the transfer potentially illegal. Florida state officials quietly changed campaign finance guidelines to enable the transfer.",
+      "source": "CNN Politics",
+      "url": "https://www.cnn.com/2023/06/13/politics/desantis-money-super-pac-transfer",
+      "date": "2023-06-13"
+    },
+    {
+      "fact": "18 companies that contributed to Friends of Ron DeSantis received a combined $1.68 billion in Florida state contracts during DeSantis's tenure. One contractor, Herzog Contracting, gave $350,000 and received $32.7 million in FDOT contracts — having received only $115,000 under Rick Scott without donating.",
+      "source": "The Intercept",
+      "url": "https://theintercept.com/2022/09/27/florida-ron-desantis-campaign-fund/",
+      "date": "2022-09-27"
+    },
+    {
+      "fact": "The committee received at least $3.9 million from the insurance industry. DeSantis simultaneously signed three pieces of insurance-friendly legislation in roughly one year, while average Florida homeowner premiums rose from $1,988 to $4,231 — nearly triple the national average — and $2 billion in taxpayer bailouts went to insurers.",
+      "source": "The Intercept",
+      "url": "https://theintercept.com/2023/05/03/ron-desantis-insurance-industry/",
+      "date": "2023-05-03"
+    },
+    {
+      "fact": "NextEra Energy (parent of Florida Power & Light) gave more than $2.2 million to DeSantis and the Florida GOP. DeSantis appointed all five PSC commissioners who later approved a $7 billion FPL rate hike — the largest utility rate increase in U.S. history — benefiting FPL after its political giving.",
+      "source": "Seeking Rents (Jason Garcia)",
+      "url": "https://jasongarcia.substack.com/p/how-ron-desantis-helped-florida-power",
+      "date": "2023-03-01"
+    },
+    {
+      "fact": "The Florida Chamber of Commerce's dark-money vehicle, Secure Florida's Future, spent more than $7 million in last-minute campaign contributions to help DeSantis and GOP candidates in 2022 — the most the group had ever spent on direct political donations.",
+      "source": "Seeking Rents (Jason Garcia)",
+      "url": "https://jasongarcia.substack.com/p/a-corporate-dark-money-group-just",
+      "date": "2022-11-01"
+    },
+    {
+      "fact": "The largest single individual donor to Friends of Ron DeSantis was space entrepreneur Robert Bigelow, who gave $10 million — the largest single individual contribution in Florida history. Citadel CEO Ken Griffin gave $5 million; at least 42 billionaires backed the 2022 reelection campaign.",
+      "source": "OpenSecrets",
+      "url": "https://www.opensecrets.org/news/2022/03/florida-gov-ron-desantis-breaks-funding-record-in-2021-citadel-ceo-contributes-millions/",
+      "date": "2022-03-01"
+    },
+    {
+      "fact": "After DeSantis dropped out of the presidential race in January 2024, Never Back Down — which had burned through $130 million of its $145 million raised — transferred its ~$5.25 million in leftover cash to RON PAC (Restore Our Nation), DeSantis's renamed federal committee. DeSantis then told donors he planned to fundraise for Trump.",
+      "source": "Florida Politics",
+      "url": "https://floridapolitics.com/archives/701953-super-pac-that-backed-ron-desantis-for-president-transfers-leftover-cash-to-his-renamed-committee/",
+      "date": "2024-03-01"
+    }
+  ],
+  "notable_connections": [
+    {
+      "entity_id": "c_4700",
+      "entity_name": "Republican Party of Florida",
+      "relationship": "Major donor and coordinated funder. Friends of Ron DeSantis funneled large sums to RPOF for party-building and legislative candidate support, and both entities shared major corporate donors (NextEra, Duke Energy, insurance industry). The RGA — itself a top RPOF donor — gave $17.4 million to Friends of Ron DeSantis in 2022.",
+      "amount_approx": 0,
+      "notes": "Exact transfer totals from FL state records; RGA cross-gave to both entities"
+    },
+    {
+      "entity_id": "never_back_down_pac",
+      "entity_name": "Never Back Down",
+      "relationship": "Received $82.5 million transfer from Empower Parents PAC (renamed Friends of Ron DeSantis) in May 2023 — a transfer the Campaign Legal Center argued violated federal campaign finance law",
+      "amount_approx": 82500000,
+      "notes": "FEC complaint filed; FL officials changed state guidelines to enable transfer; Never Back Down spent $130M before DeSantis dropped out"
+    },
+    {
+      "entity_id": "d_FLORIDA_POWER_LIGHT_COMPANY",
+      "entity_name": "Florida Power & Light / NextEra Energy",
+      "relationship": "Major donor. NextEra gave $2.2M+ to DeSantis and the Florida GOP. DeSantis's PSC appointees approved the largest rate hike in U.S. history for FPL.",
+      "amount_approx": 2200000,
+      "notes": "All five PSC commissioners were DeSantis appointees"
+    },
+    {
+      "entity_id": "florida_chamber_secure_florida",
+      "entity_name": "Florida Chamber / Secure Florida's Future",
+      "relationship": "Dark-money ally. Secure Florida's Future spent $7M+ in last-minute 2022 contributions to support DeSantis and GOP candidates, functioning as an off-books amplifier of the DeSantis donor network.",
+      "amount_approx": 7000000,
+      "notes": "Chaired by Florida Chamber CEO Mark Wilson; also implicated in Hope Florida money-routing"
+    }
+  ],
+  "articles": [
+    {
+      "title": "Florida Contracts Go to Companies That Flooded Ron DeSantis Campaign Fund",
+      "url": "https://theintercept.com/2022/09/27/florida-ron-desantis-campaign-fund/",
+      "outlet": "The Intercept",
+      "date": "2022-09-27",
+      "summary": "Investigative piece documenting 18 companies that donated to Friends of Ron DeSantis and received a combined $1.68 billion in state contracts. Identifies Herzog Contracting as a marquee example — $350K in donations, $32.7M in FDOT contracts.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Ron DeSantis Has Raked in $3.9 Million From Insurance Industry, New Report Reveals",
+      "url": "https://theintercept.com/2023/05/03/ron-desantis-insurance-industry/",
+      "outlet": "The Intercept",
+      "date": "2023-05-03",
+      "summary": "Documents $3.9M in insurance industry contributions to DeSantis/Friends of Ron DeSantis, mapping the donations against three insurance-friendly bills DeSantis signed and the doubling of Florida homeowner premium averages.",
+      "approved_for_public": false
+    },
+    {
+      "title": "DeSantis' former state political committee transfers $82.5 million to allied super PAC",
+      "url": "https://www.cnn.com/2023/06/13/politics/desantis-money-super-pac-transfer",
+      "outlet": "CNN Politics",
+      "date": "2023-06-13",
+      "summary": "Reports the $82.5M transfer from Empower Parents PAC (formerly Friends of Ron DeSantis) to Never Back Down, the mechanism used, and the CLC's FEC complaint calling it potentially illegal.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Following record fundraising cycle, Florida Gov. Ron DeSantis woos donors and lobbyists at inauguration events",
+      "url": "https://www.opensecrets.org/news/2023/01/following-record-fundraising-cycle-florida-gov-ron-desantis-woos-donors-and-lobbyists-at-inauguration-events/",
+      "outlet": "OpenSecrets",
+      "date": "2023-01-01",
+      "summary": "Profiles the January 2023 inauguration donor circuit, documenting the cross-pollination of Friends of Ron DeSantis billionaire donors, lobbyists, and state contractors at private events.",
+      "approved_for_public": false
+    },
+    {
+      "title": "How Ron DeSantis helped Florida Power & Light raise electricity rates by $5 billion",
+      "url": "https://jasongarcia.substack.com/p/how-ron-desantis-helped-florida-power",
+      "outlet": "Seeking Rents (Jason Garcia)",
+      "date": "2023-03-01",
+      "summary": "Traces the link between FPL/NextEra's $3M+ in donations to DeSantis and dark-money groups, DeSantis's PSC appointments, and the commission's approval of a $5 billion rate hike for FPL customers.",
+      "approved_for_public": false
+    },
+    {
+      "title": "A corporate dark money group just spent millions to help Ron DeSantis",
+      "url": "https://jasongarcia.substack.com/p/a-corporate-dark-money-group-just",
+      "outlet": "Seeking Rents (Jason Garcia)",
+      "date": "2022-11-01",
+      "summary": "Exposes the Florida Chamber's Secure Florida's Future 501(c)(4) spending $7M+ in last-minute 2022 contributions to boost DeSantis and Republicans — the most it had ever spent on direct political donations.",
+      "approved_for_public": false
+    },
+    {
+      "title": "Florida donors with state business fueled end of DeSantis presidential run",
+      "url": "https://www.washingtonpost.com/politics/2024/03/27/desantis-donors-florida-presidential-campaign/",
+      "outlet": "The Washington Post",
+      "date": "2024-03-27",
+      "summary": "Reports that as national mega-donors abandoned DeSantis's faltering 2024 presidential bid, his campaign increasingly turned to Florida-based donors with ongoing state business relationships — donors over whom DeSantis still wielded influence as governor.",
+      "approved_for_public": false
+    },
+    {
+      "title": "The Ron DeSantis administration gave $16.5 million. The Ron DeSantis campaign got $200,000.",
+      "url": "https://jasongarcia.substack.com/p/the-ron-desantis-administration-gave",
+      "outlet": "Seeking Rents (Jason Garcia)",
+      "date": "2023-06-01",
+      "summary": "Documents a specific pay-to-play instance: JM Family Enterprises received a $16.5M state port-infrastructure grant, then gave $200,000 to Friends of Ron DeSantis.",
+      "approved_for_public": false
+    }
+  ],
+  "rabbit_holes": [
+    "The complete vendor payment trail from Friends of Ron DeSantis through Empower Parents PAC to Never Back Down — particularly Axiom Strategies/Jeff Roe's $22M in billings and whether any money cycled back to FL political infrastructure after the presidential collapse.",
+    "The DeSantis PSC pipeline: all five commissioners were his appointees; tracing their pre-appointment donor histories and subsequent votes on FPL, Duke Energy, and Tampa Electric rate cases would map the quid-pro-quo in detail.",
+    "State contractor donors: The Intercept identified 18 companies with $1.68B in contracts through September 2022, but that was just through September 2022. A full audit through 2025 — including immigration detention contractors who reportedly received $573M — would likely expand the number significantly.",
+    "The insurance industry donation-legislation timeline: Mapping the precise sequence of insurer contributions, legislative sessions, DeSantis bill signings, and subsequent premium increases by county would provide a direct evidence chain.",
+    "Hope Florida / Keep Florida Clean money circuit: The $10M Centene Medicaid settlement → Hope Florida Foundation → Secure Florida's Future + Save our Society from Drugs → Keep Florida Clean PAC (chaired by then-future AG James Uthmeier) tracks state settlement money into DeSantis-aligned political operations — a potential criminal case as of 2025.",
+    "Private equity and pension funds: Reports suggest DeSantis steered Florida pension allocations toward private equity firms that donated to him. Identifying which firms, the AUM involved, and the fee structures would quantify the financial benefit."
+  ],
+  "open_questions": [
+    "What happened to the ~$5.25M that Never Back Down transferred to RON PAC (Restore Our Nation) after the presidential race? Did any of it flow back to Florida state-level politics or RPOF?",
+    "Did Florida's 2023 state campaign finance guideline change — which enabled the $82.5M Empower Parents → Never Back Down transfer — have any connection to DeSantis administration officials or RPOF?",
+    "How much did Friends of Ron DeSantis transfer directly to RPOF over its lifetime, and what did RPOF spend that money on?",
+    "Which specific companies received contracts under DeSantis after 2022 with documented donation histories — the Intercept's 2022 count was 18 companies; how many more emerged through 2025?",
+    "Is there a direct paper trail connecting Ballard Partners clients to both RPOF donations and favorable DeSantis regulatory or legislative outcomes?"
+  ],
+  "approved_for_public": false,
+  "research_confidence": "high",
+  "last_updated": "2026-04-08"
+}
