@@ -176,7 +176,8 @@ export default function Home() {
               'How money flows between donors, committees, and candidates',
               'Hard money (direct) vs. soft money (PAC) per candidate',
               'Corporate vs. individual vs. PAC donors',
-              '30 years of Florida political finance',
+              'Which lobbyist principals are also top donors',
+              'Committees sharing treasurers, addresses, or money flows',
             ].map(line => (
               <div key={line} style={{
                 fontSize: '0.68rem',
@@ -210,7 +211,7 @@ export default function Home() {
           Explore the data
         </div>
         <div className="rg-2" style={{ gap: '1rem' }}>
-          <a href="#donors" style={{ textDecoration: 'none' }}>
+          <a href="/donors" style={{ textDecoration: 'none' }}>
             <div style={{
               border: '1px solid rgba(255,176,96,0.2)',
               borderRadius: '3px',
@@ -223,7 +224,7 @@ export default function Home() {
                 → search donors
               </div>
               <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
-                Find any donor by name. See their total giving and which committees they fund.
+                Find any donor by name. See their total giving, which committees they fund, and any lobbyist connections.
               </div>
             </div>
           </a>
@@ -278,6 +279,42 @@ export default function Home() {
               </div>
               <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
                 Individual committee profiles — top donors, total received, entity connections, lobbyist links.
+              </div>
+            </div>
+          </a>
+
+          <a href="/lobbyists" style={{ textDecoration: 'none' }}>
+            <div style={{
+              border: '1px solid rgba(160,192,255,0.15)',
+              borderRadius: '3px',
+              padding: '1.25rem',
+              background: 'rgba(160,192,255,0.02)',
+              height: '100%',
+              cursor: 'pointer',
+            }}>
+              <div style={{ fontSize: '0.72rem', color: 'var(--blue)', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
+                → browse lobbyists
+              </div>
+              <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
+                2,480 registered FL lobbyists and their principals — cross-referenced against donation records.
+              </div>
+            </div>
+          </a>
+
+          <a href="/connections" style={{ textDecoration: 'none' }}>
+            <div style={{
+              border: '1px solid rgba(255,176,96,0.12)',
+              borderRadius: '3px',
+              padding: '1.25rem',
+              background: 'rgba(255,176,96,0.01)',
+              height: '100%',
+              cursor: 'pointer',
+            }}>
+              <div style={{ fontSize: '0.72rem', color: 'var(--orange)', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
+                → committee connections
+              </div>
+              <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
+                56,000+ committee pairs sharing treasurers, addresses, donors, or money flows. Spot coordination.
               </div>
             </div>
           </a>
