@@ -10,11 +10,12 @@
     "test": "node --experimental-vm-modules node_modules/.bin/jest"
   },
   "dependencies": {
+    "graphology": "^0.25.4",
+    "graphology-layout-forceatlas2": "^0.10.1",
     "next": "14.2.29",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",
-    "graphology": "^0.25.4",
-    "graphology-layout-forceatlas2": "^0.10.1",
+    "recharts": "^3.8.1",
     "sigma": "^3.0.0"
   },
   "devDependencies": {
