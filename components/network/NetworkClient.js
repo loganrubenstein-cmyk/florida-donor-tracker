@@ -60,7 +60,7 @@ function NetworkClientInner({ data, annotations }) {
   }, [search, data, handleNodeSelect, handleRecenter]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 49px)' }}>
+    <div className="network-container">
 
       {/* Toolbar */}
       <div style={{
@@ -75,10 +75,11 @@ function NetworkClientInner({ data, annotations }) {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search donors, PACs, candidates..."
+            className="network-search"
             style={{
               background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)',
               color: 'var(--text)', fontFamily: 'var(--font-mono)', fontSize: '0.8rem',
-              padding: '0.3rem 0.6rem', borderRadius: '3px', width: '260px', outline: 'none',
+              padding: '0.3rem 0.6rem', borderRadius: '3px', outline: 'none',
             }}
           />
           <button type="submit" style={{
@@ -120,8 +121,8 @@ function NetworkClientInner({ data, annotations }) {
       </div>
 
       {/* Graph + Panel */}
-      <div style={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
-        <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
+      <div className="network-wrap">
+        <div className="network-graph">
           <ForceView
             data={data}
             selectedNode={selectedNode}

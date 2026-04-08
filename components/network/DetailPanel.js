@@ -66,13 +66,7 @@ const LINK_STYLE = {
 export default function DetailPanel({ node, graphData, onRecenter, annotations = {} }) {
   if (!node) {
     return (
-      <div style={{
-        width: '30%', minWidth: '260px', maxWidth: '380px',
-        padding: '2rem 1.5rem',
-        borderLeft: '1px solid var(--border)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        color: 'var(--text-dim)', fontSize: '0.85rem', textAlign: 'center',
-      }}>
+      <div className="network-panel-empty">
         <div>
           <div style={{ fontSize: '1.5rem', marginBottom: '0.75rem', opacity: 0.4 }}>✦</div>
           Click any node<br />to explore
@@ -116,11 +110,7 @@ export default function DetailPanel({ node, graphData, onRecenter, annotations =
   ];
 
   return (
-    <div style={{
-      width: '30%', minWidth: '260px', maxWidth: '380px',
-      borderLeft: '1px solid var(--border)',
-      display: 'flex', flexDirection: 'column', overflow: 'hidden',
-    }}>
+    <div className="network-panel">
       {/* Header */}
       <div style={{ padding: '1.25rem 1.25rem 0.75rem', borderBottom: '1px solid var(--border)' }}>
         <div style={{ marginBottom: '0.4rem' }}>
@@ -161,7 +151,7 @@ export default function DetailPanel({ node, graphData, onRecenter, annotations =
       </div>
 
       {/* Scrollable body */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: '0.75rem 1.25rem' }}>
+      <div className="network-panel-scroll">
 
         {/* Funded By */}
         {incomingEdges.length > 0 && (
