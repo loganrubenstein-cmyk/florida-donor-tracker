@@ -1,6 +1,7 @@
 // components/committee/CommitteeProfile.js
 
 import { getPartyFromName } from '@/lib/partyUtils';
+import BackLinks from '@/components/BackLinks';
 import { fmtArticleDate } from '@/lib/dateUtils';
 
 function fmt(n) {
@@ -44,20 +45,7 @@ export default function CommitteeProfile({ data, annotations = {} }) {
     <main className="m-padx" style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
 
       {/* Back links */}
-      <div style={{ display: 'flex', gap: '1.25rem', marginBottom: '1.5rem' }}>
-        <a href="/" style={{
-          fontSize: '0.68rem', color: 'var(--text-dim)', textDecoration: 'none',
-          fontFamily: 'var(--font-mono)',
-        }}>
-          ← home
-        </a>
-        <a href="/network" style={{
-          fontSize: '0.68rem', color: 'var(--text-dim)', textDecoration: 'none',
-          fontFamily: 'var(--font-mono)',
-        }}>
-          ← network
-        </a>
-      </div>
+      <BackLinks links={[{ href: '/', label: 'home' }, { href: '/network', label: 'network' }]} />
 
       {/* Header */}
       <div style={{ marginBottom: '1.75rem' }}>
