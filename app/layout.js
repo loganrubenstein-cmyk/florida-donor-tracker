@@ -26,6 +26,9 @@ export default function RootLayout({ children }) {
           <Link href="/donors" style={{ color: 'var(--text-dim)', textDecoration: 'none', fontSize: '0.85rem' }}>
             Donors
           </Link>
+          <Link href="/lobbyists" style={{ color: 'var(--text-dim)', textDecoration: 'none', fontSize: '0.85rem' }}>
+            Lobbyists
+          </Link>
           <Link href="/network" style={{ color: 'var(--text-dim)', textDecoration: 'none', fontSize: '0.85rem' }}>
             Network
           </Link>
