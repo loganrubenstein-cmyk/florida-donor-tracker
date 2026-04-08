@@ -3,7 +3,8 @@ import dynamic from 'next/dynamic';
 import BackLinks from '@/components/BackLinks';
 import { slugify } from '@/lib/slugify';
 
-const QuarterlyChart = dynamic(() => import('./QuarterlyChart'), { ssr: false });
+const QuarterlyChart    = dynamic(() => import('./QuarterlyChart'), { ssr: false });
+const IndustryBreakdown = dynamic(() => import('./IndustryBreakdown'), { ssr: false });
 
 const PARTY_COLOR = { REP: 'var(--republican)', DEM: 'var(--democrat)' };
 const TYPE_COLOR  = { corporate: '#94a3b8', individual: 'var(--blue)' };
@@ -181,6 +182,13 @@ export default function CandidateProfile({ data }) {
               <QuarterlyChart data={hm.by_quarter} />
             </div>
           )}
+        </div>
+      )}
+
+      {/* Industry breakdown */}
+      {hm.total > 0 && (
+        <div style={{ marginBottom: '2rem' }}>
+          <IndustryBreakdown acctNum={data.acct_num} total={hm.total} />
         </div>
       )}
 
