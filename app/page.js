@@ -245,23 +245,24 @@ export default function Home() {
             </div>
           </a>
 
-          <a href="/committee/4700" style={{ textDecoration: 'none' }}>
-            <div style={{
-              border: '1px solid rgba(128,255,160,0.2)',
-              borderRadius: '3px',
-              padding: '1.25rem',
-              background: 'rgba(128,255,160,0.02)',
-              height: '100%',
-              cursor: 'pointer',
-            }}>
-              <div style={{ fontSize: '0.65rem', color: 'var(--green)', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
-                → browse committees
-              </div>
-              <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
-                Individual committee pages — top donors, total received, full history.
-              </div>
+          <div style={{
+            border: '1px solid rgba(128,255,160,0.15)',
+            borderRadius: '3px',
+            padding: '1.25rem',
+            background: 'rgba(128,255,160,0.01)',
+            opacity: 0.55,
+            cursor: 'default',
+          }}>
+            <div style={{ fontSize: '0.65rem', color: 'var(--green)', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
+              → browse committees
             </div>
-          </a>
+            <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
+              Individual committee pages — top donors, total received, full history.
+            </div>
+            <div style={{ fontSize: '0.52rem', color: 'var(--text-dim)', marginTop: '0.6rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+              coming soon
+            </div>
+          </div>
         </div>
       </section>
 

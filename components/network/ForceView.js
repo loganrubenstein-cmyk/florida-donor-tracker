@@ -3,22 +3,7 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 import Graph from 'graphology';
 import Sigma from 'sigma';
-
-const PARTY_OVERRIDES = {
-  'c_4700': 'R', 'c_80335': 'R',
-  'd_FRIENDS_OF_RON_DESANTIS': 'R', 'd_REPUBLICAN_NATIONAL_COMMITTEE': 'R',
-  'c_61265': 'D', 'c_61018': 'D',
-};
-const R_KW = ['REPUBLICAN', 'GOP', 'CONSERVATIVES FOR', 'AMERICANS FOR PROSPERITY'];
-const D_KW = ['DEMOCRAT', 'SEIU', 'AFSCME', 'AFL-CIO', 'LABOR ', 'UNION ', 'PROGRESSIVE'];
-function getPartyAffiliation(node) {
-  if (!node) return null;
-  if (PARTY_OVERRIDES[node.id]) return PARTY_OVERRIDES[node.id];
-  const l = (node.label || '').toUpperCase();
-  if (R_KW.some(k => l.includes(k))) return 'R';
-  if (D_KW.some(k => l.includes(k))) return 'D';
-  return null;
-}
+import { getPartyAffiliation } from '@/lib/partyUtils';
 
 // Seed nodes shown on the default landing view — add new IDs here as more data is scraped
 export const SEED_IDS = [
@@ -118,14 +103,18 @@ function spokeLayout(visibleNodes, visibleEdges, expandedIds) {
 }
 
 export default function ForceView({ data, selectedNode, onNodeSelect, centeredNodeId }) {
-  const containerRef  = useRef(null);
-  const haloCanvasRef = useRef(null);
-  const sigmaRef      = useRef(null);
-  const graphRef      = useRef(null);
+  const containerRef    = useRef(null);
+  const haloCanvasRef   = useRef(null);
+  const sigmaRef        = useRef(null);
+  const graphRef        = useRef(null);
+  const selectedNodeRef = useRef(selectedNode);
 
   const [expandedIds, setExpandedIds] = useState(() =>
     SEED_IDS.filter(id => data.nodes.some(n => n.id === id))
   );
+
+  // Keep ref in sync so the Sigma afterRender listener always sees the current selectedNode
+  useEffect(() => { selectedNodeRef.current = selectedNode; }, [selectedNode]);
 
   const drawHalos = useCallback((selNode, expIds) => {
     const canvas = haloCanvasRef.current;
@@ -244,7 +233,7 @@ export default function ForceView({ data, selectedNode, onNodeSelect, centeredNo
       );
     });
     sigma.on('clickStage', () => onNodeSelect(null));
-    sigma.on('afterRender', () => drawHalos(selectedNode, expandedIds));
+    sigma.on('afterRender', () => drawHalos(selectedNodeRef.current, expandedIds));
     sigmaRef.current = sigma;
 
     const ro = new ResizeObserver(() => {

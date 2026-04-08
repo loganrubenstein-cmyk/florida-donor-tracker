@@ -13,12 +13,15 @@ function formatDollars(n) {
 }
 
 export default function HeroCounter({ total }) {
-  const [display, setDisplay] = useState(0)
+  // Initialize to total so SSR renders the real number, not $0.
+  // The animation resets to 0 and counts up only after hydration.
+  const [display, setDisplay] = useState(total)
   const rafRef = useRef(null)
   const startRef = useRef(null)
 
   useEffect(() => {
     if (!total || isNaN(total)) return
+    setDisplay(0)
     startRef.current = null
 
     function tick(timestamp) {

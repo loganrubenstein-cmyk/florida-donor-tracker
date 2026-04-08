@@ -1,21 +1,6 @@
 // components/committee/CommitteeProfile.js
 
-const PARTY_OVERRIDES = {
-  'c_4700': 'R', 'c_80335': 'R',
-  'd_FRIENDS_OF_RON_DESANTIS': 'R', 'd_REPUBLICAN_NATIONAL_COMMITTEE': 'R',
-  'c_61265': 'D', 'c_61018': 'D',
-};
-const R_KW = ['REPUBLICAN', 'GOP', 'CONSERVATIVES FOR', 'AMERICANS FOR PROSPERITY'];
-const D_KW = ['DEMOCRAT', 'SEIU', 'AFSCME', 'AFL-CIO', 'LABOR ', 'UNION ', 'PROGRESSIVE'];
-
-function getParty(name, acct) {
-  const key = `c_${acct}`;
-  if (PARTY_OVERRIDES[key]) return PARTY_OVERRIDES[key];
-  const u = (name || '').toUpperCase();
-  if (R_KW.some(k => u.includes(k))) return 'R';
-  if (D_KW.some(k => u.includes(k))) return 'D';
-  return null;
-}
+import { getPartyFromName } from '@/lib/partyUtils';
 
 function fmt(n) {
   if (n == null) return '—';
@@ -34,7 +19,7 @@ function fmtDate(s) {
 const TYPE_COLOR = { committee: 'var(--teal)', corporate: '#94a3b8', individual: 'var(--blue)' };
 
 export default function CommitteeProfile({ data }) {
-  const party = getParty(data.committee_name, data.acct_num);
+  const party = getPartyFromName(data.committee_name, data.acct_num);
   const partyColor = party === 'R' ? 'var(--republican)' : party === 'D' ? 'var(--democrat)' : null;
 
   const researchLinks = [
@@ -175,7 +160,7 @@ export default function CommitteeProfile({ data }) {
       )}
 
       {/* Research links */}
-      <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.25rem' }}>
+      <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.25rem', marginBottom: '2rem' }}>
         <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>
           Research
         </div>
@@ -190,6 +175,15 @@ export default function CommitteeProfile({ data }) {
             </a>
           ))}
         </div>
+      </div>
+
+      {/* Disclaimer */}
+      <div style={{
+        borderTop: '1px solid var(--border)', paddingTop: '1rem',
+        fontSize: '0.55rem', color: 'rgba(90,106,136,0.5)',
+        display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem',
+      }}>
+        <span>Data: Florida Division of Elections · Not affiliated with the State of Florida · All data from public records.</span>
       </div>
     </main>
   );

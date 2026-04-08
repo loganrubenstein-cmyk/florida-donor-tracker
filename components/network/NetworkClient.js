@@ -14,6 +14,7 @@ function fmtCount(n) {
 }
 
 function NetworkClientInner({ data }) {
+  // data is guaranteed non-null here
   const router       = useRouter();
   const searchParams = useSearchParams();
 
@@ -113,6 +114,9 @@ function NetworkClientInner({ data }) {
         }}>
           {fmtCount(data.meta.total_nodes)} nodes · {fmtCount(data.meta.total_edges)} edges
         </span>
+        <span style={{ fontSize: '0.58rem', color: 'rgba(90,106,136,0.45)', whiteSpace: 'nowrap' }}>
+          Data: FL Division of Elections · Not affiliated with the State of Florida
+        </span>
       </div>
 
       {/* Graph + Panel */}
@@ -131,7 +135,29 @@ function NetworkClientInner({ data }) {
   );
 }
 
-export default function NetworkClient({ data }) {
+export default function NetworkClient() {
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    fetch('/data/network_graph.json')
+      .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(setData)
+      .catch(() => setError(true));
+  }, []);
+
+  if (error) return (
+    <div style={{ padding: '4rem', textAlign: 'center', color: 'var(--text-dim)' }}>
+      Failed to load network data.
+    </div>
+  );
+
+  if (!data) return (
+    <div style={{ padding: '4rem', textAlign: 'center', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.8rem' }}>
+      Loading network…
+    </div>
+  );
+
   return (
     <Suspense fallback={
       <div style={{ padding: '4rem', textAlign: 'center', color: 'var(--text-dim)' }}>

@@ -1,4 +1,3 @@
-import { loadNetworkGraph } from '@/lib/loadNetworkGraph';
 import NetworkClient from '@/components/network/NetworkClient';
 
 export const dynamic = 'force-static';
@@ -8,6 +7,5 @@ export const metadata = {
 };
 
 export default function NetworkPage() {
-  const data = loadNetworkGraph();
-  return <NetworkClient data={data} />;
+  return <NetworkClient />;
 }
