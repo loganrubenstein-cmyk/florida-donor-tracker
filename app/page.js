@@ -1,5 +1,6 @@
 import topDonors from '@/public/data/top_donors.json'
 import meta from '@/public/data/meta.json'
+import candidateStats from '@/public/data/candidate_stats.json'
 import DonorTable from '@/components/donors/DonorTable'
 import HeroCounter from '@/components/home/HeroCounter'
 
@@ -23,7 +24,7 @@ export default function Home() {
   return (
     <main>
       {/* ── Hero ── */}
-      <section style={{
+      <section className="m-padx" style={{
         padding: '3.5rem 2.5rem 2.5rem',
         borderBottom: '1px solid rgba(100,140,220,0.1)',
         maxWidth: '900px',
@@ -76,9 +77,20 @@ export default function Home() {
           }}>
             Top Donors
           </a>
-          <a href="/network" style={{
-            border: '1px solid rgba(100,140,220,0.3)',
+          <a href="/candidates" style={{
+            border: '1px solid rgba(160,192,255,0.3)',
             color: 'var(--blue)',
+            padding: '0.5rem 1.2rem',
+            fontSize: '0.65rem',
+            borderRadius: '3px',
+            textDecoration: 'none',
+            fontFamily: 'var(--font-mono)',
+          }}>
+            → candidates
+          </a>
+          <a href="/network" style={{
+            border: '1px solid rgba(100,140,220,0.2)',
+            color: 'var(--text-dim)',
             padding: '0.5rem 1.2rem',
             fontSize: '0.65rem',
             borderRadius: '3px',
@@ -94,23 +106,19 @@ export default function Home() {
       </section>
 
       {/* ── Stats Strip ── */}
-      <section style={{
+      <section className="m-padx" style={{
         padding: '1.75rem 2.5rem',
         borderBottom: '1px solid rgba(100,140,220,0.1)',
         background: 'rgba(255,255,255,0.01)',
         maxWidth: '900px',
         margin: '0 auto',
       }}>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
-          gap: '1.5rem',
-        }}>
+        <div className="rg-4" style={{ gap: '1.5rem' }}>
           {[
             { value: formatBillions(meta.total_amount),                      label: 'total contributions\ntracked',      color: 'var(--orange)' },
             { value: formatThousands(meta.total_contributions),              label: 'individual\ntransactions',          color: 'var(--teal)'   },
             { value: meta.total_committees_with_data.toLocaleString(),       label: 'committees\nwith data',             color: 'var(--green)'  },
-            { value: '30 yrs',                                               label: 'of records\n1996–2026',             color: 'var(--blue)'   },
+            { value: candidateStats.length.toLocaleString(),                 label: 'candidates\ntracked',               color: 'var(--blue)'   },
           ].map(({ value, label, color }) => (
             <div key={label}>
               <div style={{ fontSize: '1.5rem', color, fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1 }}>
@@ -125,7 +133,7 @@ export default function Home() {
       </section>
 
       {/* ── Purpose ── */}
-      <section style={{
+      <section className="m-padx" style={{
         padding: '2.5rem 2.5rem',
         borderBottom: '1px solid rgba(100,140,220,0.1)',
         maxWidth: '900px',
@@ -140,11 +148,7 @@ export default function Home() {
         }}>
           Why this exists
         </div>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '3rem',
-        }}>
+        <div className="rg-purpose">
           <div>
             <p style={{ fontSize: '0.72rem', color: 'var(--text)', lineHeight: 1.85, marginBottom: '1rem' }}>
               Florida is one of the biggest political money machines in the country.
@@ -157,7 +161,7 @@ export default function Home() {
               Just the data — yours to explore.
             </p>
           </div>
-          <div style={{ borderLeft: '1px solid rgba(100,140,220,0.1)', paddingLeft: '3rem' }}>
+          <div className="purpose-right" style={{ borderLeft: '1px solid rgba(100,140,220,0.1)', paddingLeft: '3rem' }}>
             <div style={{
               fontSize: '0.6rem',
               letterSpacing: '0.12em',
@@ -169,7 +173,8 @@ export default function Home() {
             </div>
             {[
               'Who gave the most, to whom, and when',
-              'How money moves between committees',
+              'How money flows between donors, committees, and candidates',
+              'Hard money (direct) vs. soft money (PAC) per candidate',
               'Corporate vs. individual vs. PAC donors',
               '30 years of Florida political finance',
             ].map(line => (
@@ -189,7 +194,7 @@ export default function Home() {
       </section>
 
       {/* ── Tool Cards ── */}
-      <section style={{
+      <section className="m-padx" style={{
         padding: '2rem 2.5rem',
         borderBottom: '1px solid rgba(100,140,220,0.1)',
         maxWidth: '900px',
@@ -204,11 +209,7 @@ export default function Home() {
         }}>
           Explore the data
         </div>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
-          gap: '1rem',
-        }}>
+        <div className="rg-2" style={{ gap: '1rem' }}>
           <a href="#donors" style={{ textDecoration: 'none' }}>
             <div style={{
               border: '1px solid rgba(255,176,96,0.2)',
@@ -218,10 +219,10 @@ export default function Home() {
               height: '100%',
               cursor: 'pointer',
             }}>
-              <div style={{ fontSize: '0.65rem', color: 'var(--orange)', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
+              <div style={{ fontSize: '0.72rem', color: 'var(--orange)', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
                 → search donors
               </div>
-              <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
+              <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
                 Find any donor by name. See their total giving and which committees they fund.
               </div>
             </div>
@@ -236,38 +237,55 @@ export default function Home() {
               height: '100%',
               cursor: 'pointer',
             }}>
-              <div style={{ fontSize: '0.65rem', color: 'var(--teal)', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
+              <div style={{ fontSize: '0.72rem', color: 'var(--teal)', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
                 → explore network
               </div>
-              <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
+              <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
                 Visualize the full donor-committee money network. Trace how funds flow across thousands of nodes.
               </div>
             </div>
           </a>
 
-          <div style={{
-            border: '1px solid rgba(128,255,160,0.15)',
-            borderRadius: '3px',
-            padding: '1.25rem',
-            background: 'rgba(128,255,160,0.01)',
-            opacity: 0.55,
-            cursor: 'default',
-          }}>
-            <div style={{ fontSize: '0.65rem', color: 'var(--green)', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
-              → browse committees
+          <a href="/candidates" style={{ textDecoration: 'none' }}>
+            <div style={{
+              border: '1px solid rgba(160,192,255,0.2)',
+              borderRadius: '3px',
+              padding: '1.25rem',
+              background: 'rgba(160,192,255,0.02)',
+              height: '100%',
+              cursor: 'pointer',
+            }}>
+              <div style={{ fontSize: '0.72rem', color: 'var(--blue)', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
+                → browse candidates
+              </div>
+              <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
+                Every Florida candidate with campaign finance data — hard money raised, linked PACs, combined total. Filter by office, party, or cycle.
+              </div>
             </div>
-            <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
-              Individual committee pages — top donors, total received, full history.
+          </a>
+
+          <a href="/committee/4700" style={{ textDecoration: 'none' }}>
+            <div style={{
+              border: '1px solid rgba(128,255,160,0.2)',
+              borderRadius: '3px',
+              padding: '1.25rem',
+              background: 'rgba(128,255,160,0.02)',
+              height: '100%',
+              cursor: 'pointer',
+            }}>
+              <div style={{ fontSize: '0.72rem', color: 'var(--green)', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
+                → browse committees
+              </div>
+              <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
+                Individual committee profiles — top donors, total received, entity connections, lobbyist links.
+              </div>
             </div>
-            <div style={{ fontSize: '0.52rem', color: 'var(--text-dim)', marginTop: '0.6rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-              coming soon
-            </div>
-          </div>
+          </a>
         </div>
       </section>
 
       {/* ── Donor Table ── */}
-      <section id="donors" style={{
+      <section id="donors" className="m-padx" style={{
         padding: '2.5rem 2.5rem 3rem',
         maxWidth: '900px',
         margin: '0 auto',
