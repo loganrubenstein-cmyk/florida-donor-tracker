@@ -3,24 +3,29 @@
 import { useState, useMemo, useEffect } from 'react';
 import BackLinks from '@/components/BackLinks';
 
-const BRANCH_OPTIONS = [
-  { value: 'all',         label: 'All Branches' },
-  { value: 'legislative', label: 'Legislative' },
-  { value: 'executive',   label: 'Executive' },
-  { value: 'both',        label: 'Both Branches' },
-];
+function fmt(n) {
+  if (!n || n === 0) return '—';
+  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000)     return `$${(n / 1_000).toFixed(0)}K`;
+  return `$${n.toFixed(0)}`;
+}
 
 const SORT_OPTIONS = [
-  { value: 'num_principals', label: 'Principals (Most)' },
-  { value: 'name',           label: 'Name A–Z' },
+  { value: 'total_donation_influence', label: 'Donation Influence' },
+  { value: 'num_principals',           label: 'Principals (Most)' },
+  { value: 'name',                     label: 'Name A–Z' },
+];
+
+const TYPE_OPTIONS = [
+  { value: 'all',     label: 'All Lobbyists' },
+  { value: 'matched', label: 'Has Donation Match' },
 ];
 
 export default function LobbyistsList() {
   const [lobbyists, setLobbyists] = useState(null);
   const [search, setSearch]       = useState('');
-  const [branch, setBranch]       = useState('all');
-  const [activeOnly, setActiveOnly] = useState(true);
-  const [sortBy, setSortBy]       = useState('num_principals');
+  const [type, setType]           = useState('all');
+  const [sortBy, setSortBy]       = useState('total_donation_influence');
 
   useEffect(() => {
     fetch('/data/lobbyists/index.json')
@@ -33,41 +38,31 @@ export default function LobbyistsList() {
     if (!lobbyists) return [];
     let list = lobbyists;
 
-    if (activeOnly) list = list.filter(l => l.is_active);
-
     if (search.trim()) {
       const q = search.trim().toLowerCase();
       list = list.filter(l =>
         (l.name || '').toLowerCase().includes(q) ||
-        (l.firm_name || '').toLowerCase().includes(q)
+        (l.firm || '').toLowerCase().includes(q) ||
+        (l.top_principal || '').toLowerCase().includes(q)
       );
     }
 
-    if (branch === 'legislative') {
-      list = list.filter(l => l.branches?.includes('legislative'));
-    } else if (branch === 'executive') {
-      list = list.filter(l => l.branches?.includes('executive'));
-    } else if (branch === 'both') {
-      list = list.filter(l =>
-        l.branches?.includes('legislative') && l.branches?.includes('executive')
-      );
-    }
+    if (type === 'matched') list = list.filter(l => l.has_donation_match);
 
     list = [...list].sort((a, b) => {
       if (sortBy === 'name') return (a.name || '').localeCompare(b.name || '');
-      return (b.num_principals || 0) - (a.num_principals || 0);
+      if (sortBy === 'num_principals') return (b.num_principals || 0) - (a.num_principals || 0);
+      return (b.total_donation_influence || 0) - (a.total_donation_influence || 0);
     });
 
     return list;
-  }, [lobbyists, search, branch, activeOnly, sortBy]);
+  }, [lobbyists, search, type, sortBy]);
 
   const totals = useMemo(() => {
     if (!lobbyists) return null;
-    const active   = lobbyists.filter(l => l.is_active).length;
-    const bothBranch = lobbyists.filter(l =>
-      l.branches?.includes('legislative') && l.branches?.includes('executive')
-    ).length;
-    return { total: lobbyists.length, active, bothBranch };
+    const withMatch = lobbyists.filter(l => l.has_donation_match).length;
+    const totalInfluence = lobbyists.reduce((s, l) => s + (l.total_donation_influence || 0), 0);
+    return { total: lobbyists.length, withMatch, totalInfluence };
   }, [lobbyists]);
 
   const inputStyle = {
@@ -103,8 +98,8 @@ export default function LobbyistsList() {
         {totals && (
           <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
             <span>{totals.total.toLocaleString()} registered lobbyists</span>
-            <span style={{ color: 'var(--teal)' }}>{totals.active.toLocaleString()} active</span>
-            <span style={{ color: 'var(--orange)' }}>{totals.bothBranch.toLocaleString()} lobby both branches</span>
+            <span style={{ color: 'var(--teal)' }}>{totals.withMatch.toLocaleString()} with donation match</span>
+            <span style={{ color: 'var(--orange)' }}>{fmt(totals.totalInfluence)} total matched donations</span>
             <span>FL Legislature · 2014–present</span>
           </div>
         )}
@@ -122,25 +117,12 @@ export default function LobbyistsList() {
           onChange={e => setSearch(e.target.value)}
           style={{ ...inputStyle, minWidth: '220px', flexGrow: 1 }}
         />
-        <select value={branch} onChange={e => setBranch(e.target.value)} style={inputStyle}>
-          {BRANCH_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+        <select value={type} onChange={e => setType(e.target.value)} style={inputStyle}>
+          {TYPE_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
         </select>
         <select value={sortBy} onChange={e => setSortBy(e.target.value)} style={inputStyle}>
           {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
         </select>
-        <label style={{
-          display: 'flex', alignItems: 'center', gap: '0.4rem',
-          fontSize: '0.72rem', color: 'var(--text-dim)',
-          fontFamily: 'var(--font-mono)', cursor: 'pointer',
-        }}>
-          <input
-            type="checkbox"
-            checked={activeOnly}
-            onChange={e => setActiveOnly(e.target.checked)}
-            style={{ accentColor: 'var(--teal)' }}
-          />
-          Active only
-        </label>
       </div>
 
       {/* Result count */}
@@ -157,13 +139,13 @@ export default function LobbyistsList() {
           <thead>
             <tr style={{ borderBottom: '1px solid var(--border)' }}>
               {[
-                { label: '#',          align: 'center', width: '2rem' },
-                { label: 'Lobbyist',   align: 'left'  },
-                { label: 'Firm',       align: 'left'  },
-                { label: 'Location',   align: 'left'  },
-                { label: 'Branch',     align: 'center'},
-                { label: 'Principals', align: 'right', sortKey: 'num_principals' },
-                { label: 'Active',     align: 'right', sortKey: 'num_active'     },
+                { label: '#',                 align: 'center', width: '2rem' },
+                { label: 'Lobbyist',          align: 'left'  },
+                { label: 'Firm',              align: 'left'  },
+                { label: 'Location',          align: 'left'  },
+                { label: 'Principals',        align: 'right', sortKey: 'num_principals'           },
+                { label: 'Active',            align: 'right'                                      },
+                { label: 'Donation Influence',align: 'right', sortKey: 'total_donation_influence' },
               ].map(({ label, align, width, sortKey }) => (
                 <th key={label} style={{
                   padding: '0.4rem 0.6rem', textAlign: align, width,
@@ -189,47 +171,40 @@ export default function LobbyistsList() {
                 </td>
               </tr>
             )}
-            {filtered.slice(0, 500).map((l, i) => {
-              const hasBoth = l.branches?.includes('legislative') && l.branches?.includes('executive');
-              const branchLabel = hasBoth ? 'both'
-                : l.branches?.includes('legislative') ? 'leg.'
-                : l.branches?.includes('executive')   ? 'exec.'
-                : '—';
-              const branchColor = hasBoth ? 'var(--orange)' : 'var(--text-dim)';
-              return (
-                <tr key={l.slug} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center' }}>
-                    {i + 1}
-                  </td>
-                  <td style={{ padding: '0.45rem 0.6rem', wordBreak: 'break-word', maxWidth: '200px' }}>
-                    <a href={`/lobbyist/${l.slug}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
-                      {l.name}
-                    </a>
-                  </td>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.68rem', maxWidth: '180px', wordBreak: 'break-word' }}>
-                    {l.firm_name || '—'}
-                  </td>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.68rem', whiteSpace: 'nowrap' }}>
-                    {[l.city, l.state].filter(Boolean).join(', ') || '—'}
-                  </td>
-                  <td style={{ padding: '0.45rem 0.6rem', textAlign: 'center' }}>
+            {filtered.slice(0, 500).map((l, i) => (
+              <tr key={l.slug} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
+                <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center' }}>
+                  {i + 1}
+                </td>
+                <td style={{ padding: '0.45rem 0.6rem', wordBreak: 'break-word', maxWidth: '200px' }}>
+                  <a href={`/lobbyist/${l.slug}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+                    {l.name}
+                  </a>
+                  {l.has_donation_match && (
                     <span style={{
-                      fontSize: '0.58rem', padding: '0.05rem 0.3rem',
-                      border: `1px solid ${branchColor}`, color: branchColor,
-                      borderRadius: '2px',
-                    }}>
-                      {branchLabel}
-                    </span>
-                  </td>
-                  <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--text)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>
-                    {(l.num_principals || 0).toLocaleString()}
-                  </td>
-                  <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--teal)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>
-                    {(l.num_active || 0).toLocaleString()}
-                  </td>
-                </tr>
-              );
-            })}
+                      marginLeft: '0.4rem', fontSize: '0.56rem', color: 'var(--orange)',
+                      border: '1px solid var(--orange)', borderRadius: '2px',
+                      padding: '0.05rem 0.2rem', verticalAlign: 'middle',
+                    }}>$</span>
+                  )}
+                </td>
+                <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.68rem', maxWidth: '180px', wordBreak: 'break-word' }}>
+                  {l.firm || '—'}
+                </td>
+                <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.68rem', whiteSpace: 'nowrap' }}>
+                  {[l.city, l.state].filter(Boolean).join(', ') || '—'}
+                </td>
+                <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--text)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>
+                  {(l.num_principals || 0).toLocaleString()}
+                </td>
+                <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--teal)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>
+                  {(l.num_active || 0).toLocaleString()}
+                </td>
+                <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: l.total_donation_influence > 0 ? 'var(--orange)' : 'var(--text-dim)', fontWeight: l.total_donation_influence > 0 ? 700 : 400, whiteSpace: 'nowrap' }}>
+                  {fmt(l.total_donation_influence)}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

@@ -92,7 +92,7 @@ export default function LobbyistProfile({ data }) {
           {data.name}
         </h1>
         <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-          {data.firm_name && <span>{data.firm_name}</span>}
+          {(data.firm_name || data.firm) && <span>{data.firm_name || data.firm}</span>}
           {location && <span>{location}</span>}
           {data.phone && <span>{data.phone}</span>}
         </div>
@@ -106,8 +106,15 @@ export default function LobbyistProfile({ data }) {
         <StatBox label="Total Principals" value={(data.num_principals || 0).toLocaleString()} />
         <StatBox label="Active Registrations" value={(data.num_active || 0).toLocaleString()}
           color="var(--teal)" />
-        <StatBox label="Inactive / Withdrawn" value={(inactivePrincipals.length).toLocaleString()}
-          color="var(--text-dim)" />
+        {data.total_donation_influence > 0 ? (
+          <StatBox label="Donation Influence"
+            value={`$${(data.total_donation_influence / 1_000_000).toFixed(1)}M`}
+            sub="Matched principal donations"
+            color="var(--orange)" />
+        ) : (
+          <StatBox label="Inactive / Withdrawn" value={(inactivePrincipals.length).toLocaleString()}
+            color="var(--text-dim)" />
+        )}
         <StatBox label="Branch" value={branchLabel}
           sub={hasBoth ? 'Lobbies both branches' : null}
           color={branchColor} />
