@@ -27,6 +27,72 @@ body {
   min-height: 100vh;
 }
 
+/* ── Responsive layout helpers ─────────────────────────────────────────────── */
+/* Use these classNames instead of inline gridTemplateColumns so media queries work */
+.rg-4 { display: grid; grid-template-columns: repeat(4, 1fr); }
+.rg-3 { display: grid; grid-template-columns: repeat(3, 1fr); }
+.rg-2 { display: grid; grid-template-columns: repeat(2, 1fr); }
+.rg-purpose { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+
+/* Reusable max-width container */
+.container { max-width: 900px; margin: 0 auto; }
+
+@media (max-width: 768px) {
+  .rg-4      { grid-template-columns: 1fr 1fr; }
+  .rg-3      { grid-template-columns: 1fr 1fr; }
+  .rg-purpose { gap: 2rem; }
+  .m-padx    { padding-left: 1.75rem !important; padding-right: 1.75rem !important; }
+}
+
+@media (max-width: 640px) {
+  .rg-4 { grid-template-columns: 1fr 1fr; }
+  .rg-3 { grid-template-columns: 1fr 1fr; }
+  .rg-2 { grid-template-columns: 1fr; }
+  .rg-purpose { grid-template-columns: 1fr; gap: 1.5rem; }
+  /* Override inline padding-right/left for section containers */
+  .m-padx { padding-left: 1.25rem !important; padding-right: 1.25rem !important; }
+  /* Purpose section right column loses its left border on mobile */
+  .purpose-right { border-left: none !important; padding-left: 0 !important; padding-top: 1.5rem; border-top: 1px solid rgba(100,140,220,0.1); }
+}
+
+/* ── Chart wrapper ─────────────────────────────────────────────────────────── */
+.chart-wrap { width: 100%; height: 180px; }
+@media (max-width: 640px) { .chart-wrap { height: 130px; } }
+
+/* ── Network page layout ────────────────────────────────────────────────────── */
+.network-container { display: flex; flex-direction: column; height: calc(100vh - 49px); }
+.network-wrap      { display: flex; flex: 1; overflow: hidden; }
+.network-graph     { flex: 1; position: relative; overflow: hidden; }
+.network-panel {
+  width: 30%; min-width: 260px; max-width: 380px;
+  border-left: 1px solid var(--border);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.network-panel-empty {
+  width: 30%; min-width: 260px; max-width: 380px;
+  padding: 2rem 1.5rem;
+  border-left: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-dim); font-size: 0.85rem; text-align: center;
+}
+.network-search { width: 260px; }
+.network-panel-scroll { flex: 1; overflow-y: auto; padding: 0.75rem 1.25rem; }
+.network-panel-scroll::-webkit-scrollbar       { width: 4px; }
+.network-panel-scroll::-webkit-scrollbar-track { background: transparent; }
+.network-panel-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+@media (max-width: 768px) {
+  .network-container { height: auto; min-height: calc(100vh - 49px); }
+  .network-wrap      { flex-direction: column; overflow-y: auto; }
+  .network-graph     { min-height: 55vh; }
+  .network-panel, .network-panel-empty {
+    width: 100%; min-width: unset; max-width: unset;
+    border-left: none; border-top: 1px solid var(--border);
+  }
+  .network-panel-empty { min-height: 100px; }
+  .network-search      { width: 140px; }
+}
+
 /* Star field — static scattered dots via repeating radial-gradient background */
 .star-field {
   position: absolute;
