@@ -13,6 +13,8 @@ COMMITTEES_RAW = RAW_DIR / "committees"
 CANDIDATES_RAW = RAW_DIR / "candidates"
 CONTRIB_RAW    = RAW_DIR / "contributions"
 EXPEND_RAW     = RAW_DIR / "expenditures"
+TRANSFERS_RAW  = RAW_DIR / "transfers"
+LOBBYIST_RAW   = RAW_DIR / "lobbyists"
 
 # --- Processed and log directories ---
 PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
@@ -24,6 +26,7 @@ CANDIDATES_URL = "https://dos.elections.myflorida.com/candidates/extractCanList.
 CONTRIB_CGI    = "https://dos.elections.myflorida.com/cgi-bin/TreFin.exe"
 CONTRIB_SEL    = "https://dos.elections.myflorida.com/cgi-bin/TreSel.exe"
 EXPEND_CGI     = "https://dos.elections.myflorida.com/cgi-bin/expend.exe"
+TRANSFER_CGI   = "https://dos.elections.myflorida.com/cgi-bin/FundXfers.exe"
 
 # --- HTTP behavior ---
 REQUEST_DELAY_SEC = 1.5   # seconds to sleep between requests

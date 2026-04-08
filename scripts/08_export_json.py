@@ -197,15 +197,7 @@ def build_per_committee_files(
             for _, row in top_donors_grouped.iterrows()
         ]
 
-        # Date range from contribution_date column (if present)
-        if "contribution_date" in group.columns:
-            dates = group["contribution_date"].dropna()
-            date_range = {
-                "earliest": str(dates.min()) if len(dates) else None,
-                "latest":   str(dates.max()) if len(dates) else None,
-            }
-        else:
-            date_range = {"earliest": None, "latest": None}
+        date_range = _clean_date_range(group)
 
         results[acct] = {
             "acct_num": acct,
@@ -216,6 +208,21 @@ def build_per_committee_files(
             "top_donors": top_donors,
         }
     return results
+
+
+def _clean_date_range(df: pd.DataFrame) -> dict:
+    """Return {earliest, latest} from contribution_date, filtering obviously bogus years."""
+    if "contribution_date" not in df.columns:
+        return {"earliest": None, "latest": None}
+    dates = df["contribution_date"].dropna()
+    # FL Division of Elections records go back to ~1996; anything outside 1990–2099 is data noise
+    dates = dates[(dates.dt.year >= 1990) & (dates.dt.year <= 2099)]
+    if dates.empty:
+        return {"earliest": None, "latest": None}
+    return {
+        "earliest": dates.min().date().isoformat(),
+        "latest":   dates.max().date().isoformat(),
+    }
 
 
 def write_json(data, path: Path) -> None:
@@ -289,10 +296,7 @@ def main(force: bool = False) -> int:
         "total_amount": round(float(df["amount"].sum()), 2),
         "total_committees_with_data": len(per_committee),
         "total_donors": int(df["canonical_name"].nunique()),
-        "date_range": {
-            "earliest": str(df["contribution_date"].min()) if "contribution_date" in df.columns else None,
-            "latest":   str(df["contribution_date"].max()) if "contribution_date" in df.columns else None,
-        },
+        "date_range": _clean_date_range(df),
     }
     write_json(meta, PUBLIC_DIR / "meta.json")
     print("Wrote meta.json")
