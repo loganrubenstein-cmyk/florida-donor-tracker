@@ -10,6 +10,8 @@ const NAV_LINKS = [
   { href: '/candidates',    label: 'Candidates' },
   { href: '/committees',    label: 'Committees' },
   { href: '/donors',        label: 'Donors' },
+  { href: '/ie',            label: 'IEs' },
+  { href: '/transfers',     label: 'Transfers' },
   { href: '/explorer',      label: 'Explorer' },
   { href: '/lobbying',      label: 'Lobbying' },
   { href: '/legislators',   label: 'Legislators' },
