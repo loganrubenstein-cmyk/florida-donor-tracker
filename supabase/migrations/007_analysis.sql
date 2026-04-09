@@ -14,7 +14,7 @@ create table if not exists entity_connections (
 create table if not exists candidate_pc_links (
   id bigint generated always as identity primary key,
   candidate_acct_num text not null,
-  pc_acct_num text not null,
+  pc_acct_num text,  -- nullable: stub entries (dissolved/unmatched PCs) have no account number
   pc_name text,
   pc_type text,
   link_type text,

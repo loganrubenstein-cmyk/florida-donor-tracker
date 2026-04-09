@@ -130,12 +130,16 @@ def load_pc_totals() -> dict:
     if not COMMITTEES_DIR.exists():
         return totals
     for f in COMMITTEES_DIR.glob("*.json"):
+        # Skip auxiliary files like 85993.connections.json, 85993.lobbyists.json
+        if f.stem.count(".") > 0:
+            continue
         try:
             d = json.loads(f.read_text())
-            totals[d["acct_num"]] = {
-                "total_received":   d.get("total_received", 0.0),
-                "num_contributions": d.get("num_contributions", 0),
-                "committee_name":   d.get("committee_name", ""),
+            total = d.get("total_received")
+            totals[str(d["acct_num"])] = {
+                "total_received":    float(total) if total is not None else 0.0,
+                "num_contributions": d.get("num_contributions", 0) or 0,
+                "committee_name":    d.get("committee_name", ""),
             }
         except Exception:
             continue

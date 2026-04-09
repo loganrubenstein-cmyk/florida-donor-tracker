@@ -1,0 +1,330 @@
+{
+  "generated_at": "2026-04-08T12:39:03.895387+00:00",
+  "total_entities": 11,
+  "entities": {
+    "c_4700": {
+      "id": "c_4700",
+      "canonical_name": "REPUBLICAN PARTY OF FLORIDA",
+      "type": "committee",
+      "industry": "political-party",
+      "themes": [
+        "republican-machine",
+        "desantis-network",
+        "corporate-influence",
+        "utility-money",
+        "dark-money"
+      ],
+      "articles": [
+        {
+          "title": "Amid Connections to Ongoing Election Scandals, NextEra Pours Millions into Florida's 2022 Election Cycle",
+          "url": "https://energyandpolicy.org/nextera-pours-millions-into-floridas-2022-election-cycle/",
+          "outlet": "Energy and Policy Institute",
+          "date": "2022-11-01",
+          "summary": ""
+        },
+        {
+          "title": "How Florida lobbyist Brian Ballard is turning close ties to Trump into big business",
+          "url": "https://www.tampabay.com/news/politics/stateroundup/how-florida-lobbyist-brian-ballard-is-turning-close-ties-to-trump-into-big/2326662/",
+          "outlet": "Tampa Bay Times",
+          "date": "2017-12-01",
+          "summary": ""
+        }
+      ]
+    },
+    "c_florida_justice_pac": {
+      "id": "c_florida_justice_pac",
+      "canonical_name": "FLORIDA JUSTICE PAC",
+      "type": "committee",
+      "industry": "trial-lawyers",
+      "themes": [
+        "trial-lawyers",
+        "tort-reform",
+        "insurance",
+        "legislative-battles",
+        "bipartisan-giving"
+      ],
+      "articles": [
+        {
+          "title": "Legislative Session Preview: Florida Justice Association braces for tort reform battle",
+          "url": "https://floridapolitics.com/archives/592785-legislative-session-preview-florida-justice-association-braces-for-tort-reform-battle/",
+          "outlet": "Florida Politics",
+          "date": "2022-12-01",
+          "summary": ""
+        },
+        {
+          "title": "Gov. DeSantis signs sweeping legal reforms passed by Legislature",
+          "url": "https://floridapolitics.com/archives/598141-first-bill-of-2023-session-signed-florida-has-new-tort-law/",
+          "outlet": "Florida Politics",
+          "date": "2023-03-24",
+          "summary": ""
+        }
+      ]
+    },
+    "c_realtors_pac": {
+      "id": "c_realtors_pac",
+      "canonical_name": "REALTORS POLITICAL ADVOCACY COMMITTEE",
+      "type": "committee",
+      "industry": "real-estate",
+      "themes": [
+        "real-estate",
+        "insurance",
+        "growth-machine",
+        "property-rights",
+        "bipartisan-giving",
+        "affordable-housing"
+      ],
+      "articles": [
+        {
+          "title": "2024 Legislative Final Report",
+          "url": "https://www.floridarealtors.org/advocacy/2024-legislative-final-report",
+          "outlet": "Florida Realtors",
+          "date": "2024-06-01",
+          "summary": ""
+        },
+        {
+          "title": "Lawmakers Try 'Accountability' Insurance Reform",
+          "url": "https://www.floridarealtors.org/news-media/news-articles/2023/04/lawmakers-try-accountability-insurance-reform",
+          "outlet": "Florida Realtors",
+          "date": "2023-04-01",
+          "summary": ""
+        }
+      ]
+    },
+    "d_FLORIDA_POWER_LIGHT_COMPANY": {
+      "id": "d_FLORIDA_POWER_LIGHT_COMPANY",
+      "canonical_name": "FLORIDA POWER & LIGHT COMPANY",
+      "type": "corporate",
+      "industry": "utilities",
+      "themes": [
+        "utilities",
+        "rate-cases",
+        "PSC",
+        "regulatory-capture",
+        "dark-money",
+        "ghost-candidates",
+        "media-manipulation"
+      ],
+      "articles": [
+        {
+          "title": "How Ron DeSantis helped Florida Power & Light raise electricity rates by $5 billion",
+          "url": "https://jasongarcia.substack.com/p/how-ron-desantis-helped-florida-power",
+          "outlet": "Seeking Rents (Jason Garcia)",
+          "date": "2022-10-01",
+          "summary": ""
+        },
+        {
+          "title": "Florida just approved the largest electric rate increase in history. Here's how it happened.",
+          "url": "https://jasongarcia.substack.com/p/florida-just-approved-the-largest",
+          "outlet": "Seeking Rents (Jason Garcia)",
+          "date": "2025-11-20",
+          "summary": ""
+        }
+      ]
+    },
+    "d_FRIENDS_OF_RON_DESANTIS": {
+      "id": "d_FRIENDS_OF_RON_DESANTIS",
+      "canonical_name": "FRIENDS OF RON DESANTIS",
+      "type": "committee",
+      "industry": "political-committee",
+      "themes": [
+        "desantis-network",
+        "republican-machine",
+        "pay-to-play",
+        "corporate-influence"
+      ],
+      "articles": [
+        {
+          "title": "Florida Contracts Go to Companies That Flooded Ron DeSantis Campaign Fund",
+          "url": "https://theintercept.com/2022/09/27/florida-ron-desantis-campaign-fund/",
+          "outlet": "The Intercept",
+          "date": "2022-09-27",
+          "summary": ""
+        },
+        {
+          "title": "Ron DeSantis Has Raked in $3.9 Million From Insurance Industry, New Report Reveals",
+          "url": "https://theintercept.com/2023/05/03/ron-desantis-insurance-industry/",
+          "outlet": "The Intercept",
+          "date": "2023-05-03",
+          "summary": ""
+        }
+      ]
+    },
+    "d_HCA_WEST_FLORIDA": {
+      "id": "d_HCA_WEST_FLORIDA",
+      "canonical_name": "HCA WEST FLORIDA",
+      "type": "corporate",
+      "industry": "healthcare",
+      "themes": [
+        "healthcare",
+        "hospital-industry",
+        "medicaid",
+        "rick-scott",
+        "federal-fraud",
+        "regulatory-capture"
+      ],
+      "articles": [
+        {
+          "title": "HCA Healthcare shareholders rally against political donations to Gov. DeSantis",
+          "url": "https://broward.us/2022/04/21/hca-healthcare-shareholders-rally-against-political-donations-to-gov-desantis/",
+          "outlet": "Broward.US",
+          "date": "2022-04-21",
+          "summary": ""
+        },
+        {
+          "title": "At HCA Shareholder Meeting, Nurses, Other Workers Call for Transparency",
+          "url": "https://hcacarecrisis.org/at-hca-shareholder-meeting-nurses-other-workers-call-for-transparency-into-political-spending-by-nations-largest-hospital-corporation/",
+          "outlet": "HCA Care Crisis",
+          "date": "2022-04-01",
+          "summary": ""
+        }
+      ]
+    },
+    "d_LAS_VEGAS_SANDS_CO_": {
+      "id": "d_LAS_VEGAS_SANDS_CO_",
+      "canonical_name": "LAS VEGAS SANDS CO.",
+      "type": "corporate",
+      "industry": "gaming",
+      "themes": [
+        "gaming",
+        "ballot-initiative",
+        "petition-fraud",
+        "tribal-gaming",
+        "Adelson-network"
+      ],
+      "articles": [
+        {
+          "title": "Las Vegas Sands dropped $73M on failed Florida casino drive",
+          "url": "https://floridapolitics.com/archives/495932-las-vegas-sands-dropped-73m-on-failed-florida-casino-drive/",
+          "outlet": "Florida Politics",
+          "date": "2022-04-01",
+          "summary": ""
+        },
+        {
+          "title": "Florida elections offices seeing suspected fraudulent petitions in gambling effort",
+          "url": "https://www.tampabay.com/news/florida-politics/2022/01/20/florida-elections-offices-seeing-suspected-fraudulent-petitions-in-gambling-effort/",
+          "outlet": "Tampa Bay Times",
+          "date": "2022-01-20",
+          "summary": ""
+        }
+      ]
+    },
+    "d_PUBLIX_SUPER_MARKETS_INC_": {
+      "id": "d_PUBLIX_SUPER_MARKETS_INC_",
+      "canonical_name": "PUBLIX SUPER MARKETS INC.",
+      "type": "corporate",
+      "industry": "retail",
+      "themes": [
+        "retail",
+        "jenkins-family",
+        "january-6",
+        "regulatory-access",
+        "labor",
+        "pay-to-play"
+      ],
+      "articles": [
+        {
+          "title": "The Florida Legislature: Where shopping is a pleasure",
+          "url": "https://jasongarcia.substack.com/p/the-florida-legislature-where-shopping",
+          "outlet": "Seeking Rents (Jason Garcia)",
+          "date": "2023-06-01",
+          "summary": ""
+        },
+        {
+          "title": "Publix: Where political giving helped get no-bid Covid vaccine business",
+          "url": "https://www.floridabulldog.org/2021/02/publix-where-political-giving-helped-get-no-bid-covid-vaccine-business/",
+          "outlet": "Florida Bulldog",
+          "date": "2021-02-01",
+          "summary": ""
+        }
+      ]
+    },
+    "d_THE_GEO_GROUP_INC_": {
+      "id": "d_THE_GEO_GROUP_INC_",
+      "canonical_name": "THE GEO GROUP, INC.",
+      "type": "corporate",
+      "industry": "private-prisons",
+      "themes": [
+        "private-prisons",
+        "immigration",
+        "government-contracts",
+        "pay-to-play",
+        "dark-money"
+      ],
+      "articles": [
+        {
+          "title": "How private prisons backdoor big donations to Ron DeSantis",
+          "url": "https://jasongarcia.substack.com/p/how-private-prisons-backdoor-big",
+          "outlet": "Seeking Rents (Jason Garcia / Substack)",
+          "date": "2022-11-01",
+          "summary": ""
+        },
+        {
+          "title": "Some major Trump donors are now reaping billions in ICE contracts",
+          "url": "https://www.opensecrets.org/news/2026/03/some-major-trump-donors-are-now-reaping-billions-in-ice-contracts",
+          "outlet": "OpenSecrets",
+          "date": "2026-03-01",
+          "summary": ""
+        }
+      ]
+    },
+    "d_TRULIEVE_INC_": {
+      "id": "d_TRULIEVE_INC_",
+      "canonical_name": "TRULIEVE INC.",
+      "type": "corporate",
+      "industry": "cannabis",
+      "themes": [
+        "cannabis",
+        "ballot-initiative",
+        "regulatory-capture",
+        "monopoly-defense",
+        "federal-lobbying"
+      ],
+      "articles": [
+        {
+          "title": "Campaign to legalize marijuana in Florida is mostly bankrolled by one company",
+          "url": "https://www.wusf.org/politics-issues/2024-10-08/campaign-legalize-marijuana-florida-amendment-3-mostly-bankrolled-one-company-trulieve",
+          "outlet": "WUSF Public Media",
+          "date": "2024-10-08",
+          "summary": ""
+        },
+        {
+          "title": "Florida Amendment 3, Marijuana Legalization Initiative (2024)",
+          "url": "https://ballotpedia.org/Florida_Amendment_3,_Marijuana_Legalization_Initiative_(2024)",
+          "outlet": "Ballotpedia",
+          "date": "2024-11-05",
+          "summary": ""
+        }
+      ]
+    },
+    "d_UNITED_STATES_SUGAR_CORPORATION": {
+      "id": "d_UNITED_STATES_SUGAR_CORPORATION",
+      "canonical_name": "UNITED STATES SUGAR CORPORATION",
+      "type": "corporate",
+      "industry": "sugar",
+      "themes": [
+        "sugar",
+        "everglades",
+        "water-quality",
+        "agricultural-lobby",
+        "federal-lobbying",
+        "dark-money"
+      ],
+      "articles": [
+        {
+          "title": "Florida Big Sugar's campaign donations reach $6M in state races",
+          "url": "https://www.tampabay.com/news/florida-politics/2022/05/12/florida-big-sugars-campaign-donations-reach-6m-in-state-races/",
+          "outlet": "Tampa Bay Times",
+          "date": "2022-05-12",
+          "summary": ""
+        },
+        {
+          "title": "'Not even close': Clean-up of Everglades water polluted by Big Sugar struggles to keep up",
+          "url": "https://www.wlrn.org/environment/2023-12-06/everglades-restoration-sugar-farms-phosphorous-water",
+          "outlet": "WLRN",
+          "date": "2023-12-06",
+          "summary": ""
+        }
+      ]
+    }
+  }
+}
