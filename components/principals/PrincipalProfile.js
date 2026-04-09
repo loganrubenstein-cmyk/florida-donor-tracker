@@ -51,7 +51,7 @@ function SectionLabel({ children }) {
   );
 }
 
-export default function PrincipalProfile({ data }) {
+export default function PrincipalProfile({ data, compData = null }) {
   const lobbyists = data.lobbyists || [];
   const activeLobbyists   = lobbyists.filter(l => l.is_active);
   const inactiveLobbyists = lobbyists.filter(l => !l.is_active);
@@ -134,9 +134,62 @@ export default function PrincipalProfile({ data }) {
           value={data.donation_total > 0 ? fmt(data.donation_total) : '—'}
           sub={data.num_contributions > 0 ? `${data.num_contributions.toLocaleString()} contributions` : null}
           color={data.donation_total > 0 ? 'var(--orange)' : 'var(--text-dim)'} />
-        <StatBox label="Past Lobbyists" value={(inactiveLobbyists.length).toLocaleString()}
-          color="var(--text-dim)" />
+        {compData ? (
+          <StatBox label="Lobbying Spend (est.)"
+            value={fmt(compData.total_comp)}
+            sub={`${compData.num_quarters || 0} quarters · midpoint estimate`}
+            color="var(--blue)" />
+        ) : (
+          <StatBox label="Past Lobbyists" value={(inactiveLobbyists.length).toLocaleString()}
+            color="var(--text-dim)" />
+        )}
       </div>
+
+      {/* Lobbying compensation section */}
+      {compData && (
+        <div style={{ marginBottom: '2rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+            <SectionLabel>Lobbying Compensation</SectionLabel>
+          </div>
+          <div style={{
+            padding: '0.75rem 1rem', border: '1px solid rgba(160,192,255,0.15)',
+            borderRadius: '3px', background: 'rgba(160,192,255,0.03)',
+            fontSize: '0.7rem', color: 'var(--text-dim)', marginBottom: '1rem', lineHeight: 1.6,
+          }}>
+            Estimated total: <strong style={{ color: 'var(--blue)' }}>{fmt(compData.total_comp)}</strong> across {compData.num_quarters} quarters
+            · covers {compData.branches?.join(' &amp; ')} lobbying
+            · figures are midpoints of FL-mandated compensation bands — not exact amounts.
+          </div>
+
+          {/* Top firms */}
+          {compData.top_firms?.length > 0 && (
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem', marginBottom: '1rem' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                  {['#', 'Lobbying Firm', 'Est. Compensation'].map((h, j) => (
+                    <th key={h} style={{
+                      padding: '0.35rem 0.6rem', fontSize: '0.6rem', color: 'var(--text-dim)',
+                      textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 400,
+                      textAlign: j === 0 ? 'center' : j === 2 ? 'right' : 'left',
+                    }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {compData.top_firms.map((f, i) => (
+                  <tr key={i} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
+                    <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2rem' }}>{i + 1}</td>
+                    <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text)' }}>{f.firm_name}</td>
+                    <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--blue)', fontWeight: 700, whiteSpace: 'nowrap' }}>
+                      {fmt(f.total_comp)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      )}
 
       {/* Active lobbyists */}
       {activeLobbyists.length > 0 && (

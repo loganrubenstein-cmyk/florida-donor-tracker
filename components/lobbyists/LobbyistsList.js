@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import BackLinks from '@/components/BackLinks';
 
 function fmt(n) {
@@ -26,57 +26,32 @@ const TYPE_OPTIONS = [
 const PAGE_SIZE = 50;
 
 export default function LobbyistsList() {
-  const [lobbyists, setLobbyists] = useState(null);
-  const [search, setSearch]       = useState('');
-  const [type, setType]           = useState('all');
-  const [sortBy, setSortBy]       = useState('total_donation_influence');
-  const [page, setPage]           = useState(1);
+  const [results, setResults]       = useState({ data: [], total: 0, pages: 0 });
+  const [loading, setLoading]       = useState(true);
+  const [search, setSearch]         = useState('');
+  const [debouncedQ, setDebouncedQ] = useState('');
+  const [type, setType]             = useState('all');
+  const [sortBy, setSortBy]         = useState('total_donation_influence');
+  const [page, setPage]             = useState(1);
 
+  // Debounce search input
   useEffect(() => {
-    fetch('/data/lobbyists/index.json')
-      .then(r => r.json())
-      .then(setLobbyists)
-      .catch(() => setLobbyists([]));
-  }, []);
-
-  const filtered = useMemo(() => {
-    if (!lobbyists) return [];
-    let list = lobbyists;
-
-    if (search.trim()) {
-      const q = search.trim().toLowerCase();
-      list = list.filter(l =>
-        (l.name || '').toLowerCase().includes(q) ||
-        (l.firm || '').toLowerCase().includes(q) ||
-        (l.top_principal || '').toLowerCase().includes(q)
-      );
-    }
-
-    if (type === 'matched') list = list.filter(l => l.has_donation_match);
-    if (type === 'active')  list = list.filter(l => (l.num_active || 0) > 0);
-
-    list = [...list].sort((a, b) => {
-      if (sortBy === 'name') return (a.name || '').localeCompare(b.name || '');
-      if (sortBy === 'num_principals') return (b.num_principals || 0) - (a.num_principals || 0);
-      if (sortBy === 'num_active') return (b.num_active || 0) - (a.num_active || 0);
-      return (b.total_donation_influence || 0) - (a.total_donation_influence || 0);
-    });
-
-    return list;
-  }, [lobbyists, search, type, sortBy]);
+    const t = setTimeout(() => setDebouncedQ(search), 300);
+    return () => clearTimeout(t);
+  }, [search]);
 
   // Reset to page 1 when filters change
-  useMemo(() => setPage(1), [search, type, sortBy]);
+  useEffect(() => { setPage(1); }, [debouncedQ, type, sortBy]);
 
-  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
-  const pageItems  = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-
-  const totals = useMemo(() => {
-    if (!lobbyists) return null;
-    const withMatch = lobbyists.filter(l => l.has_donation_match).length;
-    const totalInfluence = lobbyists.reduce((s, l) => s + (l.total_donation_influence || 0), 0);
-    return { total: lobbyists.length, withMatch, totalInfluence };
-  }, [lobbyists]);
+  // Fetch from API
+  useEffect(() => {
+    setLoading(true);
+    const params = new URLSearchParams({ q: debouncedQ, type, sort: sortBy, page });
+    fetch(`/api/lobbyists?${params}`)
+      .then(r => r.json())
+      .then(json => { setResults(json); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, [debouncedQ, type, sortBy, page]);
 
   const inputStyle = {
     background: '#0d0d22', border: '1px solid var(--border)',
@@ -85,15 +60,7 @@ export default function LobbyistsList() {
     fontFamily: 'var(--font-mono)', outline: 'none',
   };
 
-  if (!lobbyists) {
-    return (
-      <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '4rem 2rem', textAlign: 'center' }}>
-        <div style={{ color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.78rem' }}>
-          Loading lobbyists…
-        </div>
-      </main>
-    );
-  }
+  const { data: pageItems, total, pages: totalPages } = results;
 
   return (
     <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
@@ -108,14 +75,10 @@ export default function LobbyistsList() {
         }}>
           Lobbyists
         </h1>
-        {totals && (
-          <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
-            <span>{totals.total.toLocaleString()} registered lobbyists</span>
-            <span style={{ color: 'var(--teal)' }}>{totals.withMatch.toLocaleString()} with donation match</span>
-            <span style={{ color: 'var(--orange)' }}>{fmt(totals.totalInfluence)} total matched donations</span>
-            <span>FL Legislature · 2014–present</span>
-          </div>
-        )}
+        <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+          <span>{loading ? '…' : total.toLocaleString()} registered lobbyists</span>
+          <span>FL Legislature · 2014–present</span>
+        </div>
       </div>
 
       {/* Filters */}
@@ -143,22 +106,22 @@ export default function LobbyistsList() {
         fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase',
         letterSpacing: '0.08em', marginBottom: '0.6rem',
       }}>
-        {filtered.length.toLocaleString()} result{filtered.length !== 1 ? 's' : ''}
+        {loading ? 'Loading…' : `${total.toLocaleString()} result${total !== 1 ? 's' : ''}`}
       </div>
 
       {/* Table */}
-      <div style={{ overflowX: 'auto' }}>
+      <div style={{ overflowX: 'auto', opacity: loading ? 0.5 : 1, transition: 'opacity 0.15s' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid var(--border)' }}>
               {[
-                { label: '#',                 align: 'center', width: '2rem' },
-                { label: 'Lobbyist',          align: 'left'  },
-                { label: 'Firm',              align: 'left'  },
-                { label: 'Location',          align: 'left'  },
-                { label: 'Principals',        align: 'right', sortKey: 'num_principals'           },
-                { label: 'Active',            align: 'right'                                      },
-                { label: 'Donation Influence',align: 'right', sortKey: 'total_donation_influence' },
+                { label: '#',                  align: 'center', width: '2rem' },
+                { label: 'Lobbyist',           align: 'left'  },
+                { label: 'Firm',               align: 'left'  },
+                { label: 'Location',           align: 'left'  },
+                { label: 'Principals',         align: 'right', sortKey: 'num_principals'           },
+                { label: 'Active',             align: 'right'                                      },
+                { label: 'Donation Influence', align: 'right', sortKey: 'total_donation_influence' },
               ].map(({ label, align, width, sortKey }) => (
                 <th key={label} style={{
                   padding: '0.4rem 0.6rem', textAlign: align, width,
@@ -174,7 +137,7 @@ export default function LobbyistsList() {
             </tr>
           </thead>
           <tbody>
-            {filtered.length === 0 && (
+            {!loading && pageItems.length === 0 && (
               <tr>
                 <td colSpan={7} style={{
                   padding: '2.5rem 0.6rem', color: 'var(--text-dim)',

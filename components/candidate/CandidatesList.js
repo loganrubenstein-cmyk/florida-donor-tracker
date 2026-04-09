@@ -1,16 +1,9 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import BackLinks from '@/components/BackLinks';
 
 const PARTY_COLOR = { REP: 'var(--republican)', DEM: 'var(--democrat)' };
-const PARTY_LABEL = {
-  REP: 'Republican', DEM: 'Democrat',
-  NPA: 'No Party', IND: 'Independent',
-  LPF: 'Libertarian', GRE: 'Green',
-  NOP: 'No Party', WRI: 'Write-in',
-  CPF: 'CPF', ASP: 'ASP',
-};
 
 const MAJOR_OFFICES = [
   'Governor',
@@ -31,93 +24,47 @@ function fmt(n) {
   return `$${n.toFixed(0)}`;
 }
 
-function partyGroup(code) {
-  if (code === 'REP') return 'REP';
-  if (code === 'DEM') return 'DEM';
-  if (code === 'NPA' || code === 'IND' || code === 'NOP') return 'NPA/IND';
-  return 'Other';
-}
-
-function officeGroup(office) {
-  return MAJOR_OFFICES.includes(office) ? office : 'Other';
-}
-
 const SORT_OPTIONS = [
-  { value: 'total_combined', label: 'Combined Total' },
+  { value: 'total_combined',   label: 'Combined Total' },
   { value: 'hard_money_total', label: 'Hard Money' },
   { value: 'soft_money_total', label: 'Soft Money' },
-  { value: 'candidate_name', label: 'Name A–Z' },
+  { value: 'candidate_name',   label: 'Name A–Z' },
 ];
+
+const YEARS = [2026, 2024, 2022, 2020, 2018, 2016, 2014, 2012, 2010, 2008, 2006];
 
 const PAGE_SIZE = 50;
 
 export default function CandidatesList() {
-  const [candidates, setCandidates] = useState(null);
-  const [search, setSearch]       = useState('');
-  const [party, setParty]         = useState('all');
-  const [office, setOffice]       = useState('all');
-  const [year, setYear]           = useState('all');
-  const [district, setDistrict]   = useState('');
-  const [sortBy, setSortBy]       = useState('total_combined');
-  const [page, setPage]           = useState(1);
+  const [results, setResults]       = useState({ data: [], total: 0, pages: 0 });
+  const [loading, setLoading]       = useState(true);
+  const [search, setSearch]         = useState('');
+  const [debouncedQ, setDebouncedQ] = useState('');
+  const [party, setParty]           = useState('all');
+  const [office, setOffice]         = useState('all');
+  const [year, setYear]             = useState('all');
+  const [district, setDistrict]     = useState('');
+  const [sortBy, setSortBy]         = useState('total_combined');
+  const [page, setPage]             = useState(1);
 
+  // Debounce search input
   useEffect(() => {
-    fetch('/data/candidate_stats.json')
-      .then(r => r.json())
-      .then(setCandidates)
-      .catch(() => setCandidates([]));
-  }, []);
-
-  // Derive filter option lists
-  const years   = useMemo(() => {
-    if (!candidates) return [];
-    const s = [...new Set(candidates.map(c => c.election_year).filter(Boolean))].sort().reverse();
-    return s;
-  }, [candidates]);
-
-  const offices = useMemo(() => {
-    if (!candidates) return [];
-    const groups = [...new Set(candidates.map(c => officeGroup(c.office_desc)))];
-    return MAJOR_OFFICES.filter(o => groups.includes(o)).concat(groups.includes('Other') ? ['Other'] : []);
-  }, [candidates]);
-
-  const filtered = useMemo(() => {
-    if (!candidates) return [];
-    let list = candidates;
-
-    if (search.trim()) {
-      const q = search.trim().toLowerCase();
-      list = list.filter(c => (c.candidate_name || '').toLowerCase().includes(q));
-    }
-    if (party !== 'all') {
-      list = list.filter(c => partyGroup(c.party_code) === party);
-    }
-    if (office !== 'all') {
-      list = list.filter(c => officeGroup(c.office_desc) === office);
-    }
-    if (year !== 'all') {
-      list = list.filter(c => c.election_year === year);
-    }
-    if (district.trim()) {
-      const d = district.trim().replace(/^0+/, '') || '0';
-      list = list.filter(c => c.district && c.district.replace(/^0+/, '') === d);
-    }
-
-    list = [...list].sort((a, b) => {
-      if (sortBy === 'candidate_name') {
-        return (a.candidate_name || '').localeCompare(b.candidate_name || '');
-      }
-      return (b[sortBy] || 0) - (a[sortBy] || 0);
-    });
-
-    return list;
-  }, [candidates, search, party, office, year, district, sortBy]);
+    const t = setTimeout(() => setDebouncedQ(search), 300);
+    return () => clearTimeout(t);
+  }, [search]);
 
   // Reset to page 1 when filters change
-  useMemo(() => setPage(1), [search, party, office, year, district, sortBy]);
+  useEffect(() => { setPage(1); }, [debouncedQ, party, office, year, district, sortBy]);
 
-  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
-  const pageItems  = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  // Fetch from API
+  useEffect(() => {
+    setLoading(true);
+    const params = new URLSearchParams({ q: debouncedQ, party, office, year, district, sort: sortBy, page });
+    fetch(`/api/candidates?${params}`)
+      .then(r => r.json())
+      .then(json => { setResults(json); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, [debouncedQ, party, office, year, sortBy, page]);
 
   const inputStyle = {
     background: '#0d0d22', border: '1px solid var(--border)',
@@ -126,20 +73,11 @@ export default function CandidatesList() {
     fontFamily: 'var(--font-mono)', outline: 'none',
   };
 
-  if (!candidates) {
-    return (
-      <main style={{ maxWidth: '1000px', margin: '0 auto', padding: '4rem 2rem', textAlign: 'center' }}>
-        <div style={{ color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.78rem' }}>
-          Loading candidates…
-        </div>
-      </main>
-    );
-  }
+  const { data: pageItems, total, pages: totalPages } = results;
 
   return (
     <main className="m-padx" style={{ maxWidth: '1000px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
 
-      {/* Back */}
       <BackLinks links={[{ href: '/', label: 'home' }]} />
 
       {/* Header */}
@@ -151,7 +89,7 @@ export default function CandidatesList() {
           Candidates
         </h1>
         <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>
-          {(candidates?.length || 0).toLocaleString()} candidates with campaign finance data · Florida Division of Elections
+          {loading ? 'Loading…' : `${total.toLocaleString()} candidates with campaign finance data`} · Florida Division of Elections
         </div>
       </div>
 
@@ -171,16 +109,17 @@ export default function CandidatesList() {
           <option value="all">All Parties</option>
           <option value="REP">Republican</option>
           <option value="DEM">Democrat</option>
-          <option value="NPA/IND">NPA / Independent</option>
-          <option value="Other">Other</option>
+          <option value="NPA">NPA / No Party</option>
+          <option value="IND">Independent</option>
+          <option value="LPF">Libertarian</option>
         </select>
         <select value={office} onChange={e => setOffice(e.target.value)} style={inputStyle}>
           <option value="all">All Offices</option>
-          {offices.map(o => <option key={o} value={o}>{o}</option>)}
+          {MAJOR_OFFICES.map(o => <option key={o} value={o}>{o}</option>)}
         </select>
         <select value={year} onChange={e => setYear(e.target.value)} style={inputStyle}>
           <option value="all">All Years</option>
-          {years.map(y => <option key={y} value={y}>{y}</option>)}
+          {YEARS.map(y => <option key={y} value={y}>{y}</option>)}
         </select>
         <input
           type="text"
@@ -199,24 +138,24 @@ export default function CandidatesList() {
         fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase',
         letterSpacing: '0.08em', marginBottom: '0.6rem',
       }}>
-        {filtered.length.toLocaleString()} result{filtered.length !== 1 ? 's' : ''}
+        {loading ? 'Loading…' : `${total.toLocaleString()} result${total !== 1 ? 's' : ''}`}
       </div>
 
       {/* Table */}
-      <div style={{ overflowX: 'auto' }}>
+      <div style={{ overflowX: 'auto', opacity: loading ? 0.5 : 1, transition: 'opacity 0.15s' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid var(--border)' }}>
               {[
-                { label: '#',           align: 'center', width: '2rem' },
-                { label: 'Candidate',   align: 'left',   sortKey: 'candidate_name'   },
-                { label: 'Office',      align: 'left'   },
-                { label: 'Party',       align: 'center' },
-                { label: 'Year',        align: 'center' },
-                { label: 'Hard Money',  align: 'right',  sortKey: 'hard_money_total'  },
-                { label: 'Soft Money',  align: 'right',  sortKey: 'soft_money_total'  },
-                { label: 'Combined',    align: 'right',  sortKey: 'total_combined'    },
-                { label: 'PCs',         align: 'center' },
+                { label: '#',          align: 'center', width: '2rem' },
+                { label: 'Candidate',  align: 'left',   sortKey: 'candidate_name'  },
+                { label: 'Office',     align: 'left'   },
+                { label: 'Party',      align: 'center' },
+                { label: 'Year',       align: 'center' },
+                { label: 'Hard Money', align: 'right',  sortKey: 'hard_money_total' },
+                { label: 'Soft Money', align: 'right',  sortKey: 'soft_money_total' },
+                { label: 'Combined',   align: 'right',  sortKey: 'total_combined'   },
+                { label: 'PCs',        align: 'center' },
               ].map(({ label, align, width, sortKey }) => (
                 <th key={label} style={{
                   padding: '0.4rem 0.6rem', textAlign: align, width,
@@ -233,7 +172,7 @@ export default function CandidatesList() {
             </tr>
           </thead>
           <tbody>
-            {filtered.length === 0 && (
+            {!loading && pageItems.length === 0 && (
               <tr>
                 <td colSpan={9} style={{
                   padding: '2.5rem 0.6rem', color: 'var(--text-dim)',
@@ -254,11 +193,16 @@ export default function CandidatesList() {
                     <a href={`/candidate/${c.acct_num}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
                       {c.candidate_name || `#${c.acct_num}`}
                     </a>
+                    <a
+                      href={`/explorer?recipient_acct=${c.acct_num}&recipient_type=candidate`}
+                      style={{ marginLeft: '0.5rem', fontSize: '0.58rem', color: 'var(--text-dim)', textDecoration: 'none', verticalAlign: 'middle' }}
+                      title="View contributions in explorer"
+                    >
+                      ↗
+                    </a>
                   </td>
                   <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.7rem' }}>
-                    {officeGroup(c.office_desc) === 'Other'
-                      ? c.office_desc || '—'
-                      : c.office_desc || '—'}
+                    {c.office_desc || '—'}
                     {c.district ? ` · ${c.district}` : ''}
                   </td>
                   <td style={{ padding: '0.45rem 0.6rem', textAlign: 'center' }}>

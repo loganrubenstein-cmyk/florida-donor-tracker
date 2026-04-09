@@ -55,6 +55,9 @@ body {
   .purpose-right { border-left: none !important; padding-left: 0 !important; padding-top: 1.5rem; border-top: 1px solid rgba(100,140,220,0.1); }
 }
 
+/* ── Utility ───────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) { .hide-mobile { display: none !important; } }
+
 /* ── Chart wrapper ─────────────────────────────────────────────────────────── */
 .chart-wrap { width: 100%; height: 180px; }
 @media (max-width: 640px) { .chart-wrap { height: 130px; } }
@@ -93,7 +96,130 @@ body {
   .network-search      { width: 140px; }
 }
 
-/* Star field — static scattered dots via repeating radial-gradient background */
+/* ── Tab primitives ────────────────────────────────────────────────────────── */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab {
+  padding: 0.6rem 1.2rem;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab:hover { color: var(--text); }
+.tab-active {
+  color: var(--orange);
+  border-bottom-color: var(--orange);
+}
+
+/* ── Trust / methodology block ─────────────────────────────────────────────── */
+.trust-block {
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1.25rem 1.5rem;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+  margin-top: 3rem;
+}
+.trust-block h4 {
+  font-size: 0.75rem;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.75rem;
+}
+.trust-block a { color: var(--teal); text-decoration: none; }
+.trust-block a:hover { text-decoration: underline; }
+.trust-row { display: flex; flex-wrap: wrap; gap: 0.4rem 1.5rem; margin-bottom: 0.5rem; }
+.trust-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-dim); min-width: 80px; }
+
+/* ── Confidence badges ─────────────────────────────────────────────────────── */
+.confidence-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.68rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  vertical-align: middle;
+}
+.confidence-direct   { background: rgba(128,255,160,0.12); color: #80ffa0; border: 1px solid rgba(128,255,160,0.25); }
+.confidence-normalized { background: rgba(77,216,240,0.1); color: var(--teal); border: 1px solid rgba(77,216,240,0.2); }
+.confidence-inferred { background: rgba(255,176,96,0.1); color: var(--orange); border: 1px solid rgba(255,176,96,0.2); }
+.confidence-classified { background: rgba(160,192,255,0.1); color: var(--blue); border: 1px solid rgba(160,192,255,0.2); }
+
+/* ── Entity type badges ────────────────────────────────────────────────────── */
+.entity-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.68rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  vertical-align: middle;
+}
+.entity-individual   { background: rgba(100,140,220,0.1); color: var(--blue); border: 1px solid rgba(100,140,220,0.2); }
+.entity-corporation  { background: rgba(255,176,96,0.1); color: var(--orange); border: 1px solid rgba(255,176,96,0.2); }
+.entity-pac          { background: rgba(248,113,113,0.1); color: var(--republican); border: 1px solid rgba(248,113,113,0.2); }
+.entity-party        { background: rgba(96,165,250,0.1); color: var(--democrat); border: 1px solid rgba(96,165,250,0.2); }
+.entity-nonprofit    { background: rgba(128,255,160,0.12); color: #80ffa0; border: 1px solid rgba(128,255,160,0.25); }
+.entity-union        { background: rgba(255,208,96,0.1); color: var(--gold); border: 1px solid rgba(255,208,96,0.2); }
+.entity-unknown      { background: rgba(90,106,136,0.15); color: var(--text-dim); border: 1px solid var(--border); }
+
+/* ── Home tool card 3-col grid ─────────────────────────────────────────────── */
+.tool-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+@media (max-width: 768px) { .tool-grid-3 { grid-template-columns: 1fr; gap: 1.5rem; } }
+@media (max-width: 900px) { .tool-grid-3 { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; } }
+
+/* ── Hub page cards ────────────────────────────────────────────────────────── */
+.hub-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+.hub-card {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1.5rem;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: border-color 0.15s, background 0.15s;
+}
+.hub-card:hover { border-color: rgba(100,140,220,0.4); background: rgba(8,8,24,0.6); }
+.hub-card-title { font-size: 0.95rem; color: var(--text); font-weight: 600; }
+.hub-card-desc  { font-size: 0.78rem; color: var(--text-dim); line-height: 1.5; }
+.hub-card-stat  { font-size: 0.75rem; color: var(--teal); margin-top: auto; padding-top: 0.5rem; }
+
+@media (max-width: 640px) { .hub-grid { grid-template-columns: 1fr; } }
+@media (max-width: 900px) { .hub-grid { grid-template-columns: repeat(2, 1fr); } }
+
+/* ── Site footer ───────────────────────────────────────────────────────────── */
+.site-footer {
+  margin-top: 4rem;
+  padding: 1.5rem 2rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+.site-footer a { color: var(--text-dim); text-decoration: none; }
+.site-footer a:hover { color: var(--text); }
+
+/* ── Star field — static scattered dots via repeating radial-gradient background */
 .star-field {
   position: absolute;
   inset: 0;

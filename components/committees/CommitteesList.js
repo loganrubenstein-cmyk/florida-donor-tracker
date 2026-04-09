@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 const R_KW = ['REPUBLICAN', 'GOP', 'CONSERVATIVES FOR', 'AMERICANS FOR PROSPERITY'];
 const D_KW = ['DEMOCRAT', 'SEIU', 'AFSCME', 'AFL-CIO', 'LABOR ', 'UNION ', 'PROGRESSIVE'];
@@ -31,45 +31,36 @@ function fmtCount(n) {
 const PAGE_SIZE = 50;
 
 export default function CommitteesList() {
-  const [committees, setCommittees] = useState([]);
+  const [results, setResults]       = useState({ data: [], total: 0, pages: 0 });
   const [loading, setLoading]       = useState(true);
   const [search, setSearch]         = useState('');
+  const [debouncedQ, setDebouncedQ] = useState('');
   const [sort, setSort]             = useState('total');
   const [party, setParty]           = useState('all');
   const [page, setPage]             = useState(1);
 
+  // Debounce search input
   useEffect(() => {
-    fetch('/data/committees/index.json')
-      .then(r => r.json())
-      .then(d => { setCommittees(d); setLoading(false); });
-  }, []);
-
-  const filtered = useMemo(() => {
-    let list = committees;
-    if (search.trim()) {
-      const q = search.trim().toLowerCase();
-      list = list.filter(c => c.committee_name.toLowerCase().includes(q));
-    }
-    if (party !== 'all') {
-      list = list.filter(c => partyOf(c.committee_name, c.acct_num) === party);
-    }
-    if (sort === 'total') {
-      list = [...list].sort((a, b) => b.total_received - a.total_received);
-    } else if (sort === 'contributions') {
-      list = [...list].sort((a, b) => b.num_contributions - a.num_contributions);
-    } else if (sort === 'name') {
-      list = [...list].sort((a, b) => a.committee_name.localeCompare(b.committee_name));
-    }
-    return list;
-  }, [committees, search, sort, party]);
-
-  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
-  const pageItems  = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+    const t = setTimeout(() => setDebouncedQ(search), 300);
+    return () => clearTimeout(t);
+  }, [search]);
 
   // Reset to page 1 when filters change
-  useMemo(() => setPage(1), [search, sort]);
+  useEffect(() => { setPage(1); }, [debouncedQ, sort, party]);
 
-  if (loading) {
+  // Fetch from API
+  useEffect(() => {
+    setLoading(true);
+    const params = new URLSearchParams({ q: debouncedQ, sort, party, page });
+    fetch(`/api/committees?${params}`)
+      .then(r => r.json())
+      .then(json => { setResults(json); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, [debouncedQ, sort, party, page]);
+
+  const { data: pageItems, total, pages: totalPages } = results;
+
+  if (loading && pageItems.length === 0) {
     return (
       <div style={{ padding: '3rem 2rem', textAlign: 'center', color: 'var(--text-dim)', fontSize: '0.75rem', fontFamily: 'var(--font-mono)' }}>
         Loading committees...
@@ -119,12 +110,12 @@ export default function CommitteesList() {
           <option value="name">Sort: Name A–Z</option>
         </select>
         <span style={{ fontSize: '0.65rem', color: 'var(--text-dim)', whiteSpace: 'nowrap' }}>
-          {filtered.length.toLocaleString()} committees
+          {loading ? '…' : `${pageItems.length.toLocaleString()} committees`}
         </span>
       </div>
 
       {/* Table */}
-      <div style={{ overflowX: 'auto' }}>
+      <div style={{ overflowX: 'auto', opacity: loading ? 0.5 : 1, transition: 'opacity 0.15s' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid var(--border)' }}>
@@ -146,6 +137,13 @@ export default function CommitteesList() {
                 <td style={{ padding: '0.4rem 0.6rem', wordBreak: 'break-word', maxWidth: '340px' }}>
                   <a href={`/committee/${c.acct_num}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
                     {c.committee_name}
+                  </a>
+                  <a
+                    href={`/explorer?recipient_acct=${c.acct_num}&recipient_type=committee`}
+                    style={{ marginLeft: '0.4rem', fontSize: '0.58rem', color: 'var(--text-dim)', textDecoration: 'none', verticalAlign: 'middle' }}
+                    title="View contributions in explorer"
+                  >
+                    ↗
                   </a>
                   {(() => { const p = partyOf(c.committee_name, c.acct_num); return p ? (
                     <span style={{

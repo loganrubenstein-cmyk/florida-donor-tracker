@@ -29,16 +29,16 @@ OUTPUT_FILE = PROCESSED_DIR / "expenditures.csv"
 # Keys are exact raw column names (whitespace-stripped); values are snake_case.
 # If a raw column isn't in this dict, it passes through as-is.
 COLUMN_RENAME: dict = {
-    # Typical FL DOE expenditure columns — update after first real download:
-    "Rpt Yr":        "report_year",
-    "Rpt Type":      "report_type",
-    "Date":          "expenditure_date",
-    "Amount":        "amount",
-    "Vendor Name":   "vendor_name",
-    "Address":       "vendor_address",
-    "City State Zip": "vendor_city_state_zip",
-    "Purpose":       "purpose",
-    "Typ":           "type_code",
+    # Actual FL DOE TreFin.exe (queryfor=2) column names:
+    "Rpt Yr":          "report_year",
+    "Rpt Type":        "report_type",
+    "Date":            "expenditure_date",
+    "Amount":          "amount",
+    "Expense Paid To": "vendor_name",
+    "Address":         "vendor_address",
+    "City State Zip":  "vendor_city_state_zip",
+    "Purpose":         "purpose",
+    "Typ Reimb":       "type_code",
 }
 
 DATE_COLUMN   = "expenditure_date"

@@ -5,15 +5,14 @@ import BackLinks from '@/components/BackLinks';
 import { fmtArticleDate } from '@/lib/dateUtils';
 import { slugify } from '@/lib/slugify';
 import CommitteeConnections from './CommitteeConnections';
+import TabbedProfile from '@/components/shared/TabbedProfile';
+import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import dynamic from 'next/dynamic';
+import { fmtMoneyCompact, fmtMoney } from '@/lib/fmt';
 
-function fmt(n) {
-  if (n == null) return '—';
-  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000)     return `$${(n / 1_000).toFixed(0)}K`;
-  return `$${n.toFixed(0)}`;
-}
+const TransactionExplorer = dynamic(() => import('@/components/explorer/TransactionExplorer'), { ssr: false });
 
-function fmtDate(s) {
+function fmtDateLocal(s) {
   if (!s || s === 'None' || s === 'null') return '—';
   const d = new Date(s);
   if (isNaN(d.getTime())) return s;
@@ -29,92 +28,25 @@ function findCommitteeAnnotation(annotations, acct_num, committee_name) {
   return Object.values(annotations).find(e => norm(e.canonical_name) === normName) || null;
 }
 
-export default function CommitteeProfile({ data, annotations = {}, linkedCandidates = [] }) {
+export default function CommitteeProfile({ data, annotations = {}, linkedCandidates = [], expenditures = null }) {
   const annotation = findCommitteeAnnotation(annotations, data.acct_num, data.committee_name);
   const articles = annotation?.articles || [];
   const party = getPartyFromName(data.committee_name, data.acct_num);
   const partyColor = party === 'R' ? 'var(--republican)' : party === 'D' ? 'var(--democrat)' : null;
 
   const researchLinks = [
-    ...(data.website_url ? [{
-      label: 'Official Website →',
-      href: data.website_url,
-    }] : []),
-    {
-      label: 'Committee Connections →',
-      href: `/connections?committee=${data.acct_num}`,
-      internal: true,
-    },
-    {
-      label: 'View in Network →',
-      href: `/network?acct=${data.acct_num}`,
-      internal: true,
-    },
-    {
-      label: 'FL DOE Committee Page →',
-      href: `https://dos.elections.myflorida.com/committees/ComDetail.asp?account=${data.acct_num}`,
-    },
-    {
-      label: 'Campaign Finance Activity →',
-      href: `https://dos.elections.myflorida.com/cgi-bin/TreSel.exe?account=${data.acct_num}`,
-    },
-    {
-      label: 'Google News →',
-      href: `https://news.google.com/search?q=${encodeURIComponent(data.committee_name + ' Florida politics')}`,
-    },
-    {
-      label: 'OpenSecrets →',
-      href: `https://www.opensecrets.org/search?q=${encodeURIComponent(data.committee_name)}&type=donors`,
-    },
+    ...(data.website_url ? [{ label: 'Official Website →', href: data.website_url }] : []),
+    { label: 'Committee Connections →', href: `/connections?committee=${data.acct_num}`, internal: true },
+    { label: 'View in Network →', href: `/network/graph?acct=${data.acct_num}`, internal: true },
+    { label: 'FL DOE Committee Page →', href: `https://dos.elections.myflorida.com/committees/ComDetail.asp?account=${data.acct_num}` },
+    { label: 'Campaign Finance Activity →', href: `https://dos.elections.myflorida.com/cgi-bin/TreSel.exe?account=${data.acct_num}` },
+    { label: 'Google News →', href: `https://news.google.com/search?q=${encodeURIComponent(data.committee_name + ' Florida politics')}` },
   ];
 
-  return (
-    <main className="m-padx" style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
+  // ── Tab content ─────────────────────────────────────────────────────────────
 
-      {/* Back links */}
-      <BackLinks links={[{ href: '/', label: 'home' }, { href: '/network', label: 'network' }]} />
-
-      {/* Header */}
-      <div style={{ marginBottom: '1.75rem' }}>
-        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.6rem' }}>
-          <span style={{
-            fontSize: '0.65rem', padding: '0.15rem 0.5rem',
-            border: '1px solid var(--teal)', color: 'var(--teal)',
-            borderRadius: '3px', textTransform: 'uppercase', letterSpacing: '0.06em',
-          }}>
-            committee
-          </span>
-          {party && (
-            <span style={{
-              fontSize: '0.65rem', padding: '0.15rem 0.45rem',
-              border: `1px solid ${partyColor}`, color: partyColor,
-              borderRadius: '3px', letterSpacing: '0.06em', fontWeight: 'bold',
-            }}>
-              {party}
-            </span>
-          )}
-          {annotation && (
-            <a href="/investigations" style={{
-              fontSize: '0.65rem', padding: '0.15rem 0.5rem',
-              border: '1px solid var(--orange)', color: 'var(--orange)',
-              borderRadius: '3px', textTransform: 'uppercase', letterSpacing: '0.06em',
-              fontWeight: 'bold', textDecoration: 'none',
-            }}>
-              Investigation
-            </a>
-          )}
-        </div>
-        <h1 style={{
-          fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.4rem, 3vw, 2rem)',
-          fontWeight: 400, color: '#fff', lineHeight: 1.2, marginBottom: '0.4rem',
-        }}>
-          {data.committee_name}
-        </h1>
-        <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)' }}>
-          Acct #{data.acct_num}
-        </div>
-      </div>
-
+  const overviewContent = (
+    <div>
       {/* Stats grid */}
       <div className="rg-4" style={{
         gap: '1px', background: 'var(--border)',
@@ -122,10 +54,10 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
         marginBottom: '2rem', overflow: 'hidden',
       }}>
         {[
-          { label: 'Total Received',   value: fmt(data.total_received)                },
-          { label: 'Contributions',    value: data.num_contributions.toLocaleString() },
-          { label: 'Earliest',         value: fmtDate(data.date_range?.earliest)      },
-          { label: 'Latest',           value: fmtDate(data.date_range?.latest)        },
+          { label: 'Total Received',  value: fmtMoneyCompact(data.total_received) },
+          { label: 'Contributions',   value: (data.num_contributions || 0).toLocaleString() },
+          { label: 'Earliest',        value: fmtDateLocal(data.date_range?.earliest) },
+          { label: 'Latest',          value: fmtDateLocal(data.date_range?.latest) },
         ].map(({ label, value }) => (
           <div key={label} style={{ background: 'var(--bg)', padding: '1rem 1.25rem' }}>
             <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.3rem' }}>
@@ -184,15 +116,23 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
           )}
         </div>
       )}
+    </div>
+  );
 
-      {/* Top donors table */}
-      {data.top_donors.length > 0 && (
-        <div style={{ marginBottom: '2rem' }}>
-          <div style={{
-            fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase',
-            letterSpacing: '0.1em', marginBottom: '0.75rem',
-          }}>
-            Top Donors
+  const donorsContent = (
+    <div>
+      {data.top_donors.length > 0 ? (
+        <>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+            <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+              Top Donors — {data.top_donors.length} shown
+            </div>
+            <a
+              href={`/explorer?recipient_acct=${data.acct_num}&recipient_type=committee`}
+              style={{ fontSize: '0.65rem', color: 'var(--teal)', textDecoration: 'none' }}
+            >
+              View all contributions →
+            </a>
           </div>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
             <thead>
@@ -223,25 +163,27 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
                     {donor.type}
                   </td>
                   <td style={{ padding: '0.45rem 0.6rem', color: 'var(--orange)', whiteSpace: 'nowrap' }}>
-                    {fmt(donor.total_amount)}
+                    {fmtMoney(donor.total_amount)}
                   </td>
                   <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'right' }}>
-                    {donor.num_contributions.toLocaleString()}
+                    {(donor.num_contributions || 0).toLocaleString()}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-        </div>
+        </>
+      ) : (
+        <p style={{ color: 'var(--text-dim)', fontSize: '0.82rem' }}>No donor data available.</p>
       )}
+    </div>
+  );
 
-      {/* Linked Candidates */}
-      {linkedCandidates.length > 0 && (
-        <div style={{ marginBottom: '2rem' }}>
-          <div style={{
-            fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase',
-            letterSpacing: '0.1em', marginBottom: '0.75rem',
-          }}>
+  const candidatesContent = (
+    <div>
+      {linkedCandidates.length > 0 ? (
+        <>
+          <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
             Linked Candidates ({linkedCandidates.length})
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', background: 'var(--border)', border: '1px solid var(--border)', borderRadius: '3px', overflow: 'hidden' }}>
@@ -269,35 +211,118 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
               </div>
             ))}
           </div>
-        </div>
+        </>
+      ) : (
+        <p style={{ color: 'var(--text-dim)', fontSize: '0.82rem' }}>No linked candidates found.</p>
       )}
+    </div>
+  );
 
-      {/* Connected committees */}
-      <CommitteeConnections acctNum={data.acct_num} />
-
-      {/* Research links */}
-      <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.25rem', marginBottom: '2rem' }}>
-        <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>
-          Research
-        </div>
-        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-          {researchLinks.map(({ label, href, internal }) => (
-            <a key={label} href={href}
-              {...(!internal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-              style={{
-                padding: '0.35rem 0.75rem', border: '1px solid var(--border)',
-                color: internal ? 'var(--teal)' : 'var(--text-dim)', fontSize: '0.72rem', borderRadius: '3px',
-                textDecoration: 'none', fontFamily: 'var(--font-mono)',
-              }}>
-              {label}
-            </a>
-          ))}
-        </div>
+  const payeesContent = expenditures ? (
+    <div>
+      {/* Summary stats */}
+      <div style={{
+        display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))',
+        gap: '1px', background: 'var(--border)', border: '1px solid var(--border)',
+        borderRadius: '3px', marginBottom: '1.5rem', overflow: 'hidden',
+      }}>
+        {[
+          { label: 'Total Spent',    value: fmtMoneyCompact(expenditures.total_spent) },
+          { label: 'Payments',       value: (expenditures.num_expenditures || 0).toLocaleString() },
+          { label: 'Date Range',     value: expenditures.date_range?.start
+              ? `${expenditures.date_range.start.slice(0,7)} – ${expenditures.date_range.end.slice(0,7)}`
+              : '—' },
+        ].map(({ label, value }) => (
+          <div key={label} style={{ background: 'var(--bg)', padding: '0.75rem 1rem' }}>
+            <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.25rem' }}>{label}</div>
+            <div style={{ fontSize: '0.9rem', color: 'var(--teal)', fontWeight: 700 }}>{value}</div>
+          </div>
+        ))}
       </div>
 
-      {/* In the News */}
+      {/* Top vendors table */}
+      {expenditures.top_vendors?.length > 0 && (
+        <div>
+          <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
+            Top Vendors — {expenditures.top_vendors.length} shown
+          </div>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                {['#', 'Vendor', 'Payments', 'Total', '% of Spend'].map((h, j) => (
+                  <th key={h} style={{
+                    padding: '0.35rem 0.6rem', fontSize: '0.6rem', color: 'var(--text-dim)',
+                    textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 400,
+                    textAlign: j === 0 ? 'center' : j >= 2 ? 'right' : 'left',
+                  }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {expenditures.top_vendors.map((v, i) => (
+                <tr key={i} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
+                  <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2rem' }}>{i + 1}</td>
+                  <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text)', maxWidth: '280px', wordBreak: 'break-word' }}>
+                    {v.vendor_name}
+                  </td>
+                  <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontSize: '0.7rem' }}>
+                    {(v.num_payments || 0).toLocaleString()}
+                  </td>
+                  <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--teal)', fontWeight: 700, whiteSpace: 'nowrap' }}>
+                    {fmtMoney(v.total_amount)}
+                  </td>
+                  <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontSize: '0.7rem' }}>
+                    {v.pct != null ? `${v.pct.toFixed(1)}%` : '—'}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div style={{ marginTop: '0.75rem', fontSize: '0.68rem', color: 'var(--text-dim)' }}>
+            <a href={`https://dos.elections.myflorida.com/cgi-bin/TreSel.exe?account=${data.acct_num}`}
+              target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+              Full expenditure records at FL DOE →
+            </a>
+          </div>
+        </div>
+      )}
+    </div>
+  ) : (
+    <div style={{ padding: '1.5rem 0', color: 'var(--text-dim)', fontSize: '0.85rem', lineHeight: 1.6 }}>
+      <div style={{ color: 'var(--text)', marginBottom: '0.5rem', fontSize: '0.9rem' }}>
+        No expenditure data for this committee
+      </div>
+      This committee does not have expenditure records in the current dataset (1,673 committees have data).
+      <div style={{ marginTop: '1rem', fontSize: '0.75rem', color: 'rgba(90,106,136,0.7)' }}>
+        View raw expenditure records at:{' '}
+        <a href={`https://dos.elections.myflorida.com/cgi-bin/TreSel.exe?account=${data.acct_num}`}
+          target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+          FL DOE Campaign Finance →
+        </a>
+      </div>
+    </div>
+  );
+
+  const transactionsContent = (
+    <div>
+      <TransactionExplorer
+        initialRecipientAcct={data.acct_num}
+        initialRecipientType="committee"
+        prefilterLabel={`Contributions to ${data.committee_name}`}
+      />
+    </div>
+  );
+
+  const connectionsContent = (
+    <div>
+      <CommitteeConnections acctNum={data.acct_num} />
+    </div>
+  );
+
+  const sourcesContent = (
+    <div>
       {articles.length > 0 && (
-        <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.25rem', marginBottom: '2rem' }}>
+        <div style={{ marginBottom: '2rem' }}>
           <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
             In the News
           </div>
@@ -320,14 +345,96 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
         </div>
       )}
 
-      {/* Disclaimer */}
-      <div style={{
-        borderTop: '1px solid var(--border)', paddingTop: '1rem',
-        fontSize: '0.55rem', color: 'rgba(90,106,136,0.5)',
-        display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem',
-      }}>
-        <span>Data: Florida Division of Elections · Not affiliated with the State of Florida · All data from public records.</span>
+      <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>
+        Research Links
       </div>
+      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
+        {researchLinks.map(({ label, href, internal }) => (
+          <a key={label} href={href}
+            {...(!internal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+            style={{
+              padding: '0.35rem 0.75rem', border: '1px solid var(--border)',
+              color: internal ? 'var(--teal)' : 'var(--text-dim)', fontSize: '0.72rem', borderRadius: '3px',
+              textDecoration: 'none', fontFamily: 'var(--font-mono)',
+            }}>
+            {label}
+          </a>
+        ))}
+      </div>
+
+      <DataTrustBlock
+        source="Florida Division of Elections"
+        sourceUrl={`https://dos.elections.myflorida.com/committees/ComDetail.asp?account=${data.acct_num}`}
+        direct={['committee_name', 'acct_num', 'total_received', 'contribution_date', 'amount']}
+        normalized={['donor_name_normalized']}
+        inferred={['top_donor_links', 'candidate_links']}
+        classified={['committee_party', 'committee_type']}
+        caveats={[
+          'Party classification is inferred from committee name keywords — not an official field.',
+          'Top donors are matched by normalized name — the same donor may appear under multiple names.',
+          'Expenditure (payee) data is still being collected — payee tab will populate automatically.',
+        ]}
+      />
+    </div>
+  );
+
+  const tabs = [
+    { id: 'overview',      label: 'Overview',      content: overviewContent },
+    { id: 'donors',        label: 'Donors',        content: donorsContent },
+    { id: 'candidates',    label: 'Candidates',    content: candidatesContent },
+    { id: 'payees',        label: 'Payees',        content: payeesContent },
+    { id: 'transactions',  label: 'Transactions',  content: transactionsContent },
+    { id: 'connections',   label: 'Connections',   content: connectionsContent },
+    { id: 'sources',       label: 'Sources',       content: sourcesContent },
+  ];
+
+  return (
+    <main className="m-padx" style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
+
+      <BackLinks links={[{ href: '/', label: 'home' }, { href: '/network', label: 'network' }]} />
+
+      {/* Header */}
+      <div style={{ marginBottom: '1.75rem' }}>
+        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.6rem', flexWrap: 'wrap' }}>
+          <span style={{
+            fontSize: '0.65rem', padding: '0.15rem 0.5rem',
+            border: '1px solid var(--teal)', color: 'var(--teal)',
+            borderRadius: '3px', textTransform: 'uppercase', letterSpacing: '0.06em',
+          }}>
+            committee
+          </span>
+          {party && (
+            <span style={{
+              fontSize: '0.65rem', padding: '0.15rem 0.45rem',
+              border: `1px solid ${partyColor}`, color: partyColor,
+              borderRadius: '3px', letterSpacing: '0.06em', fontWeight: 'bold',
+            }}>
+              {party}
+            </span>
+          )}
+          {annotation && (
+            <a href="/investigations" style={{
+              fontSize: '0.65rem', padding: '0.15rem 0.5rem',
+              border: '1px solid var(--orange)', color: 'var(--orange)',
+              borderRadius: '3px', textTransform: 'uppercase', letterSpacing: '0.06em',
+              fontWeight: 'bold', textDecoration: 'none',
+            }}>
+              Investigation
+            </a>
+          )}
+        </div>
+        <h1 style={{
+          fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.4rem, 3vw, 2rem)',
+          fontWeight: 400, color: '#fff', lineHeight: 1.2, marginBottom: '0.4rem',
+        }}>
+          {data.committee_name}
+        </h1>
+        <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)' }}>
+          Acct #{data.acct_num}
+        </div>
+      </div>
+
+      <TabbedProfile tabs={tabs} defaultTab="overview" />
     </main>
   );
 }

@@ -151,6 +151,7 @@ def probe_cgi_endpoint(
     probe_comname: str,
     logger: logging.Logger,
     timeout: int = REQUEST_TIMEOUT,
+    probe_variants: list | None = None,
 ) -> tuple[dict, str]:
     """
     Try a series of parameter variants against cgi_url using probe_acct/probe_comname.
@@ -167,7 +168,8 @@ def probe_cgi_endpoint(
     })
     warmup_session(session, logger)
 
-    for i, variant_template in enumerate(_PROBE_VARIANTS, 1):
+    variants = probe_variants if probe_variants is not None else _PROBE_VARIANTS
+    for i, variant_template in enumerate(variants, 1):
         params = {
             k: v.replace("{acct}", probe_acct).replace("{comname}", probe_comname)
             for k, v in variant_template.items()

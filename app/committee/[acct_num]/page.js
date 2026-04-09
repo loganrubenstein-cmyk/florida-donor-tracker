@@ -1,66 +1,67 @@
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
-import { loadCommittee, listCommitteeAcctNums } from '@/lib/loadCommittee';
+import { loadCommittee } from '@/lib/loadCommittee';
 import { loadAnnotations } from '@/lib/loadAnnotations';
 import CommitteeProfile from '@/components/committee/CommitteeProfile';
+import { notFound } from 'next/navigation';
+import { getDb } from '@/lib/db';
 
+// Server-rendered on demand — no static file dependency
 export const dynamic = 'force-dynamic';
 
-let _pcLinksReverse = null;
-let _candidateNames = null;
-
-function loadPcLinksReverse() {
-  if (_pcLinksReverse) return _pcLinksReverse;
-  const DATA = join(process.cwd(), 'public', 'data');
-  try {
-    const links = JSON.parse(readFileSync(join(DATA, 'candidate_pc_links.json'), 'utf-8'));
-    const rev = {};
-    for (const [cand_acct, pcs] of Object.entries(links)) {
-      for (const pc of pcs) {
-        const k = String(pc.pc_acct);
-        if (!rev[k]) rev[k] = [];
-        rev[k].push({ acct_num: cand_acct, link_type: pc.link_type });
-      }
-    }
-    _pcLinksReverse = rev;
-  } catch {
-    _pcLinksReverse = {};
-  }
-  return _pcLinksReverse;
+function loadExpenditures(acctNum) {
+  const path = join(process.cwd(), 'public', 'data', 'expenditures', 'by_committee', `${acctNum}.json`);
+  if (!existsSync(path)) return null;
+  try { return JSON.parse(readFileSync(path, 'utf-8')); } catch { return null; }
 }
 
-function loadCandidateNames() {
-  if (_candidateNames) return _candidateNames;
-  const DATA = join(process.cwd(), 'public', 'data');
-  try {
-    const stats = JSON.parse(readFileSync(join(DATA, 'candidate_stats.json'), 'utf-8'));
-    _candidateNames = Object.fromEntries(stats.map(c => [String(c.acct_num), {
-      name: c.candidate_name, office: c.office_desc, year: c.election_year
-    }]));
-  } catch {
-    _candidateNames = {};
-  }
-  return _candidateNames;
+async function loadLinkedCandidates(acctNum) {
+  const db = getDb();
+  const { data } = await db
+    .from('candidate_pc_links')
+    .select('candidate_acct_num, link_type, candidates(candidate_name, office_desc, election_year)')
+    .eq('pc_acct_num', String(acctNum));
+
+  return (data || []).map(r => ({
+    acct_num:  r.candidate_acct_num,
+    link_type: r.link_type,
+    name:      r.candidates?.candidate_name || null,
+    office:    r.candidates?.office_desc    || null,
+    year:      r.candidates?.election_year  || null,
+  }));
 }
 
 export async function generateMetadata({ params }) {
   const { acct_num } = await params;
-  const data = loadCommittee(acct_num);
-  return { title: `${data.committee_name} | FL Donor Tracker` };
+  try {
+    const data = await loadCommittee(acct_num);
+    return { title: `${data.committee_name} | FL Donor Tracker` };
+  } catch {
+    return { title: 'Committee | FL Donor Tracker' };
+  }
 }
 
 export default async function CommitteePage({ params }) {
   const { acct_num } = await params;
-  const data = loadCommittee(acct_num);
-  const annotations = loadAnnotations();
 
-  // Linked candidates (committees that are "PCs" for candidates)
-  const reverse = loadPcLinksReverse();
-  const names   = loadCandidateNames();
-  const linkedCandidates = (reverse[String(acct_num)] || []).map(r => ({
-    ...r,
-    ...(names[r.acct_num] || {}),
-  }));
+  let data;
+  try {
+    data = await loadCommittee(acct_num);
+  } catch {
+    notFound();
+  }
 
-  return <CommitteeProfile data={data} annotations={annotations} linkedCandidates={linkedCandidates} />;
+  const [annotations, linkedCandidates] = await Promise.all([
+    Promise.resolve(loadAnnotations()),
+    loadLinkedCandidates(acct_num),
+  ]);
+
+  const expenditures = loadExpenditures(acct_num);
+
+  return <CommitteeProfile
+    data={data}
+    annotations={annotations}
+    linkedCandidates={linkedCandidates}
+    expenditures={expenditures}
+  />;
 }

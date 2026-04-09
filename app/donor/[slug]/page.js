@@ -1,15 +1,16 @@
 import { loadDonor } from '@/lib/loadDonor';
 import { loadAnnotations } from '@/lib/loadAnnotations';
 import DonorProfile from '@/components/donors/DonorProfile';
+import { notFound } from 'next/navigation';
 
+// Server-rendered on demand — no static file dependency
 export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   try {
-    const data = loadDonor(slug);
-    const name = data.name || slug;
-    return { title: `${name} | FL Donor Tracker` };
+    const data = await loadDonor(slug);
+    return { title: `${data.name} | FL Donor Tracker` };
   } catch {
     return { title: 'Donor | FL Donor Tracker' };
   }
@@ -17,7 +18,12 @@ export async function generateMetadata({ params }) {
 
 export default async function DonorPage({ params }) {
   const { slug } = await params;
-  const data = loadDonor(slug);
+  let data;
+  try {
+    data = await loadDonor(slug);
+  } catch {
+    notFound();
+  }
   const annotations = loadAnnotations();
   return <DonorProfile data={data} annotations={annotations} />;
 }

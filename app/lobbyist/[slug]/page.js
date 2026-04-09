@@ -1,16 +1,13 @@
-import { loadLobbyist, listLobbyistSlugs } from '@/lib/loadLobbyist';
+import { loadLobbyist } from '@/lib/loadLobbyist';
 import LobbyistProfile from '@/components/lobbyists/LobbyistProfile';
+import { notFound } from 'next/navigation';
 
-export const dynamic = 'force-static';
-
-export async function generateStaticParams() {
-  return listLobbyistSlugs().map(slug => ({ slug }));
-}
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   try {
-    const data = loadLobbyist(slug);
+    const data = await loadLobbyist(slug);
     return { title: `${data.name} | FL Donor Tracker` };
   } catch {
     return { title: 'Lobbyist | FL Donor Tracker' };
@@ -19,6 +16,11 @@ export async function generateMetadata({ params }) {
 
 export default async function LobbyistPage({ params }) {
   const { slug } = await params;
-  const data = loadLobbyist(slug);
+  let data;
+  try {
+    data = await loadLobbyist(slug);
+  } catch {
+    notFound();
+  }
   return <LobbyistProfile data={data} />;
 }

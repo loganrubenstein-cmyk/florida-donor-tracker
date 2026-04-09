@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import BackLinks from '@/components/BackLinks';
 
 function fmt(n) {
@@ -25,66 +25,54 @@ const TYPE_OPTIONS = [
 ];
 
 const INDUSTRY_OPTIONS = [
-  { value: 'all',                      label: 'All Industries' },
-  { value: 'Legal',                    label: 'Legal' },
-  { value: 'Real Estate',              label: 'Real Estate' },
-  { value: 'Healthcare',               label: 'Healthcare' },
-  { value: 'Finance & Insurance',      label: 'Finance & Insurance' },
-  { value: 'Agriculture',              label: 'Agriculture' },
-  { value: 'Construction',             label: 'Construction' },
-  { value: 'Education',                label: 'Education' },
-  { value: 'Technology / Engineering', label: 'Tech / Engineering' },
-  { value: 'Retail & Hospitality',     label: 'Retail & Hospitality' },
-  { value: 'Business & Consulting',    label: 'Business & Consulting' },
+  { value: 'all',                         label: 'All Industries' },
+  { value: 'Legal',                       label: 'Legal' },
+  { value: 'Real Estate',                 label: 'Real Estate' },
+  { value: 'Healthcare',                  label: 'Healthcare' },
+  { value: 'Finance & Insurance',         label: 'Finance & Insurance' },
+  { value: 'Agriculture',                 label: 'Agriculture' },
+  { value: 'Construction',                label: 'Construction' },
+  { value: 'Education',                   label: 'Education' },
+  { value: 'Technology / Engineering',    label: 'Tech / Engineering' },
+  { value: 'Retail & Hospitality',        label: 'Retail & Hospitality' },
+  { value: 'Business & Consulting',       label: 'Business & Consulting' },
   { value: 'Government & Public Service', label: 'Government' },
-  { value: 'Political / Lobbying',     label: 'Political / Lobbying' },
-  { value: 'Retired',                  label: 'Retired' },
-  { value: 'Not Employed',             label: 'Not Employed' },
-  { value: 'Other',                    label: 'Other' },
+  { value: 'Political / Lobbying',        label: 'Political / Lobbying' },
+  { value: 'Retired',                     label: 'Retired' },
+  { value: 'Not Employed',                label: 'Not Employed' },
+  { value: 'Other',                       label: 'Other' },
 ];
 
 const PAGE_SIZE = 50;
 
 export default function DonorsList() {
-  const [donors, setDonors] = useState(null);
-  const [search, setSearch]     = useState('');
-  const [type, setType]         = useState('all');
-  const [industry, setIndustry] = useState('all');
-  const [sortBy, setSortBy]     = useState('total_combined');
-  const [page, setPage]         = useState(1);
+  const [results, setResults]       = useState({ data: [], total: 0, pages: 0 });
+  const [loading, setLoading]       = useState(true);
+  const [search, setSearch]         = useState('');
+  const [debouncedQ, setDebouncedQ] = useState('');
+  const [type, setType]             = useState('all');
+  const [industry, setIndustry]     = useState('all');
+  const [sortBy, setSortBy]         = useState('total_combined');
+  const [page, setPage]             = useState(1);
 
+  // Debounce search input by 300ms
   useEffect(() => {
-    fetch('/data/donors/index_lite.json')
+    const t = setTimeout(() => setDebouncedQ(search), 300);
+    return () => clearTimeout(t);
+  }, [search]);
+
+  // Reset to page 1 when filters change
+  useEffect(() => { setPage(1); }, [debouncedQ, type, industry, sortBy]);
+
+  // Fetch from API
+  useEffect(() => {
+    setLoading(true);
+    const params = new URLSearchParams({ q: debouncedQ, type, industry, sort: sortBy, page });
+    fetch(`/api/donors?${params}`)
       .then(r => r.json())
-      .then(setDonors)
-      .catch(() => setDonors([]));
-  }, []);
-
-  const filtered = useMemo(() => {
-    if (!donors) return [];
-    let list = donors;
-
-    if (search.trim()) {
-      const q = search.trim().toLowerCase();
-      list = list.filter(d => (d.name || '').toLowerCase().includes(q));
-    }
-    if (type === 'corporate')  list = list.filter(d => d.is_corporate);
-    if (type === 'individual') list = list.filter(d => !d.is_corporate);
-    if (type === 'lobbyist')   list = list.filter(d => d.has_lobbyist_link);
-    if (industry !== 'all')    list = list.filter(d => d.industry === industry);
-
-    list = [...list].sort((a, b) => {
-      if (sortBy === 'name') return (a.name || '').localeCompare(b.name || '');
-      return (b[sortBy] || 0) - (a[sortBy] || 0);
-    });
-
-    return list;
-  }, [donors, search, type, industry, sortBy]);
-
-  useMemo(() => setPage(1), [search, type, industry, sortBy]);
-
-  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
-  const pageItems  = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+      .then(json => { setResults(json); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, [debouncedQ, type, industry, sortBy, page]);
 
   const inputStyle = {
     background: '#0d0d22', border: '1px solid var(--border)',
@@ -93,22 +81,7 @@ export default function DonorsList() {
     fontFamily: 'var(--font-mono)', outline: 'none',
   };
 
-  const totals = useMemo(() => {
-    if (!donors) return null;
-    const corp = donors.filter(d => d.is_corporate).length;
-    const withLobby = donors.filter(d => d.has_lobbyist_link).length;
-    return { total: donors.length, corp, withLobby };
-  }, [donors]);
-
-  if (!donors) {
-    return (
-      <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '4rem 2rem', textAlign: 'center' }}>
-        <div style={{ color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.78rem' }}>
-          Loading donors…
-        </div>
-      </main>
-    );
-  }
+  const { data: pageItems, total, pages: totalPages } = results;
 
   return (
     <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
@@ -123,14 +96,9 @@ export default function DonorsList() {
         }}>
           Donors
         </h1>
-        {totals && (
-          <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
-            <span>{totals.total.toLocaleString()} donors with profiles ($1K+ total)</span>
-            <span style={{ color: 'var(--orange)' }}>{totals.corp.toLocaleString()} corporate / org</span>
-            <span style={{ color: 'var(--teal)' }}>{totals.withLobby.toLocaleString()} with lobbyist link</span>
-            <span>Florida Division of Elections</span>
-          </div>
-        )}
+        <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+          <span>Donors with $1K+ in contributions · Florida Division of Elections</span>
+        </div>
       </div>
 
       {/* Filters */}
@@ -161,23 +129,23 @@ export default function DonorsList() {
         fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase',
         letterSpacing: '0.08em', marginBottom: '0.6rem',
       }}>
-        {filtered.length.toLocaleString()} result{filtered.length !== 1 ? 's' : ''}
+        {loading ? 'Loading…' : `${total.toLocaleString()} result${total !== 1 ? 's' : ''}`}
       </div>
 
       {/* Table */}
-      <div style={{ overflowX: 'auto' }}>
+      <div style={{ overflowX: 'auto', opacity: loading ? 0.5 : 1, transition: 'opacity 0.15s' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid var(--border)' }}>
               {[
-                { label: '#',             align: 'center', width: '2rem' },
-                { label: 'Donor',         align: 'left'  },
-                { label: 'Type',          align: 'center'},
-                { label: 'Location',      align: 'left'  },
-                { label: 'Committees',    align: 'right' },
-                { label: 'Soft Money',    align: 'right', sortKey: 'total_soft'     },
-                { label: 'Hard Money',    align: 'right', sortKey: 'total_hard'     },
-                { label: 'Combined',      align: 'right', sortKey: 'total_combined' },
+                { label: '#',          align: 'center', width: '2rem' },
+                { label: 'Donor',      align: 'left'   },
+                { label: 'Type',       align: 'center' },
+                { label: 'Location',   align: 'left'   },
+                { label: 'Committees', align: 'right'  },
+                { label: 'Soft Money', align: 'right', sortKey: 'total_soft'     },
+                { label: 'Hard Money', align: 'right', sortKey: 'total_hard'     },
+                { label: 'Combined',   align: 'right', sortKey: 'total_combined' },
               ].map(({ label, align, width, sortKey }) => (
                 <th key={label} style={{
                   padding: '0.4rem 0.6rem', textAlign: align, width,
@@ -186,16 +154,14 @@ export default function DonorsList() {
                   textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 400,
                 }}>
                   {label}{sortKey && sortBy === sortKey && (
-                    <span style={{ color: 'var(--orange)', marginLeft: '0.25rem' }}>
-                      {sortKey === 'name' ? '↑' : '↓'}
-                    </span>
+                    <span style={{ color: 'var(--orange)', marginLeft: '0.25rem' }}>↓</span>
                   )}
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {filtered.length === 0 && (
+            {!loading && pageItems.length === 0 && (
               <tr>
                 <td colSpan={8} style={{
                   padding: '2.5rem 0.6rem', color: 'var(--text-dim)',
@@ -219,6 +185,13 @@ export default function DonorsList() {
                   <td style={{ padding: '0.45rem 0.6rem', wordBreak: 'break-word', maxWidth: '260px' }}>
                     <a href={`/donor/${d.slug}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
                       {d.name}
+                    </a>
+                    <a
+                      href={`/explorer?donor_slug=${d.slug}`}
+                      style={{ marginLeft: '0.4rem', fontSize: '0.58rem', color: 'var(--text-dim)', textDecoration: 'none', verticalAlign: 'middle' }}
+                      title="View contributions in explorer"
+                    >
+                      ↗
                     </a>
                     {d.has_lobbyist_link && (
                       <span style={{

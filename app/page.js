@@ -48,7 +48,7 @@ export default function Home() {
           marginBottom: '1.5rem',
           fontWeight: 400,
         }}>
-          <HeroCounter total={meta.total_amount} />
+          <HeroCounter total={meta.grand_totals?.total_political_spending_tracked ?? meta.campaign_finance?.estimated_total_contributions ?? 0} />
           <br />raised in Florida<br />politics.
         </h1>
 
@@ -113,22 +113,64 @@ export default function Home() {
         maxWidth: '900px',
         margin: '0 auto',
       }}>
-        <div className="rg-4" style={{ gap: '1.5rem' }}>
-          {[
-            { value: formatBillions(meta.total_amount),                      label: 'total contributions\ntracked',      color: 'var(--orange)' },
-            { value: formatThousands(meta.total_contributions),              label: 'individual\ntransactions',          color: 'var(--teal)'   },
-            { value: meta.total_committees_with_data.toLocaleString(),       label: 'committees\nwith data',             color: 'var(--green)'  },
-            { value: candidateStats.length.toLocaleString(),                 label: 'candidates\ntracked',               color: 'var(--blue)'   },
-          ].map(({ value, label, color }) => (
-            <div key={label}>
-              <div style={{ fontSize: '1.5rem', color, fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1 }}>
-                {value}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '2.5rem' }}>
+          <div className="rg-4" style={{ gap: '1.5rem', flex: 1 }}>
+            {[
+              { value: formatBillions(meta.grand_totals?.total_political_spending_tracked ?? meta.campaign_finance?.estimated_total_contributions ?? 0), label: 'total political\nspending tracked', color: 'var(--orange)' },
+              { value: (meta.campaign_finance?.total_donors ?? 0).toLocaleString(),               label: 'donors\nindexed',              color: 'var(--teal)'   },
+              { value: (meta.committees?.total_committees ?? meta.lobbyist_registrations?.total_principals ?? 0).toLocaleString(), label: 'committees\ntracked',  color: 'var(--green)'  },
+              { value: (meta.candidates?.total_candidates ?? candidateStats.length).toLocaleString(), label: 'candidates\ntracked',       color: 'var(--blue)'   },
+            ].map(({ value, label, color }) => (
+              <div key={label}>
+                <div style={{ fontSize: '1.5rem', color, fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1 }}>
+                  {value}
+                </div>
+                <div style={{ fontSize: '0.55rem', color: 'var(--text-dim)', marginTop: '0.35rem', lineHeight: 1.6, whiteSpace: 'pre-line' }}>
+                  {label}
+                </div>
               </div>
-              <div style={{ fontSize: '0.55rem', color: 'var(--text-dim)', marginTop: '0.35rem', lineHeight: 1.6, whiteSpace: 'pre-line' }}>
-                {label}
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
+
+          {/* Florida outline — decorative */}
+          <div className="hide-mobile" style={{ flexShrink: 0, opacity: 0.55 }}>
+            <svg
+              viewBox="0 0 220 300"
+              width="72"
+              height="98"
+              fill="none"
+              stroke="var(--orange)"
+              strokeWidth="4"
+              strokeLinejoin="round"
+              strokeLinecap="round"
+            >
+              <path d="
+                M 0,52
+                L 132,2
+                L 210,10
+                L 216,62
+                L 212,112
+                L 210,162
+                L 212,202
+                L 206,242
+                L 195,268
+                L 172,284
+                L 148,292
+                L 124,290
+                L 102,278
+                L 86,256
+                L 74,228
+                L 66,200
+                L 60,170
+                L 52,144
+                L 40,124
+                L 26,108
+                L 8,96
+                L 0,80
+                Z
+              " />
+            </svg>
+          </div>
         </div>
       </section>
 
@@ -206,226 +248,60 @@ export default function Home() {
           letterSpacing: '0.15em',
           color: 'var(--text-dim)',
           textTransform: 'uppercase',
-          marginBottom: '1.25rem',
+          marginBottom: '1.5rem',
         }}>
           Explore the data
         </div>
-        <div className="rg-2" style={{ gap: '1rem' }}>
-          <a href="/search" style={{ textDecoration: 'none' }}>
-            <div style={{
-              border: '1px solid rgba(255,176,96,0.35)',
-              borderRadius: '3px',
-              padding: '1.25rem',
-              background: 'rgba(255,176,96,0.04)',
-              height: '100%',
-              cursor: 'pointer',
-            }}>
-              <div style={{ fontSize: '0.72rem', color: 'var(--orange)', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
-                → global search
-              </div>
-              <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
-                Search across all 60,000+ entities — donors, committees, candidates, lobbyists, and principals — in one place.
-              </div>
-            </div>
-          </a>
 
-          <a href="/donors" style={{ textDecoration: 'none' }}>
-            <div style={{
-              border: '1px solid rgba(255,176,96,0.2)',
-              borderRadius: '3px',
-              padding: '1.25rem',
-              background: 'rgba(255,176,96,0.02)',
-              height: '100%',
-              cursor: 'pointer',
-            }}>
-              <div style={{ fontSize: '0.72rem', color: 'var(--orange)', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
-                → search donors
-              </div>
-              <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
-                Find any donor by name. See their total giving, which committees they fund, and any lobbyist connections.
-              </div>
-            </div>
-          </a>
+        {/* Three-column layout: Who Gave | Who Got Paid | How Money Moved */}
+        <div className="tool-grid-3">
 
-          <a href="/network" style={{ textDecoration: 'none' }}>
-            <div style={{
-              border: '1px solid rgba(77,216,240,0.2)',
-              borderRadius: '3px',
-              padding: '1.25rem',
-              background: 'rgba(77,216,240,0.02)',
-              height: '100%',
-              cursor: 'pointer',
-            }}>
-              <div style={{ fontSize: '0.72rem', color: 'var(--teal)', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
-                → explore network
-              </div>
-              <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
-                Visualize the full donor-committee money network. Trace how funds flow across thousands of nodes.
-              </div>
+          {/* Column 1 — Who Gave */}
+          <div>
+            <div style={{ fontSize: '0.55rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '0.75rem', borderBottom: '1px solid rgba(100,140,220,0.1)', paddingBottom: '0.4rem' }}>
+              Who gave
             </div>
-          </a>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <CardLink href="/donors" color="var(--orange)" accent="rgba(255,176,96,0.2)" title="→ donors" desc="Search 336K donors — total giving, committee funding, lobbyist connections." />
+              <CardLink href="/explorer" color="var(--orange)" accent="rgba(255,176,96,0.35)" title="→ transaction explorer" desc="Browse every contribution row — filter by name, amount, date, recipient." highlight />
+              <CardLink href="/industries" color="var(--blue)" accent="rgba(160,192,255,0.15)" title="→ industries" desc="Legal, Real Estate, Healthcare, Finance — see which sectors fund what." />
+              <CardLink href="/lobbyists" color="var(--blue)" accent="rgba(160,192,255,0.15)" title="→ lobbyists" desc="2,480 registered FL lobbyists cross-referenced with donation records." />
+              <CardLink href="/principals" color="var(--green)" accent="rgba(128,255,160,0.2)" title="→ principals" desc="Lobbying clients matched to their campaign contributions." />
+              <CardLink href="/lobbying/bills" color="var(--blue)" accent="rgba(160,192,255,0.1)" title="→ lobbied bills" desc="14K FL House bills by lobbying activity 2016–2026. Top issues and most active lobbyists." />
+            </div>
+          </div>
 
-          <a href="/candidates" style={{ textDecoration: 'none' }}>
-            <div style={{
-              border: '1px solid rgba(160,192,255,0.2)',
-              borderRadius: '3px',
-              padding: '1.25rem',
-              background: 'rgba(160,192,255,0.02)',
-              height: '100%',
-              cursor: 'pointer',
-            }}>
-              <div style={{ fontSize: '0.72rem', color: 'var(--blue)', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
-                → browse candidates
-              </div>
-              <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
-                Every Florida candidate with campaign finance data — hard money raised, linked PACs, combined total. Filter by office, party, or cycle.
-              </div>
+          {/* Column 2 — Who Got Paid */}
+          <div>
+            <div style={{ fontSize: '0.55rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '0.75rem', borderBottom: '1px solid rgba(100,140,220,0.1)', paddingBottom: '0.4rem' }}>
+              Who got paid
             </div>
-          </a>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <CardLink href="/candidates" color="var(--blue)" accent="rgba(160,192,255,0.2)" title="→ candidates" desc="Every FL candidate — hard money raised, linked PACs, combined total." />
+              <CardLink href="/committees" color="var(--green)" accent="rgba(128,255,160,0.2)" title="→ committees" desc="4,440 PACs, ECOs, and party committees with full donor breakdowns." />
+              <CardLink href="/cycles" color="var(--green)" accent="rgba(128,255,160,0.15)" title="→ election cycles" desc="10 cycles 2008–2026 — totals, top raisers, party and office splits." />
+              <CardLink href="/investigations" color="var(--orange)" accent="rgba(255,176,96,0.25)" title="→ investigations" desc="11 entities with documented political influence, linked to journalism." />
+              <CardLink href="/legislators" color="var(--blue)" accent="rgba(160,192,255,0.12)" title="→ legislators" desc="224 FL House/Senate members — voting records + campaign finance." />
+              <CardLink href="/elections" color="var(--teal)" accent="rgba(77,216,240,0.12)" title="→ elections" desc="Results 2012–2024 with cost-per-vote for finance-matched candidates." />
+              <CardLink href="/party-finance" color="var(--teal)" accent="rgba(77,216,240,0.1)" title="→ party finance" desc="Republican vs Democrat fundraising trends by year and office." />
+            </div>
+          </div>
 
-          <a href="/committees" style={{ textDecoration: 'none' }}>
-            <div style={{
-              border: '1px solid rgba(128,255,160,0.2)',
-              borderRadius: '3px',
-              padding: '1.25rem',
-              background: 'rgba(128,255,160,0.02)',
-              height: '100%',
-              cursor: 'pointer',
-            }}>
-              <div style={{ fontSize: '0.72rem', color: 'var(--green)', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
-                → browse committees
-              </div>
-              <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
-                Individual committee profiles — top donors, total received, entity connections, lobbyist links.
-              </div>
+          {/* Column 3 — How Money Moved */}
+          <div>
+            <div style={{ fontSize: '0.55rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '0.75rem', borderBottom: '1px solid rgba(100,140,220,0.1)', paddingBottom: '0.4rem' }}>
+              How money moved
             </div>
-          </a>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <CardLink href="/network/graph" color="var(--teal)" accent="rgba(77,216,240,0.2)" title="→ network graph" desc="Visualize the full donor-committee network. Trace money flows across thousands of nodes." />
+              <CardLink href="/flow" color="var(--teal)" accent="rgba(77,216,240,0.15)" title="→ money flow" desc="Sankey diagram of the 500 largest donor-to-committee flows." />
+              <CardLink href="/transfers" color="var(--teal)" accent="rgba(77,216,240,0.1)" title="→ committee transfers" desc="$147M in committee-to-committee money flows — how PC networks funnel funds." />
+              <CardLink href="/ie" color="var(--orange)" accent="rgba(255,176,96,0.15)" title="→ independent expenditures" desc="$70.9M in IE/EC spending — committees advocating for and against candidates." />
+              <CardLink href="/connections" color="var(--orange)" accent="rgba(255,176,96,0.12)" title="→ committee connections" desc="56K+ committee pairs sharing treasurers, addresses, donors, or money flows." />
+              <CardLink href="/search" color="var(--orange)" accent="rgba(255,176,96,0.35)" title="→ global search" desc="Search all 20K+ entities — donors, committees, candidates, lobbyists." highlight />
+            </div>
+          </div>
 
-          <a href="/lobbyists" style={{ textDecoration: 'none' }}>
-            <div style={{
-              border: '1px solid rgba(160,192,255,0.15)',
-              borderRadius: '3px',
-              padding: '1.25rem',
-              background: 'rgba(160,192,255,0.02)',
-              height: '100%',
-              cursor: 'pointer',
-            }}>
-              <div style={{ fontSize: '0.72rem', color: 'var(--blue)', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
-                → browse lobbyists
-              </div>
-              <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
-                2,480 registered FL lobbyists and their principals — cross-referenced against donation records.
-              </div>
-            </div>
-          </a>
-
-          <a href="/principals" style={{ textDecoration: 'none' }}>
-            <div style={{
-              border: '1px solid rgba(128,255,160,0.2)',
-              borderRadius: '3px',
-              padding: '1.25rem',
-              background: 'rgba(128,255,160,0.02)',
-              height: '100%',
-              cursor: 'pointer',
-            }}>
-              <div style={{ fontSize: '0.72rem', color: 'var(--green)', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
-                → lobbying principals
-              </div>
-              <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
-                Organizations registered as lobbying principals — matched to their campaign donations.
-              </div>
-            </div>
-          </a>
-
-          <a href="/connections" style={{ textDecoration: 'none' }}>
-            <div style={{
-              border: '1px solid rgba(255,176,96,0.12)',
-              borderRadius: '3px',
-              padding: '1.25rem',
-              background: 'rgba(255,176,96,0.01)',
-              height: '100%',
-              cursor: 'pointer',
-            }}>
-              <div style={{ fontSize: '0.72rem', color: 'var(--orange)', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
-                → committee connections
-              </div>
-              <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
-                56,000+ committee pairs sharing treasurers, addresses, donors, or money flows. Spot coordination.
-              </div>
-            </div>
-          </a>
-
-          <a href="/flow" style={{ textDecoration: 'none' }}>
-            <div style={{
-              border: '1px solid rgba(77,216,240,0.15)',
-              borderRadius: '3px',
-              padding: '1.25rem',
-              background: 'rgba(77,216,240,0.01)',
-              height: '100%',
-              cursor: 'pointer',
-            }}>
-              <div style={{ fontSize: '0.72rem', color: 'var(--teal)', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
-                → money flow
-              </div>
-              <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
-                Sankey diagram of the 500 largest donor-to-committee money flows in Florida politics.
-              </div>
-            </div>
-          </a>
-
-          <a href="/industries" style={{ textDecoration: 'none' }}>
-            <div style={{
-              border: '1px solid rgba(160,192,255,0.15)',
-              borderRadius: '3px',
-              padding: '1.25rem',
-              background: 'rgba(160,192,255,0.01)',
-              height: '100%',
-              cursor: 'pointer',
-            }}>
-              <div style={{ fontSize: '0.72rem', color: 'var(--blue)', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
-                → industries
-              </div>
-              <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
-                Follow the money by industry — Legal, Real Estate, Healthcare, and 12 more. See who each sector funds.
-              </div>
-            </div>
-          </a>
-
-          <a href="/cycles" style={{ textDecoration: 'none' }}>
-            <div style={{
-              border: '1px solid rgba(128,255,160,0.15)',
-              borderRadius: '3px',
-              padding: '1.25rem',
-              background: 'rgba(128,255,160,0.01)',
-              height: '100%',
-              cursor: 'pointer',
-            }}>
-              <div style={{ fontSize: '0.72rem', color: 'var(--green)', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
-                → election cycles
-              </div>
-              <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
-                10 election cycles from 2008 to 2026 — totals, top raisers, party breakdown, office-by-office splits.
-              </div>
-            </div>
-          </a>
-
-          <a href="/investigations" style={{ textDecoration: 'none' }}>
-            <div style={{
-              border: '1px solid rgba(255,176,96,0.25)',
-              borderRadius: '3px',
-              padding: '1.25rem',
-              background: 'rgba(255,176,96,0.03)',
-              height: '100%',
-              cursor: 'pointer',
-            }}>
-              <div style={{ fontSize: '0.72rem', color: 'var(--orange)', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
-                → investigations
-              </div>
-              <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
-                11 entities with documented political influence — cross-referenced with investigative journalism from ProPublica, Tampa Bay Times, and more.
-              </div>
-            </div>
-          </a>
         </div>
       </section>
 
@@ -438,22 +314,27 @@ export default function Home() {
         <DonorTable donors={topDonors} />
       </section>
 
-      {/* ── Footer ── */}
-      <footer style={{
-        borderTop: '1px solid rgba(100,140,220,0.1)',
-        padding: '1rem 2.5rem',
-        fontSize: '0.55rem',
-        color: 'rgba(90,106,136,0.5)',
-        display: 'flex',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        gap: '0.5rem',
-        maxWidth: '900px',
-        margin: '0 auto',
-      }}>
-        <span>Data: Florida Division of Elections · Not affiliated with the State of Florida · All data from public records.</span>
-        <span>Made in the Sunshine State</span>
-      </footer>
     </main>
   )
+}
+
+function CardLink({ href, color, accent, title, desc, highlight }) {
+  return (
+    <a href={href} style={{ textDecoration: 'none' }}>
+      <div style={{
+        border: `1px solid ${accent}`,
+        borderRadius: '3px',
+        padding: '0.85rem 1rem',
+        background: highlight ? accent.replace('0.35', '0.04').replace('0.25', '0.03') : 'transparent',
+        transition: 'background 0.15s',
+      }}>
+        <div style={{ fontSize: '0.7rem', color, fontWeight: 700, marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
+          {title}
+        </div>
+        <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
+          {desc}
+        </div>
+      </div>
+    </a>
+  );
 }

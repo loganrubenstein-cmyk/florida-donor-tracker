@@ -21,7 +21,7 @@ import requests
 
 sys.path.insert(0, str(Path(__file__).parent))
 from config import (
-    EXPEND_CGI, EXPEND_RAW, PROCESSED_DIR,
+    CONTRIB_CGI, EXPEND_RAW, PROCESSED_DIR,
     COMMITTEE_TYPE_FILTER,
 )
 from _scraper_lib import (
@@ -30,6 +30,16 @@ from _scraper_lib import (
     probe_cgi_endpoint,
     download_all_pages,
 )
+
+# Expenditure probe variants — same CGI as contributions but queryfor=2
+_EXPEND_PROBE_VARIANTS = [
+    {"account": "{acct}", "comname": "{comname}", "CanCom": "Comm", "seqnum": "0",
+     "queryfor": "2", "queryorder": "DAT", "queryoutput": "2", "query": "Submit+Query+Now"},
+    {"account": "{acct}", "comname": "{comname}", "CanCom": "Comm", "seqnum": "0",
+     "queryfor": "2", "queryorder": "DAT", "queryoutput": "tab", "query": "Submit+Query+Now"},
+    {"account": "{acct}", "comname": "{comname}", "CanCom": "Comm", "seqnum": "0",
+     "queryfor": "2", "queryorder": "DAT", "queryoutput": "1", "query": "Submit+Query+Now"},
+]
 
 MANIFEST_PATH = EXPEND_RAW / "manifest.json"
 
@@ -72,8 +82,12 @@ def main(force: bool = False, limit: int | None = None) -> int:
     logger.info(f"Committees to process: {len(committees):,}")
 
     probe_acct = find_probe_acct(committees)
+    probe_name = next((n for a, n in committees if a == probe_acct), "")
     try:
-        cgi_params = probe_cgi_endpoint(EXPEND_CGI, probe_acct, logger)
+        cgi_params, response_format = probe_cgi_endpoint(
+            CONTRIB_CGI, probe_acct, probe_name, logger,
+            probe_variants=_EXPEND_PROBE_VARIANTS,
+        )
     except RuntimeError as e:
         logger.error(str(e))
         return 1
@@ -98,8 +112,8 @@ def main(force: bool = False, limit: int | None = None) -> int:
 
         try:
             entry = download_all_pages(
-                EXPEND_CGI, acct_num, dest, cgi_params,
-                session, manifest, MANIFEST_PATH, logger, force=force,
+                CONTRIB_CGI, acct_num, name, dest, cgi_params,
+                response_format, session, manifest, MANIFEST_PATH, logger, force=force,
             )
             if entry["status"] == "complete":
                 completed += 1

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import BackLinks from '@/components/BackLinks';
 
 function fmt(n) {
@@ -23,73 +23,50 @@ const TYPE_OPTIONS = [
 ];
 
 const INDUSTRY_OPTIONS = [
-  { value: 'all',                       label: 'All Industries' },
-  { value: 'Healthcare',                label: 'Healthcare' },
-  { value: 'Finance & Insurance',       label: 'Finance & Insurance' },
-  { value: 'Legal',                     label: 'Legal' },
-  { value: 'Real Estate',               label: 'Real Estate' },
-  { value: 'Education',                 label: 'Education' },
-  { value: 'Construction',              label: 'Construction' },
-  { value: 'Agriculture',               label: 'Agriculture' },
-  { value: 'Retail & Hospitality',      label: 'Retail & Hospitality' },
-  { value: 'Business & Consulting',     label: 'Business & Consulting' },
+  { value: 'all',                         label: 'All Industries' },
+  { value: 'Healthcare',                  label: 'Healthcare' },
+  { value: 'Finance & Insurance',         label: 'Finance & Insurance' },
+  { value: 'Legal',                       label: 'Legal' },
+  { value: 'Real Estate',                 label: 'Real Estate' },
+  { value: 'Education',                   label: 'Education' },
+  { value: 'Construction',                label: 'Construction' },
+  { value: 'Agriculture',                 label: 'Agriculture' },
+  { value: 'Retail & Hospitality',        label: 'Retail & Hospitality' },
+  { value: 'Business & Consulting',       label: 'Business & Consulting' },
   { value: 'Government & Public Service', label: 'Government' },
-  { value: 'Political / Lobbying',      label: 'Associations' },
+  { value: 'Political / Lobbying',        label: 'Associations' },
 ];
 
 const PAGE_SIZE = 50;
 
 export default function PrincipalsList() {
-  const [principals, setPrincipals] = useState(null);
+  const [results, setResults]       = useState({ data: [], total: 0, pages: 0 });
+  const [loading, setLoading]       = useState(true);
   const [search, setSearch]         = useState('');
+  const [debouncedQ, setDebouncedQ] = useState('');
   const [type, setType]             = useState('all');
   const [industry, setIndustry]     = useState('all');
   const [sortBy, setSortBy]         = useState('donation_total');
   const [page, setPage]             = useState(1);
 
+  // Debounce search input
   useEffect(() => {
-    fetch('/data/principals/index.json')
+    const t = setTimeout(() => setDebouncedQ(search), 300);
+    return () => clearTimeout(t);
+  }, [search]);
+
+  // Reset to page 1 when filters change
+  useEffect(() => { setPage(1); }, [debouncedQ, type, industry, sortBy]);
+
+  // Fetch from API
+  useEffect(() => {
+    setLoading(true);
+    const params = new URLSearchParams({ q: debouncedQ, type, industry, sort: sortBy, page });
+    fetch(`/api/principals?${params}`)
       .then(r => r.json())
-      .then(setPrincipals)
-      .catch(() => setPrincipals([]));
-  }, []);
-
-  const filtered = useMemo(() => {
-    if (!principals) return [];
-    let list = principals;
-
-    if (search.trim()) {
-      const q = search.trim().toLowerCase();
-      list = list.filter(p =>
-        (p.name || '').toLowerCase().includes(q) ||
-        (p.city || '').toLowerCase().includes(q)
-      );
-    }
-
-    if (type === 'matched')   list = list.filter(p => p.donation_total > 0);
-    if (type === 'active')    list = list.filter(p => p.num_active > 0);
-    if (industry !== 'all')   list = list.filter(p => p.industry === industry);
-
-    list = [...list].sort((a, b) => {
-      if (sortBy === 'name')            return (a.name || '').localeCompare(b.name || '');
-      if (sortBy === 'total_lobbyists') return (b.total_lobbyists || 0) - (a.total_lobbyists || 0);
-      return (b.donation_total || 0) - (a.donation_total || 0);
-    });
-
-    return list;
-  }, [principals, search, type, industry, sortBy]);
-
-  useMemo(() => setPage(1), [search, type, industry, sortBy]);
-
-  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
-  const pageItems  = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
-
-  const totals = useMemo(() => {
-    if (!principals) return null;
-    const withMatch = principals.filter(p => p.donation_total > 0).length;
-    const totalDonated = principals.reduce((s, p) => s + (p.donation_total || 0), 0);
-    return { total: principals.length, withMatch, totalDonated };
-  }, [principals]);
+      .then(json => { setResults(json); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, [debouncedQ, type, industry, sortBy, page]);
 
   const inputStyle = {
     background: '#0d0d22', border: '1px solid var(--border)',
@@ -98,15 +75,7 @@ export default function PrincipalsList() {
     fontFamily: 'var(--font-mono)', outline: 'none',
   };
 
-  if (!principals) {
-    return (
-      <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '4rem 2rem', textAlign: 'center' }}>
-        <div style={{ color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.78rem' }}>
-          Loading principals…
-        </div>
-      </main>
-    );
-  }
+  const { data: pageItems, total, pages: totalPages } = results;
 
   return (
     <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
@@ -121,14 +90,10 @@ export default function PrincipalsList() {
         }}>
           Lobbying Principals
         </h1>
-        {totals && (
-          <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
-            <span>{totals.total.toLocaleString()} registered principals</span>
-            <span style={{ color: 'var(--teal)' }}>{totals.withMatch.toLocaleString()} with donation match</span>
-            <span style={{ color: 'var(--orange)' }}>{fmt(totals.totalDonated)} total matched donations</span>
-            <span>FL Legislature · 2014–present</span>
-          </div>
-        )}
+        <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+          <span>{loading ? '…' : total.toLocaleString()} registered principals</span>
+          <span>FL Legislature · 2014–present</span>
+        </div>
       </div>
 
       {/* Filters */}
@@ -159,21 +124,21 @@ export default function PrincipalsList() {
         fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase',
         letterSpacing: '0.08em', marginBottom: '0.6rem',
       }}>
-        {filtered.length.toLocaleString()} result{filtered.length !== 1 ? 's' : ''}
+        {loading ? 'Loading…' : `${total.toLocaleString()} result${total !== 1 ? 's' : ''}`}
       </div>
 
       {/* Table */}
-      <div style={{ overflowX: 'auto' }}>
+      <div style={{ overflowX: 'auto', opacity: loading ? 0.5 : 1, transition: 'opacity 0.15s' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid var(--border)' }}>
               {[
-                { label: '#',               align: 'center', width: '2rem' },
-                { label: 'Principal',       align: 'left'  },
-                { label: 'Location',        align: 'left'  },
-                { label: 'Lobbyists',       align: 'right', sortKey: 'total_lobbyists' },
-                { label: 'Active',          align: 'right' },
-                { label: 'Donation Match',  align: 'right', sortKey: 'donation_total'  },
+                { label: '#',              align: 'center', width: '2rem' },
+                { label: 'Principal',      align: 'left'  },
+                { label: 'Location',       align: 'left'  },
+                { label: 'Lobbyists',      align: 'right', sortKey: 'total_lobbyists' },
+                { label: 'Active',         align: 'right' },
+                { label: 'Donation Match', align: 'right', sortKey: 'donation_total'  },
               ].map(({ label, align, width, sortKey }) => (
                 <th key={label} style={{
                   padding: '0.4rem 0.6rem', textAlign: align, width,
@@ -189,7 +154,7 @@ export default function PrincipalsList() {
             </tr>
           </thead>
           <tbody>
-            {filtered.length === 0 && (
+            {!loading && pageItems.length === 0 && (
               <tr>
                 <td colSpan={6} style={{
                   padding: '2.5rem 0.6rem', color: 'var(--text-dim)',

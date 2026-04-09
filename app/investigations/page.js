@@ -2,15 +2,16 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import InvestigationsList from '@/components/investigations/InvestigationsList';
 import { slugify } from '@/lib/slugify';
+import { getDb } from '@/lib/db';
 
-export const dynamic = 'force-static';
+// Migrated to Supabase — no donors/index.json needed
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Investigations | FL Donor Tracker',
   description: 'Florida political entities with documented influence — cross-referenced with investigative journalism.',
 };
 
-// Normalize a name for matching: uppercase, strip non-alphanumeric
 function norm(s) {
   return String(s).toUpperCase().replace(/[^A-Z0-9]/g, '');
 }
@@ -23,31 +24,47 @@ function fmt(n) {
   return `$${n.toFixed(0)}`;
 }
 
-export default function InvestigationsPage() {
+export default async function InvestigationsPage() {
   const DATA = join(process.cwd(), 'public', 'data');
 
-  // Load annotations
+  // Annotations stay in static JSON (sourced, curated content)
   const annotations = JSON.parse(
     readFileSync(join(DATA, 'research', 'annotations.json'), 'utf-8')
   );
-  const entityMap = annotations.entities; // keyed dict
+  const entityMap = annotations.entities;
 
-  // Load indexes for stat lookup
-  const committeeIndex = JSON.parse(readFileSync(join(DATA, 'committees', 'index.json'), 'utf-8'));
-  const donorIndex     = JSON.parse(readFileSync(join(DATA, 'donors', 'index.json'), 'utf-8'));
+  // Pull names we need to look up
+  const entityList = Object.values(entityMap);
+  const committeeNames = entityList.filter(e => e.type === 'committee').map(e => e.canonical_name);
+  const donorNames     = entityList.filter(e => e.type !== 'committee').map(e => e.canonical_name);
 
-  // Map committee name → acct + total
+  const db = getDb();
+
+  // Look up committees by name
+  const { data: committeeRows } = await db
+    .from('committees')
+    .select('acct_num, committee_name, total_received')
+    .in('committee_name', committeeNames)
+    .catch(() => ({ data: [] }));
+
   const committeeByName = {};
-  for (const c of committeeIndex) {
+  for (const c of (committeeRows || [])) {
     committeeByName[norm(c.committee_name)] = c;
   }
-  // Map donor name → slug + total
+
+  // Look up donors by name
+  const { data: donorRows } = await db
+    .from('donors')
+    .select('slug, name, total_combined')
+    .in('name', donorNames)
+    .catch(() => ({ data: [] }));
+
   const donorByName = {};
-  for (const d of donorIndex) {
+  for (const d of (donorRows || [])) {
     donorByName[norm(d.name)] = d;
   }
 
-  const entities = Object.values(entityMap).map(e => {
+  const entities = entityList.map(e => {
     let page_url = '/';
     let stat_raw = 0;
     let stat = null;
@@ -61,11 +78,9 @@ export default function InvestigationsPage() {
         stat      = fmt(match.total_received);
         stat_label = 'Total Received';
       } else {
-        // Fallback: candidate page for DeSantis-style candidate committees
         page_url = `/candidates`;
       }
     } else {
-      // corporate donor
       const match = donorByName[norm(e.canonical_name)];
       if (match) {
         page_url  = `/donor/${match.slug}`;
@@ -73,7 +88,6 @@ export default function InvestigationsPage() {
         stat      = fmt(match.total_combined);
         stat_label = 'Total Donated';
       } else {
-        // Try slugified name as fallback
         page_url = `/donor/${slugify(e.canonical_name)}`;
       }
     }
