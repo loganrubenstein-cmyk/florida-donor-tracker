@@ -16,10 +16,15 @@ public/data/principals/
 public/data/connections_pages/
 public/data/entity_connections_full.json
 public/data/lobbyist_comp/
-public/data/lobbyist_disclosures/
+# lobbyist_disclosures — commit top-level summary files only, exclude large per-entity subdirs
+public/data/lobbyist_disclosures/by_bill/
+public/data/lobbyist_disclosures/by_lobbyist/
+public/data/lobbyist_disclosures/by_principal/
+public/data/lobbyist_disclosures/by_year/
+public/data/lobbyist_disclosures/raw/
 public/data/lobbying_firms/
-public/data/legislators/
-public/data/elections/
+# legislators — committed (~5MB, 227 files)
+# elections — committed (~4.8MB, 13 files)
 # public/data/party_finance/ — committed, small (~80KB)
 public/data/fec/
 public/data/news/

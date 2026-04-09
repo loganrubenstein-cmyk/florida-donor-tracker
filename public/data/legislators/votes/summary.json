@@ -1,0 +1,12 @@
+{
+  "total_legislators": 224,
+  "total_bills_fetched": 1000,
+  "total_roll_calls": 546,
+  "sessions_covered": [
+    2135,
+    2220
+  ],
+  "donor_crossref_count": 164,
+  "note": "Floor votes only (Third Reading / Final Passage). Committee votes excluded.",
+  "generated_by": "scripts/50_fetch_voting_records.py"
+}

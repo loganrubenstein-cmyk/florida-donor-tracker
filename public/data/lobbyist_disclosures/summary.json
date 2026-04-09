@@ -1,0 +1,92 @@
+{
+  "generated_at": "2026-04-09T17:39:42.457864+00:00",
+  "years": [
+    {
+      "year": 2017,
+      "records": 8608,
+      "unique_lobbyists": 1430,
+      "unique_principals": 2951,
+      "unique_bills": 3432,
+      "total_bill_filings": 50098
+    },
+    {
+      "year": 2018,
+      "records": 7124,
+      "unique_lobbyists": 1208,
+      "unique_principals": 2565,
+      "unique_bills": 3379,
+      "total_bill_filings": 40705
+    },
+    {
+      "year": 2019,
+      "records": 7258,
+      "unique_lobbyists": 1095,
+      "unique_principals": 2653,
+      "unique_bills": 3746,
+      "total_bill_filings": 44415
+    },
+    {
+      "year": 2020,
+      "records": 6932,
+      "unique_lobbyists": 997,
+      "unique_principals": 2575,
+      "unique_bills": 3520,
+      "total_bill_filings": 42177
+    },
+    {
+      "year": 2021,
+      "records": 6248,
+      "unique_lobbyists": 1030,
+      "unique_principals": 2349,
+      "unique_bills": 2993,
+      "total_bill_filings": 37103
+    },
+    {
+      "year": 2022,
+      "records": 6046,
+      "unique_lobbyists": 916,
+      "unique_principals": 2461,
+      "unique_bills": 3188,
+      "total_bill_filings": 26477
+    },
+    {
+      "year": 2023,
+      "records": 5651,
+      "unique_lobbyists": 874,
+      "unique_principals": 2382,
+      "unique_bills": 2087,
+      "total_bill_filings": 17702
+    },
+    {
+      "year": 2024,
+      "records": 5869,
+      "unique_lobbyists": 816,
+      "unique_principals": 2454,
+      "unique_bills": 2264,
+      "total_bill_filings": 16890
+    },
+    {
+      "year": 2025,
+      "records": 7693,
+      "unique_lobbyists": 955,
+      "unique_principals": 2973,
+      "unique_bills": 2450,
+      "total_bill_filings": 21506
+    },
+    {
+      "year": 2026,
+      "records": 7356,
+      "unique_lobbyists": 848,
+      "unique_principals": 2732,
+      "unique_bills": 2042,
+      "total_bill_filings": 22872
+    }
+  ],
+  "totals": {
+    "unique_lobbyists": 2682,
+    "unique_principals": 8394,
+    "unique_bills": 14045,
+    "total_records": 68785
+  },
+  "source": "FL House Lobbyist Disclosure portal \u2014 https://www.flhouse.gov/LD/default.aspx"
+}
