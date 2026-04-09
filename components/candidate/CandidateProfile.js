@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import BackLinks from '@/components/BackLinks';
 import TabbedProfile from '@/components/shared/TabbedProfile';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import NewsBlock from '@/components/shared/NewsBlock';
 import { slugify } from '@/lib/slugify';
 import { fmtMoneyCompact, fmtMoney } from '@/lib/fmt';
 
@@ -346,6 +347,8 @@ export default function CandidateProfile({ data, cycles = [] }) {
           </a>
         ))}
       </div>
+
+      <NewsBlock articles={data.news} />
 
       <DataTrustBlock
         source="Florida Division of Elections"

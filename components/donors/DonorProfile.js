@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import BackLinks from '@/components/BackLinks';
 import TabbedProfile from '@/components/shared/TabbedProfile';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import NewsBlock from '@/components/shared/NewsBlock';
 import { slugify } from '@/lib/slugify';
 import { fmtMoneyCompact, fmtMoney, fmtCount } from '@/lib/fmt';
 
@@ -272,27 +273,7 @@ export default function DonorProfile({ data, annotations = {} }) {
 
   const sourcesContent = (
     <div>
-      {articles.length > 0 && (
-        <div style={{ marginBottom: '2rem' }}>
-          <SectionLabel>In the News</SectionLabel>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-            {articles.map((article) => (
-              <a key={article.url} href={article.url} target="_blank" rel="noopener noreferrer" style={{
-                display: 'block', padding: '0.65rem 0.85rem',
-                border: '1px solid var(--border)', borderRadius: '3px',
-                textDecoration: 'none', background: 'rgba(255,255,255,0.02)',
-              }}>
-                <div style={{ fontSize: '0.82rem', color: 'var(--text)', lineHeight: 1.4, marginBottom: '0.25rem' }}>
-                  {article.title}
-                </div>
-                <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
-                  {article.outlet}{article.date ? ` · ${article.date.slice(0, 7)}` : ''}
-                </div>
-              </a>
-            ))}
-          </div>
-        </div>
-      )}
+      <NewsBlock articles={data.news || []} />
 
       <SectionLabel>Research Links</SectionLabel>
       <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
