@@ -1,8 +1,7 @@
-import { readFileSync } from 'fs';
-import { join } from 'path';
 import Link from 'next/link';
+import { getDb } from '@/lib/db';
 
-export const dynamic = 'force-static';
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Lobbying Firms — Florida Donor Tracker',
@@ -16,15 +15,15 @@ function fmt(n) {
   return `$${n}`;
 }
 
-function loadTopFirms() {
-  try {
-    const path = join(process.cwd(), 'public', 'data', 'lobbyist_comp', 'top_firms.json');
-    return JSON.parse(readFileSync(path, 'utf-8'));
-  } catch { return []; }
-}
+export default async function LobbyingFirmsPage() {
+  const db = getDb();
+  const { data: firms } = await db
+    .from('lobbying_firms')
+    .select('slug, firm_name, total_comp, num_principals, num_quarters')
+    .order('total_comp', { ascending: false })
+    .limit(100);
 
-export default function LobbyingFirmsPage() {
-  const firms = loadTopFirms();
+  const rows = firms || [];
 
   return (
     <main style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
@@ -40,7 +39,7 @@ export default function LobbyingFirmsPage() {
         Lobbying Firms
       </h1>
       <p style={{ color: 'var(--text-dim)', fontSize: '0.85rem', lineHeight: 1.6, marginBottom: '0.4rem' }}>
-        Top {firms.length} Florida lobbying firms by estimated compensation. Figures are midpoints of FL-mandated
+        Top {rows.length} Florida lobbying firms by estimated compensation. Figures are midpoints of FL-mandated
         disclosure bands — not exact amounts. Data from the Florida Lobbyist Registration Office.
       </p>
       <p style={{ color: 'rgba(90,106,136,0.7)', fontSize: '0.72rem', marginBottom: '1.5rem' }}>
@@ -61,7 +60,7 @@ export default function LobbyingFirmsPage() {
             </tr>
           </thead>
           <tbody>
-            {firms.map((f, i) => (
+            {rows.map((f, i) => (
               <tr key={f.slug} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
                 <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2.5rem', fontFamily: 'var(--font-mono)', fontSize: '0.65rem' }}>
                   {i + 1}

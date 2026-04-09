@@ -1,31 +1,8 @@
-import { readFileSync, readdirSync, existsSync } from 'fs';
-import { join } from 'path';
 import Link from 'next/link';
+import { getDb } from '@/lib/db';
+import { notFound } from 'next/navigation';
 
-export const dynamic = 'force-static';
-
-const FIRMS_DIR = join(process.cwd(), 'public', 'data', 'lobbyist_comp', 'by_firm');
-
-function loadFirm(slug) {
-  return JSON.parse(readFileSync(join(FIRMS_DIR, `${slug}.json`), 'utf-8'));
-}
-
-export async function generateStaticParams() {
-  if (!existsSync(FIRMS_DIR)) return [];
-  return readdirSync(FIRMS_DIR)
-    .filter(f => f.endsWith('.json'))
-    .map(f => ({ slug: f.replace('.json', '') }));
-}
-
-export async function generateMetadata({ params }) {
-  const { slug } = await params;
-  try {
-    const d = loadFirm(slug);
-    return { title: `${d.firm_name} — Lobbying Firm | FL Donor Tracker` };
-  } catch {
-    return { title: 'Lobbying Firm | FL Donor Tracker' };
-  }
-}
+export const dynamic = 'force-dynamic';
 
 function fmt(n) {
   if (!n) return '—';
@@ -34,9 +11,39 @@ function fmt(n) {
   return `$${n}`;
 }
 
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const db = getDb();
+  const { data } = await db
+    .from('lobbying_firms')
+    .select('firm_name')
+    .eq('slug', slug)
+    .single();
+  if (!data) return { title: 'Lobbying Firm | FL Donor Tracker' };
+  return { title: `${data.firm_name} — Lobbying Firm | FL Donor Tracker` };
+}
+
 export default async function LobbyingFirmPage({ params }) {
   const { slug } = await params;
-  const firm = loadFirm(slug);
+  const db = getDb();
+
+  const [{ data: firm }, { data: clients }, { data: quarters }] = await Promise.all([
+    db.from('lobbying_firms')
+      .select('slug, firm_name, total_comp, num_principals, num_quarters')
+      .eq('slug', slug)
+      .single(),
+    db.from('lobbying_firm_clients')
+      .select('principal_name, principal_slug, total_comp')
+      .eq('firm_slug', slug)
+      .order('total_comp', { ascending: false }),
+    db.from('lobbying_firm_quarters')
+      .select('year, quarter, period, branch, total_comp')
+      .eq('firm_slug', slug)
+      .order('year', { ascending: false })
+      .order('quarter', { ascending: false }),
+  ]);
+
+  if (!firm) notFound();
 
   return (
     <main style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
@@ -94,10 +101,10 @@ export default async function LobbyingFirmPage({ params }) {
       </div>
 
       {/* Top clients */}
-      {firm.top_clients?.length > 0 && (
+      {clients?.length > 0 && (
         <div style={{ marginBottom: '2rem' }}>
           <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
-            Top Clients — {firm.top_clients.length} shown
+            Top Clients — {clients.length} shown
           </div>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
             <thead>
@@ -112,11 +119,11 @@ export default async function LobbyingFirmPage({ params }) {
               </tr>
             </thead>
             <tbody>
-              {firm.top_clients.map((c, i) => (
+              {clients.map((c, i) => (
                 <tr key={i} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
                   <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2rem' }}>{i + 1}</td>
                   <td style={{ padding: '0.4rem 0.6rem', maxWidth: '400px', wordBreak: 'break-word' }}>
-                    <Link href={`/principal/${c.slug}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+                    <Link href={`/principal/${c.principal_slug}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
                       {c.principal_name}
                     </Link>
                   </td>
@@ -131,7 +138,7 @@ export default async function LobbyingFirmPage({ params }) {
       )}
 
       {/* Quarterly breakdown */}
-      {firm.by_quarter?.length > 0 && (
+      {quarters?.length > 0 && (
         <div style={{ marginBottom: '2rem' }}>
           <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
             Quarterly Breakdown
@@ -149,7 +156,7 @@ export default async function LobbyingFirmPage({ params }) {
               </tr>
             </thead>
             <tbody>
-              {firm.by_quarter.map((q, i) => (
+              {quarters.map((q, i) => (
                 <tr key={i} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
                   <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', whiteSpace: 'nowrap' }}>
                     {q.year} Q{q.quarter}
@@ -158,7 +165,7 @@ export default async function LobbyingFirmPage({ params }) {
                     {q.branch}
                   </td>
                   <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>
-                    {(q.num_principals || 0).toLocaleString()}
+                    —
                   </td>
                   <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--blue)', fontWeight: 600, whiteSpace: 'nowrap' }}>
                     {fmt(q.total_comp)}
