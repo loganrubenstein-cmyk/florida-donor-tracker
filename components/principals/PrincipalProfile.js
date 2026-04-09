@@ -2,6 +2,20 @@
 import BackLinks from '@/components/BackLinks';
 import { slugify } from '@/lib/slugify';
 
+const INDUSTRY_SLUG = {
+  'Healthcare':                 'healthcare',
+  'Finance & Insurance':        'finance-insurance',
+  'Legal':                      'legal',
+  'Real Estate':                'real-estate',
+  'Education':                  'education',
+  'Construction':               'construction',
+  'Agriculture':                'agriculture',
+  'Retail & Hospitality':       'retail-hospitality',
+  'Business & Consulting':      'business-consulting',
+  'Government & Public Service':'government-public-service',
+  'Political / Lobbying':       'political-lobbying',
+};
+
 function fmt(n) {
   if (!n || n === 0) return '—';
   if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
@@ -42,8 +56,11 @@ export default function PrincipalProfile({ data }) {
   const activeLobbyists   = lobbyists.filter(l => l.is_active);
   const inactiveLobbyists = lobbyists.filter(l => !l.is_active);
   const donationMatches   = data.donation_matches || [];
+  const topCommittees     = data.top_committees || [];
 
-  const location = [data.city, data.state].filter(Boolean).join(', ');
+  const location    = [data.city, data.state].filter(Boolean).join(', ');
+  const industry    = data.industry && data.industry !== 'Other' ? data.industry : null;
+  const industrySlug = industry ? INDUSTRY_SLUG[industry] : null;
 
   const researchLinks = [
     {
@@ -74,6 +91,15 @@ export default function PrincipalProfile({ data }) {
           }}>
             PRINCIPAL
           </span>
+          {industry && industrySlug && (
+            <a href={`/industry/${industrySlug}`} style={{
+              fontSize: '0.65rem', padding: '0.15rem 0.5rem',
+              border: '1px solid rgba(100,140,220,0.4)', color: 'var(--text-dim)',
+              borderRadius: '2px', fontFamily: 'var(--font-mono)', textDecoration: 'none',
+            }}>
+              {industry}
+            </a>
+          )}
           {data.donation_total > 0 && (
             <span style={{
               fontSize: '0.65rem', padding: '0.15rem 0.5rem',
@@ -187,8 +213,11 @@ export default function PrincipalProfile({ data }) {
                     <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2rem' }}>
                       {i + 1}
                     </td>
-                    <td style={{ padding: '0.4rem 0.6rem', maxWidth: '220px', wordBreak: 'break-word', color: 'var(--text)' }}>
-                      {l.lobbyist_name}
+                    <td style={{ padding: '0.4rem 0.6rem', maxWidth: '220px', wordBreak: 'break-word' }}>
+                      <a href={`/lobbyist/${slugify(l.lobbyist_name)}`}
+                        style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>
+                        {l.lobbyist_name}
+                      </a>
                     </td>
                     <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.68rem', maxWidth: '180px', wordBreak: 'break-word' }}>
                       {l.firm || '—'}
@@ -204,6 +233,49 @@ export default function PrincipalProfile({ data }) {
                     </td>
                     <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.7rem', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap' }}>
                       {l.since || '—'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* Top Committees Supported */}
+      {topCommittees.length > 0 && (
+        <div style={{ marginBottom: '2rem' }}>
+          <SectionLabel>Top Committees Supported ({topCommittees.length})</SectionLabel>
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                  {['#', 'Committee', 'Total Donated', 'Contributions'].map((h, j) => (
+                    <th key={h} style={{
+                      padding: '0.35rem 0.6rem', fontSize: '0.6rem', color: 'var(--text-dim)',
+                      textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 400,
+                      textAlign: j === 0 ? 'center' : j >= 2 ? 'right' : 'left',
+                    }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {topCommittees.map((c, i) => (
+                  <tr key={c.acct_num} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
+                    <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2rem' }}>
+                      {i + 1}
+                    </td>
+                    <td style={{ padding: '0.4rem 0.6rem', maxWidth: '320px', wordBreak: 'break-word' }}>
+                      <a href={`/committee/${c.acct_num}`}
+                        style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+                        {c.name}
+                      </a>
+                    </td>
+                    <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--orange)', fontWeight: 700, whiteSpace: 'nowrap' }}>
+                      {fmt(c.total)}
+                    </td>
+                    <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--text-dim)' }}>
+                      {(c.num_contributions || 0).toLocaleString()}
                     </td>
                   </tr>
                 ))}
@@ -246,7 +318,7 @@ export default function PrincipalProfile({ data }) {
                       </a>
                     </td>
                     <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--text-dim)' }}>
-                      {m.match_score}
+                      {Number(m.match_score).toFixed(0)}%
                     </td>
                     <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: m.total_donated > 0 ? 'var(--orange)' : 'var(--text-dim)', fontWeight: m.total_donated > 0 ? 700 : 400, whiteSpace: 'nowrap' }}>
                       {fmt(m.total_donated)}
@@ -263,12 +335,16 @@ export default function PrincipalProfile({ data }) {
       )}
 
       {/* Research links */}
-      <div style={{ marginBottom: '2rem' }}>
-        <SectionLabel>Research Links</SectionLabel>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+      <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.25rem', marginBottom: '2rem' }}>
+        <SectionLabel>Research</SectionLabel>
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
           {researchLinks.map(({ label, href }) => (
             <a key={label} href={href} target="_blank" rel="noopener noreferrer"
-              style={{ color: 'var(--teal)', fontSize: '0.78rem', textDecoration: 'none' }}>
+              style={{
+                padding: '0.35rem 0.75rem', border: '1px solid var(--border)',
+                color: 'var(--text-dim)', fontSize: '0.72rem', borderRadius: '3px',
+                textDecoration: 'none', fontFamily: 'var(--font-mono)',
+              }}>
               {label}
             </a>
           ))}

@@ -2,6 +2,13 @@
 import BackLinks from '@/components/BackLinks';
 import { slugify } from '@/lib/slugify';
 
+function fmt(n) {
+  if (!n || n === 0) return '—';
+  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000)     return `$${(n / 1_000).toFixed(0)}K`;
+  return `$${n.toFixed(0)}`;
+}
+
 function fmtDate(s) {
   if (!s || s === 'None' || s === 'nan') return null;
   const d = new Date(s);
@@ -103,7 +110,7 @@ export default function LobbyistProfile({ data }) {
           color="var(--teal)" />
         <StatBox label="Donation Influence"
           value={data.total_donation_influence > 0
-            ? `$${(data.total_donation_influence / 1_000_000).toFixed(1)}M`
+            ? fmt(data.total_donation_influence)
             : '—'}
           sub={data.total_donation_influence > 0 ? 'Matched principal donations' : null}
           color={data.total_donation_influence > 0 ? 'var(--orange)' : 'var(--text-dim)'} />
@@ -210,12 +217,16 @@ export default function LobbyistProfile({ data }) {
       )}
 
       {/* Research links */}
-      <div style={{ marginBottom: '2rem' }}>
-        <SectionLabel>Research Links</SectionLabel>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+      <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.25rem', marginBottom: '2rem' }}>
+        <SectionLabel>Research</SectionLabel>
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
           {researchLinks.map(({ label, href }) => (
             <a key={label} href={href} target="_blank" rel="noopener noreferrer"
-              style={{ color: 'var(--teal)', fontSize: '0.78rem', textDecoration: 'none' }}>
+              style={{
+                padding: '0.35rem 0.75rem', border: '1px solid var(--border)',
+                color: 'var(--text-dim)', fontSize: '0.72rem', borderRadius: '3px',
+                textDecoration: 'none', fontFamily: 'var(--font-mono)',
+              }}>
               {label}
             </a>
           ))}

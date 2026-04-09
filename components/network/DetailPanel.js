@@ -2,6 +2,7 @@
 
 import { getPartyAffiliation } from '@/lib/partyUtils';
 import { fmtArticleDate } from '@/lib/dateUtils';
+import { slugify } from '@/lib/slugify';
 function getNodeDescription(node) {
   if (!node) return '';
   if (node.data_pending) return 'Committee — contribution data not yet downloaded';
@@ -92,9 +93,18 @@ export default function DetailPanel({ node, graphData, onRecenter, annotations =
 
   const totalIncoming = allEdges.filter(e => e.target === node.id).length;
 
-  const nodeArticles = annotations[node.id]?.articles || [];
+  const norm = s => String(s).toUpperCase().replace(/[^A-Z0-9]/g, '');
+  const nodeAnnotation = annotations[node.id]
+    || Object.values(annotations).find(a => norm(a.canonical_name) === norm(node.label))
+    || null;
+  const nodeArticles = nodeAnnotation?.articles || [];
+
+  const profileHref = node.type === 'committee'
+    ? (node.acct_num ? `/committee/${node.acct_num}` : null)
+    : `/donor/${slugify(node.label)}`;
 
   const researchLinks = [
+    ...(profileHref ? [{ label: 'Open Full Profile →', href: profileHref, internal: true }] : []),
     {
       label: 'FL Elections Records →',
       href: 'https://dos.fl.gov/elections/campaign-finance/reports-data/',
@@ -113,9 +123,19 @@ export default function DetailPanel({ node, graphData, onRecenter, annotations =
     <div className="network-panel">
       {/* Header */}
       <div style={{ padding: '1.25rem 1.25rem 0.75rem', borderBottom: '1px solid var(--border)' }}>
-        <div style={{ marginBottom: '0.4rem' }}>
+        <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginBottom: '0.4rem', alignItems: 'center' }}>
           <TypeBadge type={node.type} dataPending={node.data_pending} />
           <PartyBadge party={party} />
+          {nodeAnnotation && (
+            <a href="/investigations" style={{
+              display: 'inline-block', padding: '0.15rem 0.45rem',
+              border: '1px solid var(--orange)', color: 'var(--orange)',
+              fontSize: '0.7rem', borderRadius: '3px', letterSpacing: '0.06em',
+              fontWeight: 'bold', textDecoration: 'none',
+            }}>
+              Investigation
+            </a>
+          )}
         </div>
         <div style={{
           fontSize: '0.95rem', fontWeight: 'bold', color: 'var(--text)',
@@ -254,8 +274,10 @@ export default function DetailPanel({ node, graphData, onRecenter, annotations =
         <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: '0.25rem' }}>
           Research
         </div>
-        {researchLinks.map(({ label, href }) => (
-          <a key={label} href={href} target="_blank" rel="noopener noreferrer" style={LINK_STYLE}>
+        {researchLinks.map(({ label, href, internal }) => (
+          <a key={label} href={href}
+            {...(!internal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+            style={{ ...LINK_STYLE, ...(internal ? { color: 'var(--teal)', borderColor: 'rgba(77,216,240,0.3)' } : {}) }}>
             {label}
           </a>
         ))}

@@ -1,11 +1,8 @@
-import { loadDonor, listDonorSlugs } from '@/lib/loadDonor';
+import { loadDonor } from '@/lib/loadDonor';
+import { loadAnnotations } from '@/lib/loadAnnotations';
 import DonorProfile from '@/components/donors/DonorProfile';
 
-export const dynamic = 'force-static';
-
-export async function generateStaticParams() {
-  return listDonorSlugs().map(slug => ({ slug }));
-}
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
@@ -21,5 +18,6 @@ export async function generateMetadata({ params }) {
 export default async function DonorPage({ params }) {
   const { slug } = await params;
   const data = loadDonor(slug);
-  return <DonorProfile data={data} />;
+  const annotations = loadAnnotations();
+  return <DonorProfile data={data} annotations={annotations} />;
 }

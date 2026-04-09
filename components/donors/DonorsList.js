@@ -24,14 +24,37 @@ const TYPE_OPTIONS = [
   { value: 'lobbyist',   label: 'Has Lobbyist Link' },
 ];
 
+const INDUSTRY_OPTIONS = [
+  { value: 'all',                      label: 'All Industries' },
+  { value: 'Legal',                    label: 'Legal' },
+  { value: 'Real Estate',              label: 'Real Estate' },
+  { value: 'Healthcare',               label: 'Healthcare' },
+  { value: 'Finance & Insurance',      label: 'Finance & Insurance' },
+  { value: 'Agriculture',              label: 'Agriculture' },
+  { value: 'Construction',             label: 'Construction' },
+  { value: 'Education',                label: 'Education' },
+  { value: 'Technology / Engineering', label: 'Tech / Engineering' },
+  { value: 'Retail & Hospitality',     label: 'Retail & Hospitality' },
+  { value: 'Business & Consulting',    label: 'Business & Consulting' },
+  { value: 'Government & Public Service', label: 'Government' },
+  { value: 'Political / Lobbying',     label: 'Political / Lobbying' },
+  { value: 'Retired',                  label: 'Retired' },
+  { value: 'Not Employed',             label: 'Not Employed' },
+  { value: 'Other',                    label: 'Other' },
+];
+
+const PAGE_SIZE = 50;
+
 export default function DonorsList() {
   const [donors, setDonors] = useState(null);
-  const [search, setSearch] = useState('');
-  const [type, setType]     = useState('all');
-  const [sortBy, setSortBy] = useState('total_combined');
+  const [search, setSearch]     = useState('');
+  const [type, setType]         = useState('all');
+  const [industry, setIndustry] = useState('all');
+  const [sortBy, setSortBy]     = useState('total_combined');
+  const [page, setPage]         = useState(1);
 
   useEffect(() => {
-    fetch('/data/donors/index.json')
+    fetch('/data/donors/index_lite.json')
       .then(r => r.json())
       .then(setDonors)
       .catch(() => setDonors([]));
@@ -48,6 +71,7 @@ export default function DonorsList() {
     if (type === 'corporate')  list = list.filter(d => d.is_corporate);
     if (type === 'individual') list = list.filter(d => !d.is_corporate);
     if (type === 'lobbyist')   list = list.filter(d => d.has_lobbyist_link);
+    if (industry !== 'all')    list = list.filter(d => d.industry === industry);
 
     list = [...list].sort((a, b) => {
       if (sortBy === 'name') return (a.name || '').localeCompare(b.name || '');
@@ -55,7 +79,12 @@ export default function DonorsList() {
     });
 
     return list;
-  }, [donors, search, type, sortBy]);
+  }, [donors, search, type, industry, sortBy]);
+
+  useMemo(() => setPage(1), [search, type, industry, sortBy]);
+
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  const pageItems  = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   const inputStyle = {
     background: '#0d0d22', border: '1px solid var(--border)',
@@ -96,7 +125,7 @@ export default function DonorsList() {
         </h1>
         {totals && (
           <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
-            <span>{totals.total.toLocaleString()} unique donors</span>
+            <span>{totals.total.toLocaleString()} donors with profiles ($1K+ total)</span>
             <span style={{ color: 'var(--orange)' }}>{totals.corp.toLocaleString()} corporate / org</span>
             <span style={{ color: 'var(--teal)' }}>{totals.withLobby.toLocaleString()} with lobbyist link</span>
             <span>Florida Division of Elections</span>
@@ -118,6 +147,9 @@ export default function DonorsList() {
         />
         <select value={type} onChange={e => setType(e.target.value)} style={inputStyle}>
           {TYPE_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+        </select>
+        <select value={industry} onChange={e => setIndustry(e.target.value)} style={inputStyle}>
+          {INDUSTRY_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
         </select>
         <select value={sortBy} onChange={e => setSortBy(e.target.value)} style={inputStyle}>
           {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
@@ -173,32 +205,32 @@ export default function DonorsList() {
                 </td>
               </tr>
             )}
-            {filtered.slice(0, 500).map((d, i) => {
+            {pageItems.map((d, i) => {
               const typeColor = d.is_corporate ? 'var(--orange)' : 'var(--teal)';
               const typeLabel = d.is_corporate ? 'CORP' : 'IND';
-              const hasFull   = d.total_combined >= 1000;
               const loc = d.top_location
                 ? d.top_location.replace(/,\s*\d{5}(-\d{4})?$/, '').trim()
                 : '—';
               return (
                 <tr key={d.slug} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center' }}>
-                    {i + 1}
+                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '0.65rem' }}>
+                    {(page - 1) * PAGE_SIZE + i + 1}
                   </td>
                   <td style={{ padding: '0.45rem 0.6rem', wordBreak: 'break-word', maxWidth: '260px' }}>
-                    {hasFull ? (
-                      <a href={`/donor/${d.slug}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
-                        {d.name}
-                      </a>
-                    ) : (
-                      <span style={{ color: 'var(--text)' }}>{d.name}</span>
-                    )}
+                    <a href={`/donor/${d.slug}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+                      {d.name}
+                    </a>
                     {d.has_lobbyist_link && (
                       <span style={{
                         marginLeft: '0.4rem', fontSize: '0.58rem', color: 'var(--blue)',
                         border: '1px solid var(--blue)', borderRadius: '2px',
                         padding: '0.05rem 0.25rem', verticalAlign: 'middle',
                       }}>LOBBY</span>
+                    )}
+                    {d.industry && d.industry !== 'Not Employed' && d.industry !== 'Other' && (
+                      <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', marginTop: '0.1rem' }}>
+                        {d.industry}
+                      </div>
                     )}
                   </td>
                   <td style={{ padding: '0.45rem 0.6rem', textAlign: 'center' }}>
@@ -232,12 +264,31 @@ export default function DonorsList() {
         </table>
       </div>
 
-      {filtered.length > 500 && (
-        <div style={{
-          fontSize: '0.68rem', color: 'var(--text-dim)', textAlign: 'center',
-          padding: '1rem', fontFamily: 'var(--font-mono)',
-        }}>
-          Showing top 500 of {filtered.length.toLocaleString()} — use filters to narrow results
+      {totalPages > 1 && (
+        <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+          <button
+            onClick={() => setPage(p => Math.max(1, p - 1))}
+            disabled={page === 1}
+            style={{
+              padding: '0.25rem 0.65rem', fontSize: '0.65rem',
+              background: 'transparent', border: '1px solid rgba(100,140,220,0.25)',
+              color: page === 1 ? 'var(--text-dim)' : 'var(--text)', cursor: page === 1 ? 'default' : 'pointer',
+              borderRadius: '2px', fontFamily: 'var(--font-mono)', opacity: page === 1 ? 0.4 : 1,
+            }}
+          >← prev</button>
+          <span style={{ fontSize: '0.65rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+            page {page} / {totalPages}
+          </span>
+          <button
+            onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+            style={{
+              padding: '0.25rem 0.65rem', fontSize: '0.65rem',
+              background: 'transparent', border: '1px solid rgba(100,140,220,0.25)',
+              color: page === totalPages ? 'var(--text-dim)' : 'var(--text)', cursor: page === totalPages ? 'default' : 'pointer',
+              borderRadius: '2px', fontFamily: 'var(--font-mono)', opacity: page === totalPages ? 0.4 : 1,
+            }}
+          >next →</button>
         </div>
       )}
 

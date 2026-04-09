@@ -1,0 +1,31 @@
+import './globals.css';
+import Link from 'next/link';
+
+export const metadata = {
+  title: 'Florida Donor Tracker',
+  description: 'Follow the money in Florida politics',
+};
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>
+        <nav style={{
+          display: 'flex', alignItems: 'center', gap: '2rem',
+          padding: '0.75rem 1.5rem',
+          borderBottom: '1px solid var(--border)',
+          background: 'rgba(8,8,24,0.95)',
+          position: 'sticky', top: 0, zIndex: 100,
+        }}>
+          <Link href="/" style={{ color: 'var(--orange)', textDecoration: 'none', fontWeight: 'bold', letterSpacing: '0.05em' }}>
+            FL DONOR TRACKER
+          </Link>
+          <Link href="/network" style={{ color: 'var(--text-dim)', textDecoration: 'none', fontSize: '0.85rem' }}>
+            Network
+          </Link>
+        </nav>
+        {children}
+      </body>
+    </html>
+  );
+}

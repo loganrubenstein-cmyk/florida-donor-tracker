@@ -32,7 +32,9 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 export default function DonorYearChart({ data }) {
-  const hasBoth = data.some(d => d.hard > 0) && data.some(d => d.soft > 0);
+  const hasSoft = data.some(d => d.soft > 0);
+  const hasHard = data.some(d => d.hard > 0);
+  const hasBoth = hasSoft && hasHard;
 
   return (
     <div className="chart-wrap" role="img" aria-label="Contributions by year">
@@ -51,9 +53,11 @@ export default function DonorYearChart({ data }) {
           />
           <Tooltip content={<CustomTooltip />} />
           {hasBoth && <Legend wrapperStyle={{ fontSize: '0.65rem', color: 'var(--text-dim)' }} />}
-          <Bar dataKey="soft" name="PAC/Soft" stackId="a" fill="#4dd8f0" radius={[0, 0, 0, 0]} />
-          {hasBoth && (
-            <Bar dataKey="hard" name="Direct/Hard" stackId="a" fill="#a0c0ff" radius={[2, 2, 0, 0]} />
+          {hasSoft && (
+            <Bar dataKey="soft" name="PAC/Soft" stackId="a" fill="#4dd8f0" radius={hasBoth ? [0,0,0,0] : [2,2,0,0]} />
+          )}
+          {hasHard && (
+            <Bar dataKey="hard" name="Direct/Hard" stackId="a" fill="#a0c0ff" radius={[2,2,0,0]} />
           )}
         </BarChart>
       </ResponsiveContainer>

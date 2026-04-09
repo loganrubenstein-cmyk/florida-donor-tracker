@@ -23,6 +23,9 @@ export default function RootLayout({ children }) {
           <Link href="/candidates" style={{ color: 'var(--text-dim)', textDecoration: 'none', fontSize: '0.85rem' }}>
             Candidates
           </Link>
+          <Link href="/cycles" style={{ color: 'var(--text-dim)', textDecoration: 'none', fontSize: '0.85rem' }}>
+            Cycles
+          </Link>
           <Link href="/industries" style={{ color: 'var(--text-dim)', textDecoration: 'none', fontSize: '0.85rem' }}>
             Industries
           </Link>
@@ -35,14 +38,26 @@ export default function RootLayout({ children }) {
           <Link href="/principals" style={{ color: 'var(--text-dim)', textDecoration: 'none', fontSize: '0.85rem' }}>
             Principals
           </Link>
+          <Link href="/solicitations" style={{ color: 'var(--text-dim)', textDecoration: 'none', fontSize: '0.85rem' }}>
+            Solicitations
+          </Link>
           <Link href="/connections" style={{ color: 'var(--text-dim)', textDecoration: 'none', fontSize: '0.85rem' }}>
             Connections
+          </Link>
+          <Link href="/flow" style={{ color: 'var(--text-dim)', textDecoration: 'none', fontSize: '0.85rem' }}>
+            Flow
+          </Link>
+          <Link href="/investigations" style={{ color: 'var(--text-dim)', textDecoration: 'none', fontSize: '0.85rem' }}>
+            Investigations
           </Link>
           <Link href="/network" style={{ color: 'var(--text-dim)', textDecoration: 'none', fontSize: '0.85rem' }}>
             Network
           </Link>
-          <Link href="/committee/4700" style={{ color: 'var(--text-dim)', textDecoration: 'none', fontSize: '0.85rem' }}>
+          <Link href="/committees" style={{ color: 'var(--text-dim)', textDecoration: 'none', fontSize: '0.85rem' }}>
             Committees
+          </Link>
+          <Link href="/search" style={{ color: 'var(--text-dim)', textDecoration: 'none', fontSize: '0.85rem', marginLeft: 'auto' }}>
+            Search
           </Link>
         </nav>
         {children}

@@ -123,12 +123,32 @@ def main(force: bool = False) -> int:
             })
     for ind in industry_top_cands:
         industry_top_cands[ind].sort(key=lambda x: -x["total"])
-        industry_top_cands[ind] = industry_top_cands[ind][:10]  # top 10 per industry
+        industry_top_cands[ind] = industry_top_cands[ind][:10]
 
-    # Merge top candidates into global rows
-    ind_top_map = dict(industry_top_cands)
+    # ── Top donors per industry ───────────────────────────────────────────────
+    print("Finding top donors per industry…")
+    industry_top_donors = defaultdict(list)
+    donor_industry = (
+        df.groupby(["contributor_name", "industry"])["amount"]
+        .sum()
+        .reset_index()
+        .rename(columns={"amount": "total"})
+    )
+    for _, row in donor_industry.iterrows():
+        industry_top_donors[row["industry"]].append({
+            "name":  row["contributor_name"],
+            "total": round(float(row["total"]), 2),
+        })
+    for ind in industry_top_donors:
+        industry_top_donors[ind].sort(key=lambda x: -x["total"])
+        industry_top_donors[ind] = industry_top_donors[ind][:10]
+
+    # Merge both into global rows
+    ind_top_map  = dict(industry_top_cands)
+    ind_don_map  = dict(industry_top_donors)
     for row in global_rows:
         row["top_candidates"] = ind_top_map.get(row["industry"], [])
+        row["top_donors"]     = ind_don_map.get(row["industry"], [])
 
     # ── Write global summary ──────────────────────────────────────────────────
     summary = {

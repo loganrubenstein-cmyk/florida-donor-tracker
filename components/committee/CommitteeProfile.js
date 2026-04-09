@@ -4,6 +4,7 @@ import { getPartyFromName } from '@/lib/partyUtils';
 import BackLinks from '@/components/BackLinks';
 import { fmtArticleDate } from '@/lib/dateUtils';
 import { slugify } from '@/lib/slugify';
+import CommitteeConnections from './CommitteeConnections';
 
 function fmt(n) {
   if (n == null) return '—';
@@ -21,16 +22,41 @@ function fmtDate(s) {
 
 const TYPE_COLOR = { committee: 'var(--teal)', corporate: '#94a3b8', individual: 'var(--blue)' };
 
-export default function CommitteeProfile({ data, annotations = {} }) {
-  const annotation = annotations[`c_${data.acct_num}`];
+function findCommitteeAnnotation(annotations, acct_num, committee_name) {
+  if (annotations[`c_${acct_num}`]) return annotations[`c_${acct_num}`];
+  const norm = s => String(s).toUpperCase().replace(/[^A-Z0-9]/g, '');
+  const normName = norm(committee_name);
+  return Object.values(annotations).find(e => norm(e.canonical_name) === normName) || null;
+}
+
+export default function CommitteeProfile({ data, annotations = {}, linkedCandidates = [] }) {
+  const annotation = findCommitteeAnnotation(annotations, data.acct_num, data.committee_name);
   const articles = annotation?.articles || [];
   const party = getPartyFromName(data.committee_name, data.acct_num);
   const partyColor = party === 'R' ? 'var(--republican)' : party === 'D' ? 'var(--democrat)' : null;
 
   const researchLinks = [
+    ...(data.website_url ? [{
+      label: 'Official Website →',
+      href: data.website_url,
+    }] : []),
     {
-      label: 'FL Elections Records →',
-      href: 'https://dos.fl.gov/elections/campaign-finance/reports-data/',
+      label: 'Committee Connections →',
+      href: `/connections?committee=${data.acct_num}`,
+      internal: true,
+    },
+    {
+      label: 'View in Network →',
+      href: `/network?acct=${data.acct_num}`,
+      internal: true,
+    },
+    {
+      label: 'FL DOE Committee Page →',
+      href: `https://dos.elections.myflorida.com/committees/ComDetail.asp?account=${data.acct_num}`,
+    },
+    {
+      label: 'Campaign Finance Activity →',
+      href: `https://dos.elections.myflorida.com/cgi-bin/TreSel.exe?account=${data.acct_num}`,
     },
     {
       label: 'Google News →',
@@ -67,6 +93,16 @@ export default function CommitteeProfile({ data, annotations = {} }) {
               {party}
             </span>
           )}
+          {annotation && (
+            <a href="/investigations" style={{
+              fontSize: '0.65rem', padding: '0.15rem 0.5rem',
+              border: '1px solid var(--orange)', color: 'var(--orange)',
+              borderRadius: '3px', textTransform: 'uppercase', letterSpacing: '0.06em',
+              fontWeight: 'bold', textDecoration: 'none',
+            }}>
+              Investigation
+            </a>
+          )}
         </div>
         <h1 style={{
           fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.4rem, 3vw, 2rem)',
@@ -101,6 +137,53 @@ export default function CommitteeProfile({ data, annotations = {} }) {
           </div>
         ))}
       </div>
+
+      {/* Solicitation info */}
+      {data.solicitation_id && (
+        <div style={{ marginBottom: '2rem', padding: '0.9rem 1.1rem', border: '1px solid var(--border)', borderRadius: '3px', background: 'rgba(255,255,255,0.02)' }}>
+          <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.6rem' }}>
+            Public Solicitation Registration
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem 2rem', fontSize: '0.72rem' }}>
+            {data.org_type && (
+              <div>
+                <span style={{ color: 'var(--text-dim)' }}>Type: </span>
+                <span style={{ color: 'var(--text)', fontFamily: 'var(--font-mono)' }}>
+                  {data.org_type.replace('Type: ', '')}
+                </span>
+              </div>
+            )}
+            {data.solicitation_file_date && (
+              <div>
+                <span style={{ color: 'var(--text-dim)' }}>Filed: </span>
+                <span style={{ color: 'var(--text)', fontFamily: 'var(--font-mono)' }}>
+                  {data.solicitation_file_date}
+                </span>
+              </div>
+            )}
+            <div>
+              <span style={{ color: 'var(--text-dim)' }}>Status: </span>
+              <span style={{ color: data.solicitation_active ? 'var(--teal)' : 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+                {data.solicitation_active ? 'Active' : 'Withdrawn'}
+              </span>
+            </div>
+            {data.solicitation_id && (
+              <div>
+                <span style={{ color: 'var(--text-dim)' }}>ID: </span>
+                <a href="https://dos.fl.gov/elections/political-activities/registration/" target="_blank" rel="noopener noreferrer"
+                  style={{ color: 'var(--teal)', fontFamily: 'var(--font-mono)', textDecoration: 'none' }}>
+                  #{data.solicitation_id}
+                </a>
+              </div>
+            )}
+          </div>
+          {data.solicitors && data.solicitors.length > 0 && (
+            <div style={{ marginTop: '0.5rem', fontSize: '0.68rem', color: 'var(--text-dim)' }}>
+              Solicitor{data.solicitors.length > 1 ? 's' : ''}: {data.solicitors.join(' · ')}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Top donors table */}
       {data.top_donors.length > 0 && (
@@ -152,18 +235,60 @@ export default function CommitteeProfile({ data, annotations = {} }) {
         </div>
       )}
 
+      {/* Linked Candidates */}
+      {linkedCandidates.length > 0 && (
+        <div style={{ marginBottom: '2rem' }}>
+          <div style={{
+            fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase',
+            letterSpacing: '0.1em', marginBottom: '0.75rem',
+          }}>
+            Linked Candidates ({linkedCandidates.length})
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', background: 'var(--border)', border: '1px solid var(--border)', borderRadius: '3px', overflow: 'hidden' }}>
+            {linkedCandidates.map((c, i) => (
+              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.5rem 0.75rem', background: 'var(--bg)' }}>
+                <a href={`/candidate/${c.acct_num}`} style={{
+                  color: 'var(--teal)', textDecoration: 'none', fontSize: '0.72rem', flex: 1,
+                  minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                }}>
+                  {c.name || `Candidate #${c.acct_num}`}
+                </a>
+                {c.office && (
+                  <span style={{ fontSize: '0.6rem', color: 'var(--text-dim)', whiteSpace: 'nowrap', flexShrink: 0 }}>
+                    {c.office}{c.year ? ` · ${c.year}` : ''}
+                  </span>
+                )}
+                <span style={{
+                  fontSize: '0.55rem', padding: '0.05rem 0.3rem',
+                  background: 'rgba(77,216,240,0.08)', color: 'var(--teal)',
+                  border: '1px solid rgba(77,216,240,0.2)', borderRadius: '2px',
+                  fontFamily: 'var(--font-mono)', flexShrink: 0,
+                }}>
+                  {c.link_type}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Connected committees */}
+      <CommitteeConnections acctNum={data.acct_num} />
+
       {/* Research links */}
       <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.25rem', marginBottom: '2rem' }}>
         <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>
           Research
         </div>
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-          {researchLinks.map(({ label, href }) => (
-            <a key={label} href={href} target="_blank" rel="noopener noreferrer" style={{
-              padding: '0.35rem 0.75rem', border: '1px solid var(--border)',
-              color: 'var(--text-dim)', fontSize: '0.72rem', borderRadius: '3px',
-              textDecoration: 'none', fontFamily: 'var(--font-mono)',
-            }}>
+          {researchLinks.map(({ label, href, internal }) => (
+            <a key={label} href={href}
+              {...(!internal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+              style={{
+                padding: '0.35rem 0.75rem', border: '1px solid var(--border)',
+                color: internal ? 'var(--teal)' : 'var(--text-dim)', fontSize: '0.72rem', borderRadius: '3px',
+                textDecoration: 'none', fontFamily: 'var(--font-mono)',
+              }}>
               {label}
             </a>
           ))}

@@ -1,6 +1,7 @@
 // components/donors/DonorProfile.js
 import dynamic from 'next/dynamic';
 import BackLinks from '@/components/BackLinks';
+import { slugify } from '@/lib/slugify';
 
 const DonorYearChart = dynamic(() => import('./DonorYearChart'), { ssr: false });
 
@@ -46,11 +47,16 @@ function SectionLabel({ children }) {
   );
 }
 
-export default function DonorProfile({ data }) {
+export default function DonorProfile({ data, annotations = {} }) {
   const committees = data.committees || [];
   const candidates = data.candidates || [];
   const byYear     = data.by_year    || [];
   const lobbyists  = data.lobbyist_principals || [];
+
+  const norm = s => String(s).toUpperCase().replace(/[^A-Z0-9]/g, '');
+  const normName = norm(data.name || '');
+  const annotation = Object.values(annotations).find(e => norm(e.canonical_name) === normName) || null;
+  const articles = annotation?.articles || [];
 
   const typeColor = data.is_corporate ? 'var(--orange)' : 'var(--teal)';
   const typeLabel = data.is_corporate ? 'Corporate / Org' : 'Individual';
@@ -98,6 +104,25 @@ export default function DonorProfile({ data }) {
             }}>
               LOBBYIST PRINCIPAL
             </span>
+          )}
+          {data.industry && data.industry !== 'Not Employed' && data.industry !== 'Other' && (
+            <a href={`/industry/${slugify(data.industry)}`} style={{
+              fontSize: '0.65rem', padding: '0.15rem 0.5rem',
+              border: '1px solid rgba(100,140,220,0.3)', color: 'var(--text-dim)',
+              borderRadius: '2px', fontFamily: 'var(--font-mono)', textDecoration: 'none',
+            }}>
+              {data.industry}
+            </a>
+          )}
+          {annotation && (
+            <a href="/investigations" style={{
+              fontSize: '0.65rem', padding: '0.15rem 0.5rem',
+              border: '1px solid var(--orange)', color: 'var(--orange)',
+              borderRadius: '2px', fontFamily: 'var(--font-mono)', fontWeight: 'bold',
+              textDecoration: 'none',
+            }}>
+              INVESTIGATION
+            </a>
           )}
         </div>
         <h1 style={{
@@ -253,7 +278,10 @@ export default function DonorProfile({ data }) {
                   padding: '0.4rem 0.6rem', background: 'rgba(160,192,255,0.06)',
                   borderRadius: '3px',
                 }}>
-                  <span style={{ color: 'var(--blue)', fontSize: '0.78rem' }}>{l.principal_name}</span>
+                  <a href={`/principal/${slugify(l.principal_name)}`}
+                    style={{ color: 'var(--blue)', fontSize: '0.78rem', textDecoration: 'none' }}>
+                    {l.principal_name}
+                  </a>
                   <span style={{ fontSize: '0.65rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
                     {l.match_score}% match
                   </span>
@@ -264,18 +292,59 @@ export default function DonorProfile({ data }) {
         </div>
       )}
 
+      {/* Industry cross-reference */}
+      {data.industry && data.industry !== 'Not Employed' && data.industry !== 'Other' && (
+        <div style={{ marginBottom: '1.5rem' }}>
+          <a href={`/industry/${slugify(data.industry)}`} style={{
+            display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
+            fontSize: '0.7rem', color: 'var(--text-dim)', textDecoration: 'none',
+            padding: '0.4rem 0.75rem', border: '1px solid rgba(100,140,220,0.15)',
+            borderRadius: '3px', fontFamily: 'var(--font-mono)',
+          }}>
+            → browse top {data.industry} donors
+          </a>
+        </div>
+      )}
+
       {/* Research links */}
-      <div style={{ marginBottom: '2rem' }}>
-        <SectionLabel>Research Links</SectionLabel>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+      <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.25rem', marginBottom: '2rem' }}>
+        <SectionLabel>Research</SectionLabel>
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
           {researchLinks.map(({ label, href }) => (
             <a key={label} href={href} target="_blank" rel="noopener noreferrer"
-              style={{ color: 'var(--teal)', fontSize: '0.78rem', textDecoration: 'none' }}>
+              style={{
+                padding: '0.35rem 0.75rem', border: '1px solid var(--border)',
+                color: 'var(--text-dim)', fontSize: '0.72rem', borderRadius: '3px',
+                textDecoration: 'none', fontFamily: 'var(--font-mono)',
+              }}>
               {label}
             </a>
           ))}
         </div>
       </div>
+
+      {/* In the News */}
+      {articles.length > 0 && (
+        <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.25rem', marginBottom: '2rem' }}>
+          <SectionLabel>In the News</SectionLabel>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+            {articles.map((article) => (
+              <a key={article.url} href={article.url} target="_blank" rel="noopener noreferrer" style={{
+                display: 'block', padding: '0.65rem 0.85rem',
+                border: '1px solid var(--border)', borderRadius: '3px',
+                textDecoration: 'none', background: 'rgba(255,255,255,0.02)',
+              }}>
+                <div style={{ fontSize: '0.82rem', color: 'var(--text)', lineHeight: 1.4, marginBottom: '0.25rem' }}>
+                  {article.title}
+                </div>
+                <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+                  {article.outlet}{article.date ? ` · ${article.date.slice(0, 7)}` : ''}
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Attribution */}
       <div style={{

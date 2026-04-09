@@ -95,6 +95,9 @@ def load_donor_details(cur):
         except Exception:
             continue
 
+        if not isinstance(d, dict):
+            continue
+
         slug = d.get("slug", fpath.stem)
 
         for c in d.get("committees", []):
@@ -153,8 +156,9 @@ def load_candidates(cur):
             len(d.get("linked_pcs", []))
         ))
 
-        for quarter, amount in hm.get("by_quarter", {}).items():
-            quarterly_rows.append((str(acct), quarter, amount))
+        for entry in hm.get("by_quarter", []):
+            if isinstance(entry, dict):
+                quarterly_rows.append((str(acct), entry.get("period"), entry.get("amount", 0)))
 
         for td in hm.get("top_donors", []):
             donor_name = td.get("name", "")
@@ -334,17 +338,26 @@ def load_industries(cur):
 def load_analysis(cur):
     print("Loading analysis tables...")
     ec = load_json(DATA_DIR / "entity_connections.json")
-    ec_rows = [
-        (c["entity_a"], c["entity_b"], c.get("connection_score", 0),
-         c.get("shared_treasurer", False), c.get("shared_address", False),
-         c.get("shared_phone", False), c.get("shared_chair", False),
-         c.get("donor_overlap_pct", 0), c.get("money_between", 0))
-        for c in ec.get("connections", [])
-    ]
+    ec_rows = []
+    for c in ec.get("connections", []):
+        ea = c["entity_a"]
+        eb = c["entity_b"]
+        ea_name = ea["name"] if isinstance(ea, dict) else ea
+        eb_name = eb["name"] if isinstance(eb, dict) else eb
+        ea_acct = ea.get("acct_num") if isinstance(ea, dict) else None
+        eb_acct = eb.get("acct_num") if isinstance(eb, dict) else None
+        ec_rows.append((
+            ea_name, eb_name, ea_acct, eb_acct,
+            c.get("connection_score", 0),
+            c.get("shared_treasurer", False), c.get("shared_address", False),
+            c.get("shared_phone", False), c.get("shared_chair", False),
+            c.get("donor_overlap_pct", 0), c.get("money_between", 0)
+        ))
     flush(cur, """
         INSERT INTO entity_connections
-          (entity_a, entity_b, connection_score, shared_treasurer, shared_address,
-           shared_phone, shared_chair, donor_overlap_pct, money_between)
+          (entity_a, entity_b, entity_a_acct, entity_b_acct, connection_score,
+           shared_treasurer, shared_address, shared_phone, shared_chair,
+           donor_overlap_pct, money_between)
         VALUES %s
     """, ec_rows)
     print(f"  → {len(ec_rows)} entity connections")

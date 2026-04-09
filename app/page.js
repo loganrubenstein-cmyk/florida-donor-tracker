@@ -211,6 +211,24 @@ export default function Home() {
           Explore the data
         </div>
         <div className="rg-2" style={{ gap: '1rem' }}>
+          <a href="/search" style={{ textDecoration: 'none' }}>
+            <div style={{
+              border: '1px solid rgba(255,176,96,0.35)',
+              borderRadius: '3px',
+              padding: '1.25rem',
+              background: 'rgba(255,176,96,0.04)',
+              height: '100%',
+              cursor: 'pointer',
+            }}>
+              <div style={{ fontSize: '0.72rem', color: 'var(--orange)', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
+                → global search
+              </div>
+              <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
+                Search across all 60,000+ entities — donors, committees, candidates, lobbyists, and principals — in one place.
+              </div>
+            </div>
+          </a>
+
           <a href="/donors" style={{ textDecoration: 'none' }}>
             <div style={{
               border: '1px solid rgba(255,176,96,0.2)',
@@ -265,7 +283,7 @@ export default function Home() {
             </div>
           </a>
 
-          <a href="/committee/4700" style={{ textDecoration: 'none' }}>
+          <a href="/committees" style={{ textDecoration: 'none' }}>
             <div style={{
               border: '1px solid rgba(128,255,160,0.2)',
               borderRadius: '3px',
@@ -333,6 +351,78 @@ export default function Home() {
               </div>
               <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
                 56,000+ committee pairs sharing treasurers, addresses, donors, or money flows. Spot coordination.
+              </div>
+            </div>
+          </a>
+
+          <a href="/flow" style={{ textDecoration: 'none' }}>
+            <div style={{
+              border: '1px solid rgba(77,216,240,0.15)',
+              borderRadius: '3px',
+              padding: '1.25rem',
+              background: 'rgba(77,216,240,0.01)',
+              height: '100%',
+              cursor: 'pointer',
+            }}>
+              <div style={{ fontSize: '0.72rem', color: 'var(--teal)', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
+                → money flow
+              </div>
+              <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
+                Sankey diagram of the 500 largest donor-to-committee money flows in Florida politics.
+              </div>
+            </div>
+          </a>
+
+          <a href="/industries" style={{ textDecoration: 'none' }}>
+            <div style={{
+              border: '1px solid rgba(160,192,255,0.15)',
+              borderRadius: '3px',
+              padding: '1.25rem',
+              background: 'rgba(160,192,255,0.01)',
+              height: '100%',
+              cursor: 'pointer',
+            }}>
+              <div style={{ fontSize: '0.72rem', color: 'var(--blue)', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
+                → industries
+              </div>
+              <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
+                Follow the money by industry — Legal, Real Estate, Healthcare, and 12 more. See who each sector funds.
+              </div>
+            </div>
+          </a>
+
+          <a href="/cycles" style={{ textDecoration: 'none' }}>
+            <div style={{
+              border: '1px solid rgba(128,255,160,0.15)',
+              borderRadius: '3px',
+              padding: '1.25rem',
+              background: 'rgba(128,255,160,0.01)',
+              height: '100%',
+              cursor: 'pointer',
+            }}>
+              <div style={{ fontSize: '0.72rem', color: 'var(--green)', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
+                → election cycles
+              </div>
+              <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
+                10 election cycles from 2008 to 2026 — totals, top raisers, party breakdown, office-by-office splits.
+              </div>
+            </div>
+          </a>
+
+          <a href="/investigations" style={{ textDecoration: 'none' }}>
+            <div style={{
+              border: '1px solid rgba(255,176,96,0.25)',
+              borderRadius: '3px',
+              padding: '1.25rem',
+              background: 'rgba(255,176,96,0.03)',
+              height: '100%',
+              cursor: 'pointer',
+            }}>
+              <div style={{ fontSize: '0.72rem', color: 'var(--orange)', fontWeight: 700, marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
+                → investigations
+              </div>
+              <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
+                11 entities with documented political influence — cross-referenced with investigative journalism from ProPublica, Tampa Bay Times, and more.
               </div>
             </div>
           </a>

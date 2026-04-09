@@ -233,6 +233,8 @@ def build_donor_records(
             print(f"    {i:,}/{total:,}…")
 
         slug = slugify(name)
+        if not slug:  # skip donors whose name produces an empty slug (e.g. bare backtick)
+            continue
         s_total = float(soft_totals.get(name, 0))
         s_count = int(soft_counts.get(name, 0))
 

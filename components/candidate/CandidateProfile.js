@@ -57,8 +57,12 @@ export default function CandidateProfile({ data }) {
 
   const researchLinks = [
     {
-      label: 'FL Elections Records →',
-      href: 'https://dos.fl.gov/elections/campaign-finance/reports-data/',
+      label: 'FL DOE Candidate Page →',
+      href: `https://dos.elections.myflorida.com/candidate/CandidateDetail.asp?account=${data.acct_num}`,
+    },
+    {
+      label: 'Campaign Finance Activity →',
+      href: `https://dos.elections.myflorida.com/cgi-bin/TreSel.exe?account=${data.acct_num}`,
     },
     {
       label: 'Google News →',

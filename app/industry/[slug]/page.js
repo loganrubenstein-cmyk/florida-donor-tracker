@@ -6,11 +6,29 @@ import { slugify } from '@/lib/slugify';
 export const dynamic = 'force-static';
 
 function loadSummary() {
-  const raw = readFileSync(
-    join(process.cwd(), 'public', 'data', 'industry_summary.json'),
-    'utf-8'
+  return JSON.parse(
+    readFileSync(join(process.cwd(), 'public', 'data', 'industry_summary.json'), 'utf-8')
   );
-  return JSON.parse(raw);
+}
+
+function loadTrends() {
+  try {
+    return JSON.parse(
+      readFileSync(join(process.cwd(), 'public', 'data', 'industry_trends.json'), 'utf-8')
+    );
+  } catch {
+    return null;
+  }
+}
+
+function loadIndustryDonors(slug) {
+  try {
+    return JSON.parse(
+      readFileSync(join(process.cwd(), 'public', 'data', 'industry_donors', `${slug}.json`), 'utf-8')
+    );
+  } catch {
+    return null;
+  }
 }
 
 export async function generateStaticParams() {
@@ -29,6 +47,8 @@ export async function generateMetadata({ params }) {
 export default async function IndustryPage({ params }) {
   const { slug } = await params;
   const summary = loadSummary();
+  const trends = loadTrends();
+  const topDonors = loadIndustryDonors(slug);
   const ind = summary.industries.find(i => slugify(i.industry) === slug);
-  return <IndustryProfile data={ind} totalAmount={summary.total_amount} />;
+  return <IndustryProfile data={ind} totalAmount={summary.total_amount} trendData={trends} topDonors={topDonors} />;
 }

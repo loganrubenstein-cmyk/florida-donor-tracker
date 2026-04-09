@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'next/navigation';
 import BackLinks from '@/components/BackLinks';
 
 const FILTER_OPTIONS = [
@@ -12,6 +13,13 @@ const FILTER_OPTIONS = [
   { value: 'donor_overlap',     label: 'Donor Overlap' },
   { value: 'money_between',     label: 'Money Flows' },
 ];
+
+function fmt(n) {
+  if (!n || n === 0) return null;
+  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000)     return `$${(n / 1_000).toFixed(0)}K`;
+  return `$${n.toFixed(0)}`;
+}
 
 function ScoreBadge({ score }) {
   const color = score >= 70 ? 'var(--orange)'
@@ -35,7 +43,7 @@ function ConnectionPips({ row }) {
     { key: 'shared_phone',     label: 'PHN', active: row.shared_phone     },
     { key: 'shared_chair',     label: 'CHR', active: row.shared_chair     },
     { key: 'donor_overlap',    label: `${Math.round(row.donor_overlap_pct || 0)}%`, active: (row.donor_overlap_pct || 0) > 0 },
-    { key: 'money_between',    label: '$→', active: (row.money_between || 0) > 0 },
+    { key: 'money_between',    label: fmt(row.money_between) || '$→', active: (row.money_between || 0) > 0 },
   ];
   return (
     <div style={{ display: 'flex', gap: '0.25rem', flexWrap: 'wrap' }}>
@@ -55,23 +63,73 @@ function ConnectionPips({ row }) {
 }
 
 export default function ConnectionsView() {
-  const [data, setData]     = useState(null);
-  const [search, setSearch] = useState('');
-  const [filter, setFilter] = useState('all');
+  const searchParams = useSearchParams();
+  const committeeParam = searchParams?.get('committee') || null;
 
-  useEffect(() => {
-    fetch('/data/entity_connections.json')
-      .then(r => r.json())
-      .then(setData)
-      .catch(() => setData({ connections: [] }));
+  const [connections, setConnections] = useState([]);
+  const [meta, setMeta]               = useState(null);
+  const [page, setPage]               = useState(1);
+  const [totalPages, setTotalPages]   = useState(29);
+  const [loading, setLoading]         = useState(true);
+  const [search, setSearch]           = useState('');
+  const [filter, setFilter]           = useState('all');
+  const [committeeMode, setCommitteeMode] = useState(!!committeeParam);
+  const [committeeName, setCommitteeName] = useState('');
+
+  // Load per-committee connections when acct is passed
+  const loadCommittee = useCallback(async (acct) => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/data/connections_pages/by_committee/${acct}.json`);
+      if (!res.ok) throw new Error('not found');
+      const data = await res.json();
+      setConnections(data);
+      setMeta({ total: data.length, mode: 'committee', acct });
+      setCommitteeMode(true);
+    } catch {
+      setConnections([]);
+      setMeta({ total: 0, mode: 'committee', acct });
+    }
+    setLoading(false);
   }, []);
 
-  const connections = data?.connections || [];
-  const meta = data ? {
-    total: data.total_connections,
-    shown: data.shown,
-    threshold: data.threshold,
-  } : null;
+  // Load a paginated page of the full dataset
+  const loadPage = useCallback(async (pageNum) => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/data/connections_pages/page_${String(pageNum).padStart(3, '0')}.json`);
+      const data = await res.json();
+      setConnections(data.connections || []);
+      setMeta({
+        total: data.total_connections,
+        totalPages: data.total_pages,
+        threshold: data.threshold,
+        mode: 'paginated',
+        page: pageNum,
+      });
+      setTotalPages(data.total_pages);
+    } catch {
+      setConnections([]);
+    }
+    setLoading(false);
+  }, []);
+
+  // Initial load
+  useEffect(() => {
+    if (committeeParam) {
+      // Try to get name from committee index for display
+      fetch('/data/committees/index.json')
+        .then(r => r.json())
+        .then(index => {
+          const match = index.find(c => String(c.acct_num) === String(committeeParam));
+          if (match) setCommitteeName(match.committee_name);
+        })
+        .catch(() => {});
+      loadCommittee(committeeParam);
+    } else {
+      loadPage(1);
+    }
+  }, [committeeParam, loadCommittee, loadPage]);
 
   const filtered = useMemo(() => {
     let list = connections;
@@ -101,14 +159,19 @@ export default function ConnectionsView() {
     fontFamily: 'var(--font-mono)', outline: 'none',
   };
 
-  if (!data) {
-    return (
-      <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '4rem 2rem', textAlign: 'center' }}>
-        <div style={{ color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.78rem' }}>
-          Loading connections…
-        </div>
-      </main>
-    );
+  const btnStyle = (active) => ({
+    ...inputStyle,
+    cursor: active ? 'pointer' : 'default',
+    color: active ? 'var(--teal)' : 'var(--text-dim)',
+    border: `1px solid ${active ? 'var(--teal)' : 'var(--border)'}`,
+    padding: '0.4rem 0.8rem',
+  });
+
+  function goPage(p) {
+    if (p < 1 || p > totalPages) return;
+    setPage(p);
+    setCommitteeMode(false);
+    loadPage(p);
   }
 
   return (
@@ -122,15 +185,26 @@ export default function ConnectionsView() {
           fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.4rem, 3vw, 2rem)',
           fontWeight: 400, color: '#fff', marginBottom: '0.4rem',
         }}>
-          Committee Connections
+          {committeeMode && committeeName
+            ? `Connections — ${committeeName}`
+            : 'Committee Connections'}
         </h1>
-        {meta && (
-          <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
-            <span>{meta.total.toLocaleString()} committee pairs with connection score ≥ {meta.threshold}</span>
-            <span style={{ color: 'var(--orange)' }}>Showing top {meta.shown}</span>
-            <span>Connections: shared treasurer · address · phone · chair · donor overlap · money flow</span>
-          </div>
-        )}
+        <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+          {committeeMode ? (
+            <>
+              <span>Top 50 connections for this committee</span>
+              <a href="/connections" style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+                Browse all 56,173 pairs →
+              </a>
+            </>
+          ) : (
+            <>
+              <span>56,173 committee pairs with connection signals</span>
+              {meta && <span style={{ color: 'var(--orange)' }}>Page {meta.page} of {meta.totalPages} · 2,000 per page</span>}
+              <span>Signals: shared treasurer · address · phone · chair · donor overlap · money flow</span>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Score legend */}
@@ -139,11 +213,11 @@ export default function ConnectionsView() {
         marginBottom: '1.25rem', fontSize: '0.65rem', fontFamily: 'var(--font-mono)',
         color: 'var(--text-dim)', alignItems: 'center',
       }}>
-        <span>Score legend:</span>
+        <span>Score:</span>
         <span><span style={{ color: 'var(--orange)', fontWeight: 700 }}>70+</span> High</span>
         <span><span style={{ color: 'var(--teal)',   fontWeight: 700 }}>45–69</span> Medium</span>
         <span><span style={{ color: 'var(--text-dim)' }}>{'<45'}</span> Low</span>
-        <span style={{ marginLeft: '0.5rem' }}>TRS=treasurer ADR=address PHN=phone CHR=chair %=donor overlap $→=money flow</span>
+        <span style={{ marginLeft: '0.5rem' }}>TRS=treasurer ADR=address PHN=phone CHR=chair %=donor overlap $=money flow</span>
       </div>
 
       {/* Filters */}
@@ -163,12 +237,31 @@ export default function ConnectionsView() {
         </select>
       </div>
 
+      {/* Pagination (global mode only) */}
+      {!committeeMode && (
+        <div style={{
+          display: 'flex', gap: '0.5rem', alignItems: 'center',
+          marginBottom: '1rem', flexWrap: 'wrap',
+        }}>
+          <button onClick={() => goPage(1)} disabled={page === 1} style={btnStyle(page > 1)}>«</button>
+          <button onClick={() => goPage(page - 1)} disabled={page === 1} style={btnStyle(page > 1)}>‹ Prev</button>
+          <span style={{ fontSize: '0.68rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', padding: '0 0.5rem' }}>
+            Page {page} of {totalPages}
+          </span>
+          <button onClick={() => goPage(page + 1)} disabled={page >= totalPages} style={btnStyle(page < totalPages)}>Next ›</button>
+          <button onClick={() => goPage(totalPages)} disabled={page >= totalPages} style={btnStyle(page < totalPages)}>»</button>
+          <span style={{ fontSize: '0.6rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', marginLeft: '0.5rem' }}>
+            rows {((page - 1) * 2000 + 1).toLocaleString()}–{Math.min(page * 2000, 56173).toLocaleString()} of 56,173
+          </span>
+        </div>
+      )}
+
       {/* Result count */}
       <div style={{
         fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase',
         letterSpacing: '0.08em', marginBottom: '0.6rem',
       }}>
-        {filtered.length.toLocaleString()} pair{filtered.length !== 1 ? 's' : ''}
+        {loading ? 'Loading…' : `${filtered.length.toLocaleString()} pair${filtered.length !== 1 ? 's' : ''}${search || filter !== 'all' ? ' (filtered)' : ''}`}
       </div>
 
       {/* Table */}
@@ -177,11 +270,11 @@ export default function ConnectionsView() {
           <thead>
             <tr style={{ borderBottom: '1px solid var(--border)' }}>
               {[
-                { label: '#',      align: 'center', width: '2rem' },
-                { label: 'Score',  align: 'center', width: '4rem' },
+                { label: '#',           align: 'center', width: '2rem' },
+                { label: 'Score',       align: 'center', width: '4rem' },
                 { label: 'Committee A', align: 'left' },
                 { label: 'Committee B', align: 'left' },
-                { label: 'Signals', align: 'left'  },
+                { label: 'Signals',     align: 'left'  },
               ].map(({ label, align, width }) => (
                 <th key={label} style={{
                   padding: '0.4rem 0.6rem', textAlign: align, width,
@@ -194,7 +287,7 @@ export default function ConnectionsView() {
             </tr>
           </thead>
           <tbody>
-            {filtered.length === 0 && (
+            {!loading && filtered.length === 0 && (
               <tr>
                 <td colSpan={5} style={{
                   padding: '2.5rem 0.6rem', color: 'var(--text-dim)',
@@ -205,10 +298,10 @@ export default function ConnectionsView() {
               </tr>
             )}
             {filtered.map((row, i) => (
-              <tr key={`${row.entity_a?.acct_num}-${row.entity_b?.acct_num}`}
+              <tr key={`${row.entity_a?.acct_num}-${row.entity_b?.acct_num}-${i}`}
                 style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
                 <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2rem' }}>
-                  {i + 1}
+                  {!committeeMode ? ((page - 1) * 2000 + i + 1).toLocaleString() : i + 1}
                 </td>
                 <td style={{ padding: '0.45rem 0.6rem', textAlign: 'center', width: '4rem' }}>
                   <ScoreBadge score={row.connection_score} />
@@ -218,18 +311,30 @@ export default function ConnectionsView() {
                     style={{ color: 'var(--teal)', textDecoration: 'none', display: 'block', marginBottom: '0.1rem' }}>
                     {row.entity_a?.name}
                   </a>
-                  <span style={{ fontSize: '0.6rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
-                    {row.entity_a?.type_code} · #{row.entity_a?.acct_num}
-                  </span>
+                  <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.6rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+                      #{row.entity_a?.acct_num}
+                    </span>
+                    <a href={`/connections?committee=${row.entity_a?.acct_num}`}
+                      style={{ fontSize: '0.55rem', color: 'var(--text-dim)', textDecoration: 'none', fontFamily: 'var(--font-mono)' }}>
+                      all connections →
+                    </a>
+                  </div>
                 </td>
                 <td style={{ padding: '0.45rem 0.6rem', maxWidth: '280px', wordBreak: 'break-word' }}>
                   <a href={`/committee/${row.entity_b?.acct_num}`}
                     style={{ color: 'var(--teal)', textDecoration: 'none', display: 'block', marginBottom: '0.1rem' }}>
                     {row.entity_b?.name}
                   </a>
-                  <span style={{ fontSize: '0.6rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
-                    {row.entity_b?.type_code} · #{row.entity_b?.acct_num}
-                  </span>
+                  <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.6rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+                      #{row.entity_b?.acct_num}
+                    </span>
+                    <a href={`/connections?committee=${row.entity_b?.acct_num}`}
+                      style={{ fontSize: '0.55rem', color: 'var(--text-dim)', textDecoration: 'none', fontFamily: 'var(--font-mono)' }}>
+                      all connections →
+                    </a>
+                  </div>
                 </td>
                 <td style={{ padding: '0.45rem 0.6rem' }}>
                   <ConnectionPips row={row} />
@@ -239,6 +344,20 @@ export default function ConnectionsView() {
           </tbody>
         </table>
       </div>
+
+      {/* Bottom pagination */}
+      {!committeeMode && filtered.length > 0 && (
+        <div style={{
+          display: 'flex', gap: '0.5rem', alignItems: 'center',
+          marginTop: '1rem', flexWrap: 'wrap',
+        }}>
+          <button onClick={() => goPage(page - 1)} disabled={page === 1} style={btnStyle(page > 1)}>‹ Prev</button>
+          <span style={{ fontSize: '0.68rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', padding: '0 0.5rem' }}>
+            Page {page} of {totalPages}
+          </span>
+          <button onClick={() => goPage(page + 1)} disabled={page >= totalPages} style={btnStyle(page < totalPages)}>Next ›</button>
+        </div>
+      )}
 
       <div style={{
         fontSize: '0.62rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)',

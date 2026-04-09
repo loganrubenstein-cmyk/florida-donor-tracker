@@ -1,7 +1,10 @@
 // components/industries/IndustryProfile.js
 // Server component
+import dynamic from 'next/dynamic';
 import BackLinks from '@/components/BackLinks';
 import { slugify } from '@/lib/slugify';
+
+const IndustryTrendChart = dynamic(() => import('./IndustryTrendChart'), { ssr: false });
 
 function fmt(n) {
   if (n == null) return '—';
@@ -57,9 +60,11 @@ function StatBox({ label, value, sub, color }) {
   );
 }
 
-export default function IndustryProfile({ data, totalAmount }) {
+export default function IndustryProfile({ data, totalAmount, trendData, topDonors }) {
   const color = INDUSTRY_COLORS[data.industry] || '#444466';
   const candidates = data.top_candidates || [];
+  // Prefer rich per-industry donor file (100 donors, full data) over summary (10 donors, name+total only)
+  const richDonors = topDonors?.top_donors || null;
   const donors     = data.top_donors     || [];
 
   return (
@@ -103,6 +108,11 @@ export default function IndustryProfile({ data, totalAmount }) {
         <StatBox label="Candidates Funded" value={(candidates.length).toLocaleString()}
           sub="in top recipients shown" color="var(--text-dim)" />
       </div>
+
+      {/* Trend chart */}
+      {trendData && (
+        <IndustryTrendChart industry={data.industry} trendData={trendData} color={color} />
+      )}
 
       {/* Top candidates */}
       {candidates.length > 0 && (
@@ -161,33 +171,70 @@ export default function IndustryProfile({ data, totalAmount }) {
       )}
 
       {/* Top donors */}
-      {donors.length > 0 && (
+      {(richDonors || donors).length > 0 && (
         <div style={{ marginBottom: '2rem' }}>
           <div style={{
             fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase',
             letterSpacing: '0.1em', marginBottom: '0.75rem',
           }}>
             Top Donors — {data.industry}
+            {topDonors && (
+              <span style={{ marginLeft: '0.75rem', color: 'rgba(90,106,136,0.5)' }}>
+                ({topDonors.total_donors.toLocaleString()} total in this industry)
+              </span>
+            )}
           </div>
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                  {['#', 'Donor', 'Total Given'].map((h, j) => (
+                  {(richDonors
+                    ? ['#', 'Donor', 'Type', 'Committees', 'Combined Total']
+                    : ['#', 'Donor', 'Total Given']
+                  ).map((h, j) => (
                     <th key={h} style={{
                       padding: '0.35rem 0.6rem', fontSize: '0.6rem', color: 'var(--text-dim)',
                       textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 400,
-                      textAlign: j === 0 ? 'center' : j === 2 ? 'right' : 'left',
+                      textAlign: j === 0 || j === 2 ? 'center' : j >= 3 ? 'right' : 'left',
                     }}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                {donors.map((d, i) => (
-                  <tr key={d.name} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
-                    <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2rem' }}>
-                      {i + 1}
+                {richDonors ? richDonors.map((d, i) => (
+                  <tr key={d.slug || d.name} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
+                    <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2rem' }}>{i + 1}</td>
+                    <td style={{ padding: '0.4rem 0.6rem', wordBreak: 'break-word', maxWidth: '280px' }}>
+                      <a href={`/donor/${d.slug || slugify(d.name)}`}
+                        style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+                        {d.name}
+                      </a>
+                      {d.top_location && (
+                        <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)' }}>
+                          {d.top_location.replace(/,\s*\d{5}(-\d{4})?$/, '').trim()}
+                        </div>
+                      )}
                     </td>
+                    <td style={{ padding: '0.4rem 0.6rem', textAlign: 'center' }}>
+                      <span style={{
+                        fontSize: '0.55rem', padding: '0.05rem 0.3rem',
+                        border: `1px solid ${d.is_corporate ? 'rgba(160,192,255,0.4)' : 'rgba(128,255,160,0.4)'}`,
+                        color: d.is_corporate ? 'var(--blue)' : 'var(--teal)',
+                        borderRadius: '2px', fontFamily: 'var(--font-mono)',
+                      }}>
+                        {d.is_corporate ? 'CORP' : 'IND'}
+                      </span>
+                    </td>
+                    <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>
+                      {d.num_committees}
+                    </td>
+                    <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--orange)', fontWeight: 700, whiteSpace: 'nowrap', fontFamily: 'var(--font-mono)', fontSize: '0.72rem' }}>
+                      {fmt(d.total_combined)}
+                    </td>
+                  </tr>
+                )) : donors.map((d, i) => (
+                  <tr key={d.name} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
+                    <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2rem' }}>{i + 1}</td>
                     <td style={{ padding: '0.4rem 0.6rem', wordBreak: 'break-word', maxWidth: '300px' }}>
                       <a href={`/donor/${slugify(d.name)}`}
                         style={{ color: 'var(--teal)', textDecoration: 'none' }}>

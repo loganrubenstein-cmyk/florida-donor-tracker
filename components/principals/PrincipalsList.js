@@ -22,11 +22,30 @@ const TYPE_OPTIONS = [
   { value: 'active',  label: 'Active Lobbyists' },
 ];
 
+const INDUSTRY_OPTIONS = [
+  { value: 'all',                       label: 'All Industries' },
+  { value: 'Healthcare',                label: 'Healthcare' },
+  { value: 'Finance & Insurance',       label: 'Finance & Insurance' },
+  { value: 'Legal',                     label: 'Legal' },
+  { value: 'Real Estate',               label: 'Real Estate' },
+  { value: 'Education',                 label: 'Education' },
+  { value: 'Construction',              label: 'Construction' },
+  { value: 'Agriculture',               label: 'Agriculture' },
+  { value: 'Retail & Hospitality',      label: 'Retail & Hospitality' },
+  { value: 'Business & Consulting',     label: 'Business & Consulting' },
+  { value: 'Government & Public Service', label: 'Government' },
+  { value: 'Political / Lobbying',      label: 'Associations' },
+];
+
+const PAGE_SIZE = 50;
+
 export default function PrincipalsList() {
   const [principals, setPrincipals] = useState(null);
   const [search, setSearch]         = useState('');
   const [type, setType]             = useState('all');
+  const [industry, setIndustry]     = useState('all');
   const [sortBy, setSortBy]         = useState('donation_total');
+  const [page, setPage]             = useState(1);
 
   useEffect(() => {
     fetch('/data/principals/index.json')
@@ -47,8 +66,9 @@ export default function PrincipalsList() {
       );
     }
 
-    if (type === 'matched') list = list.filter(p => p.donation_total > 0);
-    if (type === 'active')  list = list.filter(p => p.num_active > 0);
+    if (type === 'matched')   list = list.filter(p => p.donation_total > 0);
+    if (type === 'active')    list = list.filter(p => p.num_active > 0);
+    if (industry !== 'all')   list = list.filter(p => p.industry === industry);
 
     list = [...list].sort((a, b) => {
       if (sortBy === 'name')            return (a.name || '').localeCompare(b.name || '');
@@ -57,7 +77,12 @@ export default function PrincipalsList() {
     });
 
     return list;
-  }, [principals, search, type, sortBy]);
+  }, [principals, search, type, industry, sortBy]);
+
+  useMemo(() => setPage(1), [search, type, industry, sortBy]);
+
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  const pageItems  = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   const totals = useMemo(() => {
     if (!principals) return null;
@@ -121,6 +146,9 @@ export default function PrincipalsList() {
         <select value={type} onChange={e => setType(e.target.value)} style={inputStyle}>
           {TYPE_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
         </select>
+        <select value={industry} onChange={e => setIndustry(e.target.value)} style={inputStyle}>
+          {INDUSTRY_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+        </select>
         <select value={sortBy} onChange={e => setSortBy(e.target.value)} style={inputStyle}>
           {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
         </select>
@@ -171,10 +199,10 @@ export default function PrincipalsList() {
                 </td>
               </tr>
             )}
-            {filtered.slice(0, 500).map((p, i) => (
+            {pageItems.map((p, i) => (
               <tr key={p.slug} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
-                <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center' }}>
-                  {i + 1}
+                <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '0.65rem' }}>
+                  {(page - 1) * PAGE_SIZE + i + 1}
                 </td>
                 <td style={{ padding: '0.45rem 0.6rem', wordBreak: 'break-word', maxWidth: '260px' }}>
                   <a href={`/principal/${p.slug}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
@@ -186,6 +214,11 @@ export default function PrincipalsList() {
                       border: '1px solid var(--orange)', borderRadius: '2px',
                       padding: '0.05rem 0.2rem', verticalAlign: 'middle',
                     }}>$</span>
+                  )}
+                  {p.industry && p.industry !== 'Other' && (
+                    <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', marginTop: '0.1rem' }}>
+                      {p.industry}
+                    </div>
                   )}
                 </td>
                 <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.68rem', whiteSpace: 'nowrap' }}>
@@ -206,12 +239,31 @@ export default function PrincipalsList() {
         </table>
       </div>
 
-      {filtered.length > 500 && (
-        <div style={{
-          fontSize: '0.68rem', color: 'var(--text-dim)', textAlign: 'center',
-          padding: '1rem', fontFamily: 'var(--font-mono)',
-        }}>
-          Showing top 500 of {filtered.length.toLocaleString()} — use filters to narrow results
+      {totalPages > 1 && (
+        <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+          <button
+            onClick={() => setPage(p => Math.max(1, p - 1))}
+            disabled={page === 1}
+            style={{
+              padding: '0.25rem 0.65rem', fontSize: '0.65rem',
+              background: 'transparent', border: '1px solid rgba(100,140,220,0.25)',
+              color: page === 1 ? 'var(--text-dim)' : 'var(--text)', cursor: page === 1 ? 'default' : 'pointer',
+              borderRadius: '2px', fontFamily: 'var(--font-mono)', opacity: page === 1 ? 0.4 : 1,
+            }}
+          >← prev</button>
+          <span style={{ fontSize: '0.65rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+            page {page} / {totalPages}
+          </span>
+          <button
+            onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+            style={{
+              padding: '0.25rem 0.65rem', fontSize: '0.65rem',
+              background: 'transparent', border: '1px solid rgba(100,140,220,0.25)',
+              color: page === totalPages ? 'var(--text-dim)' : 'var(--text)', cursor: page === totalPages ? 'default' : 'pointer',
+              borderRadius: '2px', fontFamily: 'var(--font-mono)', opacity: page === totalPages ? 0.4 : 1,
+            }}
+          >next →</button>
         </div>
       )}
 
