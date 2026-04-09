@@ -1,0 +1,127 @@
+name: Quarterly Data Update Reminder
+
+# Runs the day after each FL Division of Elections quarterly filing deadline:
+#   Jan 10 -> reminder Jan 11
+#   Apr 10 -> reminder Apr 11
+#   Jul 10 -> reminder Jul 11
+#   Oct 10 -> reminder Oct 11
+#
+# Also triggerable manually via the Actions tab (workflow_dispatch).
+
+on:
+  schedule:
+    - cron: '0 14 11 1,4,7,10 *'   # 14:00 UTC = 9 AM ET, 11th of Jan/Apr/Jul/Oct
+  workflow_dispatch:
+    inputs:
+      quarter_label:
+        description: 'Quarter label (e.g. "Q2 2026 - April")'
+        required: false
+        default: 'Manual trigger'
+
+jobs:
+  create-reminder-issue:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+
+    steps:
+      - name: Determine quarter label
+        id: label
+        run: |
+          MONTH=$(date -u +%-m)
+          YEAR=$(date -u +%Y)
+          case $MONTH in
+            1)  Q="Q4 $((YEAR-1)) - January filing" ;;
+            4)  Q="Q1 $YEAR - April filing" ;;
+            7)  Q="Q2 $YEAR - July filing" ;;
+            10) Q="Q3 $YEAR - October filing" ;;
+            *)  Q="Manual - $(date -u +'%B %Y')" ;;
+          esac
+          echo "quarter=$Q" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub issue
+        uses: actions/github-script@v7
+        env:
+          QUARTER: ${{ steps.label.outputs.quarter }}
+          MANUAL_LABEL: ${{ inputs.quarter_label }}
+        with:
+          script: |
+            const quarter = process.env.QUARTER || process.env.MANUAL_LABEL || 'Unknown quarter';
+            const today = new Date().toISOString().slice(0, 10);
+
+            const body = [
+              '## Florida Donor Tracker — Quarterly Data Update',
+              `**Filing period:** ${quarter}`,
+              `**Issue created:** ${today}`,
+              '',
+              'FL Division of Elections quarterly deadline just passed. Time to refresh all datasets.',
+              '',
+              '### Step 1 — Download fresh data',
+              '- [ ] Download latest contributions from [FL DOE Campaign Finance](https://dos.elections.myflorida.com/campaign-finance/contributions/)',
+              '- [ ] Download latest expenditures CSV',
+              '- [ ] Download candidate list updates',
+              '- [ ] Download lobbyist registration/compensation files',
+              '',
+              '### Step 2 — Run pipeline (from project root, .venv activated)',
+              '```bash',
+              '# Committee contributions + expenditures',
+              'python scripts/07_import_expenditures.py',
+              'python scripts/34_export_expenditures.py',
+              '',
+              '# Candidate contributions',
+              'python scripts/20_scrape_candidate_contributions.py  # long-running',
+              'python scripts/21_import_candidate_contributions.py',
+              'python scripts/22_export_candidate_json.py --force',
+              '',
+              '# Candidate expenditures',
+              'python scripts/35_scrape_candidate_expenditures.py   # long-running',
+              'python scripts/36_import_candidate_expenditures.py',
+              'python scripts/37_export_candidate_expenditures.py',
+              '',
+              '# PC links',
+              'python scripts/58_rebuild_pc_links.py',
+              '```',
+              '',
+              '### Step 3 — Load to Supabase',
+              '```bash',
+              'python scripts/41_load_committee_contributions_supabase.py',
+              'python scripts/42_load_candidate_contributions_supabase.py',
+              'python scripts/59_load_pc_links_supabase.py',
+              'python scripts/60_load_candidate_expenditures_supabase.py',
+              'python scripts/61_update_soft_money_totals.py',
+              'python scripts/62_load_lobbying_firms_supabase.py',
+              'python scripts/63_load_committee_solicitations_supabase.py',
+              '```',
+              '',
+              '### Step 4 — Refresh meta.json and deploy',
+              '```bash',
+              'python scripts/52_regenerate_meta.py',
+              'git add public/data/meta.json',
+              `git commit -m "Update meta.json for ${quarter}"`,
+              'git push origin main',
+              '# Vercel auto-deploys in ~1 min',
+              '```',
+              '',
+              '### Step 5 — Verify',
+              '- [ ] Candidate profile — hard + soft money look right',
+              '- [ ] Committees directory — totals updated',
+              '- [ ] Homepage stats — grand total reflects new data',
+              '- [ ] Spot-check a top donor profile',
+              '- [ ] Expenditures tab on a major candidate',
+              '',
+              '### Notes',
+              '- FL deadlines: **Jan 10, Apr 10, Jul 10, Oct 10**',
+              '- Supabase data updates immediately — no Vercel redeploy needed unless meta.json changes',
+              '- Scrapers (scripts 20, 35) take hours — run overnight',
+              '- SUPABASE_DB_URL is in `.env.local` (not committed)',
+            ].join('\n');
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `Quarterly data update — ${quarter}`,
+              body: body,
+              labels: ['data-update'],
+            });
+
+            core.info(`Issue created for quarter: ${quarter}`);
