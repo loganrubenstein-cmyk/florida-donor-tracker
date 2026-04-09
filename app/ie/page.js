@@ -1,27 +1,40 @@
 import Link from 'next/link';
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import { getDb } from '@/lib/db';
 import { fmtMoney, fmtMoneyCompact, fmtCount } from '../../lib/fmt';
+
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Independent Expenditures — Florida Donor Tracker',
   description: 'Florida independent expenditures and electioneering communications — $70.9M tracked across 492 committees.',
 };
 
-function loadData() {
-  const base = join(process.cwd(), 'public', 'data', 'ie');
+async function loadData() {
   try {
-    const summary = JSON.parse(readFileSync(join(base, 'summary.json'), 'utf8'));
-    const byCommDir = join(base, 'by_committee');
-    const fs = require('fs');
-    const files = fs.readdirSync(byCommDir).filter(f => f.endsWith('.json'));
-    const committees = files.map(f => {
-      try {
-        return JSON.parse(fs.readFileSync(join(byCommDir, f), 'utf8'));
-      } catch { return null; }
-    }).filter(Boolean);
-    committees.sort((a, b) => (b.total_amount || 0) - (a.total_amount || 0));
-    return { summary, committees };
+    const db = getDb();
+    const [{ data: summaryRows }, { data: committees }] = await Promise.all([
+      db.from('ie_summary').select('total_amount, total_rows, num_committees, date_start, date_end, by_type').limit(1),
+      db.from('ie_committees').select('acct_num, committee_name, total_amount, num_transactions, year_min, year_max')
+        .order('total_amount', { ascending: false }).limit(50),
+    ]);
+    const s = summaryRows?.[0] || {};
+    return {
+      summary: {
+        total_amount:   parseFloat(s.total_amount) || 0,
+        total_rows:     s.total_rows || 0,
+        num_committees: s.num_committees || 0,
+        date_range:     { start: s.date_start, end: s.date_end },
+        by_type:        s.by_type ? JSON.parse(s.by_type) : [],
+      },
+      committees: (committees || []).map(c => ({
+        acct_num:         c.acct_num,
+        committee_name:   c.committee_name,
+        total_amount:     parseFloat(c.total_amount) || 0,
+        num_transactions: c.num_transactions || 0,
+        year_min:         c.year_min,
+        year_max:         c.year_max,
+      })),
+    };
   } catch { return { summary: {}, committees: [] }; }
 }
 
@@ -42,12 +55,12 @@ const TYPE_COLORS = {
   IES: 'var(--democrat)',
 };
 
-export default function IEPage() {
-  const { summary, committees } = loadData();
+export default async function IEPage() {
+  const { summary, committees } = await loadData();
 
-  const byType    = summary.by_type || [];
-  const maxType   = byType[0]?.total_amount || 1;
-  const top25     = committees.slice(0, 25);
+  const byType  = summary.by_type || [];
+  const maxType = byType[0]?.total_amount || 1;
+  const top25   = committees.slice(0, 25);
 
   return (
     <main style={{ maxWidth: '960px', margin: '0 auto', padding: '3rem 1.5rem' }}>
@@ -87,7 +100,7 @@ export default function IEPage() {
           </h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
             {top25.map((c, i) => (
-              <CommitteeRow key={c.acct_num} committee={c} rank={i + 1} maxAmount={top25[0].total_amount} />
+              <CommitteeRow key={c.acct_num} committee={c} rank={i + 1} maxAmount={top25[0]?.total_amount || 1} />
             ))}
             {committees.length > 25 && (
               <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', padding: '0.5rem 0.75rem' }}>
@@ -160,9 +173,8 @@ function StatBox({ value, label, color = 'var(--teal)' }) {
 
 function CommitteeRow({ committee: c, rank, maxAmount }) {
   const pct = (c.total_amount / maxAmount * 100).toFixed(1);
-  const byYear = c.by_year || [];
-  const yearStr = byYear.length > 0
-    ? `${byYear[0].year}–${byYear[byYear.length - 1].year}`
+  const yearStr = c.year_min && c.year_max
+    ? (c.year_min === c.year_max ? String(c.year_min) : `${c.year_min}–${c.year_max}`)
     : '';
 
   return (
