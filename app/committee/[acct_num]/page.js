@@ -1,5 +1,3 @@
-import { readFileSync, existsSync } from 'fs';
-import { join } from 'path';
 import { loadCommittee } from '@/lib/loadCommittee';
 import { loadAnnotations } from '@/lib/loadAnnotations';
 import CommitteeProfile from '@/components/committee/CommitteeProfile';
@@ -8,12 +6,6 @@ import { getDb } from '@/lib/db';
 
 // Server-rendered on demand — no static file dependency
 export const dynamic = 'force-dynamic';
-
-function loadExpenditures(acctNum) {
-  const path = join(process.cwd(), 'public', 'data', 'expenditures', 'by_committee', `${acctNum}.json`);
-  if (!existsSync(path)) return null;
-  try { return JSON.parse(readFileSync(path, 'utf-8')); } catch { return null; }
-}
 
 async function loadLinkedCandidates(acctNum) {
   const db = getDb();
@@ -56,12 +48,10 @@ export default async function CommitteePage({ params }) {
     loadLinkedCandidates(acct_num),
   ]);
 
-  const expenditures = loadExpenditures(acct_num);
-
   return <CommitteeProfile
     data={data}
     annotations={annotations}
     linkedCandidates={linkedCandidates}
-    expenditures={expenditures}
+    expenditures={data.expenditures}
   />;
 }

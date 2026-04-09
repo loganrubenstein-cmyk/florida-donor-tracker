@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-09T21:46:17.456078+00:00",
+  "generated_at": "2026-04-09T23:11:45.894390+00:00",
   "note": "All figures are FL state-level data unless otherwise noted.",
   "campaign_finance": {
     "total_donors": 336478,
@@ -25,9 +25,9 @@
     }
   },
   "candidate_expenditures": {
-    "total_amount": 898839038.65,
-    "total_payments": 654504,
-    "num_candidates": 6379
+    "total_amount": 1068162381.29,
+    "total_payments": 780998,
+    "num_candidates": 7651
   },
   "transfers": {
     "total_amount": 147386021.83,
@@ -180,7 +180,7 @@
   },
   "grand_totals": {
     "total_political_spending_tracked": 3894316430.36,
-    "total_expenditures_tracked": 3682782283.6,
+    "total_expenditures_tracked": 3852105626.24,
     "note": "Campaign contributions + est. lobbyist compensation + IE/EC spending"
   }
 }
