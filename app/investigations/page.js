@@ -41,23 +41,33 @@ export default async function InvestigationsPage() {
   const db = getDb();
 
   // Look up committees by name
-  const { data: committeeRows } = await db
-    .from('committees')
-    .select('acct_num, committee_name, total_received')
-    .in('committee_name', committeeNames)
-    .catch(() => ({ data: [] }));
+  let committeeRows = [];
+  try {
+    const { data } = await db
+      .from('committees')
+      .select('acct_num, committee_name, total_received')
+      .in('committee_name', committeeNames);
+    committeeRows = data || [];
+  } catch (e) {
+    console.error('investigations: committee lookup failed', e);
+  }
 
   const committeeByName = {};
-  for (const c of (committeeRows || [])) {
+  for (const c of committeeRows) {
     committeeByName[norm(c.committee_name)] = c;
   }
 
   // Look up donors by name
-  const { data: donorRows } = await db
-    .from('donors')
-    .select('slug, name, total_combined')
-    .in('name', donorNames)
-    .catch(() => ({ data: [] }));
+  let donorRows = [];
+  try {
+    const { data } = await db
+      .from('donors')
+      .select('slug, name, total_combined')
+      .in('name', donorNames);
+    donorRows = data || [];
+  } catch (e) {
+    console.error('investigations: donor lookup failed', e);
+  }
 
   const donorByName = {};
   for (const d of (donorRows || [])) {

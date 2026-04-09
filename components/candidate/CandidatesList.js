@@ -45,6 +45,7 @@ export default function CandidatesList() {
   const [year, setYear]             = useState('all');
   const [district, setDistrict]     = useState('');
   const [sortBy, setSortBy]         = useState('total_combined');
+  const [sortDir, setSortDir]       = useState('desc');
   const [page, setPage]             = useState(1);
 
   // Debounce search input
@@ -54,17 +55,17 @@ export default function CandidatesList() {
   }, [search]);
 
   // Reset to page 1 when filters change
-  useEffect(() => { setPage(1); }, [debouncedQ, party, office, year, district, sortBy]);
+  useEffect(() => { setPage(1); }, [debouncedQ, party, office, year, district, sortBy, sortDir]);
 
   // Fetch from API
   useEffect(() => {
     setLoading(true);
-    const params = new URLSearchParams({ q: debouncedQ, party, office, year, district, sort: sortBy, page });
+    const params = new URLSearchParams({ q: debouncedQ, party, office, year, district, sort: sortBy, sort_dir: sortDir, page });
     fetch(`/api/candidates?${params}`)
       .then(r => r.json())
       .then(json => { setResults(json); setLoading(false); })
       .catch(() => setLoading(false));
-  }, [debouncedQ, party, office, year, sortBy, page]);
+  }, [debouncedQ, party, office, year, sortBy, sortDir, page]);
 
   const inputStyle = {
     background: '#0d0d22', border: '1px solid var(--border)',
@@ -156,19 +157,40 @@ export default function CandidatesList() {
                 { label: 'Soft Money', align: 'right',  sortKey: 'soft_money_total' },
                 { label: 'Combined',   align: 'right',  sortKey: 'total_combined'   },
                 { label: 'PCs',        align: 'center' },
-              ].map(({ label, align, width, sortKey }) => (
-                <th key={label} style={{
-                  padding: '0.4rem 0.6rem', textAlign: align, width,
-                  fontSize: '0.6rem', color: sortKey && sortBy === sortKey ? 'var(--text)' : 'var(--text-dim)',
-                  textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 400,
-                }}>
-                  {label}{sortKey && sortBy === sortKey && (
-                    <span style={{ color: 'var(--orange)', marginLeft: '0.25rem' }}>
-                      {sortKey === 'candidate_name' ? '↑' : '↓'}
-                    </span>
-                  )}
-                </th>
-              ))}
+              ].map(({ label, align, width, sortKey }) => {
+                const isActive = sortKey && sortBy === sortKey;
+                return (
+                  <th key={label}
+                    onClick={sortKey ? () => {
+                      if (sortBy === sortKey) {
+                        setSortDir(d => d === 'desc' ? 'asc' : 'desc');
+                      } else {
+                        setSortBy(sortKey);
+                        setSortDir(sortKey === 'candidate_name' ? 'asc' : 'desc');
+                      }
+                    } : undefined}
+                    style={{
+                      padding: '0.4rem 0.6rem', textAlign: align, width,
+                      fontSize: '0.6rem', letterSpacing: '0.08em', fontWeight: 400,
+                      textTransform: 'uppercase',
+                      color: isActive ? 'var(--text)' : 'var(--text-dim)',
+                      cursor: sortKey ? 'pointer' : 'default',
+                      userSelect: 'none',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {label}
+                    {isActive && (
+                      <span style={{ color: 'var(--orange)', marginLeft: '0.25rem' }}>
+                        {sortDir === 'asc' ? '↑' : '↓'}
+                      </span>
+                    )}
+                    {!isActive && sortKey && (
+                      <span style={{ color: 'rgba(90,106,136,0.3)', marginLeft: '0.25rem' }}>↕</span>
+                    )}
+                  </th>
+                );
+              })}
             </tr>
           </thead>
           <tbody>

@@ -36,6 +36,7 @@ export default function CommitteesList() {
   const [search, setSearch]         = useState('');
   const [debouncedQ, setDebouncedQ] = useState('');
   const [sort, setSort]             = useState('total');
+  const [sortDir, setSortDir]       = useState('desc');
   const [party, setParty]           = useState('all');
   const [page, setPage]             = useState(1);
 
@@ -46,17 +47,17 @@ export default function CommitteesList() {
   }, [search]);
 
   // Reset to page 1 when filters change
-  useEffect(() => { setPage(1); }, [debouncedQ, sort, party]);
+  useEffect(() => { setPage(1); }, [debouncedQ, sort, sortDir, party]);
 
   // Fetch from API
   useEffect(() => {
     setLoading(true);
-    const params = new URLSearchParams({ q: debouncedQ, sort, party, page });
+    const params = new URLSearchParams({ q: debouncedQ, sort, sort_dir: sortDir, party, page });
     fetch(`/api/committees?${params}`)
       .then(r => r.json())
       .then(json => { setResults(json); setLoading(false); })
       .catch(() => setLoading(false));
-  }, [debouncedQ, sort, party, page]);
+  }, [debouncedQ, sort, sortDir, party, page]);
 
   const { data: pageItems, total, pages: totalPages } = results;
 
@@ -119,13 +120,38 @@ export default function CommitteesList() {
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid var(--border)' }}>
-              {['#', 'Committee', 'Contributions', 'Total Received'].map((h, j) => (
-                <th key={h} style={{
-                  padding: '0.35rem 0.6rem', fontSize: '0.6rem', color: 'var(--text-dim)',
-                  textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 400,
-                  textAlign: j === 0 ? 'center' : j >= 2 ? 'right' : 'left',
-                }}>{h}</th>
-              ))}
+              {[
+                { label: '#',              align: 'center' },
+                { label: 'Committee',      align: 'left',  sortKey: 'name'          },
+                { label: 'Contributions',  align: 'right', sortKey: 'contributions' },
+                { label: 'Total Received', align: 'right', sortKey: 'total'         },
+              ].map(({ label, align, sortKey }) => {
+                const isActive = sortKey && sort === sortKey;
+                return (
+                  <th key={label}
+                    onClick={sortKey ? () => {
+                      if (sort === sortKey) {
+                        setSortDir(d => d === 'desc' ? 'asc' : 'desc');
+                      } else {
+                        setSort(sortKey);
+                        setSortDir(sortKey === 'name' ? 'asc' : 'desc');
+                      }
+                    } : undefined}
+                    style={{
+                      padding: '0.35rem 0.6rem', fontSize: '0.6rem', fontWeight: 400,
+                      textTransform: 'uppercase', letterSpacing: '0.08em',
+                      textAlign: align,
+                      color: isActive ? 'var(--text)' : 'var(--text-dim)',
+                      cursor: sortKey ? 'pointer' : 'default',
+                      userSelect: 'none', whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {label}
+                    {isActive && <span style={{ color: 'var(--orange)', marginLeft: '0.25rem' }}>{sortDir === 'asc' ? '↑' : '↓'}</span>}
+                    {!isActive && sortKey && <span style={{ color: 'rgba(90,106,136,0.3)', marginLeft: '0.25rem' }}>↕</span>}
+                  </th>
+                );
+              })}
             </tr>
           </thead>
           <tbody>

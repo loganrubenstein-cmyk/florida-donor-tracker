@@ -17,9 +17,18 @@ _RULES = [
     # Political / lobbying — check first to avoid misclassifying
     ("Political / Lobbying", {
         "POLITICAL COMMITTEE", "POLITICAL ORG", "POLITICAL PARTY",
-        "PARTY COMMITTEE", "LOBBYIST", "GOVERNMENT RELATIONS",
-        "GOVT. RELATIONS", "POLITICAL AFFAIRS", "POLITICAL ACTION",
-        "PAC", " PC ", "CCE", "COMMITTEE", "UNION",
+        "PARTY COMMITTEE", "LOBBYIST", "LOBBYING",
+        "GOVERNMENT RELATIONS", "GOVT. RELATIONS",
+        "POLITICAL AFFAIRS", "POLITICAL ACTION",
+        "POLITICAL CAMPAIGN", "POLITICAL ASSOC",
+        "PAC", "P.A.C.", " PC ", "CCE", "COMMITTEE", "UNION",
+        "LABOR ORGANIZATION", "LABOR ORG",
+        "TRADE ASSOCIATION", "TRADE ASSOC",
+        "SOCIAL WELFARE ORG", "SOCIAL WELFARE",
+        "ADVOCACY ORGANIZATION", "ADVOCACY ORG", "ADVOCACY",
+        "CIVIC ACTION", "GRASSROOTS",
+        "501(C)", "501C", "C4 ORG", "C(4)",
+        "STATE PARTY", "GOVERNORS ASSOC",
     }),
 
     # Legal
@@ -33,6 +42,8 @@ _RULES = [
         "REAL ESTATE", "REALTOR", "PROPERTY MANAGEMENT", "PROPERTY MGMT",
         "DEVELOPER", "DEVELOPMENT", "HOMEBUILDER", "LAND DEVELOPER",
         "MORTGAGE", "PROPERTY INVESTOR", "REAL PROPERTY",
+        "MANUFACTURED HOUSING", "MANUFACTURED HOME",
+        "TITLE SERV", "TITLE INSUR",
     }),
 
     # Healthcare
@@ -43,6 +54,8 @@ _RULES = [
         "MEDICINE", "PHYSICIAN'S", "RADIOLOG", "CARDIOLOG",
         "OPTOMETRIST", "OPTOMETRY", "CHIROPRACTOR", "VETERINARIAN", "DENTAL",
         "PHARMACEUTICAL", "PHARMACY",
+        "NURSING HOME", "ASSISTED LIVING", "RETIREMENT COMMUNIT",
+        "THERAPEUTICS", "BIOTECH", "BIOPHARMACEUTICAL",
     }),
 
     # Finance / Insurance / Accounting
@@ -52,13 +65,15 @@ _RULES = [
         "SECURITIES", "INSURANCE", "ACCOUNTANT", "ACCOUNTING", "CPA",
         "WEALTH MANAGEMENT", "HEDGE FUND", "PRIVATE EQUITY",
         "STOCK BROKER", "FINANCIAL PLANNER",
+        "HOLDING COMPANY",
     }),
 
     # Agriculture
     ("Agriculture", {
-        "AGRICULTURE", "FARMING", "FARMER", "RANCHER", "CITRUS",
-        "CATTLE", "SUGAR", "DAIRY", "POULTRY", "CROP", "GROWER",
-        "NURSERY", "AGRIBUSINESS",
+        "AGRICULTURE", "FARMING", "FARMER", "RANCHER", "RANCH",
+        "CITRUS", "CATTLE", "SUGAR", "DAIRY", "POULTRY", "CROP", "GROWER",
+        "NURSERY", "AGRIBUSINESS", "THOROUGHBRED", "EQUESTRIAN",
+        "HEMP", "FERTILIZER", "TIMBER", "FORESTRY",
     }),
 
     # Construction / Contracting
@@ -66,6 +81,7 @@ _RULES = [
         "CONSTRUCTION", "BUILDER", "CONTRACTOR", "GENERAL CONTRACTOR",
         "SUBCONTRACTOR", "ELECTRICIAN", "PLUMBER", "HVAC",
         "ARCHITECT", "ARCHITECTURE", "STRUCTURAL", "MECHANICAL CONTRACTOR",
+        "HEAVY EQUIPMENT", "MINING",
     }),
 
     # Education
@@ -83,31 +99,46 @@ _RULES = [
         "AEROSPACE", "TELECOMMUNICATIONS",
     }),
 
-    # Retail / Hospitality / Food
+    # Retail / Hospitality / Food / Gaming
     ("Retail & Hospitality", {
         "RETAIL", "RESTAURANT", "HOSPITALITY", "HOTEL",
         "FOOD SERVICE", "FOOD AND BEVERAGE", "CATERING",
         "GROCERY", "WHOLESALE", "DISTRIBUTION",
+        "CASINO", "PARI-MUTU", "PARIMUTUEL", "GAMING",
+        "TOURISM", "RESORT", "THEME PARK", "AMUSEMENT",
+        "SUPERMARKET", "SUPER MARKET",
+        "BEVERAGE", "ALCOHOL", "LIQUOR",
+        "TRIBAL", "INDIAN TRIBE", " TRIBE",
+        "DAILY FANTASY",
     }),
 
-    # Business Owner / Executive / Consulting / Media
+    # Business Owner / Executive / Consulting / Media / Energy
     ("Business & Consulting", {
         "BUSINESS OWNER", "BUSINESSMAN", "ENTREPRENEUR", "EXECUTIVE", "CEO",
         "PRESIDENT", "MANAGING PARTNER", "CONSULTANT", "CONSULTING",
         "SELF-EMPLOYED", "SELF EMPLOYED", "MANAGEMENT", "MANAGER",
         "BUSINESS DEVELOPMENT", "SALES", "MARKETING", "ADVERTISING",
         "COMMUNICATIONS", "PUBLIC RELATIONS", "ENTERTAINMENT",
-        "ENERGY", "TRANSPORTATION", "AUTO DEALER", "AUTOMOTIVE",
-        "TOBACCO", "GAMING",
+        "ENERGY", "TRANSPORTATION", "AUTO DEALER", "AUTOMOTIVE", "AUTOMOBILE",
+        "TOBACCO", "MEDIA", "BROADCASTING", "PUBLISHING",
+        "UTILITIES", "UTILITY", "PETROLEUM", "OIL AND GAS", "NATURAL GAS",
+        "ELECTRIC COMPANY", "ELECTRIC CO",
+        "CHAMBER OF COMMERCE",
+        "CORPORATION", "BUSINESS",
+        "NONPROFIT", "NON-PROFIT", "NON PROFIT", "NFP",
+        "PHILANTHROPIST",
     }),
 
     # Government / Public Service / Military
     ("Government & Public Service", {
         "GOVERNMENT", "PUBLIC SERVANT", "CIVIL SERVICE",
         "MILITARY", "ARMED FORCES", "VETERAN", "LAW ENFORCEMENT",
-        "POLICE", "FIREFIGHTER", "FIRE DEPARTMENT",
+        "POLICE", "FIREFIGHTER", "FIRE DEPARTMENT", "FIRE FIGHTER",
         "CITY EMPLOYEE", "COUNTY EMPLOYEE", "STATE EMPLOYEE",
         "ELECTED OFFICIAL", "COMMISSIONER",
+        "CORRECTIONS", "DEPT. OF", "GOVT. AGENCY", "GOV. AGENCY",
+        "SUPERVISOR OF ELECTIONS", "CLERK OF COURT",
+        "FIRST LADY", "GOVERNOR",
     }),
 
     # Retired
@@ -119,7 +150,7 @@ _RULES = [
     ("Not Employed", {
         "NOT EMPLOYED", "UNEMPLOYED", "HOMEMAKER",
         "HOUSEWIFE", "STAY AT HOME", "STUDENT", "NONE", "N/A", "NA",
-        "INFORMATION REQUESTE",  # truncated "information requested"
+        "INFORMATION REQUESTE", "INFO REQUESTED",
     }),
 ]
 
@@ -175,6 +206,7 @@ if __name__ == "__main__":
         ("RETIRED", "Retired"),
         ("NOT EMPLOYED", "Not Employed"),
         ("PAC", "Political / Lobbying"),
+        ("P.A.C.", "Political / Lobbying"),
         ("GOVERNMENT RELATIONS", "Political / Lobbying"),
         ("SOFTWARE ENGINEER", "Technology / Engineering"),
         ("AGRICULTURE", "Agriculture"),
@@ -186,6 +218,26 @@ if __name__ == "__main__":
         ("INSURANCE", "Finance & Insurance"),
         ("", "Not Employed"),
         ("XYZUNKNOWN", "Other"),
+        # New keyword smoke tests
+        ("UTILITIES", "Business & Consulting"),
+        ("POLITICAL CAMPAIGN", "Political / Lobbying"),
+        ("TRADE ASSOCIATION", "Political / Lobbying"),
+        ("LABOR ORGANIZATION", "Political / Lobbying"),
+        ("501(C)4", "Political / Lobbying"),
+        ("SOCIAL WELFARE ORGANIZATION", "Political / Lobbying"),
+        ("CASINO/RESORT C.E.O.", "Retail & Hospitality"),
+        ("PARI-MUTUELS", "Retail & Hospitality"),
+        ("TOURISM", "Retail & Hospitality"),
+        ("THEME PARKS & RESORTS", "Retail & Hospitality"),
+        ("NURSING HOME", "Healthcare"),
+        ("ASSISTED LIVING", "Healthcare"),
+        ("CORRECTIONS", "Government & Public Service"),
+        ("RANCH", "Agriculture"),
+        ("THOROUGHBRED BREEDER", "Agriculture"),
+        ("LOBBYING", "Political / Lobbying"),
+        ("INFO REQUESTED", "Not Employed"),
+        ("HOLDING COMPANY", "Finance & Insurance"),
+        ("MANUFACTURED HOUSING", "Real Estate"),
     ]
     passed = 0
     for occ, expected in tests:

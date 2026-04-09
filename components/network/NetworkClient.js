@@ -43,7 +43,7 @@ function NetworkClientInner({ data, annotations }) {
       if (node.acct_num) params.set('acct', node.acct_num);
       else params.set('donor', node.label);
     }
-    router.replace(`/network${params.toString() ? '?' + params.toString() : ''}`, { scroll: false });
+    router.replace(`/network/graph${params.toString() ? '?' + params.toString() : ''}`, { scroll: false });
   }, [router]);
 
   const handleRecenter = useCallback((node) => {

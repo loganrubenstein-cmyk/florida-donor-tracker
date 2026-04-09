@@ -35,17 +35,27 @@ export default function IndustryTrendChart({ industry, trendData, color }) {
 
   const maxVal = Math.max(...chartData.map(d => d.total), 1);
 
+  function handleBarClick(data) {
+    if (data && data.activePayload?.[0]?.payload?.year) {
+      window.location.href = `/cycle/${data.activePayload[0].payload.year}`;
+    }
+  }
+
   return (
     <div style={{ marginBottom: '2rem' }}>
       <div style={{
-        fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase',
-        letterSpacing: '0.1em', marginBottom: '0.75rem',
+        display: 'flex', alignItems: 'baseline', gap: '0.75rem',
+        fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.1em',
+        marginBottom: '0.75rem',
       }}>
-        Giving by Election Cycle
+        <span style={{ color: 'var(--text-dim)' }}>Giving by Election Cycle</span>
+        <span style={{ color: 'rgba(90,106,136,0.5)', textTransform: 'none', letterSpacing: 0, fontSize: '0.58rem' }}>
+          click a bar to explore that cycle
+        </span>
       </div>
-      <div className="chart-wrap" style={{ height: '160px' }}>
+      <div className="chart-wrap" style={{ height: '160px', cursor: 'pointer' }}>
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={chartData} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
+          <BarChart data={chartData} margin={{ top: 4, right: 8, left: 0, bottom: 0 }} onClick={handleBarClick}>
             <XAxis
               dataKey="year"
               tick={{ fontSize: 10, fill: '#5a6a88', fontFamily: 'Courier New' }}
@@ -56,9 +66,9 @@ export default function IndustryTrendChart({ industry, trendData, color }) {
               tick={{ fontSize: 9, fill: '#5a6a88', fontFamily: 'Courier New' }}
               axisLine={false} tickLine={false} width={36}
             />
-            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,255,255,0.03)' }} />
+            <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,255,255,0.06)' }} />
             <Bar dataKey="total" radius={[2, 2, 0, 0]}>
-              {chartData.map((entry, i) => (
+              {chartData.map((entry) => (
                 <Cell
                   key={entry.year}
                   fill={color}
@@ -70,7 +80,7 @@ export default function IndustryTrendChart({ industry, trendData, color }) {
         </ResponsiveContainer>
       </div>
       <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', marginTop: '0.35rem' }}>
-        Hard money contributions only · Peak cycle highlighted
+        Hard money contributions only · Peak cycle highlighted · Click any bar to view that cycle
       </div>
     </div>
   );

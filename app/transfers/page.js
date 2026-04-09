@@ -11,24 +11,10 @@ export const metadata = {
 function loadData() {
   const base = join(process.cwd(), 'public', 'data', 'transfers');
   try {
-    const summary   = JSON.parse(readFileSync(join(base, 'summary.json'), 'utf8'));
-    const topFlows  = JSON.parse(readFileSync(join(base, 'top_flows.json'), 'utf8'));
-
-    // Load committee names from committees index for sender lookup
-    const commIdxPath = join(process.cwd(), 'public', 'data', 'committees', 'index.json');
-    const commIdx = JSON.parse(readFileSync(commIdxPath, 'utf8'));
-    const nameMap = {};
-    for (const c of commIdx) {
-      nameMap[String(c.acct_num)] = c.committee_name;
-    }
-
-    // Enrich top_flows with sender name
-    const enriched = topFlows.map(f => ({
-      ...f,
-      sender_name: nameMap[String(f.sender_acct_num)] || `Committee ${f.sender_acct_num}`,
-    }));
-
-    return { summary, topFlows: enriched };
+    const summary  = JSON.parse(readFileSync(join(base, 'summary.json'), 'utf8'));
+    const topFlows = JSON.parse(readFileSync(join(base, 'top_flows.json'), 'utf8'));
+    // sender_name is pre-baked into top_flows.json — no index lookup needed
+    return { summary, topFlows };
   } catch { return { summary: {}, topFlows: [] }; }
 }
 

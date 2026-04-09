@@ -1,4 +1,5 @@
-import { loadCandidate, loadCandidateCycles } from '@/lib/loadCandidate';
+import { loadCandidate, loadCandidateCycles, getPoliticianBySlug } from '@/lib/loadCandidate';
+import { slugify } from '@/lib/slugify';
 import CandidateProfile from '@/components/candidate/CandidateProfile';
 import { notFound } from 'next/navigation';
 
@@ -10,7 +11,15 @@ export async function generateMetadata({ params }) {
   try {
     const data = await loadCandidate(acct_num);
     const name = data.candidate_name || `Account ${acct_num}`;
-    return { title: `${name} | FL Donor Tracker` };
+    const polSlug = slugify(name);
+    const hasPoliticianPage = getPoliticianBySlug(polSlug) !== null;
+    const canonical = hasPoliticianPage
+      ? `https://floridadonortracker.com/politician/${polSlug}?cycle=${acct_num}`
+      : undefined;
+    return {
+      title: `${name} | FL Donor Tracker`,
+      ...(canonical ? { alternates: { canonical } } : {}),
+    };
   } catch {
     return { title: 'Candidate | FL Donor Tracker' };
   }
@@ -25,5 +34,27 @@ export default async function CandidatePage({ params }) {
     notFound();
   }
   const cycles = loadCandidateCycles(acct_num);
-  return <CandidateProfile data={data} cycles={cycles} />;
+
+  // If a canonical politician page exists, surface a banner link
+  const polSlug = slugify(data.candidate_name || '');
+  const politician = getPoliticianBySlug(polSlug);
+  const hasMultipleCycles = politician && politician.cycles.length > 1;
+
+  return (
+    <>
+      {hasMultipleCycles && (
+        <div style={{
+          background: 'rgba(77,216,240,0.06)', borderBottom: '1px solid rgba(77,216,240,0.2)',
+          padding: '0.5rem 2rem', fontSize: '0.68rem', color: 'var(--text-dim)',
+          fontFamily: 'var(--font-mono)', textAlign: 'center',
+        }}>
+          {politician.cycles.length} election cycles found for this candidate ·{' '}
+          <a href={`/politician/${polSlug}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+            View full profile →
+          </a>
+        </div>
+      )}
+      <CandidateProfile data={data} cycles={cycles} />
+    </>
+  );
 }

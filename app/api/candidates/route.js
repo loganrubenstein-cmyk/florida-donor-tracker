@@ -11,6 +11,7 @@ export async function GET(request) {
   const year     = searchParams.get('year')     || 'all';
   const district = searchParams.get('district') || '';
   const sort     = searchParams.get('sort')     || 'total_combined';
+  const sortDir  = searchParams.get('sort_dir') || '';
   const page     = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
 
   const db = getDb();
@@ -27,7 +28,8 @@ export async function GET(request) {
   if (year !== 'all')   query = query.eq('election_year', parseInt(year, 10));
   if (district.trim())  query = query.eq('district', district.trim().replace(/^0+/, ''));
 
-  const ascending = sort === 'candidate_name';
+  const defaultAsc = sort === 'candidate_name';
+  const ascending  = sortDir === 'asc' ? true : sortDir === 'desc' ? false : defaultAsc;
   query = query.order(sort, { ascending });
 
   const offset = (page - 1) * PAGE_SIZE;

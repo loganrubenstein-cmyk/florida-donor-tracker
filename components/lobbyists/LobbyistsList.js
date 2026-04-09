@@ -32,6 +32,7 @@ export default function LobbyistsList() {
   const [debouncedQ, setDebouncedQ] = useState('');
   const [type, setType]             = useState('all');
   const [sortBy, setSortBy]         = useState('total_donation_influence');
+  const [sortDir, setSortDir]       = useState('desc');
   const [page, setPage]             = useState(1);
 
   // Debounce search input
@@ -41,12 +42,12 @@ export default function LobbyistsList() {
   }, [search]);
 
   // Reset to page 1 when filters change
-  useEffect(() => { setPage(1); }, [debouncedQ, type, sortBy]);
+  useEffect(() => { setPage(1); }, [debouncedQ, type, sortBy, sortDir]);
 
   // Fetch from API
   useEffect(() => {
     setLoading(true);
-    const params = new URLSearchParams({ q: debouncedQ, type, sort: sortBy, page });
+    const params = new URLSearchParams({ q: debouncedQ, type, sort: sortBy, sort_dir: sortDir, page });
     fetch(`/api/lobbyists?${params}`)
       .then(r => r.json())
       .then(json => { setResults(json); setLoading(false); })
@@ -122,18 +123,33 @@ export default function LobbyistsList() {
                 { label: 'Principals',         align: 'right', sortKey: 'num_principals'           },
                 { label: 'Active',             align: 'right'                                      },
                 { label: 'Donation Influence', align: 'right', sortKey: 'total_donation_influence' },
-              ].map(({ label, align, width, sortKey }) => (
-                <th key={label} style={{
-                  padding: '0.4rem 0.6rem', textAlign: align, width,
-                  fontSize: '0.6rem',
-                  color: sortKey && sortBy === sortKey ? 'var(--text)' : 'var(--text-dim)',
-                  textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 400,
-                }}>
-                  {label}{sortKey && sortBy === sortKey && (
-                    <span style={{ color: 'var(--orange)', marginLeft: '0.25rem' }}>↓</span>
-                  )}
-                </th>
-              ))}
+              ].map(({ label, align, width, sortKey }) => {
+                const isActive = sortKey && sortBy === sortKey;
+                return (
+                  <th key={label}
+                    onClick={sortKey ? () => {
+                      if (sortBy === sortKey) {
+                        setSortDir(d => d === 'desc' ? 'asc' : 'desc');
+                      } else {
+                        setSortBy(sortKey);
+                        setSortDir('desc');
+                      }
+                    } : undefined}
+                    style={{
+                      padding: '0.4rem 0.6rem', textAlign: align, width,
+                      fontSize: '0.6rem', fontWeight: 400,
+                      textTransform: 'uppercase', letterSpacing: '0.08em',
+                      color: isActive ? 'var(--text)' : 'var(--text-dim)',
+                      cursor: sortKey ? 'pointer' : 'default',
+                      userSelect: 'none', whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {label}
+                    {isActive && <span style={{ color: 'var(--orange)', marginLeft: '0.25rem' }}>{sortDir === 'asc' ? '↑' : '↓'}</span>}
+                    {!isActive && sortKey && <span style={{ color: 'rgba(90,106,136,0.3)', marginLeft: '0.25rem' }}>↕</span>}
+                  </th>
+                );
+              })}
             </tr>
           </thead>
           <tbody>

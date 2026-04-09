@@ -9,6 +9,7 @@ export async function GET(request) {
   const type     = searchParams.get('type') || 'all';
   const industry = searchParams.get('industry') || 'all';
   const sort     = searchParams.get('sort') || 'donation_total';
+  const sortDir  = searchParams.get('sort_dir') || '';
   const page     = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
 
   const db = getDb();
@@ -26,8 +27,9 @@ export async function GET(request) {
   if (type === 'active')  query = query.gt('num_active', 0);
   if (industry !== 'all') query = query.eq('industry', industry);
 
-  const sortCol = sort === 'total_lobbyists' ? 'total_lobbyists' : sort === 'name' ? 'name' : 'donation_total';
-  const ascending = sort === 'name';
+  const sortCol    = sort === 'total_lobbyists' ? 'total_lobbyists' : sort === 'name' ? 'name' : 'donation_total';
+  const defaultAsc = sort === 'name';
+  const ascending  = sortDir === 'asc' ? true : sortDir === 'desc' ? false : defaultAsc;
   query = query.order(sortCol, { ascending });
 
   const offset = (page - 1) * PAGE_SIZE;

@@ -20,12 +20,12 @@ public/data/lobbyist_disclosures/
 public/data/lobbying_firms/
 public/data/legislators/
 public/data/elections/
-public/data/party_finance/
+# public/data/party_finance/ — committed, small (~80KB)
 public/data/fec/
 public/data/news/
 public/data/ie/
 public/data/expenditures/
-public/data/transfers/
+# public/data/transfers/ — committed, small (~340KB)
 public/data/industry_donors/
 public/data/search_index_donors.json
 

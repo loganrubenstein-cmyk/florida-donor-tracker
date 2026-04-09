@@ -6,7 +6,20 @@ import { slugify } from '@/lib/slugify'
 const PAGE_SIZE = 25
 
 function formatDollars(n) {
-  return '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+  const v = Number(n)
+  if (!Number.isFinite(v)) return '—'
+  return '$' + v.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
+}
+
+function normalizeDonor(d) {
+  // Accepts either the legacy static-JSON shape {total_amount, type} or the
+  // Supabase shape {total_combined, total_hard, total_soft, is_corporate}.
+  const total =
+    d.total_amount ??
+    d.total_combined ??
+    ((Number(d.total_hard) || 0) + (Number(d.total_soft) || 0))
+  const type = d.type || (d.is_corporate ? 'corporate' : 'individual')
+  return { ...d, total_amount: total, type, num_contributions: d.num_contributions ?? 0 }
 }
 
 function TypeBadge({ type }) {
@@ -30,66 +43,16 @@ function TypeBadge({ type }) {
   )
 }
 
-export default function DonorTable({ donors }) {
-  const [query, setQuery] = useState('')
+export default function DonorTable({ donors: rawDonors }) {
+  const donors = (rawDonors || []).map(normalizeDonor)
   const [shown, setShown] = useState(PAGE_SIZE)
 
-  const filtered = query.trim()
-    ? donors.filter(d => d.name.toLowerCase().includes(query.toLowerCase()))
-    : donors
-
-  const visible = query.trim() ? filtered : filtered.slice(0, shown)
-  const hasMore = !query.trim() && shown < filtered.length
+  const visible = donors.slice(0, shown)
+  const hasMore = shown < donors.length
   const rankMap = new Map(donors.map((d, i) => [d.name, i + 1]))
 
   return (
     <div>
-      {/* Search bar */}
-      <div style={{ marginBottom: '2rem' }}>
-        <div style={{
-          fontSize: '0.6rem',
-          letterSpacing: '0.15em',
-          color: 'var(--text-dim)',
-          textTransform: 'uppercase',
-          marginBottom: '0.6rem',
-        }}>
-          Search donors &amp; committees
-        </div>
-        <div style={{
-          display: 'flex',
-          maxWidth: '540px',
-          border: '1px solid rgba(100,140,220,0.3)',
-          borderRadius: '3px',
-          overflow: 'hidden',
-        }}>
-          <input
-            type="text"
-            value={query}
-            onChange={e => { setQuery(e.target.value); setShown(PAGE_SIZE) }}
-            placeholder="_ search by name..."
-            style={{
-              flex: 1,
-              background: 'rgba(255,255,255,0.03)',
-              border: 'none',
-              padding: '0.6rem 1rem',
-              fontSize: '0.7rem',
-              color: 'var(--text)',
-              fontFamily: 'var(--font-mono)',
-              outline: 'none',
-            }}
-          />
-          <div style={{
-            background: 'rgba(255,176,96,0.08)',
-            borderLeft: '1px solid rgba(100,140,220,0.3)',
-            color: 'var(--orange)',
-            padding: '0.6rem 1rem',
-            fontSize: '0.7rem',
-            display: 'flex',
-            alignItems: 'center',
-          }}>→</div>
-        </div>
-      </div>
-
       {/* Table header */}
       <div style={{
         display: 'flex',
@@ -101,9 +64,7 @@ export default function DonorTable({ donors }) {
           Top donors — all time
         </span>
         <span style={{ fontSize: '0.58rem', color: 'rgba(90,106,136,0.6)' }}>
-          {query.trim()
-            ? `${filtered.length} result${filtered.length !== 1 ? 's' : ''}`
-            : `showing ${Math.min(shown, filtered.length)} of ${filtered.length}`}
+          showing {Math.min(shown, donors.length)} of {donors.length}
         </span>
       </div>
 
@@ -145,14 +106,14 @@ export default function DonorTable({ donors }) {
                 {formatDollars(donor.total_amount)}
               </td>
               <td style={{ padding: '0.55rem 0.75rem', textAlign: 'right', color: 'var(--text-dim)' }}>
-                {donor.num_contributions.toLocaleString()}
+                {(Number(donor.num_contributions) || 0).toLocaleString()}
               </td>
             </tr>
           ))}
           {visible.length === 0 && (
             <tr>
               <td colSpan={5} style={{ padding: '1.5rem 0.75rem', color: 'var(--text-dim)', fontSize: '0.65rem' }}>
-                No donors match &ldquo;{query}&rdquo;
+                No donors to show.
               </td>
             </tr>
           )}
@@ -175,7 +136,7 @@ export default function DonorTable({ donors }) {
               fontFamily: 'var(--font-mono)',
             }}
           >
-            Load {Math.min(PAGE_SIZE, filtered.length - shown)} more →
+            Load {Math.min(PAGE_SIZE, donors.length - shown)} more →
           </button>
         </div>
       )}

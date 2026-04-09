@@ -1,0 +1,159 @@
+{
+  "num_parties": 19,
+  "total_raised_all": 770556583.46,
+  "parties": [
+    {
+      "party_code": "REP",
+      "party_label": "Republican",
+      "num_candidates": 1267,
+      "total_raised": 373204536.33,
+      "hard_money": 209247177.05,
+      "soft_money": 163957359.28
+    },
+    {
+      "party_code": "DEM",
+      "party_label": "Democrat",
+      "num_candidates": 1312,
+      "total_raised": 283814352.75,
+      "hard_money": 246388359.68,
+      "soft_money": 37425993.07
+    },
+    {
+      "party_code": "NOP",
+      "party_label": "No Party Affiliation / Non-Partisan",
+      "num_candidates": 1570,
+      "total_raised": 109538485.0,
+      "hard_money": 92197218.75,
+      "soft_money": 17341266.25
+    },
+    {
+      "party_code": "NPA",
+      "party_label": "No Party Affiliation",
+      "num_candidates": 150,
+      "total_raised": 3329894.76,
+      "hard_money": 2422186.82,
+      "soft_money": 907707.94
+    },
+    {
+      "party_code": "LPF",
+      "party_label": "Libertarian",
+      "num_candidates": 36,
+      "total_raised": 300041.65,
+      "hard_money": 300041.65,
+      "soft_money": 0.0
+    },
+    {
+      "party_code": "WRI",
+      "party_label": "Write-In",
+      "num_candidates": 37,
+      "total_raised": 69398.34,
+      "hard_money": 69398.34,
+      "soft_money": 0.0
+    },
+    {
+      "party_code": "LIB",
+      "party_label": "Libertarian",
+      "num_candidates": 7,
+      "total_raised": 68386.63,
+      "hard_money": 68386.63,
+      "soft_money": 0.0
+    },
+    {
+      "party_code": "REF",
+      "party_label": "Reform",
+      "num_candidates": 2,
+      "total_raised": 68310.02,
+      "hard_money": 68310.02,
+      "soft_money": 0.0
+    },
+    {
+      "party_code": "TEA",
+      "party_label": "Tea Party",
+      "num_candidates": 17,
+      "total_raised": 58158.46,
+      "hard_money": 58158.46,
+      "soft_money": 0.0
+    },
+    {
+      "party_code": "INT",
+      "party_label": "INT",
+      "num_candidates": 4,
+      "total_raised": 39938.05,
+      "hard_money": 39938.05,
+      "soft_money": 0.0
+    },
+    {
+      "party_code": "GRE",
+      "party_label": "Green",
+      "num_candidates": 7,
+      "total_raised": 35924.79,
+      "hard_money": 35924.79,
+      "soft_money": 0.0
+    },
+    {
+      "party_code": "IDP",
+      "party_label": "IDP",
+      "num_candidates": 1,
+      "total_raised": 11978.22,
+      "hard_money": 11978.22,
+      "soft_money": 0.0
+    },
+    {
+      "party_code": "CPF",
+      "party_label": "Constitution Party",
+      "num_candidates": 3,
+      "total_raised": 4780.98,
+      "hard_money": 4780.98,
+      "soft_money": 0.0
+    },
+    {
+      "party_code": "AIP",
+      "party_label": "AIP",
+      "num_candidates": 1,
+      "total_raised": 3821.95,
+      "hard_money": 3821.95,
+      "soft_money": 0.0
+    },
+    {
+      "party_code": "BRS",
+      "party_label": "BRS",
+      "num_candidates": 1,
+      "total_raised": 3821.72,
+      "hard_money": 3821.72,
+      "soft_money": 0.0
+    },
+    {
+      "party_code": "IND",
+      "party_label": "Independent",
+      "num_candidates": 3,
+      "total_raised": 3578.81,
+      "hard_money": 3578.81,
+      "soft_money": 0.0
+    },
+    {
+      "party_code": "ASP",
+      "party_label": "ASP",
+      "num_candidates": 1,
+      "total_raised": 1146.0,
+      "hard_money": 1146.0,
+      "soft_money": 0.0
+    },
+    {
+      "party_code": "CHR",
+      "party_label": "CHR",
+      "num_candidates": 1,
+      "total_raised": 29.0,
+      "hard_money": 29.0,
+      "soft_money": 0.0
+    },
+    {
+      "party_code": "MGT",
+      "party_label": "MGT",
+      "num_candidates": 1,
+      "total_raised": 0.0,
+      "hard_money": 0.0,
+      "soft_money": 0.0
+    }
+  ],
+  "generated_by": "scripts/54_export_party_finance.py"
+}

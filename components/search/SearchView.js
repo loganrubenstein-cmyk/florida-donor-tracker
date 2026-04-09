@@ -138,6 +138,26 @@ export default function SearchView() {
         <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)} style={inputStyle}>
           {TYPE_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
         </select>
+        <button
+          disabled={!metaIndex}
+          onClick={() => {
+            const pool = metaIndex || [];
+            if (!pool.length) return;
+            const pick = pool[Math.floor(Math.random() * pool.length)];
+            if (pick?.u) window.location.href = pick.u;
+          }}
+          style={{
+            ...inputStyle,
+            cursor: metaIndex ? 'pointer' : 'default',
+            opacity: metaIndex ? 1 : 0.4,
+            whiteSpace: 'nowrap',
+            border: '1px solid rgba(77,216,240,0.3)',
+            color: 'var(--teal)',
+            padding: '0.55rem 0.9rem',
+          }}
+        >
+          ✦ Surprise me
+        </button>
       </div>
 
       {/* Result meta */}

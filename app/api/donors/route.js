@@ -8,7 +8,8 @@ export async function GET(request) {
   const q        = searchParams.get('q') || '';
   const type     = searchParams.get('type') || 'all';
   const industry = searchParams.get('industry') || 'all';
-  const sort     = searchParams.get('sort') || 'total_combined';
+  const sort     = searchParams.get('sort')     || 'total_combined';
+  const sortDir  = searchParams.get('sort_dir') || '';
   const page     = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
 
   const db = getDb();
@@ -26,7 +27,8 @@ export async function GET(request) {
   if (type === 'lobbyist')   query = query.eq('has_lobbyist_link', true);
   if (industry !== 'all')    query = query.eq('industry', industry);
 
-  const ascending = sort === 'name';
+  const defaultAsc = sort === 'name';
+  const ascending  = sortDir === 'asc' ? true : sortDir === 'desc' ? false : defaultAsc;
   query = query.order(sort, { ascending });
 
   const offset = (page - 1) * PAGE_SIZE;

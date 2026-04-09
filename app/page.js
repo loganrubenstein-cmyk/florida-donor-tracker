@@ -26,7 +26,7 @@ async function getHomeData() {
     { count: committeeCount },
     { data: donorAgg },
   ] = await Promise.all([
-    db.from('donors').select('slug, name, is_corporate, total_combined, total_soft, total_hard, num_contributions').order('total_combined', { ascending: false }).limit(10),
+    db.from('donors').select('slug, name, is_corporate, total_combined, total_soft, total_hard, num_contributions').order('total_combined', { ascending: false }).limit(100),
     db.from('candidates').select('*', { count: 'exact', head: true }),
     db.from('committees').select('*', { count: 'exact', head: true }),
     db.from('donors').select('total_combined.sum()').single(),
@@ -158,7 +158,7 @@ export default async function Home() {
               { value: formatBillions(meta.grand_totals?.total_political_spending_tracked ?? meta.campaign_finance?.estimated_total_contributions ?? 0), label: 'total political\nspending tracked', color: 'var(--orange)' },
               { value: (meta.campaign_finance?.total_donors ?? 0).toLocaleString(),               label: 'donors\nindexed',              color: 'var(--teal)'   },
               { value: (meta.committees?.total_committees ?? meta.lobbyist_registrations?.total_principals ?? 0).toLocaleString(), label: 'committees\ntracked',  color: 'var(--green)'  },
-              { value: (meta.candidates?.total_candidates ?? candidateStats.length).toLocaleString(), label: 'candidates\ntracked',       color: 'var(--blue)'   },
+              { value: (meta.candidates?.total_candidates ?? 0).toLocaleString(), label: 'candidates\ntracked',       color: 'var(--blue)'   },
             ].map(({ value, label, color }) => (
               <div key={label}>
                 <div style={{ fontSize: '1.5rem', color, fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1 }}>
@@ -171,106 +171,19 @@ export default async function Home() {
             ))}
           </div>
 
-          {/* Florida outline — decorative */}
-          <div className="hide-mobile" style={{ flexShrink: 0, opacity: 0.55 }}>
-            <svg
-              viewBox="0 0 220 300"
-              width="72"
-              height="98"
-              fill="none"
-              stroke="var(--orange)"
-              strokeWidth="4"
-              strokeLinejoin="round"
-              strokeLinecap="round"
-            >
-              <path d="
-                M 0,52
-                L 132,2
-                L 210,10
-                L 216,62
-                L 212,112
-                L 210,162
-                L 212,202
-                L 206,242
-                L 195,268
-                L 172,284
-                L 148,292
-                L 124,290
-                L 102,278
-                L 86,256
-                L 74,228
-                L 66,200
-                L 60,170
-                L 52,144
-                L 40,124
-                L 26,108
-                L 8,96
-                L 0,80
-                Z
-              " />
-            </svg>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Purpose ── */}
-      <section className="m-padx" style={{
-        padding: '2.5rem 2.5rem',
-        borderBottom: '1px solid rgba(100,140,220,0.1)',
-        maxWidth: '900px',
-        margin: '0 auto',
-      }}>
-        <div style={{
-          fontSize: '0.6rem',
-          letterSpacing: '0.15em',
-          color: 'var(--text-dim)',
-          textTransform: 'uppercase',
-          marginBottom: '1.5rem',
-        }}>
-          Why this exists
-        </div>
-        <div className="rg-purpose">
-          <div>
-            <p style={{ fontSize: '0.72rem', color: 'var(--text)', lineHeight: 1.85, marginBottom: '1rem' }}>
-              Florida is one of the biggest political money machines in the country.
-              Billions flow between donors, committees, and campaigns every cycle —
-              but the trail is buried in raw government files that almost no one reads.
-            </p>
-            <p style={{ fontSize: '0.72rem', color: 'var(--text)', lineHeight: 1.85 }}>
-              This site pulls every contribution record from the Florida Division of
-              Elections and makes it searchable, visual, and human. No spin. No agenda.
-              Just the data — yours to explore.
-            </p>
-          </div>
-          <div className="purpose-right" style={{ borderLeft: '1px solid rgba(100,140,220,0.1)', paddingLeft: '3rem' }}>
-            <div style={{
+          <div className="hide-mobile" style={{ flexShrink: 0 }}>
+            <a href="/about" style={{
               fontSize: '0.6rem',
-              letterSpacing: '0.12em',
               color: 'var(--text-dim)',
-              textTransform: 'uppercase',
-              marginBottom: '1rem',
+              fontFamily: 'var(--font-mono)',
+              textDecoration: 'none',
+              border: '1px solid rgba(100,140,220,0.2)',
+              padding: '0.5rem 1rem',
+              borderRadius: '3px',
+              whiteSpace: 'nowrap',
             }}>
-              What you can find here
-            </div>
-            {[
-              'Who gave the most, to whom, and when',
-              'How money flows between donors, committees, and candidates',
-              'Hard money (direct) vs. soft money (PAC) per candidate',
-              'Corporate vs. individual vs. PAC donors',
-              'Which lobbyist principals are also top donors',
-              'Committees sharing treasurers, addresses, or money flows',
-            ].map(line => (
-              <div key={line} style={{
-                fontSize: '0.68rem',
-                color: 'var(--text)',
-                lineHeight: 2.2,
-                display: 'flex',
-                gap: '0.5rem',
-              }}>
-                <span style={{ color: 'var(--orange)' }}>→</span>
-                <span>{line}</span>
-              </div>
-            ))}
+              → about this site
+            </a>
           </div>
         </div>
       </section>

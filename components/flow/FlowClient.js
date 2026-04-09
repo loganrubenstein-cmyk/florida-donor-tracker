@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import { Sankey, Tooltip, ResponsiveContainer } from 'recharts';
 import BackLinks from '@/components/BackLinks';
+import { slugify } from '@/lib/slugify';
 
 function fmt(n) {
   if (!n || n === 0) return '—';
@@ -12,7 +13,12 @@ function fmt(n) {
   return `$${n.toFixed(0)}`;
 }
 
-const TOP_OPTIONS = [20, 30, 50, 100];
+const TOP_OPTIONS  = [20, 30, 50, 100];
+const SORT_OPTIONS = [
+  { value: 'amount', label: 'By Amount' },
+  { value: 'alpha',  label: 'A → Z' },
+  { value: 'count',  label: 'By Contributions' },
+];
 const NODE_WIDTH  = 12;
 const LABEL_MAX   = 30;
 
@@ -55,6 +61,13 @@ function SankeyNode({ x, y, width, height, payload, typeMap }) {
       </g>
     );
   }
+  if (!isCommittee && info.slug) {
+    return (
+      <g style={{ cursor: 'pointer' }}>
+        <a href={`/donor/${info.slug}`}>{inner}</a>
+      </g>
+    );
+  }
   return <g>{inner}</g>;
 }
 
@@ -88,15 +101,20 @@ function FlowTooltip({ active, payload }) {
 }
 
 export default function FlowClient({ flows }) {
-  const [topN, setTopN] = useState(30);
+  const [topN,   setTopN]   = useState(30);
+  const [sortBy, setSortBy] = useState('amount');
 
   const { sankeyData, typeMap, totalFlow } = useMemo(() => {
-    const top = flows.slice(0, topN);
+    let sorted = [...flows];
+    if (sortBy === 'alpha')  sorted.sort((a, b) => a.donor.localeCompare(b.donor));
+    if (sortBy === 'count')  sorted.sort((a, b) => b.num_contributions - a.num_contributions);
+    // 'amount' is already the default order from the file
+    const top = sorted.slice(0, topN);
 
-    // Build type map: name → {type, acct?}
+    // Build type map: name → {type, acct?, slug?}
     const typeMap = {};
     top.forEach(f => {
-      typeMap[f.donor]     = { type: 'donor' };
+      if (!typeMap[f.donor]) typeMap[f.donor] = { type: 'donor', slug: slugify(f.donor) };
       typeMap[f.committee] = { type: 'committee', acct: f.committee_acct };
     });
 
@@ -178,9 +196,27 @@ export default function FlowClient({ flows }) {
           </button>
         ))}
 
+        <span style={{ fontSize: '0.65rem', color: 'var(--text-dim)', marginLeft: '0.5rem' }}>Sort:</span>
+        {SORT_OPTIONS.map(opt => (
+          <button
+            key={opt.value}
+            onClick={() => setSortBy(opt.value)}
+            style={{
+              padding: '0.2rem 0.6rem', fontSize: '0.65rem',
+              background: sortBy === opt.value ? 'rgba(77,216,240,0.15)' : 'transparent',
+              color:      sortBy === opt.value ? 'var(--teal)'           : 'var(--text-dim)',
+              border:     `1px solid ${sortBy === opt.value ? 'var(--teal)' : 'rgba(100,140,220,0.25)'}`,
+              borderRadius: '2px', cursor: 'pointer', fontFamily: 'var(--font-mono)',
+              transition: 'all 0.1s',
+            }}
+          >
+            {opt.label}
+          </button>
+        ))}
+
         <div style={{ marginLeft: 'auto', display: 'flex', gap: '1.25rem', alignItems: 'center' }}>
           {[
-            { color: 'var(--orange)', label: 'Donor' },
+            { color: 'var(--orange)', label: 'Donor (click to view)' },
             { color: 'var(--teal)',   label: 'Committee (click to view)' },
           ].map(({ color, label }) => (
             <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
