@@ -17,8 +17,10 @@ function fmt(n) {
 }
 
 function loadTopFirms() {
-  const path = join(process.cwd(), 'public', 'data', 'lobbyist_comp', 'top_firms.json');
-  return JSON.parse(readFileSync(path, 'utf-8'));
+  try {
+    const path = join(process.cwd(), 'public', 'data', 'lobbyist_comp', 'top_firms.json');
+    return JSON.parse(readFileSync(path, 'utf-8'));
+  } catch { return []; }
 }
 
 export default function LobbyingFirmsPage() {
