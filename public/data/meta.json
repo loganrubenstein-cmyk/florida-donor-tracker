@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-09T17:54:13.096161+00:00",
+  "generated_at": "2026-04-09T21:46:17.456078+00:00",
   "note": "All figures are FL state-level data unless otherwise noted.",
   "campaign_finance": {
     "total_donors": 336478,
@@ -12,8 +12,8 @@
     "total_received": 3140636551.38
   },
   "candidates": {
-    "total_candidates": 4421,
-    "total_raised": 770556583.46
+    "total_candidates": 4466,
+    "total_raised": 1941587692.69
   },
   "committee_expenditures": {
     "total_amount": 2783943244.95,
@@ -23,6 +23,11 @@
       "start": "1996-01-01",
       "end": "2026-12-29"
     }
+  },
+  "candidate_expenditures": {
+    "total_amount": 898839038.65,
+    "total_payments": 654504,
+    "num_candidates": 6379
   },
   "transfers": {
     "total_amount": 147386021.83,
@@ -175,6 +180,7 @@
   },
   "grand_totals": {
     "total_political_spending_tracked": 3894316430.36,
+    "total_expenditures_tracked": 3682782283.6,
     "note": "Campaign contributions + est. lobbyist compensation + IE/EC spending"
   }
 }

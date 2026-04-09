@@ -52,6 +52,28 @@ const OFFICE_SHORT = {
   STA: 'St. Atty', PUB: 'Pub. Def', CTJ: 'Ct. Judge', SEB: 'St. Exec',
 };
 
+function VendorBar({ vendor, maxAmount }) {
+  const pct = maxAmount > 0 ? (vendor.total_amount / maxAmount) * 100 : 0;
+  return (
+    <div style={{ marginBottom: '0.6rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', marginBottom: '0.2rem' }}>
+        <span style={{ color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '60%' }}>
+          {vendor.vendor_name}
+        </span>
+        <span style={{ color: 'var(--orange)', whiteSpace: 'nowrap', marginLeft: '0.5rem' }}>
+          {fmtMoney(vendor.total_amount)}
+          <span style={{ color: 'var(--text-dim)', fontWeight: 400, marginLeft: '0.35rem' }}>
+            ({vendor.pct.toFixed(1)}%)
+          </span>
+        </span>
+      </div>
+      <div style={{ height: '4px', background: 'var(--border)', borderRadius: '2px' }}>
+        <div style={{ height: '100%', width: `${pct}%`, background: 'var(--orange)', borderRadius: '2px' }} />
+      </div>
+    </div>
+  );
+}
+
 export default function CandidateProfile({ data, cycles = [] }) {
   const hm     = data.hard_money || {};
   const donors = hm.top_donors  || [];
@@ -258,6 +280,48 @@ export default function CandidateProfile({ data, cycles = [] }) {
     </div>
   );
 
+  const exp = data.expenditures || {};
+  const expVendors = exp.top_vendors || [];
+  const maxVendorAmount = expVendors.length > 0 ? expVendors[0].total_amount : 0;
+
+  const expendituresContent = (
+    <div>
+      {exp.total_spent > 0 ? (
+        <>
+          {/* Summary stats */}
+          <div className="rg-3" style={{
+            gap: '1px', background: 'var(--border)',
+            border: '1px solid var(--border)', borderRadius: '3px',
+            marginBottom: '2rem', overflow: 'hidden',
+          }}>
+            {[
+              { label: 'Total Spent',    value: fmtMoney(exp.total_spent) },
+              { label: 'Expenditures',   value: (exp.num_expenditures || 0).toLocaleString() },
+              { label: 'Period',         value: exp.date_start ? `${fmtDate(exp.date_start)} – ${fmtDate(exp.date_end)}` : '—' },
+            ].map(({ label, value }) => (
+              <div key={label} style={{ background: 'var(--bg)', padding: '1rem 1.25rem' }}>
+                <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.3rem' }}>{label}</div>
+                <div style={{ fontSize: '1rem', color: 'var(--orange)', fontWeight: 700 }}>{value}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Top vendors bar chart */}
+          {expVendors.length > 0 && (
+            <>
+              <SectionLabel>Top Vendors / Payees</SectionLabel>
+              {expVendors.map((v, i) => (
+                <VendorBar key={i} vendor={v} maxAmount={maxVendorAmount} />
+              ))}
+            </>
+          )}
+        </>
+      ) : (
+        <p style={{ color: 'var(--text-dim)', fontSize: '0.82rem' }}>No expenditure data available for this campaign account.</p>
+      )}
+    </div>
+  );
+
   const transactionsContent = (
     <div>
       <TransactionExplorer
@@ -304,6 +368,7 @@ export default function CandidateProfile({ data, cycles = [] }) {
     { id: 'donors',        label: 'Donors',        content: donorsContent },
     { id: 'committees',    label: 'Committees',    content: committeesContent },
     { id: 'industries',    label: 'Industries',    content: industriesContent },
+    { id: 'expenditures',  label: 'Expenditures',  content: expendituresContent },
     { id: 'transactions',  label: 'Transactions',  content: transactionsContent },
     { id: 'sources',       label: 'Sources',       content: sourcesContent },
   ];

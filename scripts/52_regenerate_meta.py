@@ -24,8 +24,10 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+import pandas as pd
+
 sys.path.insert(0, str(Path(__file__).parent))
-from config import PROJECT_ROOT
+from config import PROJECT_ROOT, PROCESSED_DIR
 
 DATA_DIR = PROJECT_ROOT / "public" / "data"
 
@@ -98,6 +100,25 @@ def main() -> int:
             "date_range":          exp_summary.get("date_range", {}),
         }
         print(f"Committee expenditures: ${exp_summary.get('total_amount', 0):,.0f}")
+
+    # ── Expenditures (Candidate) ──────────────────────────────────────────────
+    cand_expend_csv = PROCESSED_DIR / "candidate_expenditures.csv"
+    if cand_expend_csv.exists():
+        try:
+            ce = pd.read_csv(cand_expend_csv, usecols=["amount", "acct_num"],
+                             dtype={"acct_num": str}, low_memory=False)
+            ce["amount"] = pd.to_numeric(ce["amount"], errors="coerce").fillna(0.0)
+            ce_total      = float(ce["amount"].sum())
+            ce_payments   = int(len(ce))
+            ce_candidates = int(ce["acct_num"].nunique())
+            meta["candidate_expenditures"] = {
+                "total_amount":    round(ce_total, 2),
+                "total_payments":  ce_payments,
+                "num_candidates":  ce_candidates,
+            }
+            print(f"Candidate expenditures: ${ce_total:,.0f} across {ce_candidates:,} candidates")
+        except Exception as e:
+            print(f"  WARNING: candidate_expenditures.csv error: {e}")
 
     # ── Transfers ─────────────────────────────────────────────────────────────
     transfers_summary = load_json(DATA_DIR / "transfers" / "summary.json")
@@ -229,11 +250,14 @@ def main() -> int:
         print(f"Influence index: {len(influence_idx):,} principals, ${total_influence:,.0f} combined")
 
     # ── Grand totals ──────────────────────────────────────────────────────────
-    campaign_total = meta.get("campaign_finance", {}).get("estimated_total_contributions", 0)
-    comp_total     = meta.get("lobbyist_compensation", {}).get("total_estimated_comp", 0)
-    ie_total       = meta.get("independent_expenditures", {}).get("total_amount", 0)
+    campaign_total  = meta.get("campaign_finance", {}).get("estimated_total_contributions", 0)
+    comp_total      = meta.get("lobbyist_compensation", {}).get("total_estimated_comp", 0)
+    ie_total        = meta.get("independent_expenditures", {}).get("total_amount", 0)
+    comm_exp_total  = meta.get("committee_expenditures", {}).get("total_amount", 0)
+    cand_exp_total  = meta.get("candidate_expenditures", {}).get("total_amount", 0)
     meta["grand_totals"] = {
         "total_political_spending_tracked": round(campaign_total + comp_total + ie_total, 2),
+        "total_expenditures_tracked":       round(comm_exp_total + cand_exp_total, 2),
         "note": "Campaign contributions + est. lobbyist compensation + IE/EC spending",
     }
 

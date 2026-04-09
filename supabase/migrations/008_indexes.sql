@@ -42,3 +42,7 @@ create index if not exists idx_connections_score on entity_connections(connectio
 create index if not exists idx_pc_links_candidate on candidate_pc_links(candidate_acct_num);
 create index if not exists idx_cycle_donors_year on cycle_donors(year);
 create index if not exists idx_cycle_donors_slug on cycle_donors(slug);
+
+-- candidate expenditure indexes (script 60, 2026-04-09)
+create index if not exists idx_cand_exp_summary_acct on candidate_expenditure_summary(acct_num);
+create index if not exists idx_cand_top_vendors_acct  on candidate_top_vendors(acct_num);

@@ -38,3 +38,23 @@ create table if not exists candidate_top_donors (
   type text,
   occupation text
 );
+
+-- Added by script 60 (2026-04-09): candidate expenditure tables
+create table if not exists candidate_expenditure_summary (
+  id               bigint generated always as identity primary key,
+  acct_num         text not null unique,
+  total_spent      numeric(15,2) default 0,
+  num_expenditures integer default 0,
+  date_start       date,
+  date_end         date
+);
+
+create table if not exists candidate_top_vendors (
+  id                     bigint generated always as identity primary key,
+  acct_num               text not null,
+  vendor_name            text,
+  vendor_name_normalized text,
+  total_amount           numeric(15,2),
+  num_payments           integer,
+  pct                    numeric(6,2)
+);
