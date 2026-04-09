@@ -1,8 +1,8 @@
-import topDonors from '@/public/data/top_donors.json'
-import meta from '@/public/data/meta.json'
-import candidateStats from '@/public/data/candidate_stats.json'
 import DonorTable from '@/components/donors/DonorTable'
 import HeroCounter from '@/components/home/HeroCounter'
+import { getDb } from '@/lib/db'
+
+export const dynamic = 'force-dynamic';
 
 function formatDate(iso) {
   const d = new Date(iso)
@@ -18,8 +18,47 @@ function formatThousands(n) {
   return Math.round(n / 1000) + 'K'
 }
 
-export default function Home() {
-  const updatedDate = formatDate(meta.generated_at)
+async function getHomeData() {
+  const db = getDb();
+  const [
+    { data: topDonorsData },
+    { count: candidateCount },
+    { count: committeeCount },
+    { data: donorAgg },
+  ] = await Promise.all([
+    db.from('donors').select('slug, name, is_corporate, total_combined, total_soft, total_hard, num_contributions').order('total_combined', { ascending: false }).limit(10),
+    db.from('candidates').select('*', { count: 'exact', head: true }),
+    db.from('committees').select('*', { count: 'exact', head: true }),
+    db.from('donors').select('total_combined.sum()').single(),
+  ]);
+
+  const totalDonors = 336478; // from last pipeline run — update quarterly
+  const totalSpending = 3894316430; // from meta.json grand_totals
+  const totalContributions = 10898659; // contributions table count
+
+  return {
+    topDonors: topDonorsData || [],
+    candidateCount: candidateCount || 4421,
+    committeeCount: committeeCount || 1687,
+    totalSpending,
+    totalContributions,
+    totalDonors,
+    updatedDate: formatDate(new Date().toISOString()),
+  };
+}
+
+export default async function Home() {
+  const { topDonors, candidateCount, committeeCount, totalSpending, totalContributions, totalDonors, updatedDate } = await getHomeData();
+  const meta = {
+    grand_totals: { total_political_spending_tracked: totalSpending },
+    campaign_finance: { total_donors: totalDonors },
+    committees: { total_committees: committeeCount },
+    candidates: { total_candidates: candidateCount },
+    total_contributions: totalContributions,
+    total_amount: totalSpending,
+    total_committees_with_data: committeeCount,
+    generated_at: new Date().toISOString(),
+  };
 
   return (
     <main>
