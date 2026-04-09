@@ -1,10 +1,13 @@
 import Link from 'next/link';
-import { readFileSync, existsSync } from 'fs';
+import { readFileSync } from 'fs';
 import { join } from 'path';
 import { notFound } from 'next/navigation';
+import { getDb } from '@/lib/db';
 import { fmtCount } from '../../../../lib/fmt';
 
-// Generate static params for top 500 most-lobbied bills
+export const dynamic = 'force-dynamic';
+
+// Generate static params for top 500 most-lobbied bills (reads committed top_bills.json)
 export async function generateStaticParams() {
   try {
     const topBills = JSON.parse(readFileSync(
@@ -14,30 +17,25 @@ export async function generateStaticParams() {
   } catch { return []; }
 }
 
-export async function generateMetadata({ params }) {
-  const data = loadBill(params.slug);
-  if (!data) return { title: 'Bill — Florida Donor Tracker' };
-  const bill = data.entries[0]?.bill_canon || params.slug;
-  return {
-    title: `${bill} — Lobbying Disclosures — Florida Donor Tracker`,
-    description: `Who lobbied on Florida ${bill}. ${data.entries.length} lobbyist-principal filings across ${data.years.join(', ')}.`,
-  };
-}
-
-function loadBill(slug) {
-  const filePath = join(process.cwd(), 'public', 'data', 'lobbyist_disclosures', 'by_bill', `${slug}.json`);
-  if (!existsSync(filePath)) return null;
+async function loadBill(slug) {
   try {
-    const entries = JSON.parse(readFileSync(filePath, 'utf8'));
-    if (!entries.length) return null;
+    const db = getDb();
+    const { data: entries } = await db
+      .from('bill_disclosures')
+      .select('bill_canon, lobbyist, principal, firm, issues, year')
+      .eq('bill_slug', slug)
+      .order('year', { ascending: true });
 
-    const years     = [...new Set(entries.map(e => e.year))].sort();
+    if (!entries || entries.length === 0) return null;
+
+    const years      = [...new Set(entries.map(e => e.year))].sort();
     const principals = [...new Set(entries.map(e => e.principal))].sort();
     const lobbyists  = [...new Set(entries.map(e => e.lobbyist))].sort();
     const firms      = [...new Set(entries.map(e => e.firm).filter(Boolean))].sort();
-    const issues     = [...new Set(entries.flatMap(e => e.issues || []).filter(i => i && i.length > 2))];
+    const issues     = [...new Set(entries.flatMap(e => {
+      try { return JSON.parse(e.issues || '[]'); } catch { return []; }
+    }).filter(i => i && i.length > 2))];
 
-    // Group by year for timeline
     const byYear = {};
     for (const e of entries) {
       if (!byYear[e.year]) byYear[e.year] = { filings: 0, principals: new Set(), lobbyists: new Set() };
@@ -46,7 +44,6 @@ function loadBill(slug) {
       byYear[e.year].lobbyists.add(e.lobbyist);
     }
 
-    // Group by principal (sorted by filing count)
     const byPrincipal = {};
     for (const e of entries) {
       if (!byPrincipal[e.principal]) byPrincipal[e.principal] = { name: e.principal, filings: 0, lobbyists: new Set(), years: new Set() };
@@ -74,8 +71,19 @@ function loadBill(slug) {
   } catch { return null; }
 }
 
-export default function BillLobbyingPage({ params }) {
-  const data = loadBill(params.slug);
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const data = await loadBill(slug);
+  if (!data) return { title: 'Bill — Florida Donor Tracker' };
+  return {
+    title: `${data.bill} — Lobbying Disclosures — Florida Donor Tracker`,
+    description: `Who lobbied on Florida ${data.bill}. ${data.entries.length} lobbyist-principal filings across ${data.years.join(', ')}.`,
+  };
+}
+
+export default async function BillLobbyingPage({ params }) {
+  const { slug } = await params;
+  const data = await loadBill(slug);
   if (!data) return notFound();
 
   const { bill, entries, years, principals, lobbyists, firms, issues, byYear, principalList } = data;
@@ -106,7 +114,6 @@ export default function BillLobbyingPage({ params }) {
         Source: FL House Lobbyist Disclosure portal. Not affiliated with the State of Florida. All data from public records.
       </p>
 
-      {/* Stats bar */}
       <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', marginBottom: '2.5rem', padding: '1rem 1.25rem', background: 'var(--surface)', borderRadius: '6px', border: '1px solid var(--border)' }}>
         <StatBox value={fmtCount(entries.length)} label="Total Filings" />
         <StatBox value={fmtCount(principals.length)} label="Unique Principals" />
@@ -115,7 +122,6 @@ export default function BillLobbyingPage({ params }) {
         <StatBox value={yearStr} label="Years Active" color="var(--text-dim)" />
       </div>
 
-      {/* Issue categories */}
       {issues.length > 0 && (
         <div style={{ marginBottom: '1.5rem', display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
           {issues.slice(0, 8).map(iss => (
@@ -127,7 +133,6 @@ export default function BillLobbyingPage({ params }) {
       )}
 
       <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem', alignItems: 'start' }}>
-        {/* Principals list */}
         <div>
           <h2 style={{ fontSize: '1rem', color: 'var(--text)', marginBottom: '0.75rem' }}>
             Principals Filing on This Bill — {fmtCount(principalList.length)} total
@@ -164,12 +169,9 @@ export default function BillLobbyingPage({ params }) {
           </div>
         </div>
 
-        {/* Sidebar: year timeline */}
         <div>
           <div style={{ padding: '1rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '6px', marginBottom: '1.5rem' }}>
-            <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '0.75rem' }}>
-              Activity by Year
-            </div>
+            <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '0.75rem' }}>Activity by Year</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               {Object.entries(byYear).sort(([a], [b]) => Number(a) - Number(b)).map(([yr, d]) => (
                 <div key={yr}>
@@ -185,7 +187,6 @@ export default function BillLobbyingPage({ params }) {
             </div>
           </div>
 
-          {/* All lobbyists */}
           <div style={{ padding: '1rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '6px' }}>
             <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '0.75rem' }}>
               Lobbyists ({fmtCount(lobbyists.length)})
