@@ -200,6 +200,7 @@ body {
   transition: border-color 0.15s, background 0.15s;
 }
 .hub-card:hover { border-color: rgba(100,140,220,0.4); background: rgba(8,8,24,0.6); }
+.source-link:hover { border-color: var(--teal); opacity: 1; }
 .hub-card-title { font-size: 0.95rem; color: var(--text); font-weight: 600; }
 .hub-card-desc  { font-size: 0.78rem; color: var(--text-dim); line-height: 1.5; }
 .hub-card-stat  { font-size: 0.75rem; color: var(--teal); margin-top: auto; padding-top: 0.5rem; }

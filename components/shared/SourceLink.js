@@ -1,5 +1,3 @@
-import Link from 'next/link';
-
 const DOE_URLS = {
   candidate: (id) => `https://dos.elections.myflorida.com/candidates/CanDetail.asp?account=${id}`,
   committee: (id) => `https://dos.elections.myflorida.com/committees/ComDetail.asp?account=${id}`,
@@ -27,12 +25,10 @@ export default function SourceLink({ type, id }) {
         display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
         fontSize: '0.68rem', color: 'var(--teal)',
         textDecoration: 'none', padding: '0.25rem 0.6rem',
-        border: '1px solid var(--teal)', borderRadius: '3px',
-        marginTop: '0.5rem', opacity: 0.85,
-        transition: 'opacity 0.12s',
+        border: '1px solid rgba(77,216,240,0.5)', borderRadius: '3px',
+        marginTop: '0.5rem',
       }}
-      onMouseOver={e => e.currentTarget.style.opacity = 1}
-      onMouseOut={e => e.currentTarget.style.opacity = 0.85}
+      className="source-link"
     >
       <span style={{ fontSize: '0.72rem' }}>&#x2197;</span>
       {label}
