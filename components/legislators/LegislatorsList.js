@@ -20,6 +20,7 @@ const SORT_OPTIONS = [
   { value: 'district',           label: 'District' },
   { value: 'total_raised',       label: 'Most Raised' },
   { value: 'participation_rate', label: 'Participation %' },
+  { value: 'term_limit_year',    label: 'Terms Out' },
 ];
 
 const inputStyle = {
@@ -169,7 +170,7 @@ export default function LegislatorsList() {
         {/* Sort */}
         <select
           value={sortBy}
-          onChange={e => { setSortBy(e.target.value); setSortDir(e.target.value === 'display_name' || e.target.value === 'district' ? 'asc' : 'desc'); }}
+          onChange={e => { setSortBy(e.target.value); setSortDir(e.target.value === 'display_name' || e.target.value === 'district' || e.target.value === 'term_limit_year' ? 'asc' : 'desc'); }}
           style={{ ...inputStyle, cursor: 'pointer' }}
         >
           {SORT_OPTIONS.map(o => (
@@ -187,7 +188,7 @@ export default function LegislatorsList() {
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid var(--border)' }}>
-              {['Name', 'Chamber', 'District', 'Party', 'Leadership', 'Raised', 'Vote Part.'].map(h => (
+              {['Name', 'Chamber', 'District', 'Party', 'Leadership', 'Raised', 'Vote Part.', 'Terms Out'].map(h => (
                 <th key={h} style={{
                   padding: '0.4rem 0.75rem', textAlign: 'left',
                   fontSize: '0.6rem', color: 'var(--text-dim)',
@@ -199,10 +200,10 @@ export default function LegislatorsList() {
           </thead>
           <tbody>
             {loading && (
-              <tr><td colSpan={7} style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-dim)', fontSize: '0.78rem' }}>Loading…</td></tr>
+              <tr><td colSpan={8} style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-dim)', fontSize: '0.78rem' }}>Loading…</td></tr>
             )}
             {!loading && items.length === 0 && (
-              <tr><td colSpan={7} style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-dim)', fontSize: '0.78rem' }}>No legislators found.</td></tr>
+              <tr><td colSpan={8} style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-dim)', fontSize: '0.78rem' }}>No legislators found.</td></tr>
             )}
             {!loading && items.map(leg => {
               const partyColor = PARTY_COLOR[leg.party] || 'var(--text-dim)';
@@ -250,6 +251,18 @@ export default function LegislatorsList() {
                         </div>
                         <span style={{ fontSize: '0.68rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>{partRate}%</span>
                       </div>
+                    ) : <span style={{ color: 'var(--text-dim)', fontSize: '0.7rem' }}>—</span>}
+                  </td>
+                  <td style={{ padding: '0.5rem 0.75rem' }}>
+                    {leg.term_limit_year ? (
+                      <span style={{
+                        fontSize: '0.68rem', fontFamily: 'var(--font-mono)',
+                        color: leg.term_limit_year <= 2026 ? 'var(--orange)' : 'var(--text-dim)',
+                        fontWeight: leg.term_limit_year <= 2026 ? 600 : 400,
+                      }}>
+                        {leg.term_limit_year}
+                        {leg.term_limit_year <= 2026 && <span style={{ fontSize: '0.55rem', marginLeft: '3px', color: 'var(--orange)' }}>↑</span>}
+                      </span>
                     ) : <span style={{ color: 'var(--text-dim)', fontSize: '0.7rem' }}>—</span>}
                   </td>
                 </tr>

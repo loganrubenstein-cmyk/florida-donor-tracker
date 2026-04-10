@@ -375,6 +375,11 @@ export default async function LegislatorPage({ params }) {
                 {leg.leadership_title}
               </span>
             )}
+            {leg.term_limit_year && leg.term_limit_year <= 2026 && (
+              <span style={{ fontSize: '0.62rem', padding: '0.15rem 0.5rem', background: 'rgba(255,176,96,0.06)', border: '1px solid rgba(255,176,96,0.2)', borderRadius: '3px', color: 'var(--orange)', fontFamily: 'var(--font-mono)' }}>
+                terms out {leg.term_limit_year}
+              </span>
+            )}
           </div>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
