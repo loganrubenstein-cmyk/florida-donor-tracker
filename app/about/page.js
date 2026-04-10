@@ -105,7 +105,6 @@ export default function AboutPage() {
             ['/investigations', 'Investigations'],
             ['/network/graph', 'Network Graph'],
             ['/flow', 'Money Flow'],
-            ['/transfers', 'Committee Transfers'],
             ['/party-finance', 'Party Finance'],
             ['/connections', 'Committee Connections'],
             ['/search', 'Global Search'],

@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { fmtMoney, fmtCount } from '../../lib/fmt';
+import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 export const metadata = {
   title: 'Legislators — Florida Donor Tracker',
@@ -55,9 +56,21 @@ export default function LegislatorsPage() {
         Current Florida House and Senate members with floor vote records and campaign finance cross-references.
         Data from LegiScan (voting) and FL Division of Elections (finance).
       </p>
-      <p style={{ fontSize: '0.72rem', color: 'var(--text-dim)', marginBottom: '2rem' }}>
+      <p style={{ fontSize: '0.72rem', color: 'var(--text-dim)', marginBottom: '1rem' }}>
         Not affiliated with the State of Florida. All data from public records.
       </p>
+
+      <div style={{
+        padding: '0.75rem 1rem', marginBottom: '2rem',
+        background: 'rgba(255,176,96,0.08)', border: '1px solid rgba(255,176,96,0.3)',
+        borderRadius: '4px', fontSize: '0.78rem', color: 'var(--text)', lineHeight: 1.6,
+      }}>
+        <strong style={{ color: 'var(--orange)' }}>Data accuracy note:</strong>{' '}
+        Campaign finance cross-references are available for {withFinance} of {legislators.length} legislators
+        ({legislators.length > 0 ? Math.round(withFinance / legislators.length * 100) : 0}%).
+        Voting data includes floor votes only (committee votes not yet available).
+        Coverage spans the 2025–2026 session via LegiScan. We are actively working to improve matching accuracy and vote coverage.
+      </div>
 
       {/* Stats bar */}
       <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap', marginBottom: '2.5rem', padding: '1rem 1.25rem', background: 'var(--surface)', borderRadius: '6px', border: '1px solid var(--border)' }}>
@@ -87,13 +100,19 @@ export default function LegislatorsPage() {
       </h2>
       <LegislatorTable legislators={reps} financeMap={financeMap} />
 
-      <div style={{ marginTop: '2rem', padding: '1rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '4px', fontSize: '0.75rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
-        <strong style={{ color: 'var(--text)' }}>Data notes:</strong> Voting records cover floor votes only (Third Reading / Final Passage).
-        Committee votes excluded. Sessions 2025 Regular and 2026 Regular via LegiScan API.
-        Finance cross-references match by candidate name — approximately 73% of legislators matched (164/224).
-        Participation rate = votes cast ÷ total roll calls in tracked sessions.{' '}
-        <Link href="/methodology" style={{ color: 'var(--teal)' }}>Full methodology →</Link>
-      </div>
+      <DataTrustBlock
+        source="LegiScan API (voting) · FL Division of Elections (finance)"
+        lastUpdated="April 2026"
+        direct={['name', 'party', 'district', 'chamber', 'vote counts']}
+        normalized={['finance totals (matched from candidate records by name)']}
+        inferred={['participation rate = votes cast ÷ total tracked roll calls']}
+        caveats={[
+          `Finance matched for ${withFinance} of ${legislators.length} legislators (~${legislators.length > 0 ? Math.round(withFinance / legislators.length * 100) : 0}%). Remaining show "—" for finance data.`,
+          'Voting covers floor votes only (Third Reading / Final Passage). Committee votes excluded.',
+          'Sessions covered: 2025 Regular, 2026 Regular via LegiScan.',
+          'Active members only — resigned or replaced legislators may be missing.',
+        ]}
+      />
     </main>
   );
 }

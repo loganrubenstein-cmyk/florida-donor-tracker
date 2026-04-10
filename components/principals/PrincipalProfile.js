@@ -1,5 +1,7 @@
 // components/principals/PrincipalProfile.js
 import BackLinks from '@/components/BackLinks';
+import SourceLink from '@/components/shared/SourceLink';
+import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import { slugify } from '@/lib/slugify';
 
 const INDUSTRY_SLUG = {
@@ -120,6 +122,7 @@ export default function PrincipalProfile({ data, compData = null }) {
           {location && <span>{location}</span>}
           {data.naics && <span>NAICS {data.naics}</span>}
         </div>
+        <SourceLink type="principal" />
       </div>
 
       {/* Stats grid */}
@@ -404,13 +407,18 @@ export default function PrincipalProfile({ data, compData = null }) {
         </div>
       </div>
 
-      {/* Attribution */}
-      <div style={{
-        fontSize: '0.62rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)',
-        borderTop: '1px solid var(--border)', paddingTop: '1rem',
-      }}>
-        Data: Florida Legislature Lobbyist Registration · Not affiliated with the State of Florida. All data from public records.
-      </div>
+      <DataTrustBlock
+        source="Florida Legislature Lobbyist Registration"
+        sourceUrl="https://www.floridalobbyist.gov"
+        lastUpdated="January 2026"
+        direct={['entity name', 'NAICS code', 'address', 'registered lobbyists']}
+        normalized={['compensation totals (summed from band midpoints)']}
+        inferred={['donation matches (matched by principal name to contribution records)']}
+        caveats={[
+          'Compensation figures are band midpoints — exact amounts not publicly reported.',
+          'Donation matches are name-based and may include false positives.',
+        ]}
+      />
     </main>
   );
 }

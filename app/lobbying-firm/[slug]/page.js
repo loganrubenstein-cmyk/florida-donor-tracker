@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getDb } from '@/lib/db';
 import { notFound } from 'next/navigation';
+import SourceLink from '@/components/shared/SourceLink';
 
 export const dynamic = 'force-dynamic';
 
@@ -74,6 +75,7 @@ export default async function LobbyingFirmPage({ params }) {
         }}>
           {firm.firm_name}
         </h1>
+        <SourceLink type="firm" />
       </div>
 
       {/* Stats */}
@@ -177,9 +179,17 @@ export default async function LobbyingFirmPage({ params }) {
         </div>
       )}
 
-      <div style={{ fontSize: '0.62rem', color: 'var(--text-dim)', borderTop: '1px solid var(--border)', paddingTop: '1rem' }}>
-        Data: Florida Lobbyist Registration Office · Compensation amounts are range midpoints, not exact figures.
-      </div>
+      <DataTrustBlock
+        source="Florida Lobbyist Registration Office"
+        sourceUrl="https://www.floridalobbyist.gov"
+        lastUpdated="January 2026"
+        direct={['firm name', 'client list', 'registration quarters']}
+        normalized={['compensation totals (summed from band midpoints)']}
+        caveats={[
+          'Compensation amounts are reported in bands — totals here use band midpoints.',
+          'Clients listed are those who retained this firm for FL legislative lobbying only.',
+        ]}
+      />
     </main>
   );
 }

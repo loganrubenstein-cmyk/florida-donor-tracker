@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
+import { FEDERAL_OFFICE_CODES } from '@/lib/officeCodes';
 
 const PAGE_SIZE = 50;
 
@@ -15,12 +16,15 @@ export async function GET(request) {
   const page     = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
 
   const db = getDb();
+  const federalCodes = [...FEDERAL_OFFICE_CODES];
+
   let query = db
     .from('candidates')
     .select(
-      'acct_num, candidate_name, election_year, office_desc, party_code, district, hard_money_total, soft_money_total, total_combined, hard_num_contributions, num_linked_pcs',
+      'acct_num, candidate_name, election_year, office_code, office_desc, party_code, district, hard_money_total, soft_money_total, total_combined, hard_num_contributions, num_linked_pcs',
       { count: 'exact' }
-    );
+    )
+    .not('office_code', 'in', `(${federalCodes.join(',')})`);
 
   if (q.trim())         query = query.ilike('candidate_name', `%${q.trim()}%`);
   if (party !== 'all')  query = query.eq('party_code', party);

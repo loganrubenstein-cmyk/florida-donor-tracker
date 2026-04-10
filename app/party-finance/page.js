@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { fmtMoney, fmtCount } from '../../lib/fmt';
@@ -168,9 +169,20 @@ export default function PartyFinancePage() {
         <strong style={{ color: 'var(--text)' }}>Data notes:</strong> Aggregated from FL Division of Elections candidate finance records.
         Hard money = direct contributions; soft money = PC/PAC transfers and other committee receipts.
         Includes all candidates who filed, not just winners or major-party candidates.
-        Year reflects candidate&apos;s election year, not when money was raised.{' '}
-        <Link href="/methodology" style={{ color: 'var(--teal)' }}>Full methodology →</Link>
+        Year reflects candidate&apos;s election year, not when money was raised.
       </div>
+      <DataTrustBlock
+        source="Florida Division of Elections — Candidate Finance Records"
+        sourceUrl="https://dos.elections.myflorida.com/campaign-finance/"
+        lastUpdated="April 2026"
+        direct={['party affiliation', 'total raised', 'contribution amounts']}
+        normalized={['hard money vs soft money split', 'office-level aggregation']}
+        caveats={[
+          'Federal candidates (U.S. House, Senate, President) excluded — FL state races only.',
+          'Party totals include all filed candidates, not just competitive or major-party races.',
+          'Soft money linked via PC/ECO affiliations — see methodology for confidence levels.',
+        ]}
+      />
     </main>
   );
 }

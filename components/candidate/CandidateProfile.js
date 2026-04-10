@@ -4,6 +4,7 @@ import BackLinks from '@/components/BackLinks';
 import TabbedProfile from '@/components/shared/TabbedProfile';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import NewsBlock from '@/components/shared/NewsBlock';
+import SourceLink from '@/components/shared/SourceLink';
 import { slugify } from '@/lib/slugify';
 import { fmtMoneyCompact, fmtMoney } from '@/lib/fmt';
 
@@ -425,6 +426,7 @@ export default function CandidateProfile({ data, cycles = [] }) {
           Acct #{data.acct_num}
           {data.status_desc ? ` · ${data.status_desc}` : ''}
         </div>
+        <SourceLink type="candidate" id={data.acct_num} />
       </div>
 
       {/* Cycle connector pill bar */}

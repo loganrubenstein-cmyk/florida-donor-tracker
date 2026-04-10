@@ -8,6 +8,7 @@ import CommitteeConnections from './CommitteeConnections';
 import TabbedProfile from '@/components/shared/TabbedProfile';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import NewsBlock from '@/components/shared/NewsBlock';
+import SourceLink from '@/components/shared/SourceLink';
 import dynamic from 'next/dynamic';
 import { fmtMoneyCompact, fmtMoney } from '@/lib/fmt';
 
@@ -435,6 +436,7 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
         <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)' }}>
           Acct #{data.acct_num}
         </div>
+        <SourceLink type="committee" id={data.acct_num} />
       </div>
 
       <TabbedProfile tabs={tabs} defaultTab="overview" />

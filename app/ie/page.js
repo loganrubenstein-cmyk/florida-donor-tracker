@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getDb } from '@/lib/db';
 import { fmtMoney, fmtMoneyCompact, fmtCount } from '../../lib/fmt';
+import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 export const dynamic = 'force-dynamic';
 
@@ -157,6 +158,21 @@ export default async function IEPage() {
             </p>
           </div>
         </div>
+      </div>
+
+      <div style={{ maxWidth: '900px', margin: '2rem auto 0', padding: '0 1.5rem' }}>
+        <DataTrustBlock
+          source="Florida Division of Elections — IE/EC Filings"
+          sourceUrl="https://dos.elections.myflorida.com/independent-expenditures/"
+          lastUpdated="April 2026"
+          direct={['committee name', 'total amount', 'transaction count', 'expenditure type']}
+          normalized={['IE vs EC classification (based on filing type code)']}
+          caveats={[
+            'Covers committee-level totals only — individual transaction detail is not yet loaded.',
+            'Does not include federal IE filings (FEC). Florida state filings only.',
+            'Recipient-side data (which candidates were targeted) coming in a future update.',
+          ]}
+        />
       </div>
     </main>
   );

@@ -2,6 +2,7 @@
 // Server component — rendered at build time from annotations.json
 
 import BackLinks from '@/components/BackLinks';
+import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 function fmt(n) {
   if (!n) return null;
@@ -241,14 +242,18 @@ export default function InvestigationsList({ entities }) {
         {sorted.map(e => <EntityCard key={e.id} entity={e} />)}
       </div>
 
-      {/* Attribution */}
-      <div style={{
-        fontSize: '0.62rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)',
-        borderTop: '1px solid var(--border)', paddingTop: '1rem', marginTop: '2.5rem',
-      }}>
-        Financial data: Florida Division of Elections · Journalism sources credited per article ·
-        Not affiliated with the State of Florida. All data from public records.
-      </div>
+      <DataTrustBlock
+        source="FL Division of Elections (finance) · RSS news feeds (journalism)"
+        lastUpdated="April 2026"
+        direct={['entity names', 'finance totals', 'article headlines and links']}
+        normalized={['entity-to-profile matching (by name/acct_num)']}
+        inferred={['political influence signals (editorial judgment, not automated)']}
+        caveats={[
+          'Entities curated manually — not a comprehensive list of all political actors.',
+          'News links sourced from public RSS feeds; content belongs to original publishers.',
+          'Finance figures may include cross-cycle amounts — see individual profiles for cycle breakdown.',
+        ]}
+      />
     </main>
   );
 }

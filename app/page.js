@@ -1,6 +1,7 @@
 import DonorTable from '@/components/donors/DonorTable'
 import HeroCounter from '@/components/home/HeroCounter'
 import { getDb } from '@/lib/db'
+import { FEDERAL_OFFICE_CODES } from '@/lib/officeCodes'
 
 export const dynamic = 'force-dynamic';
 
@@ -24,17 +25,21 @@ async function getHomeData() {
     { data: topDonorsData },
     { count: candidateCount },
     { count: committeeCount },
+    { count: donorCount },
     { data: donorAgg },
+    { count: contributionCount },
   ] = await Promise.all([
     db.from('donors').select('slug, name, is_corporate, total_combined, total_soft, total_hard, num_contributions').order('total_combined', { ascending: false }).limit(100),
-    db.from('candidates').select('*', { count: 'exact', head: true }),
+    db.from('candidates').select('*', { count: 'exact', head: true }).not('office_code', 'in', `(${[...FEDERAL_OFFICE_CODES].join(',')})`),
     db.from('committees').select('*', { count: 'exact', head: true }),
+    db.from('donors').select('*', { count: 'exact', head: true }),
     db.from('donors').select('total_combined.sum()').single(),
+    db.from('contributions').select('*', { count: 'exact', head: true }),
   ]);
 
-  const totalDonors = 336478; // from last pipeline run — update quarterly
-  const totalSpending = 3894316430; // from meta.json grand_totals
-  const totalContributions = 10898659; // contributions table count
+  const totalSpending = donorAgg?.sum ?? 3894316430;
+  const totalDonors = donorCount ?? 336478;
+  const totalContributions = contributionCount ?? 10898659;
 
   return {
     topDonors: topDonorsData || [],
@@ -79,17 +84,22 @@ export default async function Home() {
           Florida · 1996–2026 · Public Record
         </div>
 
-        <h1 style={{
-          fontFamily: 'var(--font-serif)',
-          fontSize: 'clamp(2rem, 5vw, 3.2rem)',
-          lineHeight: 1.05,
-          color: '#fff',
-          marginBottom: '1.5rem',
-          fontWeight: 400,
-        }}>
-          <HeroCounter total={meta.grand_totals?.total_political_spending_tracked ?? meta.campaign_finance?.estimated_total_contributions ?? 0} />
-          <br />raised in Florida<br />politics.
-        </h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', marginBottom: '1.5rem' }}>
+          <h1 style={{
+            fontFamily: 'var(--font-serif)',
+            fontSize: 'clamp(2rem, 5vw, 3.2rem)',
+            lineHeight: 1.05,
+            color: '#fff',
+            fontWeight: 400,
+            flex: 1,
+          }}>
+            <HeroCounter total={meta.grand_totals?.total_political_spending_tracked ?? meta.campaign_finance?.estimated_total_contributions ?? 0} />
+            <br />raised in Florida<br />politics.
+          </h1>
+          <svg className="hide-mobile" viewBox="0 0 200 260" style={{ width: '120px', flexShrink: 0, opacity: 0.8 }} fill="none" stroke="var(--orange)" strokeWidth="2.5" strokeLinejoin="round">
+            <path d="M68,4 L120,4 L130,10 L140,8 L155,15 L162,12 L170,18 L172,28 L168,35 L170,42 L175,48 L178,58 L174,65 L170,68 L165,75 L162,85 L158,90 L155,100 L150,108 L148,115 L145,122 L140,128 L138,135 L135,140 L130,148 L125,155 L120,162 L115,168 L110,175 L108,180 L105,185 L100,190 L95,195 L90,200 L88,210 L85,218 L82,225 L78,232 L75,238 L70,242 L65,248 L60,252 L55,255 L50,252 L48,245 L52,240 L55,235 L50,230 L45,228 L38,222 L32,218 L28,212 L25,205 L30,198 L35,192 L38,185 L35,178 L30,172 L28,165 L30,158 L35,150 L38,142 L42,135 L45,128 L48,120 L50,112 L52,105 L48,98 L45,90 L42,82 L40,75 L38,68 L36,60 L38,52 L42,45 L45,38 L48,30 L52,22 L55,15 L60,8 L68,4Z" />
+          </svg>
+        </div>
 
         <p style={{
           fontSize: '0.7rem',
@@ -234,7 +244,7 @@ export default async function Home() {
               <CardLink href="/cycles" color="var(--green)" accent="rgba(128,255,160,0.15)" title="→ election cycles" desc="10 cycles 2008–2026 — totals, top raisers, party and office splits." />
               <CardLink href="/investigations" color="var(--orange)" accent="rgba(255,176,96,0.25)" title="→ investigations" desc="11 entities with documented political influence, linked to journalism." />
               <CardLink href="/legislators" color="var(--blue)" accent="rgba(160,192,255,0.12)" title="→ legislators" desc="224 FL House/Senate members — voting records + campaign finance." />
-              <CardLink href="/elections" color="var(--teal)" accent="rgba(77,216,240,0.12)" title="→ elections" desc="Results 2012–2024 with cost-per-vote for finance-matched candidates." />
+              <CardLink href="/elections" color="var(--text-dim)" accent="rgba(100,140,220,0.1)" title="→ elections (rebuilding)" desc="Election results page is being rebuilt for improved accuracy." />
               <CardLink href="/party-finance" color="var(--teal)" accent="rgba(77,216,240,0.1)" title="→ party finance" desc="Republican vs Democrat fundraising trends by year and office." />
             </div>
           </div>
@@ -247,7 +257,6 @@ export default async function Home() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <CardLink href="/network/graph" color="var(--teal)" accent="rgba(77,216,240,0.2)" title="→ network graph" desc="Visualize the full donor-committee network. Trace money flows across thousands of nodes." />
               <CardLink href="/flow" color="var(--teal)" accent="rgba(77,216,240,0.15)" title="→ money flow" desc="Sankey diagram of the 500 largest donor-to-committee flows." />
-              <CardLink href="/transfers" color="var(--teal)" accent="rgba(77,216,240,0.1)" title="→ committee transfers" desc="$147M in committee-to-committee money flows — how PC networks funnel funds." />
               <CardLink href="/ie" color="var(--orange)" accent="rgba(255,176,96,0.15)" title="→ independent expenditures" desc="$70.9M in IE/EC spending — committees advocating for and against candidates." />
               <CardLink href="/connections" color="var(--orange)" accent="rgba(255,176,96,0.12)" title="→ committee connections" desc="56K+ committee pairs sharing treasurers, addresses, donors, or money flows." />
               <CardLink href="/search" color="var(--orange)" accent="rgba(255,176,96,0.35)" title="→ global search" desc="Search all 20K+ entities — donors, committees, candidates, lobbyists." highlight />

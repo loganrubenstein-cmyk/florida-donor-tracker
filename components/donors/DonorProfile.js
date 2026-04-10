@@ -4,6 +4,7 @@ import BackLinks from '@/components/BackLinks';
 import TabbedProfile from '@/components/shared/TabbedProfile';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import NewsBlock from '@/components/shared/NewsBlock';
+import SourceLink from '@/components/shared/SourceLink';
 import { slugify } from '@/lib/slugify';
 import { fmtMoneyCompact, fmtMoney, fmtCount } from '@/lib/fmt';
 
@@ -374,6 +375,7 @@ export default function DonorProfile({ data, annotations = {} }) {
           {data.top_occupation && <span>{data.top_occupation}</span>}
           <span>{fmtCount(data.num_contributions)} contributions recorded</span>
         </div>
+        <SourceLink type="donor" />
       </div>
 
       <TabbedProfile tabs={tabs} defaultTab="overview" />

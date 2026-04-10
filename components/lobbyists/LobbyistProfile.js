@@ -1,5 +1,7 @@
 // components/lobbyists/LobbyistProfile.js
 import BackLinks from '@/components/BackLinks';
+import SourceLink from '@/components/shared/SourceLink';
+import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import { slugify } from '@/lib/slugify';
 
 function fmt(n) {
@@ -98,6 +100,7 @@ export default function LobbyistProfile({ data }) {
           {location && <span>{location}</span>}
           {data.phone && <span>{data.phone}</span>}
         </div>
+        <SourceLink type="lobbyist" id={data.lobbyist_id} />
       </div>
 
       {/* Stats grid */}
@@ -233,13 +236,19 @@ export default function LobbyistProfile({ data }) {
         </div>
       </div>
 
-      {/* Attribution */}
-      <div style={{
-        fontSize: '0.62rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)',
-        borderTop: '1px solid var(--border)', paddingTop: '1rem',
-      }}>
-        Data: Florida Legislature Lobbyist Registration · Not affiliated with the State of Florida. All data from public records.
-      </div>
+      <DataTrustBlock
+        source="Florida Legislature Lobbyist Registration"
+        sourceUrl="https://www.floridalobbyist.gov"
+        lastUpdated="January 2026"
+        direct={['name', 'firm', 'phone', 'address', 'registration status']}
+        normalized={['principal names', 'compensation amounts']}
+        inferred={['donation influence (matched by name to contribution records)']}
+        caveats={[
+          'Compensation figures are reported in bands (e.g. "$50K–$100K"), not exact amounts.',
+          'Donation matches are approximate — same name does not guarantee same person.',
+          'Active registrations only; historical filings may be incomplete.',
+        ]}
+      />
     </main>
   );
 }
