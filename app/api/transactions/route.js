@@ -76,7 +76,7 @@ export async function GET(request) {
   ]);
   const safeSort = ALLOWED_SORTS.has(sort) ? sort : 'contribution_date';
   const ascending = sort_dir === 'asc';
-  query = query.order(safeSort, { ascending });
+  query = query.order(safeSort, { ascending, nullsFirst: false });
 
   // ── Pagination ───────────────────────────────────────────────────────────────
   const offset = (page - 1) * page_size;
