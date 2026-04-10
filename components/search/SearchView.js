@@ -45,8 +45,15 @@ export default function SearchView() {
   const [donorIndex,   setDonorIndex]   = useState(null);   // lazy: ~7MB
   const [donorsLoaded, setDonorsLoaded] = useState(false);
   const [query,        setQuery]        = useState(initQ);
+  const [debouncedQ,   setDebouncedQ]   = useState(initQ);
   const [typeFilter,   setTypeFilter]   = useState('all');
   const inputRef = useRef(null);
+
+  // Debounce query so the 64K+ entry index isn't filtered on every keystroke
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedQ(query), 180);
+    return () => clearTimeout(t);
+  }, [query]);
 
   // Load meta index first (fast)
   useEffect(() => {
@@ -76,8 +83,8 @@ export default function SearchView() {
   }, [metaIndex, donorIndex]);
 
   const results = useMemo(() => {
-    if (!index || !query.trim()) return [];
-    const tokens = query.trim().toUpperCase().split(/\s+/).filter(Boolean);
+    if (!index || !debouncedQ.trim()) return [];
+    const tokens = debouncedQ.trim().toUpperCase().split(/\s+/).filter(Boolean);
     const q      = tokens.join(' ');
     const filtered = index.filter(e => {
       if (typeFilter !== 'all' && e.t !== typeFilter) return false;
@@ -93,7 +100,7 @@ export default function SearchView() {
       return aExact - bExact;
     });
     return filtered.slice(0, 200);
-  }, [index, query, typeFilter]);
+  }, [index, debouncedQ, typeFilter]);
 
   const inputStyle = {
     background: '#0d0d22', border: '1px solid var(--border)',

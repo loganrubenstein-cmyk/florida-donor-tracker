@@ -330,7 +330,7 @@ export default function FlowClient({ flows, flowsByCycle = null, donorIndustries
               {['all', ...cycles].map(c => {
                 const active = selectedCycle === c;
                 return (
-                  <button key={c} onClick={() => { setSelectedCycle(c); setSearch(''); setIndustryFilter('all'); }} style={{
+                  <button key={c} onClick={() => { setSelectedCycle(c); setSearch(''); setIndustryFilter('all'); setPartyFilter('all'); }} style={{
                     ...btnBase,
                     background: active ? 'rgba(77,216,240,0.08)' : 'transparent',
                     color:      active ? 'var(--teal)' : 'var(--text-dim)',
@@ -338,7 +338,7 @@ export default function FlowClient({ flows, flowsByCycle = null, donorIndustries
                     padding: '0.15rem 0.5rem',
                     fontSize: '0.65rem',
                   }}>
-                    {c === 'all' ? 'All Time' : c}
+                    {c === 'all' ? 'All Time' : c === '2026' ? '2026 ●' : c}
                   </button>
                 );
               })}
