@@ -220,6 +220,10 @@ export default function CandidateProfile({ data, cycles = [] }) {
       {pcs.length > 0 ? (
         <>
           <SectionLabel>Linked Political Committees (Soft Money)</SectionLabel>
+          <p style={{ fontSize: '0.68rem', color: 'rgba(90,106,136,0.75)', lineHeight: 1.5, marginBottom: '0.75rem' }}>
+            Committees linked by name similarity to this candidate (chair, treasurer, or solicitation match).
+            Links labeled <span style={{ color: 'var(--orange)', fontFamily: 'var(--font-mono)', fontSize: '0.62rem' }}>Possible</span> are name-matched only — not independently verified.
+          </p>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid var(--border)' }}>

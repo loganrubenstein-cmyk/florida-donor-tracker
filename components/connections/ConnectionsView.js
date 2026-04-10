@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
 import BackLinks from '@/components/BackLinks';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
@@ -139,13 +140,16 @@ function ConnectionRow({ row }) {
 }
 
 export default function ConnectionsView() {
-  const [results, setResults] = useState({ data: [], total: 0, pages: 0 });
-  const [loading, setLoading] = useState(true);
-  const [search,  setSearch]  = useState('');
-  const [debouncedQ, setDebouncedQ] = useState('');
-  const [filter,  setFilter]  = useState('all');
-  const [sort,    setSort]    = useState('connection_score');
-  const [page,    setPage]    = useState(1);
+  const searchParams = useSearchParams();
+  const committeeParam = searchParams?.get('committee') || '';
+
+  const [results,      setResults]      = useState({ data: [], total: 0, pages: 0 });
+  const [loading,      setLoading]      = useState(true);
+  const [search,       setSearch]       = useState('');
+  const [debouncedQ,   setDebouncedQ]   = useState('');
+  const [filter,       setFilter]       = useState('all');
+  const [sort,         setSort]         = useState('connection_score');
+  const [page,         setPage]         = useState(1);
   const abortRef = useRef(null);
 
   useEffect(() => {
@@ -153,14 +157,15 @@ export default function ConnectionsView() {
     return () => clearTimeout(t);
   }, [search]);
 
-  useEffect(() => { setPage(1); }, [debouncedQ, filter, sort]);
+  useEffect(() => { setPage(1); }, [debouncedQ, filter, sort, committeeParam]);
 
-  const load = useCallback(async (q, type, sortBy, pg) => {
+  const load = useCallback(async (q, type, sortBy, pg, committee) => {
     if (abortRef.current) abortRef.current.abort();
     abortRef.current = new AbortController();
     setLoading(true);
     try {
       const params = new URLSearchParams({ q, type, sort: sortBy, page: pg });
+      if (committee) params.set('committee', committee);
       const res = await fetch(`/api/connections?${params}`, { signal: abortRef.current.signal });
       const json = await res.json();
       setResults(json);
@@ -172,8 +177,8 @@ export default function ConnectionsView() {
   }, []);
 
   useEffect(() => {
-    load(debouncedQ, filter, sort, page);
-  }, [debouncedQ, filter, sort, page, load]);
+    load(debouncedQ, filter, sort, page, committeeParam);
+  }, [debouncedQ, filter, sort, page, committeeParam, load]);
 
   const inputStyle = {
     background: '#0d0d22', border: '1px solid var(--border)',
@@ -220,6 +225,22 @@ export default function ConnectionsView() {
         </p>
       </div>
 
+      {/* Committee filter banner */}
+      {committeeParam && (
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: '0.75rem',
+          padding: '0.5rem 0.85rem', marginBottom: '0.75rem',
+          background: 'rgba(77,216,240,0.05)', border: '1px solid rgba(77,216,240,0.25)',
+          borderRadius: '3px', fontSize: '0.68rem', fontFamily: 'var(--font-mono)',
+        }}>
+          <span style={{ color: 'var(--text-dim)' }}>Filtered to committee</span>
+          <span style={{ color: 'var(--teal)' }}>#{committeeParam}</span>
+          <a href="/connections" style={{ marginLeft: 'auto', color: 'var(--text-dim)', textDecoration: 'none' }}>
+            ✕ clear
+          </a>
+        </div>
+      )}
+
       {/* Controls */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.75rem', alignItems: 'center' }}>
         <input
@@ -227,7 +248,8 @@ export default function ConnectionsView() {
           placeholder="Search committee name…"
           value={search}
           onChange={e => setSearch(e.target.value)}
-          style={{ ...inputStyle, minWidth: '200px', flexGrow: 1 }}
+          disabled={!!committeeParam}
+          style={{ ...inputStyle, minWidth: '200px', flexGrow: 1, opacity: committeeParam ? 0.4 : 1 }}
         />
       </div>
 
