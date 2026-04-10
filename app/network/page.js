@@ -24,13 +24,14 @@ export default function NetworkHub() {
       <div className="hub-grid">
         <Link href="/network/graph" className="hub-card">
           <div className="hub-card-title">Network Graph</div>
-          <div className="hub-card-desc">Interactive force-directed graph showing donor-committee-candidate relationships. Search for any entity to center the graph.</div>
-          <div className="hub-card-stat">Force-directed · interactive</div>
+          <div className="hub-card-desc">Interactive force-directed graph of donor-committee relationships. Filter by industry to map how healthcare, real estate, legal, and other sectors fund Florida politics.</div>
+          <div className="hub-card-stat">12,110 nodes · industry filter</div>
         </Link>
 
         <Link href="/flow" className="hub-card">
           <div className="hub-card-title">Money Flow</div>
-          <div className="hub-card-desc">Sankey diagram of aggregate money movement between donor types and recipient committees and candidates.</div>
+          <div className="hub-card-desc">Sankey diagram of the largest donor-to-committee flows. Filter by election cycle (2008–2026), industry, or party to track how money moved in each cycle.</div>
+          <div className="hub-card-stat">10 election cycles · per-cycle view</div>
         </Link>
 
         <Link href="/connections" className="hub-card">

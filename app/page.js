@@ -272,8 +272,8 @@ export default async function Home() {
               How money moved
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <CardLink href="/network/graph" color="var(--teal)" accent="rgba(77,216,240,0.2)" title="→ network graph" desc="Visualize the full donor-committee network. Trace money flows across thousands of nodes." />
-              <CardLink href="/flow" color="var(--teal)" accent="rgba(77,216,240,0.15)" title="→ money flow" desc="Sankey diagram of the 500 largest donor-to-committee flows." />
+              <CardLink href="/network/graph" color="var(--teal)" accent="rgba(77,216,240,0.2)" title="→ network graph" desc="Visualize the full donor-committee network. Filter by industry to map special interest influence." />
+              <CardLink href="/flow" color="var(--teal)" accent="rgba(77,216,240,0.15)" title="→ money flow" desc="Sankey diagram of the largest donor-to-committee flows. Filter by election cycle, industry, or party." />
               <CardLink href="/ie" color="var(--orange)" accent="rgba(255,176,96,0.15)" title="→ independent expenditures" desc="$70.9M in IE/EC spending — committees advocating for and against candidates." />
               <CardLink href="/connections" color="var(--orange)" accent="rgba(255,176,96,0.12)" title="→ committee connections" desc="56K+ committee pairs sharing treasurers, addresses, donors, or money flows." />
               <CardLink href="/search" color="var(--orange)" accent="rgba(255,176,96,0.35)" title="→ global search" desc="Search all 20K+ entities — donors, committees, candidates, lobbyists." highlight />
