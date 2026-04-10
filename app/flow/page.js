@@ -17,8 +17,18 @@ export default async function FlowPage() {
     readFileSync(join(process.cwd(), 'public', 'data', 'donor_flows.json'), 'utf-8')
   );
 
+  const flowsByCycle = JSON.parse(
+    readFileSync(join(process.cwd(), 'public', 'data', 'donor_flows_by_year.json'), 'utf-8')
+  );
+
   // Fetch donor industries from Supabase for the donors in this flow set
-  const donorNames = [...new Set(flows.map(f => f.donor))];
+  // Use all-time flows + first cycle to cover the full donor name universe
+  const allDonors = new Set([
+    ...flows.map(f => f.donor),
+    ...Object.values(flowsByCycle.by_cycle).flatMap(arr => arr.map(f => f.donor)),
+  ]);
+  const donorNames = [...allDonors];
+
   const db = getDb();
   const { data: donorRows } = await db
     .from('donors')
@@ -30,5 +40,5 @@ export default async function FlowPage() {
     if (d.industry) donorIndustries[d.name] = d.industry;
   });
 
-  return <FlowClient flows={flows} donorIndustries={donorIndustries} />;
+  return <FlowClient flows={flows} flowsByCycle={flowsByCycle} donorIndustries={donorIndustries} />;
 }

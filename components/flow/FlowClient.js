@@ -115,7 +115,7 @@ const btnBase = {
   transition: 'all 0.1s', background: 'transparent',
 };
 
-export default function FlowClient({ flows, donorIndustries = {} }) {
+export default function FlowClient({ flows, flowsByCycle = null, donorIndustries = {} }) {
   const [topN,            setTopN]          = useState(30);
   const [sortBy,          setSortBy]        = useState('amount');
   const [minAmount,       setMinAmount]     = useState(0);
@@ -123,16 +123,25 @@ export default function FlowClient({ flows, donorIndustries = {} }) {
   const [partyFilter,     setPartyFilter]   = useState('all');
   const [industryFilter,  setIndustryFilter] = useState('all');
   const [focusedEntity,   setFocusedEntity] = useState(null); // { name, info }
+  const [selectedCycle,   setSelectedCycle] = useState('all');
+
+  // Active flows: per-cycle selection or all-time
+  const activeFlows = useMemo(() => {
+    if (selectedCycle === 'all' || !flowsByCycle) return flows;
+    return flowsByCycle.by_cycle[selectedCycle] || [];
+  }, [flows, flowsByCycle, selectedCycle]);
+
+  const cycles = flowsByCycle?.cycles || [];
 
   // Build sorted industry list from donorIndustries (industries present in the flow set)
   const industries = useMemo(() => {
     const counts = {};
-    flows.forEach(f => {
+    activeFlows.forEach(f => {
       const ind = donorIndustries[f.donor];
       if (ind && ind !== 'Unclassified') counts[ind] = (counts[ind] || 0) + 1;
     });
     return Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([ind]) => ind);
-  }, [flows, donorIndustries]);
+  }, [activeFlows, donorIndustries]);
 
   const handleNodeFocus = (name, info) => {
     setFocusedEntity({ name, info });
@@ -149,9 +158,9 @@ export default function FlowClient({ flows, donorIndustries = {} }) {
     if (focusedEntity) {
       // Show ALL flows involving this entity (ignore topN, minAmount, partyFilter, search)
       const n = focusedEntity.name;
-      filtered = flows.filter(f => f.donor === n || f.committee === n);
+      filtered = activeFlows.filter(f => f.donor === n || f.committee === n);
     } else {
-      filtered = flows.filter(f => {
+      filtered = activeFlows.filter(f => {
         if (f.total_amount < minAmount) return false;
         if (q && !f.donor.toLowerCase().includes(q) && !f.committee.toLowerCase().includes(q)) return false;
         if (partyFilter !== 'all') {
@@ -197,7 +206,7 @@ export default function FlowClient({ flows, donorIndustries = {} }) {
     const visibleCount = filtered.length;
 
     return { sankeyData: { nodes, links }, typeMap, totalFlow, visibleCount };
-  }, [flows, topN, sortBy, minAmount, search, partyFilter, industryFilter, donorIndustries, focusedEntity]);
+  }, [activeFlows, topN, sortBy, minAmount, search, partyFilter, industryFilter, donorIndustries, focusedEntity]);
 
   const nodeCount   = sankeyData.nodes.length;
   const chartHeight = Math.max(520, nodeCount * 24);
@@ -223,12 +232,12 @@ export default function FlowClient({ flows, donorIndustries = {} }) {
   const focusStats = useMemo(() => {
     if (!focusedEntity) return null;
     const n = focusedEntity.name;
-    const asCommittee = flows.filter(f => f.committee === n);
-    const asDonor     = flows.filter(f => f.donor === n);
+    const asCommittee = activeFlows.filter(f => f.committee === n);
+    const asDonor     = activeFlows.filter(f => f.donor === n);
     const totalIn     = asCommittee.reduce((s, f) => s + f.total_amount, 0);
     const totalOut    = asDonor.reduce((s, f) => s + f.total_amount, 0);
     return { asCommittee, asDonor, totalIn, totalOut };
-  }, [focusedEntity, flows]);
+  }, [focusedEntity, activeFlows]);
 
   return (
     <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
@@ -258,7 +267,12 @@ export default function FlowClient({ flows, donorIndustries = {} }) {
               : `Showing ${Math.min(topN, visibleCount)} of ${visibleCount} matching flows · ${sankeyData.nodes.length} entities`}
           </span>
           <span style={{ color: 'var(--orange)', fontWeight: 700 }}>{fmt(totalFlow)} shown</span>
-          {!focusedEntity && <span>{flows.length} total flows in dataset</span>}
+          {!focusedEntity && <span>{activeFlows.length} total flows in dataset</span>}
+          {selectedCycle !== 'all' && (
+            <span style={{ color: 'var(--teal)', fontFamily: 'var(--font-mono)' }}>
+              {selectedCycle} election cycle
+            </span>
+          )}
         </div>
       </div>
 
@@ -307,6 +321,30 @@ export default function FlowClient({ flows, donorIndustries = {} }) {
       {/* Controls — only shown when not in focus mode */}
       {!focusedEntity && (
         <>
+          {/* Cycle selector */}
+          {cycles.length > 0 && (
+            <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap', marginBottom: '0.75rem', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', alignSelf: 'center', marginRight: '0.2rem' }}>
+                Cycle
+              </span>
+              {['all', ...cycles].map(c => {
+                const active = selectedCycle === c;
+                return (
+                  <button key={c} onClick={() => { setSelectedCycle(c); setSearch(''); setIndustryFilter('all'); }} style={{
+                    ...btnBase,
+                    background: active ? 'rgba(77,216,240,0.08)' : 'transparent',
+                    color:      active ? 'var(--teal)' : 'var(--text-dim)',
+                    border:     `1px solid ${active ? 'var(--teal)' : 'rgba(100,140,220,0.25)'}`,
+                    padding: '0.15rem 0.5rem',
+                    fontSize: '0.65rem',
+                  }}>
+                    {c === 'all' ? 'All Time' : c}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.6rem', alignItems: 'center' }}>
             <input
               type="text"
