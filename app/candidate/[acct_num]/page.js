@@ -1,7 +1,21 @@
+import { readFileSync } from 'fs';
+import { join } from 'path';
 import { loadCandidate, loadCandidateCycles, getPoliticianBySlug } from '@/lib/loadCandidate';
 import { slugify } from '@/lib/slugify';
 import CandidateProfile from '@/components/candidate/CandidateProfile';
 import { notFound } from 'next/navigation';
+
+let _electionLookup = null;
+function getElectionLookup() {
+  if (!_electionLookup) {
+    try {
+      _electionLookup = JSON.parse(
+        readFileSync(join(process.cwd(), 'public', 'data', 'elections', 'results_by_acct.json'), 'utf-8')
+      );
+    } catch { _electionLookup = {}; }
+  }
+  return _electionLookup;
+}
 
 // Server-rendered on demand — no static file dependency
 export const dynamic = 'force-dynamic';
@@ -34,6 +48,7 @@ export default async function CandidatePage({ params }) {
     notFound();
   }
   const cycles = loadCandidateCycles(acct_num);
+  const electionResults = getElectionLookup()[String(acct_num)] || [];
 
   // If a canonical politician page exists, surface a banner link
   const polSlug = slugify(data.candidate_name || '');
@@ -54,7 +69,7 @@ export default async function CandidatePage({ params }) {
           </a>
         </div>
       )}
-      <CandidateProfile data={data} cycles={cycles} />
+      <CandidateProfile data={data} cycles={cycles} electionResults={electionResults} />
     </>
   );
 }

@@ -16,12 +16,25 @@ const PARTY_COLOR = { REP: 'var(--republican)', DEM: 'var(--democrat)' };
 const TYPE_COLOR  = { corporate: '#94a3b8', individual: 'var(--blue)' };
 
 const LINK_TYPE_LABEL = {
+  SOLICITATION_CONTROL:              'Solicitation',
+  STATEMENT_OF_ORG_SUPPORT:          'Statement of Org',
+  DIRECT_CONTRIBUTION_TO_CANDIDATE:  'Direct Contribution',
+  OTHER_DISTRIBUTION_TO_CANDIDATE:   'Distribution',
+  IEC_FOR_OR_AGAINST:                'Independent Expenditure',
+  ECC_FOR_OR_AGAINST:                'Electioneering Comm.',
+  ADMIN_OVERLAP_ONLY:                'Administrative',
+  // Legacy labels (candidate_pc_links table fallback)
   chair:              'Chair',
   treasurer:          'Treasurer',
   solicitation:       'Solicitation',
   solicitation_stub:  'Solicitation',
   historical:         'Historical',
   historical_stub:    'Historical',
+  direct_contribution: 'Direct Contribution',
+  iec:                'Independent Expenditure',
+  ecc:                'Electioneering Comm.',
+  statement_of_org:   'Statement of Org',
+  distribution:       'Distribution',
 };
 
 function fmt(n) {
@@ -76,7 +89,66 @@ function VendorBar({ vendor, maxAmount }) {
   );
 }
 
-export default function CandidateProfile({ data, cycles = [] }) {
+const PARTY_LABEL = { REP: 'Republican', DEM: 'Democrat', NPA: 'Independent' };
+const ETYPE_LABEL = { general: 'General', primary: 'Primary' };
+
+function ElectionContextCard({ results }) {
+  if (!results?.length) return null;
+  // Show up to 4 most recent
+  const rows = results.slice(0, 4);
+  return (
+    <div style={{ marginBottom: '2rem' }}>
+      <SectionLabel>Election Results</SectionLabel>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        {rows.map((r, i) => {
+          const won = r.winner;
+          const cpv = r.cost_per_vote;
+          const votes = r.total_votes;
+          return (
+            <div key={i} style={{
+              display: 'flex', alignItems: 'center', gap: '0.75rem',
+              padding: '0.55rem 0.85rem',
+              border: `1px solid ${won ? 'rgba(128,255,160,0.25)' : 'var(--border)'}`,
+              borderRadius: '4px',
+              background: won ? 'rgba(128,255,160,0.04)' : 'transparent',
+            }}>
+              <div style={{ fontSize: '0.68rem', fontFamily: 'var(--font-mono)', color: won ? 'var(--green)' : 'var(--text-dim)', fontWeight: 700, minWidth: '36px' }}>
+                {r.year}
+              </div>
+              <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', minWidth: '55px' }}>
+                {ETYPE_LABEL[r.election_type] || r.election_type}
+              </div>
+              <div style={{ fontSize: '0.7rem', color: 'var(--text)', flex: 1, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                {won && <span style={{ color: 'var(--green)', marginRight: '5px', fontSize: '0.65rem' }}>✓</span>}
+                {r.contest_name}
+              </div>
+              {votes > 0 && (
+                <div style={{ fontSize: '0.62rem', fontFamily: 'var(--font-mono)', color: 'var(--text-dim)', whiteSpace: 'nowrap' }}>
+                  {votes >= 1000 ? `${(votes/1000).toFixed(0)}K` : votes} votes
+                </div>
+              )}
+              {cpv > 0 && (
+                <div style={{ fontSize: '0.62rem', fontFamily: 'var(--font-mono)', color: 'var(--teal)', whiteSpace: 'nowrap' }}>
+                  ${cpv.toFixed(2)}/vote
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+      {results.length > 4 && (
+        <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', marginTop: '0.4rem' }}>
+          +{results.length - 4} more election cycles
+        </div>
+      )}
+      <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', marginTop: '0.4rem' }}>
+        Source: FL Division of Elections results · Finance-matched only · <a href="/elections" style={{ color: 'var(--teal)', textDecoration: 'none' }}>→ elections page</a>
+      </div>
+    </div>
+  );
+}
+
+export default function CandidateProfile({ data, cycles = [], electionResults = [] }) {
   const hm     = data.hard_money || {};
   const donors = hm.top_donors  || [];
   const pcs        = data.linked_pcs || [];
@@ -119,6 +191,8 @@ export default function CandidateProfile({ data, cycles = [] }) {
           </div>
         ))}
       </div>
+
+      <ElectionContextCard results={electionResults} />
 
       {/* Hard money breakdown */}
       {hm.total > 0 && (
@@ -221,8 +295,8 @@ export default function CandidateProfile({ data, cycles = [] }) {
         <>
           <SectionLabel>Linked Political Committees (Soft Money)</SectionLabel>
           <p style={{ fontSize: '0.68rem', color: 'rgba(90,106,136,0.75)', lineHeight: 1.5, marginBottom: '0.75rem' }}>
-            Committees linked by name similarity to this candidate (chair, treasurer, or solicitation match).
-            Links labeled <span style={{ color: 'var(--orange)', fontFamily: 'var(--font-mono)', fontSize: '0.62rem' }}>Possible</span> are name-matched only — not independently verified.
+            Links are based on FL Division of Elections filings — solicitation statements (DS-DE 102), direct contributions, and independent expenditures.
+            Administrative overlaps (shared treasurer, address, phone) alone are not shown. Hover a confidence badge to see the source evidence.
           </p>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
             <thead>
@@ -239,7 +313,7 @@ export default function CandidateProfile({ data, cycles = [] }) {
             </thead>
             <tbody>
               {pcs.map((pc, i) => {
-                const isStub = pc.link_type === 'solicitation_stub' || pc.link_type === 'historical_stub';
+                const isStub = !pc.pc_acct || pc.link_type === 'solicitation_stub' || pc.link_type === 'historical_stub';
                 const isHistorical = pc.link_type === 'historical' || pc.link_type === 'historical_stub';
                 const isStrong = pc.confidence_tier === 'strong';
                 const tierColor  = isStrong ? 'var(--teal)' : 'var(--orange)';
