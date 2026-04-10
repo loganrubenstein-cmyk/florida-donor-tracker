@@ -13,6 +13,7 @@ import dynamic from 'next/dynamic';
 import { fmtMoneyCompact, fmtMoney } from '@/lib/fmt';
 
 const TransactionExplorer = dynamic(() => import('@/components/explorer/TransactionExplorer'), { ssr: false });
+const ContributionChart   = dynamic(() => import('./ContributionChart'), { ssr: false });
 
 function fmtDateLocal(s) {
   if (!s || s === 'None' || s === 'null') return '—';
@@ -30,7 +31,7 @@ function findCommitteeAnnotation(annotations, acct_num, committee_name) {
   return Object.values(annotations).find(e => norm(e.canonical_name) === normName) || null;
 }
 
-export default function CommitteeProfile({ data, annotations = {}, linkedCandidates = [], expenditures = null }) {
+export default function CommitteeProfile({ data, annotations = {}, linkedCandidates = [], expenditures = null, byYear = [] }) {
   const annotation = findCommitteeAnnotation(annotations, data.acct_num, data.committee_name);
   const articles = annotation?.articles || [];
   const party = getPartyFromName(data.committee_name, data.acct_num);
@@ -71,6 +72,16 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
           </div>
         ))}
       </div>
+
+      {/* Contributions over time chart */}
+      {byYear.length > 1 && (
+        <div style={{ marginBottom: '2rem' }}>
+          <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.5rem' }}>
+            Contributions Over Time
+          </div>
+          <ContributionChart data={byYear} />
+        </div>
+      )}
 
       {/* Committee meta + connection badges */}
       {(data.committee_meta || (data.shared_with && Object.values(data.shared_with).some(v => v > 0))) && (

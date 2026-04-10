@@ -53,5 +53,6 @@ export default async function CommitteePage({ params }) {
     annotations={annotations}
     linkedCandidates={linkedCandidates}
     expenditures={data.expenditures}
+    byYear={data.by_year || []}
   />;
 }
