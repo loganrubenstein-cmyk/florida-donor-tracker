@@ -5,12 +5,11 @@ export const dynamic = 'force-dynamic';
 
 async function getCounts() {
   const db = getDb();
-  const [{ count: lobbyists }, { count: principals }, { count: solicitations }] = await Promise.all([
+  const [{ count: lobbyists }, { count: principals }] = await Promise.all([
     db.from('lobbyists').select('*', { count: 'exact', head: true }),
     db.from('principals').select('*', { count: 'exact', head: true }),
-    db.from('solicitations').select('*', { count: 'exact', head: true }),
   ]);
-  return { lobbyists: lobbyists ?? 0, principals: principals ?? 0, solicitations: solicitations ?? 0 };
+  return { lobbyists: lobbyists ?? 0, principals: principals ?? 0, solicitations: 1060 };
 }
 
 export const metadata = {

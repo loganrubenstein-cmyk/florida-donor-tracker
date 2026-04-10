@@ -148,11 +148,11 @@ export default async function LobbyingFirmPage({ params }) {
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.75rem' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                {['Period', 'Branch', 'Clients', 'Est. Comp'].map((h, j) => (
+                {['Period', 'Branch', 'Est. Comp'].map((h, j) => (
                   <th key={h} style={{
                     padding: '0.35rem 0.6rem', fontSize: '0.6rem', color: 'var(--text-dim)',
                     textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 400,
-                    textAlign: j >= 2 ? 'right' : 'left',
+                    textAlign: j === 2 ? 'right' : 'left',
                   }}>{h}</th>
                 ))}
               </tr>
@@ -165,9 +165,6 @@ export default async function LobbyingFirmPage({ params }) {
                   </td>
                   <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.7rem' }}>
                     {q.branch}
-                  </td>
-                  <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>
-                    —
                   </td>
                   <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--blue)', fontWeight: 600, whiteSpace: 'nowrap' }}>
                     {fmt(q.total_comp)}
@@ -182,7 +179,7 @@ export default async function LobbyingFirmPage({ params }) {
       <DataTrustBlock
         source="Florida Lobbyist Registration Office"
         sourceUrl="https://www.floridalobbyist.gov"
-        lastUpdated="January 2026"
+        lastUpdated="April 2026"
         direct={['firm name', 'client list', 'registration quarters']}
         normalized={['compensation totals (summed from band midpoints)']}
         caveats={[
