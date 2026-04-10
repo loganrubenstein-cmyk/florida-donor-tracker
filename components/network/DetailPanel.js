@@ -3,6 +3,15 @@
 import { getPartyAffiliation } from '@/lib/partyUtils';
 import { fmtArticleDate } from '@/lib/dateUtils';
 import { slugify } from '@/lib/slugify';
+
+const INDUSTRY_COLORS = {
+  'Real Estate': '#f59e0b', 'Healthcare': '#ec4899',
+  'Finance & Insurance': '#22d3ee', 'Legal': '#a78bfa',
+  'Business & Consulting': '#fb923c', 'Agriculture': '#86efac',
+  'Construction': '#94a3b8', 'Political / Lobbying': '#fcd34d',
+  'Education': '#60a5fa', 'Technology / Engineering': '#34d399',
+  'Retail & Hospitality': '#e879f9', 'Government & Public Service': '#7dd3fc',
+};
 function getNodeDescription(node) {
   if (!node) return '';
   if (node.data_pending) return 'Committee — contribution data not yet downloaded';
@@ -126,6 +135,16 @@ export default function DetailPanel({ node, graphData, onRecenter, annotations =
         <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginBottom: '0.4rem', alignItems: 'center' }}>
           <TypeBadge type={node.type} dataPending={node.data_pending} />
           <PartyBadge party={party} />
+          {node.industry && INDUSTRY_COLORS[node.industry] && (
+            <span style={{
+              display: 'inline-block', padding: '0.15rem 0.45rem',
+              border: `1px solid ${INDUSTRY_COLORS[node.industry]}55`,
+              color: INDUSTRY_COLORS[node.industry],
+              fontSize: '0.65rem', borderRadius: '3px', fontFamily: 'var(--font-mono)',
+            }}>
+              {node.industry}
+            </span>
+          )}
           {nodeAnnotation && (
             <a href="/investigations" style={{
               display: 'inline-block', padding: '0.15rem 0.45rem',

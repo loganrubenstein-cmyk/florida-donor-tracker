@@ -17,6 +17,21 @@ export const SEED_IDS = [
 
 const TOP_N_SPOKES = 5;
 
+export const INDUSTRY_COLORS = {
+  'Real Estate':                '#f59e0b',
+  'Healthcare':                 '#ec4899',
+  'Finance & Insurance':        '#22d3ee',
+  'Legal':                      '#a78bfa',
+  'Business & Consulting':      '#fb923c',
+  'Agriculture':                '#86efac',
+  'Construction':               '#94a3b8',
+  'Political / Lobbying':       '#fcd34d',
+  'Education':                  '#60a5fa',
+  'Technology / Engineering':   '#34d399',
+  'Retail & Hospitality':       '#e879f9',
+  'Government & Public Service':'#7dd3fc',
+};
+
 function getNodeColor(node) {
   if (node.data_pending) return '#334455';
   const party = getPartyAffiliation(node);
@@ -102,7 +117,7 @@ function spokeLayout(visibleNodes, visibleEdges, expandedIds) {
   return positions;
 }
 
-export default function ForceView({ data, selectedNode, onNodeSelect, centeredNodeId }) {
+export default function ForceView({ data, selectedNode, onNodeSelect, centeredNodeId, industryFilter }) {
   const containerRef    = useRef(null);
   const haloCanvasRef   = useRef(null);
   const sigmaRef        = useRef(null);
@@ -260,6 +275,43 @@ export default function ForceView({ data, selectedNode, onNodeSelect, centeredNo
     const { x, y } = graphRef.current.getNodeAttributes(centeredNodeId);
     sigmaRef.current.getCamera().animate({ x, y, ratio: 0.5 }, { duration: 600 });
   }, [centeredNodeId]);
+
+  // Industry filter: apply nodeReducer to highlight matching nodes, dim others
+  useEffect(() => {
+    const sigma = sigmaRef.current;
+    const graph = graphRef.current;
+    if (!sigma || !graph) return;
+
+    const nodeMap = Object.fromEntries(data.nodes.map(n => [n.id, n]));
+
+    if (!industryFilter) {
+      sigma.setSetting('nodeReducer', null);
+      sigma.setSetting('edgeReducer', null);
+    } else {
+      const industryColor = INDUSTRY_COLORS[industryFilter] || '#ffffff';
+      sigma.setSetting('nodeReducer', (nodeId, attrs) => {
+        const nd = nodeMap[nodeId];
+        if (!nd) return { ...attrs, color: '#1a1a2e', size: attrs.size * 0.4 };
+        const match = nd.industry === industryFilter;
+        return match
+          ? { ...attrs, color: industryColor, size: attrs.size * 1.4, zIndex: 2 }
+          : { ...attrs, color: '#1a1a2e', size: attrs.size * 0.3 };
+      });
+      const gr = graphRef.current;
+      sigma.setSetting('edgeReducer', (edgeId, attrs) => {
+        if (!gr) return attrs;
+        const src = gr.source(edgeId);
+        const tgt = gr.target(edgeId);
+        const srcInd = nodeMap[src]?.industry;
+        const tgtInd = nodeMap[tgt]?.industry;
+        const match = srcInd === industryFilter || tgtInd === industryFilter;
+        return match
+          ? { ...attrs, color: industryColor + '66', size: Math.max(attrs.size, 1) }
+          : { ...attrs, color: '#0d0d2200', size: 0.1 };
+      });
+    }
+    sigma.refresh();
+  }, [industryFilter, data]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div style={{ position: 'absolute', inset: 0, background: 'var(--bg)' }}>

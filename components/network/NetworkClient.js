@@ -7,6 +7,13 @@ import DetailPanel from './DetailPanel';
 
 const ForceView = dynamic(() => import('./ForceView'), { ssr: false });
 
+const INDUSTRY_OPTIONS = [
+  'Real Estate', 'Healthcare', 'Finance & Insurance', 'Legal',
+  'Business & Consulting', 'Agriculture', 'Construction',
+  'Political / Lobbying', 'Education', 'Technology / Engineering',
+  'Retail & Hospitality', 'Government & Public Service',
+];
+
 function fmtCount(n) {
   if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
   if (n >= 1_000)     return `${Math.round(n / 1_000)}K`;
@@ -21,6 +28,7 @@ function NetworkClientInner({ data, annotations }) {
   const [selectedNode,   setSelectedNode]   = useState(null);
   const [centeredNodeId, setCenteredNodeId] = useState(null);
   const [search,         setSearch]         = useState('');
+  const [industryFilter, setIndustryFilter] = useState(null);
 
   // Resolve initial node from URL params on mount
   useEffect(() => {
@@ -89,25 +97,58 @@ function NetworkClientInner({ data, annotations }) {
           }}>→</button>
         </form>
 
-        {/* Legend */}
-        <div style={{ display: 'flex', gap: '0.85rem', fontSize: '0.68rem', color: 'var(--text-dim)', flexWrap: 'wrap', alignItems: 'center' }}>
-          {[
-            { color: '#f87171', label: 'Republican' },
-            { color: '#60a5fa', label: 'Democrat' },
-            { color: '#ffb060', label: 'PAC (unclassified)' },
-            { color: '#94a3b8', label: 'Corporate' },
-            { color: '#c4b5fd', label: 'Individual' },
-            { color: '#334455', label: 'Data pending' },
-          ].map(({ color, label }) => (
-            <span key={label} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-              <span style={{ width: 7, height: 7, borderRadius: '50%', background: color, display: 'inline-block', flexShrink: 0 }} />
-              {label}
-            </span>
-          ))}
-          <span style={{ borderLeft: '1px solid var(--border)', paddingLeft: '0.85rem', opacity: 0.6 }}>
-            ● size = total $ flow
+        {/* Industry filter */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+          <span style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.07em', whiteSpace: 'nowrap' }}>
+            Industry
           </span>
+          <select
+            value={industryFilter || ''}
+            onChange={e => setIndustryFilter(e.target.value || null)}
+            style={{
+              background: '#0d0d22', border: '1px solid var(--border)',
+              color: industryFilter ? 'var(--teal)' : 'var(--text-dim)',
+              fontFamily: 'var(--font-mono)', fontSize: '0.7rem',
+              padding: '0.25rem 0.5rem', borderRadius: '3px', cursor: 'pointer', outline: 'none',
+            }}
+          >
+            <option value="">All industries</option>
+            {INDUSTRY_OPTIONS.map(ind => (
+              <option key={ind} value={ind}>{ind}</option>
+            ))}
+          </select>
+          {industryFilter && (
+            <button
+              onClick={() => setIndustryFilter(null)}
+              style={{
+                padding: '0.2rem 0.45rem', background: 'transparent',
+                border: '1px solid rgba(77,216,240,0.3)', color: 'var(--teal)',
+                fontFamily: 'var(--font-mono)', fontSize: '0.65rem', cursor: 'pointer', borderRadius: '3px',
+              }}
+            >✕</button>
+          )}
         </div>
+
+        {/* Legend — shows industry colors when filter active, party legend otherwise */}
+        {!industryFilter ? (
+          <div style={{ display: 'flex', gap: '0.85rem', fontSize: '0.68rem', color: 'var(--text-dim)', flexWrap: 'wrap', alignItems: 'center' }}>
+            {[
+              { color: '#f87171', label: 'Republican' },
+              { color: '#60a5fa', label: 'Democrat' },
+              { color: '#ffb060', label: 'PAC (unclassified)' },
+              { color: '#94a3b8', label: 'Corporate' },
+              { color: '#c4b5fd', label: 'Individual' },
+            ].map(({ color, label }) => (
+              <span key={label} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                <span style={{ width: 7, height: 7, borderRadius: '50%', background: color, display: 'inline-block', flexShrink: 0 }} />
+                {label}
+              </span>
+            ))}
+            <span style={{ borderLeft: '1px solid var(--border)', paddingLeft: '0.85rem', opacity: 0.6 }}>
+              ● size = total $ flow
+            </span>
+          </div>
+        ) : null}
 
         <span style={{
           marginLeft: 'auto', fontSize: '0.72rem', color: 'var(--text-dim)',
@@ -128,6 +169,7 @@ function NetworkClientInner({ data, annotations }) {
             selectedNode={selectedNode}
             onNodeSelect={handleNodeSelect}
             centeredNodeId={centeredNodeId}
+            industryFilter={industryFilter}
           />
         </div>
         <DetailPanel node={selectedNode} graphData={data} onRecenter={handleRecenter} annotations={annotations} />
