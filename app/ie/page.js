@@ -1,6 +1,4 @@
 import Link from 'next/link';
-import { readFileSync } from 'fs';
-import { join } from 'path';
 import { getDb } from '@/lib/db';
 import { fmtMoney, fmtMoneyCompact, fmtCount } from '../../lib/fmt';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
@@ -12,24 +10,15 @@ export const metadata = {
   description: 'Florida independent expenditures and electioneering communications — $70.9M tracked across 492 committees.',
 };
 
-function loadTargetedCandidates() {
-  const base = join(process.cwd(), 'public', 'data', 'ie', 'by_candidate');
-  try {
-    const { readdirSync } = require('fs');
-    const files = readdirSync(base).filter(f => f.endsWith('.json'));
-    return files
-      .map(fn => JSON.parse(readFileSync(join(base, fn), 'utf8')))
-      .sort((a, b) => b.total_ie_amount - a.total_ie_amount);
-  } catch { return []; }
-}
-
 async function loadData() {
   try {
     const db = getDb();
-    const [{ data: summaryRows }, { data: committees }] = await Promise.all([
+    const [{ data: summaryRows }, { data: committees }, { data: candidates }] = await Promise.all([
       db.from('ie_summary').select('total_amount, total_rows, num_committees, date_start, date_end, by_type').limit(1),
       db.from('ie_committees').select('acct_num, committee_name, total_amount, num_transactions, year_min, year_max')
         .order('total_amount', { ascending: false }).limit(50),
+      db.from('ie_candidates').select('candidate_acct_num, candidate_name, total_ie_amount, num_expenditures, num_committees, by_year')
+        .order('total_ie_amount', { ascending: false }),
     ]);
     const s = summaryRows?.[0] || {};
     return {
@@ -48,8 +37,16 @@ async function loadData() {
         year_min:         c.year_min,
         year_max:         c.year_max,
       })),
+      targetedCandidates: (candidates || []).map(c => ({
+        candidate_acct_num: c.candidate_acct_num,
+        candidate_name:     c.candidate_name,
+        total_ie_amount:    parseFloat(c.total_ie_amount) || 0,
+        num_expenditures:   c.num_expenditures || 0,
+        num_committees:     c.num_committees || 0,
+        by_year:            c.by_year || [],
+      })),
     };
-  } catch { return { summary: {}, committees: [] }; }
+  } catch { return { summary: {}, committees: [], targetedCandidates: [] }; }
 }
 
 const TYPE_LABELS = {
@@ -70,8 +67,7 @@ const TYPE_COLORS = {
 };
 
 export default async function IEPage() {
-  const { summary, committees } = await loadData();
-  const targetedCandidates = loadTargetedCandidates();
+  const { summary, committees, targetedCandidates } = await loadData();
 
   const byType  = summary.by_type || [];
   const maxType = byType[0]?.total_amount || 1;

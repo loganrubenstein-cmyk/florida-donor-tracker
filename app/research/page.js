@@ -68,10 +68,10 @@ export default async function ResearchHub() {
           <div className="hub-card-stat">12 elections · 2012–2024</div>
         </Link>
 
-        <Link href="/legislators" className="hub-card">
-          <div className="hub-card-title">Legislators</div>
-          <div className="hub-card-desc">Current Florida House and Senate members. Floor vote records, party breakdown, and campaign finance cross-references.</div>
-          <div className="hub-card-stat">224 legislators · 546 roll calls tracked</div>
+        <Link href="/legislature" className="hub-card">
+          <div className="hub-card-title">Legislature</div>
+          <div className="hub-card-desc">160 current FL House + Senate members — voting records, committee assignments, campaign finance, and who funds them.</div>
+          <div className="hub-card-stat">160 members · 65 committees · 30K+ floor votes</div>
         </Link>
       </div>
 
