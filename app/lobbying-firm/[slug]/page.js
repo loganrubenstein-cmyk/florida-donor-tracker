@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getDb } from '@/lib/db';
 import { notFound } from 'next/navigation';
 import SourceLink from '@/components/shared/SourceLink';
+import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 export const dynamic = 'force-dynamic';
 

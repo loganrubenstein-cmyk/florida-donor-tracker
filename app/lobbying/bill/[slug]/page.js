@@ -25,7 +25,8 @@ async function loadBill(slug) {
       .from('bill_disclosures')
       .select('bill_canon, lobbyist, principal, firm, issues, year')
       .eq('bill_slug', slug)
-      .order('year', { ascending: true });
+      .order('year', { ascending: true })
+      .limit(20000);
 
     if (!entries || entries.length === 0) return null;
 
