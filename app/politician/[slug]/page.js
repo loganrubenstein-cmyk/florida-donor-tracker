@@ -1,7 +1,21 @@
+import { readFileSync } from 'fs';
+import { join } from 'path';
 import { notFound } from 'next/navigation';
 import { loadCandidate, loadCandidateCycles, getPoliticianBySlug, listPoliticianSlugs } from '@/lib/loadCandidate';
 import CandidateProfile from '@/components/candidate/CandidateProfile';
 import BackLinks from '@/components/BackLinks';
+
+let _electionLookup = null;
+function getElectionLookup() {
+  if (!_electionLookup) {
+    try {
+      _electionLookup = JSON.parse(
+        readFileSync(join(process.cwd(), 'public', 'data', 'elections', 'results_by_acct.json'), 'utf-8')
+      );
+    } catch { _electionLookup = {}; }
+  }
+  return _electionLookup;
+}
 
 export const dynamic = 'force-dynamic';
 
@@ -21,7 +35,7 @@ export async function generateStaticParams() {
 }
 
 export default async function PoliticianPage({ params, searchParams }) {
-  const { slug } = params;
+  const { slug } = await params;
   const politician = getPoliticianBySlug(slug);
   if (!politician) notFound();
 
@@ -31,7 +45,7 @@ export default async function PoliticianPage({ params, searchParams }) {
   const sortedCycles = [...cycles].sort((a, b) => Number(b.year) - Number(a.year));
 
   // Determine active cycle from ?cycle= param, default to most recent
-  const requestedAcct = searchParams?.cycle;
+  const { cycle: requestedAcct } = await searchParams;
   const activeCycle = sortedCycles.find(c => c.acct_num === requestedAcct) ?? sortedCycles[0];
 
   // Load full candidate data for active cycle
@@ -45,6 +59,13 @@ export default async function PoliticianPage({ params, searchParams }) {
   // loadCandidateCycles for the acct_num (used by CandidateProfile's own pill bar)
   // We pass all cycles from the politician index instead, which is richer
   const allCyclesForAcct = loadCandidateCycles(activeCycle.acct_num);
+
+  // Election results for all accounts linked to this politician
+  const lookup = getElectionLookup();
+  const allElectionResults = sortedCycles
+    .flatMap(c => lookup[String(c.acct_num)] || [])
+    .filter((r, i, arr) => arr.findIndex(x => x.year === r.year && x.election_type === r.election_type) === i)
+    .sort((a, b) => b.year - a.year || (a.election_type === 'general' ? -1 : 1));
 
   const party = activeCycle.party_code;
   const partyColor = PARTY_COLOR[party] || null;
@@ -123,7 +144,7 @@ export default async function PoliticianPage({ params, searchParams }) {
       )}
 
       {/* Full candidate profile for active cycle */}
-      <CandidateProfile data={candidateData} cycles={allCyclesForAcct} />
+      <CandidateProfile data={candidateData} cycles={allCyclesForAcct} electionResults={allElectionResults} />
 
       {/* Link to raw acct page */}
       <div style={{
