@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { fmtCount } from '../../../lib/fmt';
+import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 export const metadata = {
   title: 'Most Lobbied Bills — Florida Donor Tracker',
@@ -161,6 +162,21 @@ export default function LobbyingBillsPage() {
             </div>
           </div>
         </div>
+      </div>
+
+      <div style={{ marginTop: '3rem' }}>
+        <DataTrustBlock
+          source="FL House Lobbyist Disclosure Portal"
+          sourceUrl="https://www.flhouse.gov/Sections/Lobbyist/lobbyist.aspx"
+          lastUpdated="April 2026"
+          direct={['bill number', 'lobbyist name', 'principal name', 'filing year', 'issue category']}
+          normalized={['filings aggregated by bill across years and lobbyist-principal pairs']}
+          caveats={[
+            'Coverage: 2016–2026 Florida House lobbyist disclosure filings only.',
+            'Each filing = one lobbyist–principal pair for one year. A bill with 500 filings had 500 such pairs report activity on it.',
+            'General Appropriations bills are separated because they appear every session and dominate raw filing counts.',
+          ]}
+        />
       </div>
     </main>
   );

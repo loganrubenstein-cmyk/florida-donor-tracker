@@ -36,8 +36,8 @@ def main() -> int:
     print(f"Loaded {len(df):,} rows from {CSV_PATH.name}")
 
     # Map CSV columns to Supabase table columns
-    # CSV:       candidate_name, candidate_acct, pc_acct, pc_name, pc_type, link_type, confidence
-    # Supabase:  candidate_acct_num, pc_acct_num, pc_name, pc_type, link_type, confidence
+    # CSV:       candidate_name, candidate_acct, pc_acct, pc_name, pc_type, link_type, confidence, confidence_tier, signal_evidence
+    # Supabase:  candidate_acct_num, pc_acct_num, pc_name, pc_type, link_type, confidence, confidence_tier, signal_evidence
     df_out = pd.DataFrame({
         "candidate_acct_num": df["candidate_acct"].str.strip(),
         "pc_acct_num":        df["pc_acct"].str.strip().replace("", None),
@@ -45,12 +45,18 @@ def main() -> int:
         "pc_type":            df["pc_type"].str.strip(),
         "link_type":          df["link_type"].str.strip(),
         "confidence":         pd.to_numeric(df["confidence"], errors="coerce").round(2),
+        "confidence_tier":    df["confidence_tier"].str.strip() if "confidence_tier" in df.columns else "possible",
+        "signal_evidence":    df["signal_evidence"].str.strip() if "signal_evidence" in df.columns else "",
     })
 
     print(f"Rows to load: {len(df_out):,}")
     print(f"Link type breakdown:")
     for lt, cnt in df_out["link_type"].value_counts().items():
         print(f"  {lt:<22s}: {cnt:,}")
+    if "confidence_tier" in df_out.columns:
+        print(f"Confidence tier breakdown:")
+        for ct, cnt in df_out["confidence_tier"].value_counts().items():
+            print(f"  {ct:<12s}: {cnt:,}")
 
     conn = psycopg2.connect(DB_URL)
     conn.autocommit = True
@@ -69,7 +75,7 @@ def main() -> int:
         df_out.to_csv(buf, index=False, header=False)
         buf.seek(0)
         cur.copy_expert(
-            "COPY candidate_pc_links (candidate_acct_num, pc_acct_num, pc_name, pc_type, link_type, confidence) FROM STDIN WITH CSV",
+            "COPY candidate_pc_links (candidate_acct_num, pc_acct_num, pc_name, pc_type, link_type, confidence, confidence_tier, signal_evidence) FROM STDIN WITH CSV",
             buf,
         )
 

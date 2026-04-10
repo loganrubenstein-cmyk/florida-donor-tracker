@@ -107,12 +107,11 @@ export default function MethodologyPage() {
 
       <Section title="Known Limits">
         <ul style={{ paddingLeft: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-          <li>Expenditure data for many committees is still being collected — vendor/payee pages are not yet complete.</li>
-          <li>Independent expenditure filings (IE) are not yet included.</li>
-          <li>Lobbyist compensation is disclosed in ranges, not exact figures.</li>
+          <li>Lobbyist compensation is disclosed in ranges, not exact figures. Totals shown are midpoint estimates.</li>
           <li>Race-level candidate comparisons (same office, same year) are not yet built.</li>
           <li>Data freshness varies — some committees may lag by weeks or months depending on filing schedules.</li>
           <li>Name deduplication is exact-match only — contributions from the same person with differently-spelled names are not merged.</li>
+          <li>Independent expenditure data shows committee-level totals. Individual IE transaction detail is not yet included.</li>
         </ul>
       </Section>
 

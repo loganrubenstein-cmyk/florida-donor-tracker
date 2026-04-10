@@ -2,78 +2,97 @@
 
 import { useState, useEffect } from 'react';
 
-function ScoreBadge({ score }) {
-  const color = score >= 70 ? 'var(--orange)' : score >= 45 ? 'var(--teal)' : 'var(--text-dim)';
-  return (
-    <span style={{
-      padding: '0.05rem 0.35rem', border: `1px solid ${color}`, color,
-      borderRadius: '2px', fontSize: '0.6rem', fontFamily: 'var(--font-mono)', fontWeight: 700,
-    }}>
-      {score}
-    </span>
-  );
-}
-
 export default function CommitteeConnections({ acctNum }) {
   const [connections, setConnections] = useState(null);
-  const [error, setError] = useState(false);
 
   useEffect(() => {
-    fetch(`/data/connections_pages/by_committee/${acctNum}.json`)
-      .then(r => { if (!r.ok) throw new Error(); return r.json(); })
-      .then(data => setConnections(data.slice(0, 6)))
-      .catch(() => setError(true));
+    fetch(`/api/connections?committee=${acctNum}&sort=connection_score`)
+      .then(r => r.json())
+      .then(json => setConnections((json.data || []).slice(0, 8)))
+      .catch(() => setConnections([]));
   }, [acctNum]);
 
-  if (error || (connections && connections.length === 0)) return null;
-  if (!connections) return null; // silent load — don't show skeleton
+  if (!connections || connections.length === 0) return null;
 
   return (
     <div style={{ marginBottom: '2rem' }}>
-      <div style={{
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        marginBottom: '0.75rem',
-      }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
         <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-          Connected Committees
+          Connected Committees — {connections.length} shown
         </div>
         <a href={`/connections?committee=${acctNum}`} style={{
           fontSize: '0.6rem', color: 'var(--teal)', textDecoration: 'none', fontFamily: 'var(--font-mono)',
         }}>
-          all connections →
+          view all →
         </a>
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', background: 'var(--border)', border: '1px solid var(--border)', borderRadius: '3px', overflow: 'hidden' }}>
-        {connections.map((conn, i) => {
-          const other = conn.entity_a?.acct_num === acctNum ? conn.entity_b : conn.entity_a;
-          if (!other) return null;
-          const signals = [
-            conn.shared_treasurer && 'TRS',
-            conn.shared_address   && 'ADR',
-            conn.shared_phone     && 'PHN',
-            conn.shared_chair     && 'CHR',
-            conn.donor_overlap_pct > 0 && `${Math.round(conn.donor_overlap_pct)}%`,
-            conn.money_between > 0     && '$',
-          ].filter(Boolean);
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+        {connections.map((conn) => {
+          const isSideA      = conn.entity_a_acct === acctNum;
+          const otherName    = isSideA ? conn.entity_b     : conn.entity_a;
+          const otherAcct    = isSideA ? conn.entity_b_acct : conn.entity_a_acct;
+          const pct          = conn.donor_overlap_pct ? parseFloat(conn.donor_overlap_pct).toFixed(0) : null;
+
+          // Build human-readable evidence tags
+          const tags = [];
+          if (conn.shared_treasurer && conn.shared_treasurer_name) {
+            tags.push({ label: `Treasurer: ${conn.shared_treasurer_name}`, color: 'var(--orange)' });
+          } else if (conn.shared_treasurer) {
+            tags.push({ label: 'Shared treasurer', color: 'var(--orange)' });
+          }
+          if (conn.shared_chair && conn.shared_chair_name) {
+            tags.push({ label: `Chair: ${conn.shared_chair_name}`, color: 'var(--teal)' });
+          } else if (conn.shared_chair) {
+            tags.push({ label: 'Shared chair', color: 'var(--teal)' });
+          }
+          if (conn.shared_address && conn.shared_address_line) {
+            tags.push({ label: conn.shared_address_line, color: 'var(--blue)' });
+          } else if (conn.shared_address) {
+            tags.push({ label: 'Shared address', color: 'var(--blue)' });
+          }
+          if (pct && parseInt(pct) > 0) {
+            tags.push({ label: `${pct}% donor overlap`, color: 'var(--text-dim)' });
+          }
+
           return (
-            <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.5rem 0.75rem', background: 'var(--bg)' }}>
-              <ScoreBadge score={conn.connection_score} />
-              <a href={`/committee/${other.acct_num}`} style={{
-                color: 'var(--teal)', textDecoration: 'none', fontSize: '0.72rem', flex: 1, minWidth: 0,
-                whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-              }}>
-                {other.name}
-              </a>
-              <div style={{ display: 'flex', gap: '0.2rem', flexShrink: 0 }}>
-                {signals.map(s => (
-                  <span key={s} style={{
-                    fontSize: '0.5rem', padding: '0.05rem 0.2rem',
-                    background: 'rgba(77,216,240,0.1)', color: 'var(--teal)',
-                    border: '1px solid rgba(77,216,240,0.25)', borderRadius: '2px',
-                    fontFamily: 'var(--font-mono)',
-                  }}>{s}</span>
-                ))}
+            <div key={conn.id} style={{
+              padding: '0.65rem 0.85rem',
+              border: '1px solid rgba(100,140,220,0.1)',
+              borderRadius: '3px', background: 'var(--bg)',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: tags.length ? '0.4rem' : 0 }}>
+                <span style={{
+                  fontSize: '0.6rem', padding: '0.05rem 0.35rem',
+                  border: '1px solid rgba(100,140,220,0.3)', color: 'var(--text-dim)',
+                  borderRadius: '2px', fontFamily: 'var(--font-mono)', fontWeight: 700, flexShrink: 0,
+                }}>
+                  {conn.connection_score}
+                </span>
+                <a href={`/committee/${otherAcct}`} style={{
+                  color: 'var(--teal)', textDecoration: 'none', fontSize: '0.78rem',
+                  flex: 1, minWidth: 0,
+                  whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                }}>
+                  {otherName}
+                </a>
               </div>
+              {tags.length > 0 && (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.3rem' }}>
+                  {tags.map((t, i) => (
+                    <span key={i} style={{
+                      fontSize: '0.6rem', padding: '0.1rem 0.4rem',
+                      background: `${t.color}0d`,
+                      border: `1px solid ${t.color}33`,
+                      color: t.color, borderRadius: '2px',
+                      fontFamily: 'var(--font-mono)',
+                      maxWidth: '300px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                    }}>
+                      {t.label}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           );
         })}

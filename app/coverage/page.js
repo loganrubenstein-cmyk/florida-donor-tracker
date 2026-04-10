@@ -54,9 +54,9 @@ export default function CoveragePage() {
         </h2>
         <Row label="Committee contributions (receipts)" status="complete" note="~7.7M rows, all committees on file with FL Division of Elections" />
         <Row label="Candidate contributions (receipts)" status="complete" note="~3.2M rows" />
-        <Row label="Committee expenditures (disbursements)" status="partial" note="Scrape in progress — many committees loaded, some may be missing" />
-        <Row label="Candidate expenditures" status="missing" note="Not yet collected" />
-        <Row label="Independent expenditures (IEs)" status="missing" note="Filed separately — not yet included" />
+        <Row label="Committee expenditures (disbursements)" status="complete" note="Summary totals + top vendors for 1,673 committees; $2.78B tracked" />
+        <Row label="Candidate expenditures" status="complete" note="Summary totals + top vendors for all candidates" />
+        <Row label="Independent expenditures (IEs)" status="complete" note="$70.9M total across 492 committees; committee-level totals (transaction detail not yet included)" />
         <Row label="Lobbyist registrations" status="complete" note="All registered FL state lobbyists" />
         <Row label="Principal (client) registrations" status="complete" note="All registered FL lobbyist principals" />
         <Row label="Lobbyist compensation solicitations" status="complete" note="Compensation range disclosures by period" />
@@ -83,7 +83,6 @@ export default function CoveragePage() {
           <li>Name deduplication is exact-match only. The same real-world donor may appear under multiple profiles if their name was filed differently across reports.</li>
           <li>Industry and entity type classifications are rules-based — not verified against any external registry.</li>
           <li>Lobbyist compensation is disclosed in bands (&lt;$10K, $10K–$24K, etc.) — exact amounts are not public.</li>
-          <li>Vendor/payee profiles (who committees paid) are not yet built — expenditure data is collected but not surfaced on committee profiles.</li>
           <li>Race-level comparisons (candidates running for the same seat in the same year) are not yet supported.</li>
           <li>This site reflects <em>reported</em> campaign finance — late, amended, or unfiled reports will not appear.</li>
           <li>Federal PAC contributions to Florida candidates or committees are not included — only state-level filings.</li>

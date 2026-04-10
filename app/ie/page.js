@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 import { getDb } from '@/lib/db';
 import { fmtMoney, fmtMoneyCompact, fmtCount } from '../../lib/fmt';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
@@ -9,6 +11,17 @@ export const metadata = {
   title: 'Independent Expenditures — Florida Donor Tracker',
   description: 'Florida independent expenditures and electioneering communications — $70.9M tracked across 492 committees.',
 };
+
+function loadTargetedCandidates() {
+  const base = join(process.cwd(), 'public', 'data', 'ie', 'by_candidate');
+  try {
+    const { readdirSync } = require('fs');
+    const files = readdirSync(base).filter(f => f.endsWith('.json'));
+    return files
+      .map(fn => JSON.parse(readFileSync(join(base, fn), 'utf8')))
+      .sort((a, b) => b.total_ie_amount - a.total_ie_amount);
+  } catch { return []; }
+}
 
 async function loadData() {
   try {
@@ -58,6 +71,7 @@ const TYPE_COLORS = {
 
 export default async function IEPage() {
   const { summary, committees } = await loadData();
+  const targetedCandidates = loadTargetedCandidates();
 
   const byType  = summary.by_type || [];
   const maxType = byType[0]?.total_amount || 1;
@@ -160,6 +174,46 @@ export default async function IEPage() {
         </div>
       </div>
 
+      {/* Targeted candidates */}
+      {targetedCandidates.length > 0 && (
+        <div style={{ marginTop: '2.5rem' }}>
+          <h2 style={{ fontSize: '1rem', color: 'var(--text)', marginBottom: '0.4rem' }}>
+            Candidates Targeted by IE / EC Spending
+          </h2>
+          <p style={{ fontSize: '0.72rem', color: 'var(--text-dim)', marginBottom: '1rem', lineHeight: 1.6 }}>
+            {targetedCandidates.length} candidates identified from IE filing descriptions — amounts shown are spending traceable to each candidate.
+            Name matching is approximate; some filings could not be linked.
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '0.5rem' }}>
+            {targetedCandidates.map(c => {
+              const maxYear = c.by_year?.reduce((m, y) => y.year > m ? y.year : m, 0);
+              const minYear = c.by_year?.reduce((m, y) => y.year < m ? y.year : m, 9999);
+              const yearStr = minYear === maxYear ? String(minYear) : `${minYear}–${maxYear}`;
+              return (
+                <div key={c.candidate_acct_num} style={{
+                  padding: '0.6rem 0.85rem', background: 'var(--surface)',
+                  border: '1px solid var(--border)', borderRadius: '4px',
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '0.25rem' }}>
+                    <Link href={`/candidate/${c.candidate_acct_num}`} style={{
+                      fontSize: '0.82rem', fontWeight: 500, color: 'var(--teal)', textDecoration: 'none',
+                    }}>
+                      {c.candidate_name}
+                    </Link>
+                    <span style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--orange)', fontFamily: 'var(--font-mono)', flexShrink: 0, marginLeft: '0.5rem' }}>
+                      {fmtMoney(c.total_ie_amount)}
+                    </span>
+                  </div>
+                  <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+                    {fmtCount(c.num_expenditures)} exp · {c.num_committees} committee{c.num_committees !== 1 ? 's' : ''} · {yearStr}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       <div style={{ maxWidth: '900px', margin: '2rem auto 0', padding: '0 1.5rem' }}>
         <DataTrustBlock
           source="Florida Division of Elections — IE/EC Filings"
@@ -170,7 +224,7 @@ export default async function IEPage() {
           caveats={[
             'Covers committee-level totals only — individual transaction detail is not yet loaded.',
             'Does not include federal IE filings (FEC). Florida state filings only.',
-            'Recipient-side data (which candidates were targeted) coming in a future update.',
+            '21 candidates identified from IE filing descriptions — matching is approximate (name substring). Some filings could not be linked to a candidate.',
           ]}
         />
       </div>

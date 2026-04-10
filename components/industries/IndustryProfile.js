@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic';
 import BackLinks from '@/components/BackLinks';
 import { slugify } from '@/lib/slugify';
+import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 const IndustryTrendChart = dynamic(() => import('./IndustryTrendChart'), { ssr: false });
 
@@ -252,13 +253,19 @@ export default function IndustryProfile({ data, totalAmount, trendData, topDonor
         </div>
       )}
 
-      {/* Attribution */}
-      <div style={{
-        fontSize: '0.62rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)',
-        borderTop: '1px solid var(--border)', paddingTop: '1rem',
-      }}>
-        Data: Florida Division of Elections · Industry classification based on contributor occupation field ·
-        Hard money (direct candidate contributions) only · Not affiliated with the State of Florida. All data from public records.
+      <div style={{ marginTop: '3rem' }}>
+        <DataTrustBlock
+          source="Florida Division of Elections — Campaign Finance Filings"
+          sourceUrl="https://dos.elections.myflorida.com/campaign-finance/"
+          lastUpdated="April 2026"
+          direct={['contribution amounts', 'contributor occupation field']}
+          normalized={['industry assignment derived from occupation using keyword classifier']}
+          inferred={['top candidates ranked by total received from this industry']}
+          caveats={[
+            'Hard money (direct candidate contributions) only — PAC-to-PAC transfers not included.',
+            'Occupation field is self-reported. Blank or unrecognized occupations are excluded from this industry.',
+          ]}
+        />
       </div>
     </main>
   );

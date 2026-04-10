@@ -2,6 +2,7 @@
 // Server component
 import BackLinks from '@/components/BackLinks';
 import { slugify } from '@/lib/slugify';
+import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 function fmt(n) {
   if (!n || n === 0) return '—';
@@ -284,11 +285,18 @@ export default function CycleProfile({ year, candidates, topDonors = [] }) {
         </div>
       )}
 
-      <div style={{
-        fontSize: '0.62rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)',
-        borderTop: '1px solid var(--border)', paddingTop: '1rem',
-      }}>
-        Data: Florida Division of Elections · Not affiliated with the State of Florida. All data from public records.
+      <div style={{ marginTop: '3rem' }}>
+        <DataTrustBlock
+          source="Florida Division of Elections — Campaign Finance Filings"
+          sourceUrl="https://dos.elections.myflorida.com/campaign-finance/"
+          lastUpdated="April 2026"
+          direct={['candidate and committee totals per cycle', 'party breakdown', 'office breakdown']}
+          normalized={['soft money linked from committee contributions (2020 onward)', 'combined totals = hard + linked soft money']}
+          caveats={[
+            'Cycle totals include all state-level races. Federal candidates excluded.',
+            'Soft money linkage available from 2020 onward only.',
+          ]}
+        />
       </div>
     </main>
   );

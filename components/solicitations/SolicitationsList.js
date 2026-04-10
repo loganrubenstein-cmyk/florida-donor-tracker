@@ -2,6 +2,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import BackLinks from '@/components/BackLinks';
+import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 const PAGE_SIZE = 50;
 
@@ -272,13 +273,17 @@ export default function SolicitationsList() {
         </div>
       )}
 
-      {/* Attribution */}
-      <div style={{
-        fontSize: '0.62rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)',
-        borderTop: '1px solid var(--border)', paddingTop: '1rem', marginTop: '2rem',
-      }}>
-        Data: Florida Division of Elections — Public Solicitations Registry ·
-        Not affiliated with the State of Florida. All data from public records.
+      <div style={{ marginTop: '3rem' }}>
+        <DataTrustBlock
+          source="Florida Division of Elections — Public Solicitations Registry"
+          sourceUrl="https://dos.elections.myflorida.com/solicitations/"
+          lastUpdated="April 2026"
+          direct={['organization name', 'website', 'solicitor names', 'registration / expiration dates', 'status']}
+          caveats={[
+            'Includes organizations registered to solicit political contributions in Florida — not a list of donors.',
+            'Registration data is point-in-time; expired registrations may still appear.',
+          ]}
+        />
       </div>
     </main>
   );

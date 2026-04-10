@@ -2,14 +2,9 @@ import DonorTable from '@/components/donors/DonorTable'
 import HeroCounter from '@/components/home/HeroCounter'
 import { getDb } from '@/lib/db'
 import { FEDERAL_OFFICE_CODES } from '@/lib/officeCodes'
+import { DATA_LAST_UPDATED } from '@/lib/dataLastUpdated'
 
 export const dynamic = 'force-dynamic';
-
-function formatDate(iso) {
-  const d = new Date(iso)
-  if (isNaN(d.getTime())) return 'recently'
-  return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
-}
 
 function formatBillions(n) {
   return '$' + (n / 1_000_000_000).toFixed(1) + 'B+'
@@ -48,7 +43,7 @@ async function getHomeData() {
     totalSpending,
     totalContributions,
     totalDonors,
-    updatedDate: formatDate(new Date().toISOString()),
+    updatedDate: DATA_LAST_UPDATED,
   };
 }
 

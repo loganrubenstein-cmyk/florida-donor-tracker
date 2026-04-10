@@ -3,6 +3,7 @@ import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 import { notFound } from 'next/navigation';
 import { fmtMoney, fmtCount, fmtDate } from '../../../lib/fmt';
+import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 // Pre-generate all legislator pages at build time
 export async function generateStaticParams() {
@@ -201,11 +202,22 @@ export default function LegislatorPage({ params }) {
               <li>Finance: FL Division of Elections candidate records</li>
               {leg.ballotpedia && <li>Biography: <a href={`https://ballotpedia.org/${encodeURIComponent(leg.ballotpedia)}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)' }}>Ballotpedia ↗</a></li>}
             </ul>
-            <div style={{ marginTop: '0.75rem', paddingTop: '0.75rem', borderTop: '1px solid var(--border)' }}>
-              Not affiliated with the State of Florida. All data from public records.
-            </div>
           </div>
         </div>
+      </div>
+
+      <div style={{ marginTop: '3rem' }}>
+        <DataTrustBlock
+          source="LegiScan API (voting) · FL Division of Elections (finance)"
+          lastUpdated="April 2026"
+          direct={['name', 'party', 'district', 'chamber', 'individual vote records']}
+          normalized={['finance totals matched from candidate records by name']}
+          caveats={[
+            'Voting covers floor votes only (Third Reading / Final Passage). Committee votes excluded.',
+            'Finance data matched by name — not all legislators have a confirmed matching campaign account.',
+            'Sessions covered: 2025 and 2026 Regular Sessions via LegiScan.',
+          ]}
+        />
       </div>
     </main>
   );

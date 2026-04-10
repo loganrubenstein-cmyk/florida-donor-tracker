@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { getDb } from '@/lib/db';
+import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 export const dynamic = 'force-dynamic';
 
@@ -87,6 +88,21 @@ export default async function LobbyingFirmsPage() {
 
       <div style={{ marginTop: '2rem', fontSize: '0.72rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
         439 registered firms in the full dataset — top 100 shown here. Click any firm to see their full client list and quarterly breakdown.
+      </div>
+
+      <div style={{ marginTop: '2rem' }}>
+        <DataTrustBlock
+          source="Florida Legislature Lobbyist Registration — Compensation Disclosures"
+          sourceUrl="https://www.fllegislature.gov/Lobbyist/"
+          lastUpdated="April 2026"
+          direct={['firm name', 'client count', 'quarterly filings']}
+          normalized={['total compensation estimated from disclosed ranges (midpoint of band)'] }
+          inferred={['annual total = sum of quarterly midpoint estimates across all clients']}
+          caveats={[
+            'Compensation is disclosed in bands (<$10K, $10K–$25K, etc.) — exact figures are not public.',
+            'Estimates use midpoint of each band. Actual compensation may differ.',
+          ]}
+        />
       </div>
     </main>
   );

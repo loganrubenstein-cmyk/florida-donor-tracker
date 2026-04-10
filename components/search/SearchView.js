@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import BackLinks from '@/components/BackLinks';
+import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 const TYPE_COLOR = {
   donor:     'var(--orange)',
@@ -69,16 +70,20 @@ export default function SearchView() {
 
   const results = useMemo(() => {
     if (!index || !query.trim()) return [];
-    const q = query.trim().toUpperCase();
+    const tokens = query.trim().toUpperCase().split(/\s+/).filter(Boolean);
+    const q      = tokens.join(' ');
     const filtered = index.filter(e => {
       if (typeFilter !== 'all' && e.t !== typeFilter) return false;
-      return e.n.toUpperCase().includes(q);
+      const name = e.n.toUpperCase();
+      return tokens.every(tok => name.includes(tok));
     });
-    // Sort: exact prefix matches first, then contains
+    // Sort: exact prefix matches first, then any-token prefix, then contains
     filtered.sort((a, b) => {
-      const aStarts = a.n.toUpperCase().startsWith(q) ? 0 : 1;
-      const bStarts = b.n.toUpperCase().startsWith(q) ? 0 : 1;
-      return aStarts - bStarts;
+      const an = a.n.toUpperCase();
+      const bn = b.n.toUpperCase();
+      const aExact = an.startsWith(q) ? 0 : tokens.some(t => an.startsWith(t)) ? 1 : 2;
+      const bExact = bn.startsWith(q) ? 0 : tokens.some(t => bn.startsWith(t)) ? 1 : 2;
+      return aExact - bExact;
     });
     return filtered.slice(0, 200);
   }, [index, query, typeFilter]);
@@ -240,11 +245,17 @@ export default function SearchView() {
         </div>
       )}
 
-      <div style={{
-        fontSize: '0.62rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)',
-        borderTop: '1px solid var(--border)', paddingTop: '1rem', marginTop: '2rem',
-      }}>
-        Data: Florida Division of Elections · Not affiliated with the State of Florida. All data from public records.
+      <div style={{ marginTop: '3rem' }}>
+        <DataTrustBlock
+          source="Florida Division of Elections · FL Legislature Lobbyist Registration"
+          lastUpdated="April 2026"
+          direct={['entity name', 'entity type']}
+          normalized={['search index built at deploy time from Supabase tables']}
+          caveats={[
+            'Donor index (~7MB) loads in the background — donors may not appear immediately.',
+            'Names are matched by substring across all tokens — "smith john" finds "John Smith".',
+          ]}
+        />
       </div>
     </main>
   );

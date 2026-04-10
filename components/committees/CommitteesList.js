@@ -221,9 +221,6 @@ export default function CommitteesList() {
         </div>
       )}
 
-      <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', marginTop: '1.5rem' }}>
-        Data: Florida Division of Elections · Not affiliated with the State of Florida. All data from public records.
-      </div>
     </div>
   );
 }

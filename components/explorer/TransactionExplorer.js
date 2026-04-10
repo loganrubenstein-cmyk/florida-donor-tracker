@@ -62,11 +62,12 @@ export default function TransactionExplorer({
   const [page,         setPage]        = useState(parseInt(searchParams.get('page') || '1', 10));
 
   // ── Result state ─────────────────────────────────────────────────────────────
-  const [data,    setData]    = useState([]);
-  const [total,   setTotal]   = useState(null);
-  const [pages,   setPages]   = useState(1);
-  const [loading, setLoading] = useState(true);
-  const [error,   setError]   = useState(null);
+  const [data,        setData]        = useState([]);
+  const [total,       setTotal]       = useState(null);
+  const [pages,       setPages]       = useState(1);
+  const [loading,     setLoading]     = useState(true);
+  const [error,       setError]       = useState(null);
+  const [exporting,   setExporting]   = useState(false);
 
   const abortRef = useRef(null);
 
@@ -129,6 +130,45 @@ export default function TransactionExplorer({
     if (!initialRecipientType) setRecipType('');
   }
 
+  async function handleExportCSV() {
+    setExporting(true);
+    try {
+      const url = buildUrl('/api/transactions', {
+        q, donor_slug: donorSlug, recipient_acct: recipAcct,
+        recipient_type: recipType, year, tx_type: txType,
+        amount_min: amountMin, amount_max: amountMax,
+        date_start: dateStart, date_end: dateEnd,
+        sort, sort_dir: sortDir, page: 1, page_size: 500,
+      });
+      const res  = await fetch(url);
+      const json = await res.json();
+      const rows = json.data || [];
+
+      const headers = ['date', 'contributor_name', 'occupation', 'amount', 'recipient_name', 'recipient_type', 'recipient_acct', 'type'];
+      const lines   = [
+        headers.join(','),
+        ...rows.map(r => [
+          r.contribution_date || '',
+          `"${(r.contributor_name || '').replace(/"/g, '""')}"`,
+          `"${(r.contributor_occupation || '').replace(/"/g, '""')}"`,
+          r.amount ?? '',
+          `"${(r.recipient_name || '').replace(/"/g, '""')}"`,
+          r.recipient_type || '',
+          r.recipient_acct || '',
+          r.type_code || '',
+        ].join(',')),
+      ];
+      const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
+      const a    = document.createElement('a');
+      a.href     = URL.createObjectURL(blob);
+      a.download = `fl-transactions-${new Date().toISOString().slice(0,10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    } finally {
+      setExporting(false);
+    }
+  }
+
   const SortIcon = ({ col }) => {
     if (sort !== col) return <span style={{ color: 'var(--border)', marginLeft: '0.25rem' }}>↕</span>;
     return <span style={{ color: 'var(--orange)', marginLeft: '0.25rem' }}>{sortDir === 'desc' ? '↓' : '↑'}</span>;
@@ -149,7 +189,7 @@ export default function TransactionExplorer({
         gap: '0.75rem', padding: '1rem', background: 'rgba(8,8,24,0.6)',
         border: '1px solid var(--border)', borderRadius: '4px', marginBottom: '1rem',
       }}>
-        <FilterInput label="Contributor name" value={q} onChange={v => { setQ(v); setPage(1); }} placeholder="Search names…" />
+        <FilterInput label="Contributor name" value={q} onChange={v => { setQ(v); setPage(1); }} placeholder="First or last name…" />
         {!initialRecipientAcct && (
           <FilterInput label="Recipient acct #" value={recipAcct} onChange={v => { setRecipAcct(v); setPage(1); }} placeholder="e.g. 4700" />
         )}
@@ -212,15 +252,30 @@ export default function TransactionExplorer({
             : ''}
           {error && <span style={{ color: 'var(--republican)' }}> Error: {error}</span>}
         </span>
-        <button
-          onClick={clearFilters}
-          style={{
-            background: 'none', border: '1px solid var(--border)', color: 'var(--text-dim)',
-            padding: '0.2rem 0.5rem', fontSize: '0.7rem', cursor: 'pointer', borderRadius: '3px',
-          }}
-        >
-          Clear filters
-        </button>
+        <div style={{ display: 'flex', gap: '0.4rem' }}>
+          <button
+            onClick={handleExportCSV}
+            disabled={exporting || loading || data.length === 0}
+            style={{
+              background: 'none', border: '1px solid rgba(77,216,240,0.35)',
+              color: exporting ? 'var(--text-dim)' : 'var(--teal)',
+              padding: '0.2rem 0.5rem', fontSize: '0.7rem',
+              cursor: exporting || loading || data.length === 0 ? 'default' : 'pointer',
+              borderRadius: '3px', opacity: data.length === 0 ? 0.4 : 1,
+            }}
+          >
+            {exporting ? 'Exporting…' : '↓ CSV'}
+          </button>
+          <button
+            onClick={clearFilters}
+            style={{
+              background: 'none', border: '1px solid var(--border)', color: 'var(--text-dim)',
+              padding: '0.2rem 0.5rem', fontSize: '0.7rem', cursor: 'pointer', borderRadius: '3px',
+            }}
+          >
+            Clear filters
+          </button>
+        </div>
       </div>
 
       {/* Table */}
@@ -276,12 +331,12 @@ export default function TransactionExplorer({
                 </td>
                 <td style={{ padding: '0.4rem 0.6rem', maxWidth: '200px' }}>
                   {row.recipient_type === 'committee' ? (
-                    <a href={`/committee/${row.recipient_acct}`} style={{ color: 'var(--blue)', textDecoration: 'none', fontSize: '0.7rem' }}>
-                      Cmte #{row.recipient_acct}
+                    <a href={`/committee/${row.recipient_acct}`} style={{ color: 'var(--blue)', textDecoration: 'none', fontSize: '0.7rem', display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {row.recipient_name || `Cmte #${row.recipient_acct}`}
                     </a>
                   ) : row.recipient_type === 'candidate' ? (
-                    <a href={`/candidate/${row.recipient_acct}`} style={{ color: 'var(--blue)', textDecoration: 'none', fontSize: '0.7rem' }}>
-                      Cand #{row.recipient_acct}
+                    <a href={`/candidate/${row.recipient_acct}`} style={{ color: 'var(--blue)', textDecoration: 'none', fontSize: '0.7rem', display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {row.recipient_name || `Cand #${row.recipient_acct}`}
                     </a>
                   ) : (
                     <span style={{ color: 'var(--text-dim)', fontSize: '0.7rem' }}>#{row.recipient_acct}</span>

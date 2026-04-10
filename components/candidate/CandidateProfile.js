@@ -223,7 +223,7 @@ export default function CandidateProfile({ data, cycles = [] }) {
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                {['Committee', 'Link Type', 'Total Raised', 'Contributions'].map(h => (
+                {['Committee', 'Link Evidence', 'Total Raised', 'Contributions'].map(h => (
                   <th key={h} style={{
                     padding: '0.4rem 0.6rem',
                     textAlign: h === 'Contributions' ? 'center' : 'left',
@@ -237,6 +237,9 @@ export default function CandidateProfile({ data, cycles = [] }) {
               {pcs.map((pc, i) => {
                 const isStub = pc.link_type === 'solicitation_stub' || pc.link_type === 'historical_stub';
                 const isHistorical = pc.link_type === 'historical' || pc.link_type === 'historical_stub';
+                const isStrong = pc.confidence_tier === 'strong';
+                const tierColor  = isStrong ? 'var(--teal)' : 'var(--orange)';
+                const tierLabel  = isStrong ? 'Strong' : 'Possible';
                 return (
                   <tr key={i} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)', opacity: isHistorical ? 0.75 : 1 }}>
                     <td style={{ padding: '0.45rem 0.6rem', wordBreak: 'break-word' }}>
@@ -248,8 +251,21 @@ export default function CandidateProfile({ data, cycles = [] }) {
                         </a>
                       )}
                     </td>
-                    <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.68rem' }}>
-                      {LINK_TYPE_LABEL[pc.link_type] || pc.link_type}
+                    <td style={{ padding: '0.45rem 0.6rem', fontSize: '0.68rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
+                        <span style={{ color: 'var(--text-dim)' }}>{LINK_TYPE_LABEL[pc.link_type] || pc.link_type}</span>
+                        <span title={pc.signal_evidence || undefined} style={{
+                          fontSize: '0.55rem', padding: '0.1rem 0.35rem',
+                          border: `1px solid ${tierColor}55`,
+                          background: `${tierColor}11`,
+                          color: tierColor,
+                          borderRadius: '2px', fontFamily: 'var(--font-mono)',
+                          cursor: pc.signal_evidence ? 'help' : 'default',
+                          whiteSpace: 'nowrap',
+                        }}>
+                          {tierLabel}
+                        </span>
+                      </div>
                     </td>
                     <td style={{ padding: '0.45rem 0.6rem', whiteSpace: 'nowrap' }}>
                       {isStub

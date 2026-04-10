@@ -46,8 +46,11 @@ export async function GET(request) {
   if (year)           query = query.eq('report_year', parseInt(year, 10));
 
   if (q.trim()) {
-    // Use trigram index via ilike on normalized name
-    query = query.ilike('contributor_name_normalized', `%${q.trim().toUpperCase()}%`);
+    // Split into tokens so "Smith John" matches "JOHN SMITH" (token-order independent)
+    const tokens = q.trim().toUpperCase().split(/\s+/).filter(Boolean);
+    for (const tok of tokens) {
+      query = query.ilike('contributor_name_normalized', `%${tok}%`);
+    }
   }
 
   if (amount_min) {
@@ -83,8 +86,27 @@ export async function GET(request) {
   const total = count || 0;
   const pages = Math.ceil(total / page_size);
 
+  // Resolve recipient names
+  const rows = data || [];
+  const committeeAccts = [...new Set(rows.filter(r => r.recipient_type === 'committee').map(r => r.recipient_acct))];
+  const candidateAccts = [...new Set(rows.filter(r => r.recipient_type === 'candidate').map(r => r.recipient_acct))];
+
+  const [{ data: cmtes }, { data: cands }] = await Promise.all([
+    committeeAccts.length
+      ? db.from('committees').select('acct_num, committee_name').in('acct_num', committeeAccts)
+      : Promise.resolve({ data: [] }),
+    candidateAccts.length
+      ? db.from('candidates').select('acct_num, candidate_name').in('acct_num', candidateAccts)
+      : Promise.resolve({ data: [] }),
+  ]);
+
+  const nameMap = {};
+  (cmtes || []).forEach(c => { nameMap[c.acct_num] = c.committee_name; });
+  (cands || []).forEach(c => { nameMap[c.acct_num] = c.candidate_name; });
+  rows.forEach(r => { r.recipient_name = nameMap[r.recipient_acct] || null; });
+
   return NextResponse.json({
-    data: data || [],
+    data: rows,
     total,
     page,
     pages,

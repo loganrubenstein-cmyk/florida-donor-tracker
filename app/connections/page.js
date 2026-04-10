@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import ConnectionsView from '@/components/connections/ConnectionsView';
 
-export const dynamic = 'force-static';
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Committee Connections | FL Donor Tracker',

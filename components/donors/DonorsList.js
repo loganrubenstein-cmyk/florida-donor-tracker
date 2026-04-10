@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import BackLinks from '@/components/BackLinks';
+import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 function fmt(n) {
   if (!n || n === 0) return '$0';
@@ -281,11 +282,19 @@ export default function DonorsList() {
         </div>
       )}
 
-      <div style={{
-        fontSize: '0.62rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)',
-        borderTop: '1px solid var(--border)', paddingTop: '1rem', marginTop: '2rem',
-      }}>
-        Data: Florida Division of Elections · Not affiliated with the State of Florida. All data from public records.
+      <div style={{ marginTop: '3rem' }}>
+        <DataTrustBlock
+          source="Florida Division of Elections — Campaign Finance Filings"
+          sourceUrl="https://dos.elections.myflorida.com/campaign-finance/"
+          lastUpdated="April 2026"
+          direct={['donor name', 'contribution amounts', 'employer / occupation']}
+          normalized={['donors deduplicated by normalized name across committees', 'corporate flag derived from entity-type keywords']}
+          inferred={['total combined = hard money + soft money from linked committees']}
+          caveats={[
+            'Donors are matched by normalized name — different spellings of the same person may appear as separate entries.',
+            'Corporate / individual classification is automated and may be incorrect for some entities.',
+          ]}
+        />
       </div>
     </main>
   );

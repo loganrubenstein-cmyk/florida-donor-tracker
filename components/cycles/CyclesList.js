@@ -3,6 +3,7 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import BackLinks from '@/components/BackLinks';
+import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 function fmt(n) {
   if (!n || n === 0) return '—';
@@ -135,12 +136,18 @@ export default function CyclesList() {
         </table>
       </div>
 
-      <div style={{
-        fontSize: '0.62rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)',
-        borderTop: '1px solid var(--border)', paddingTop: '1rem', marginTop: '2rem',
-      }}>
-        Soft money (PAC/committee) linked from 2020 onward only. Hard money (direct) tracked from 2008.
-        Data: Florida Division of Elections · All data from public records.
+      <div style={{ marginTop: '3rem' }}>
+        <DataTrustBlock
+          source="Florida Division of Elections — Campaign Finance Filings"
+          sourceUrl="https://dos.elections.myflorida.com/campaign-finance/"
+          lastUpdated="April 2026"
+          direct={['total raised per cycle', 'candidate and committee counts', 'party breakdown']}
+          normalized={['soft money linked from committee contributions (2020 onward)', 'hard money direct from candidate filings (2008+)']}
+          caveats={[
+            'Soft money (PAC/committee receipts) linked from 2020 onward only — earlier cycles show hard money only.',
+            'Cycle totals include all state-level offices. Federal candidates excluded.',
+          ]}
+        />
       </div>
     </main>
   );

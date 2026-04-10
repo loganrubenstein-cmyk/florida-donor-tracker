@@ -42,6 +42,10 @@ const THEME_COLORS = {
   'labor':                 '#4dd8f0',
   'media-manipulation':    '#a04df0',
   'petition-fraud':        '#f04d4d',
+  'bipartisan-giving':     '#ffb060',
+  'legislative-battles':   '#ffb060',
+  'property-rights':       '#f0a04d',
+  'affordable-housing':    '#7dd87d',
 };
 
 const TYPE_COLOR = {
@@ -67,14 +71,45 @@ function ThemePill({ theme }) {
   const color = THEME_COLORS[theme] || 'var(--text-dim)';
   return (
     <span style={{
-      fontSize: '0.55rem', padding: '0.15rem 0.45rem',
-      border: `1px solid ${color}33`,
+      fontSize: '0.6rem', padding: '0.18rem 0.5rem',
+      border: `1px solid ${color}44`,
       background: `${color}11`,
       color, borderRadius: '2px',
       fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap',
     }}>
       {theme}
     </span>
+  );
+}
+
+function ArticleCard({ article }) {
+  return (
+    <a href={article.url} target="_blank" rel="noopener noreferrer"
+      style={{ textDecoration: 'none', display: 'block' }}>
+      <div style={{
+        padding: '0.75rem',
+        background: 'rgba(100,140,220,0.04)',
+        border: '1px solid rgba(100,140,220,0.1)',
+        borderRadius: '3px',
+        transition: 'border-color 0.12s',
+      }}>
+        <div style={{
+          fontSize: '0.78rem', color: 'var(--teal)', lineHeight: 1.45,
+          marginBottom: '0.3rem', fontWeight: 400,
+        }}>
+          {article.title}
+        </div>
+        <div style={{
+          fontSize: '0.62rem', color: 'var(--text-dim)',
+          fontFamily: 'var(--font-mono)',
+          display: 'flex', gap: '0.6rem', alignItems: 'center',
+        }}>
+          <span style={{ color: 'var(--orange)', fontWeight: 600 }}>{article.outlet}</span>
+          {article.date && <span>{article.date.slice(0, 7)}</span>}
+          <span style={{ marginLeft: 'auto', opacity: 0.5 }}>↗</span>
+        </div>
+      </div>
+    </a>
   );
 }
 
@@ -85,24 +120,27 @@ function EntityCard({ entity }) {
 
   return (
     <div style={{
-      border: '1px solid rgba(100,140,220,0.15)',
+      border: '1px solid rgba(100,140,220,0.18)',
       borderRadius: '4px',
-      padding: '1.25rem',
       background: 'var(--surface)',
-      display: 'flex', flexDirection: 'column', gap: '0.75rem',
+      display: 'flex', flexDirection: 'column',
+      overflow: 'hidden',
     }}>
-      {/* Header row */}
-      <div>
-        <div style={{ display: 'flex', gap: '0.4rem', marginBottom: '0.4rem', flexWrap: 'wrap' }}>
+      {/* Card header — accent stripe */}
+      <div style={{
+        padding: '1.25rem 1.25rem 0',
+      }}>
+        {/* Type + industry badges */}
+        <div style={{ display: 'flex', gap: '0.4rem', marginBottom: '0.65rem', flexWrap: 'wrap' }}>
           <span style={{
-            fontSize: '0.55rem', padding: '0.1rem 0.4rem',
+            fontSize: '0.58rem', padding: '0.12rem 0.45rem',
             border: `1px solid ${typeColor}`, color: typeColor,
             borderRadius: '2px', fontFamily: 'var(--font-mono)', fontWeight: 'bold',
           }}>
             {entity.type.toUpperCase()}
           </span>
           <span style={{
-            fontSize: '0.55rem', padding: '0.1rem 0.4rem',
+            fontSize: '0.58rem', padding: '0.12rem 0.45rem',
             border: '1px solid rgba(100,140,220,0.2)', color: 'var(--text-dim)',
             borderRadius: '2px', fontFamily: 'var(--font-mono)',
           }}>
@@ -110,64 +148,59 @@ function EntityCard({ entity }) {
           </span>
         </div>
 
+        {/* Name */}
         <a href={entity.page_url} style={{
           color: '#fff', textDecoration: 'none',
-          fontFamily: 'var(--font-serif)', fontSize: '1.05rem',
+          fontFamily: 'var(--font-serif)', fontSize: '1.15rem',
           fontWeight: 400, lineHeight: 1.2,
-          display: 'block', marginBottom: '0.3rem',
+          display: 'block', marginBottom: '0.45rem',
         }}>
-          {entity.canonical_name}
+          {entity.canonical_name.split(' ').map(w => w.charAt(0) + w.slice(1).toLowerCase()).join(' ')}
         </a>
 
+        {/* Stat */}
         {entity.stat && (
           <div style={{
-            fontSize: '0.72rem', color: 'var(--orange)',
+            fontSize: '0.88rem', color: 'var(--orange)',
             fontFamily: 'var(--font-mono)', fontWeight: 700,
+            marginBottom: '0.75rem',
           }}>
             {entity.stat_label}: {entity.stat}
           </div>
         )}
+
+        {/* Theme pills */}
+        {themes.length > 0 && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.3rem', marginBottom: '1rem' }}>
+            {themes.map(t => <ThemePill key={t} theme={t} />)}
+          </div>
+        )}
       </div>
 
-      {/* Themes */}
-      {themes.length > 0 && (
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.3rem' }}>
-          {themes.map(t => <ThemePill key={t} theme={t} />)}
-        </div>
-      )}
-
-      {/* Articles */}
+      {/* Articles section */}
       {articles.length > 0 && (
-        <div style={{ borderTop: '1px solid rgba(100,140,220,0.1)', paddingTop: '0.65rem' }}>
+        <div style={{
+          padding: '0 1.25rem 1.25rem',
+          flex: 1, display: 'flex', flexDirection: 'column', gap: '0.5rem',
+        }}>
           <div style={{
-            fontSize: '0.55rem', color: 'var(--text-dim)', textTransform: 'uppercase',
-            letterSpacing: '0.1em', marginBottom: '0.5rem',
+            fontSize: '0.58rem', color: 'var(--text-dim)', textTransform: 'uppercase',
+            letterSpacing: '0.1em', marginBottom: '0.25rem',
           }}>
-            In the News
+            In the News — {articles.length} article{articles.length !== 1 ? 's' : ''}
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            {articles.map((a, i) => (
-              <a key={i} href={a.url} target="_blank" rel="noopener noreferrer"
-                style={{ textDecoration: 'none' }}>
-                <div style={{ fontSize: '0.7rem', color: 'var(--teal)', lineHeight: 1.4, marginBottom: '0.15rem' }}>
-                  {a.title}
-                </div>
-                <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
-                  {a.outlet} · {a.date ? a.date.slice(0, 7) : ''}
-                </div>
-              </a>
-            ))}
-          </div>
+          {articles.map((a, i) => <ArticleCard key={i} article={a} />)}
         </div>
       )}
 
-      {/* Link to data page */}
-      <div style={{ marginTop: 'auto', paddingTop: '0.5rem' }}>
+      {/* Footer link */}
+      <div style={{
+        borderTop: '1px solid rgba(100,140,220,0.08)',
+        padding: '0.6rem 1.25rem',
+      }}>
         <a href={entity.page_url} style={{
-          fontSize: '0.62rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)',
+          fontSize: '0.65rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)',
           textDecoration: 'none',
-          borderTop: '1px solid rgba(100,140,220,0.08)', paddingTop: '0.5rem',
-          display: 'block',
         }}>
           → view in tracker
         </a>
@@ -177,8 +210,9 @@ function EntityCard({ entity }) {
 }
 
 export default function InvestigationsList({ entities }) {
-  // Sort by stat descending (biggest first)
   const sorted = [...entities].sort((a, b) => (b.stat_raw || 0) - (a.stat_raw || 0));
+  const totalArticles = entities.reduce((s, e) => s + (e.articles?.length || 0), 0);
+  const outlets = [...new Set(entities.flatMap(e => (e.articles || []).map(a => a.outlet)))];
 
   return (
     <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
@@ -197,13 +231,13 @@ export default function InvestigationsList({ entities }) {
           </span>
         </div>
         <h1 style={{
-          fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.5rem, 4vw, 2.6rem)',
-          fontWeight: 400, color: '#fff', marginBottom: '0.5rem', lineHeight: 1.1,
+          fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.6rem, 4vw, 2.8rem)',
+          fontWeight: 400, color: '#fff', marginBottom: '0.6rem', lineHeight: 1.1,
         }}>
           Follow the Story
         </h1>
         <p style={{
-          fontSize: '0.75rem', color: 'var(--text-dim)', maxWidth: '560px', lineHeight: 1.8,
+          fontSize: '0.82rem', color: 'var(--text-dim)', maxWidth: '580px', lineHeight: 1.8,
         }}>
           {entities.length} entities with documented political influence — cross-referenced with investigative journalism.
           Data from the Florida Division of Elections. Stories from independent reporters.
@@ -212,21 +246,22 @@ export default function InvestigationsList({ entities }) {
 
       {/* Stats strip */}
       <div style={{
-        display: 'flex', gap: '2rem', flexWrap: 'wrap',
+        display: 'flex', gap: '2.5rem', flexWrap: 'wrap',
         padding: '1rem 0', borderBottom: '1px solid rgba(100,140,220,0.1)',
         marginBottom: '2rem',
       }}>
         {[
-          { label: 'Entities tracked', value: entities.length },
-          { label: 'Committees', value: entities.filter(e => e.type === 'committee').length },
-          { label: 'Corporations', value: entities.filter(e => e.type === 'corporate').length },
-          { label: 'Journalism sources', value: [...new Set(entities.flatMap(e => (e.articles || []).map(a => a.outlet)))].length },
+          { label: 'Entities tracked',    value: entities.length },
+          { label: 'Committees',          value: entities.filter(e => e.type === 'committee').length },
+          { label: 'Corporations',        value: entities.filter(e => e.type === 'corporate').length },
+          { label: 'Articles linked',     value: totalArticles },
+          { label: 'Journalism sources',  value: outlets.length },
         ].map(({ label, value }) => (
           <div key={label}>
-            <div style={{ fontSize: '1.2rem', fontFamily: 'var(--font-mono)', color: 'var(--orange)', fontWeight: 700 }}>
+            <div style={{ fontSize: '1.4rem', fontFamily: 'var(--font-mono)', color: 'var(--orange)', fontWeight: 700 }}>
               {value}
             </div>
-            <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
               {label}
             </div>
           </div>
@@ -236,24 +271,26 @@ export default function InvestigationsList({ entities }) {
       {/* Cards grid */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-        gap: '1rem',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
+        gap: '1.25rem',
       }}>
         {sorted.map(e => <EntityCard key={e.id} entity={e} />)}
       </div>
 
-      <DataTrustBlock
-        source="FL Division of Elections (finance) · RSS news feeds (journalism)"
-        lastUpdated="April 2026"
-        direct={['entity names', 'finance totals', 'article headlines and links']}
-        normalized={['entity-to-profile matching (by name/acct_num)']}
-        inferred={['political influence signals (editorial judgment, not automated)']}
-        caveats={[
-          'Entities curated manually — not a comprehensive list of all political actors.',
-          'News links sourced from public RSS feeds; content belongs to original publishers.',
-          'Finance figures may include cross-cycle amounts — see individual profiles for cycle breakdown.',
-        ]}
-      />
+      <div style={{ marginTop: '3rem' }}>
+        <DataTrustBlock
+          source="FL Division of Elections (finance) · RSS news feeds (journalism)"
+          lastUpdated="April 2026"
+          direct={['entity names', 'finance totals', 'article headlines and links']}
+          normalized={['entity-to-profile matching (by name/acct_num)']}
+          inferred={['political influence signals (editorial judgment, not automated)']}
+          caveats={[
+            'Entities curated manually — not a comprehensive list of all political actors.',
+            'News links sourced from public RSS feeds; content belongs to original publishers.',
+            'Finance figures may include cross-cycle amounts — see individual profiles for cycle breakdown.',
+          ]}
+        />
+      </div>
     </main>
   );
 }

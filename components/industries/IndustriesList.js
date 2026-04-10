@@ -3,6 +3,7 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import BackLinks from '@/components/BackLinks';
+import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import { slugify } from '@/lib/slugify';
 
 function fmt(n) {
@@ -158,12 +159,20 @@ export default function IndustriesList() {
         </table>
       </div>
 
-      <div style={{
-        fontSize: '0.62rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)',
-        borderTop: '1px solid var(--border)', paddingTop: '1rem', marginTop: '2rem',
-      }}>
-        Data: Florida Division of Elections · Industry classification based on contributor occupation field ·
-        Hard money (direct candidate contributions) only · Not affiliated with the State of Florida. All data from public records.
+      <div style={{ marginTop: '3rem' }}>
+        <DataTrustBlock
+          source="Florida Division of Elections — Campaign Finance Filings"
+          sourceUrl="https://dos.elections.myflorida.com/campaign-finance/"
+          lastUpdated="April 2026"
+          direct={['contribution amounts', 'contributor occupation field']}
+          normalized={['industry bucket derived from occupation using keyword classifier']}
+          inferred={['industry assignment is automated — some contributors may be miscategorized']}
+          caveats={[
+            'Industry totals include hard money (direct candidate contributions) only — PAC-to-PAC transfers not included.',
+            'Occupation field is self-reported by contributors and may be blank, abbreviated, or inconsistent.',
+            '"Unclassified" category includes blank occupations and terms not matching any industry bucket.',
+          ]}
+        />
       </div>
     </main>
   );

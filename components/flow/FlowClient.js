@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import { Sankey, Tooltip, ResponsiveContainer } from 'recharts';
 import BackLinks from '@/components/BackLinks';
+import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import { slugify } from '@/lib/slugify';
 
 function fmt(n) {
@@ -13,8 +14,14 @@ function fmt(n) {
   return `$${n.toFixed(0)}`;
 }
 
-const TOP_OPTIONS  = [20, 30, 50, 100];
-const SORT_OPTIONS = [
+const TOP_OPTIONS   = [20, 30, 50, 100];
+const MIN_AMOUNTS   = [
+  { label: 'All',   value: 0 },
+  { label: '$1M+',  value: 1_000_000 },
+  { label: '$5M+',  value: 5_000_000 },
+  { label: '$10M+', value: 10_000_000 },
+];
+const SORT_OPTIONS  = [
   { value: 'amount', label: 'By Amount' },
   { value: 'alpha',  label: 'A → Z' },
   { value: 'count',  label: 'By Contributions' },
@@ -22,60 +29,61 @@ const SORT_OPTIONS = [
 const NODE_WIDTH  = 12;
 const LABEL_MAX   = 30;
 
+const REP_PATTERNS = /REPUBLICAN|DESANTIS|TRUMP|RUBIO|SCOTT|GOP|RPPOF|CONSERVATIVE/i;
+const DEM_PATTERNS = /DEMOCRAT|DEMOCRATIC|BIDEN|HARRIS|OBAMA|CLINTON|FORWARD FLORIDA|CHARLIE CRIST/i;
+
+function detectParty(name) {
+  if (REP_PATTERNS.test(name)) return 'REP';
+  if (DEM_PATTERNS.test(name)) return 'DEM';
+  return null;
+}
+
 function truncate(s) {
   return s.length > LABEL_MAX ? s.slice(0, LABEL_MAX) + '…' : s;
 }
 
-// Rendered as an SVG <g> inside Recharts' Sankey layer
-function SankeyNode({ x, y, width, height, payload, typeMap }) {
+function SankeyNode({ x, y, width, height, payload, typeMap, onFocus }) {
   if (!payload?.name) return null;
   const info        = typeMap[payload.name] || {};
   const isCommittee = info.type === 'committee';
-  const color       = isCommittee ? '#4dd8f0' : '#ffb060';
-  const label       = truncate(payload.name);
-  const textX       = isCommittee ? x + width + 8 : x - 8;
-  const anchor      = isCommittee ? 'start' : 'end';
-  const h           = Math.max(height, 2);
+  const party       = info.party;
 
-  const inner = (
-    <>
+  let color;
+  if (isCommittee) {
+    color = party === 'REP' ? 'var(--republican)' : party === 'DEM' ? 'var(--democrat)' : 'var(--teal)';
+  } else {
+    color = party === 'REP' ? '#f8a0a0' : party === 'DEM' ? '#90bffa' : 'var(--orange)';
+  }
+
+  const label  = truncate(payload.name);
+  const textX  = isCommittee ? x + width + 8 : x - 8;
+  const anchor = isCommittee ? 'start' : 'end';
+  const h      = Math.max(height, 2);
+
+  const handleClick = (e) => {
+    e.preventDefault();
+    if (onFocus) onFocus(payload.name, info);
+  };
+
+  return (
+    <g onClick={handleClick} style={{ cursor: 'pointer' }}>
       <rect x={x} y={y} width={width} height={h} fill={color} fillOpacity={0.88} rx={2} />
       <text
-        x={textX}
-        y={y + h / 2}
-        textAnchor={anchor}
-        dominantBaseline="middle"
-        fontSize={10}
-        fill={color}
+        x={textX} y={y + h / 2}
+        textAnchor={anchor} dominantBaseline="middle"
+        fontSize={10} fill={color}
         style={{ fontFamily: 'Courier New, monospace' }}
       >
         {label}
       </text>
-    </>
+    </g>
   );
-
-  if (isCommittee && info.acct) {
-    return (
-      <g style={{ cursor: 'pointer' }}>
-        <a href={`/committee/${info.acct}`}>{inner}</a>
-      </g>
-    );
-  }
-  if (!isCommittee && info.slug) {
-    return (
-      <g style={{ cursor: 'pointer' }}>
-        <a href={`/donor/${info.slug}`}>{inner}</a>
-      </g>
-    );
-  }
-  return <g>{inner}</g>;
 }
 
 function FlowTooltip({ active, payload }) {
   if (!active || !payload?.length) return null;
   const d = payload[0]?.payload;
   if (!d) return null;
-
   const isLink = d.source?.name != null;
   return (
     <div style={{
@@ -94,31 +102,68 @@ function FlowTooltip({ active, payload }) {
         <>
           <div style={{ color: '#c8d8f0', marginBottom: '0.2rem' }}>{d.name}</div>
           <div style={{ color: '#ffb060', fontWeight: 700 }}>{fmt(d.value)}</div>
+          <div style={{ color: '#5a6a88', fontSize: '0.62rem', marginTop: '0.2rem' }}>click to focus</div>
         </>
       )}
     </div>
   );
 }
 
+const btnBase = {
+  padding: '0.2rem 0.6rem', fontSize: '0.65rem',
+  borderRadius: '2px', cursor: 'pointer', fontFamily: 'var(--font-mono)',
+  transition: 'all 0.1s', background: 'transparent',
+};
+
 export default function FlowClient({ flows }) {
-  const [topN,   setTopN]   = useState(30);
-  const [sortBy, setSortBy] = useState('amount');
+  const [topN,          setTopN]          = useState(30);
+  const [sortBy,        setSortBy]        = useState('amount');
+  const [minAmount,     setMinAmount]     = useState(0);
+  const [search,        setSearch]        = useState('');
+  const [partyFilter,   setPartyFilter]   = useState('all');
+  const [focusedEntity, setFocusedEntity] = useState(null); // { name, info }
 
-  const { sankeyData, typeMap, totalFlow } = useMemo(() => {
-    let sorted = [...flows];
-    if (sortBy === 'alpha')  sorted.sort((a, b) => a.donor.localeCompare(b.donor));
-    if (sortBy === 'count')  sorted.sort((a, b) => b.num_contributions - a.num_contributions);
-    // 'amount' is already the default order from the file
-    const top = sorted.slice(0, topN);
+  const handleNodeFocus = (name, info) => {
+    setFocusedEntity({ name, info });
+    setSearch('');
+  };
 
-    // Build type map: name → {type, acct?, slug?}
+  const clearFocus = () => setFocusedEntity(null);
+
+  const { sankeyData, typeMap, totalFlow, visibleCount } = useMemo(() => {
+    const q = search.trim().toLowerCase();
+
+    let filtered;
+
+    if (focusedEntity) {
+      // Show ALL flows involving this entity (ignore topN, minAmount, partyFilter, search)
+      const n = focusedEntity.name;
+      filtered = flows.filter(f => f.donor === n || f.committee === n);
+    } else {
+      filtered = flows.filter(f => {
+        if (f.total_amount < minAmount) return false;
+        if (q && !f.donor.toLowerCase().includes(q) && !f.committee.toLowerCase().includes(q)) return false;
+        if (partyFilter !== 'all') {
+          const donorParty     = detectParty(f.donor);
+          const committeeParty = detectParty(f.committee);
+          if (partyFilter === 'REP' && donorParty !== 'REP' && committeeParty !== 'REP') return false;
+          if (partyFilter === 'DEM' && donorParty !== 'DEM' && committeeParty !== 'DEM') return false;
+        }
+        return true;
+      });
+
+      if (sortBy === 'alpha') filtered.sort((a, b) => a.donor.localeCompare(b.donor));
+      if (sortBy === 'count') filtered.sort((a, b) => b.num_contributions - a.num_contributions);
+    }
+
+    const top = focusedEntity ? filtered : filtered.slice(0, topN);
+
     const typeMap = {};
     top.forEach(f => {
-      if (!typeMap[f.donor]) typeMap[f.donor] = { type: 'donor', slug: slugify(f.donor) };
-      typeMap[f.committee] = { type: 'committee', acct: f.committee_acct };
+      if (!typeMap[f.donor])  typeMap[f.donor]    = { type: 'donor',     slug: slugify(f.donor),  party: detectParty(f.donor) };
+      typeMap[f.committee]                         = { type: 'committee', acct: f.committee_acct,  party: detectParty(f.committee) };
     });
 
-    // Donors first, then committees (determines left/right in Sankey)
     const donorNames     = [...new Set(top.map(f => f.donor))];
     const committeeNames = [...new Set(top.map(f => f.committee))];
     const nodes          = [
@@ -133,26 +178,48 @@ export default function FlowClient({ flows }) {
       value:  f.total_amount,
     }));
 
-    const totalFlow = top.reduce((s, f) => s + f.total_amount, 0);
+    const totalFlow    = top.reduce((s, f) => s + f.total_amount, 0);
+    const visibleCount = filtered.length;
 
-    return { sankeyData: { nodes, links }, typeMap, totalFlow };
-  }, [flows, topN]);
+    return { sankeyData: { nodes, links }, typeMap, totalFlow, visibleCount };
+  }, [flows, topN, sortBy, minAmount, search, partyFilter, focusedEntity]);
 
-  // Height scales with node count so labels don't overlap
   const nodeCount   = sankeyData.nodes.length;
   const chartHeight = Math.max(520, nodeCount * 24);
 
   const renderNode = useMemo(
-    () => (props) => <SankeyNode {...props} typeMap={typeMap} />,
+    () => (props) => <SankeyNode {...props} typeMap={typeMap} onFocus={handleNodeFocus} />,
     [typeMap]
   );
+
+  const inputStyle = {
+    background: '#0d0d22', border: '1px solid var(--border)',
+    color: 'var(--text)', padding: '0.3rem 0.6rem',
+    fontSize: '0.65rem', borderRadius: '2px',
+    fontFamily: 'var(--font-mono)', outline: 'none',
+  };
+
+  const focusInfo = focusedEntity?.info || {};
+  const focusProfileHref = focusInfo.acct
+    ? `/committee/${focusInfo.acct}`
+    : focusInfo.slug ? `/donor/${focusInfo.slug}` : null;
+
+  // Compute stats for focused entity
+  const focusStats = useMemo(() => {
+    if (!focusedEntity) return null;
+    const n = focusedEntity.name;
+    const asCommittee = flows.filter(f => f.committee === n);
+    const asDonor     = flows.filter(f => f.donor === n);
+    const totalIn     = asCommittee.reduce((s, f) => s + f.total_amount, 0);
+    const totalOut    = asDonor.reduce((s, f) => s + f.total_amount, 0);
+    return { asCommittee, asDonor, totalIn, totalOut };
+  }, [focusedEntity, flows]);
 
   return (
     <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
 
       <BackLinks links={[{ href: '/', label: 'home' }]} />
 
-      {/* Header */}
       <div style={{ marginBottom: '1.5rem' }}>
         <div style={{ marginBottom: '0.5rem' }}>
           <span style={{
@@ -170,88 +237,207 @@ export default function FlowClient({ flows }) {
           Donor → Committee Flow
         </h1>
         <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
-          <span>Top {topN} flows · {sankeyData.nodes.length} entities</span>
+          <span>
+            {focusedEntity
+              ? `${sankeyData.nodes.length} entities · ${visibleCount} flows for ${focusedEntity.name}`
+              : `Showing ${Math.min(topN, visibleCount)} of ${visibleCount} matching flows · ${sankeyData.nodes.length} entities`}
+          </span>
           <span style={{ color: 'var(--orange)', fontWeight: 700 }}>{fmt(totalFlow)} shown</span>
-          <span>{flows.length} total flows in dataset</span>
+          {!focusedEntity && <span>{flows.length} total flows in dataset</span>}
         </div>
       </div>
 
-      {/* Controls + legend */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.75rem', flexWrap: 'wrap' }}>
-        <span style={{ fontSize: '0.65rem', color: 'var(--text-dim)' }}>Show top:</span>
-        {TOP_OPTIONS.map(n => (
-          <button
-            key={n}
-            onClick={() => setTopN(n)}
-            style={{
-              padding: '0.2rem 0.6rem', fontSize: '0.65rem',
-              background: topN === n ? 'var(--orange)' : 'transparent',
-              color:      topN === n ? '#000'          : 'var(--text-dim)',
-              border:     `1px solid ${topN === n ? 'var(--orange)' : 'rgba(100,140,220,0.25)'}`,
-              borderRadius: '2px', cursor: 'pointer', fontFamily: 'var(--font-mono)',
-              transition: 'all 0.1s',
-            }}
-          >
-            {n}
-          </button>
-        ))}
+      {/* Focused entity banner */}
+      {focusedEntity && (
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap',
+          padding: '0.65rem 1rem', marginBottom: '1rem',
+          background: 'rgba(77,216,240,0.06)', border: '1px solid rgba(77,216,240,0.3)',
+          borderRadius: '4px',
+        }}>
+          <span style={{ fontSize: '0.62rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+            Focused on:
+          </span>
+          <span style={{ fontSize: '0.82rem', color: 'var(--teal)', fontWeight: 600 }}>
+            {focusedEntity.name}
+          </span>
+          {focusStats && (
+            <span style={{ fontSize: '0.65rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+              {focusStats.totalIn > 0 && `${fmt(focusStats.totalIn)} received`}
+              {focusStats.totalIn > 0 && focusStats.totalOut > 0 && ' · '}
+              {focusStats.totalOut > 0 && `${fmt(focusStats.totalOut)} donated`}
+            </span>
+          )}
+          <div style={{ display: 'flex', gap: '0.5rem', marginLeft: 'auto' }}>
+            {focusProfileHref && (
+              <a href={focusProfileHref} style={{
+                fontSize: '0.62rem', color: 'var(--teal)', fontFamily: 'var(--font-mono)',
+                textDecoration: 'none', padding: '0.2rem 0.5rem',
+                border: '1px solid rgba(77,216,240,0.3)', borderRadius: '2px',
+              }}>
+                view profile →
+              </a>
+            )}
+            <button onClick={clearFocus} style={{
+              ...btnBase,
+              color: 'var(--text-dim)', border: '1px solid rgba(100,140,220,0.25)',
+              fontSize: '0.62rem',
+            }}>
+              ✕ clear
+            </button>
+          </div>
+        </div>
+      )}
 
-        <span style={{ fontSize: '0.65rem', color: 'var(--text-dim)', marginLeft: '0.5rem' }}>Sort:</span>
-        {SORT_OPTIONS.map(opt => (
-          <button
-            key={opt.value}
-            onClick={() => setSortBy(opt.value)}
-            style={{
-              padding: '0.2rem 0.6rem', fontSize: '0.65rem',
-              background: sortBy === opt.value ? 'rgba(77,216,240,0.15)' : 'transparent',
-              color:      sortBy === opt.value ? 'var(--teal)'           : 'var(--text-dim)',
-              border:     `1px solid ${sortBy === opt.value ? 'var(--teal)' : 'rgba(100,140,220,0.25)'}`,
-              borderRadius: '2px', cursor: 'pointer', fontFamily: 'var(--font-mono)',
-              transition: 'all 0.1s',
-            }}
-          >
-            {opt.label}
-          </button>
-        ))}
+      {/* Controls — only shown when not in focus mode */}
+      {!focusedEntity && (
+        <>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.6rem', alignItems: 'center' }}>
+            <input
+              type="text"
+              placeholder="Filter by name…"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              style={{ ...inputStyle, minWidth: '180px', flexGrow: 1 }}
+            />
 
-        <div style={{ marginLeft: 'auto', display: 'flex', gap: '1.25rem', alignItems: 'center' }}>
-          {[
-            { color: 'var(--orange)', label: 'Donor (click to view)' },
-            { color: 'var(--teal)',   label: 'Committee (click to view)' },
-          ].map(({ color, label }) => (
-            <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <div style={{ width: '10px', height: '10px', background: color, borderRadius: '2px' }} />
-              <span style={{ fontSize: '0.62rem', color: 'var(--text-dim)' }}>{label}</span>
+            <span style={{ fontSize: '0.62rem', color: 'var(--text-dim)' }}>Party:</span>
+            {[
+              { value: 'all', label: 'All' },
+              { value: 'REP', label: 'REP', color: 'var(--republican)' },
+              { value: 'DEM', label: 'DEM', color: 'var(--democrat)' },
+            ].map(({ value, label, color }) => {
+              const active = partyFilter === value;
+              return (
+                <button key={value} onClick={() => setPartyFilter(value)} style={{
+                  ...btnBase,
+                  background: active ? (color ? `${color}22` : 'rgba(255,176,96,0.15)') : 'transparent',
+                  color:      active ? (color || 'var(--orange)')  : 'var(--text-dim)',
+                  border:     `1px solid ${active ? (color || 'var(--orange)') : 'rgba(100,140,220,0.25)'}`,
+                }}>
+                  {label}
+                </button>
+              );
+            })}
+
+            <span style={{ fontSize: '0.62rem', color: 'var(--text-dim)', marginLeft: '0.25rem' }}>Min:</span>
+            {MIN_AMOUNTS.map(({ label, value }) => {
+              const active = minAmount === value;
+              return (
+                <button key={value} onClick={() => setMinAmount(value)} style={{
+                  ...btnBase,
+                  background: active ? 'rgba(255,176,96,0.15)' : 'transparent',
+                  color:      active ? 'var(--orange)'          : 'var(--text-dim)',
+                  border:     `1px solid ${active ? 'var(--orange)' : 'rgba(100,140,220,0.25)'}`,
+                }}>
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.75rem', flexWrap: 'wrap' }}>
+            <span style={{ fontSize: '0.62rem', color: 'var(--text-dim)' }}>Show top:</span>
+            {TOP_OPTIONS.map(n => {
+              const active = topN === n;
+              return (
+                <button key={n} onClick={() => setTopN(n)} style={{
+                  ...btnBase,
+                  background: active ? 'var(--orange)' : 'transparent',
+                  color:      active ? '#000'           : 'var(--text-dim)',
+                  border:     `1px solid ${active ? 'var(--orange)' : 'rgba(100,140,220,0.25)'}`,
+                }}>
+                  {n}
+                </button>
+              );
+            })}
+
+            <span style={{ fontSize: '0.62rem', color: 'var(--text-dim)', marginLeft: '0.25rem' }}>Sort:</span>
+            {SORT_OPTIONS.map(opt => {
+              const active = sortBy === opt.value;
+              return (
+                <button key={opt.value} onClick={() => setSortBy(opt.value)} style={{
+                  ...btnBase,
+                  background: active ? 'rgba(77,216,240,0.15)' : 'transparent',
+                  color:      active ? 'var(--teal)'            : 'var(--text-dim)',
+                  border:     `1px solid ${active ? 'var(--teal)' : 'rgba(100,140,220,0.25)'}`,
+                }}>
+                  {opt.label}
+                </button>
+              );
+            })}
+
+            <div style={{ marginLeft: 'auto', display: 'flex', gap: '1.25rem', alignItems: 'center', flexWrap: 'wrap' }}>
+              {[
+                { color: 'var(--orange)',     label: 'Donor' },
+                { color: 'var(--teal)',       label: 'Committee' },
+                { color: 'var(--republican)', label: 'Republican-linked' },
+                { color: 'var(--democrat)',   label: 'Democrat-linked' },
+              ].map(({ color, label }) => (
+                <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                  <div style={{ width: '10px', height: '10px', background: color, borderRadius: '2px', opacity: 0.85 }} />
+                  <span style={{ fontSize: '0.58rem', color: 'var(--text-dim)' }}>{label}</span>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
+        </>
+      )}
+
+      {/* Hint text */}
+      {!focusedEntity && (
+        <div style={{ fontSize: '0.58rem', color: 'rgba(90,106,136,0.6)', fontFamily: 'var(--font-mono)', marginBottom: '0.75rem' }}>
+          Click any node to focus on that entity's flows
         </div>
-      </div>
+      )}
+
+      {/* Empty state */}
+      {sankeyData.nodes.length === 0 && (
+        <div style={{
+          padding: '3rem', textAlign: 'center',
+          color: 'var(--text-dim)', fontSize: '0.82rem', fontFamily: 'var(--font-mono)',
+          border: '1px solid var(--border)', borderRadius: '4px',
+        }}>
+          No flows match the current filters
+        </div>
+      )}
 
       {/* Sankey */}
-      <div style={{ width: '100%', height: `${chartHeight}px` }}>
-        <ResponsiveContainer width="100%" height={chartHeight}>
-          <Sankey
-            data={sankeyData}
-            node={renderNode}
-            nodeWidth={NODE_WIDTH}
-            nodePadding={10}
-            margin={{ top: 10, right: 220, bottom: 10, left: 220 }}
-            link={{
-              stroke:      'rgba(100,140,220,0.15)',
-              fill:        'rgba(100,140,220,0.12)',
-              strokeWidth: 0,
-            }}
-          >
-            <Tooltip content={<FlowTooltip />} />
-          </Sankey>
-        </ResponsiveContainer>
-      </div>
+      {sankeyData.nodes.length > 0 && (
+        <div style={{ width: '100%', height: `${chartHeight}px` }}>
+          <ResponsiveContainer width="100%" height={chartHeight}>
+            <Sankey
+              data={sankeyData}
+              node={renderNode}
+              nodeWidth={NODE_WIDTH}
+              nodePadding={10}
+              margin={{ top: 10, right: 220, bottom: 10, left: 220 }}
+              link={{
+                stroke:      'rgba(100,140,220,0.15)',
+                fill:        'rgba(100,140,220,0.12)',
+                strokeWidth: 0,
+              }}
+            >
+              <Tooltip content={<FlowTooltip />} />
+            </Sankey>
+          </ResponsiveContainer>
+        </div>
+      )}
 
-      <div style={{
-        fontSize: '0.62rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)',
-        borderTop: '1px solid var(--border)', paddingTop: '1rem', marginTop: '2rem',
-      }}>
-        Direct contributions from donors to political committees · Florida Division of Elections · All data from public records.
+      <div style={{ marginTop: '3rem' }}>
+        <DataTrustBlock
+          source="Florida Division of Elections — Campaign Finance Filings"
+          sourceUrl="https://dos.elections.myflorida.com/campaign-finance/"
+          lastUpdated="April 2026"
+          direct={['donor name', 'committee name', 'contribution amounts', 'contribution counts']}
+          normalized={['flows aggregated by donor → committee pair across all years']}
+          inferred={['party color derived from name pattern matching — not an official classification']}
+          caveats={[
+            'Shows top donor-to-committee flows only. Flows below the cutoff are not displayed.',
+            'Party detection uses keyword matching on names — some assignments may be incorrect.',
+            'Dollar amounts are cumulative across all election cycles in the dataset.',
+          ]}
+        />
       </div>
     </main>
   );

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import BackLinks from '@/components/BackLinks';
+import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 function fmt(n) {
   if (!n || n === 0) return '—';
@@ -248,11 +249,18 @@ export default function PrincipalsList() {
         </div>
       )}
 
-      <div style={{
-        fontSize: '0.62rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)',
-        borderTop: '1px solid var(--border)', paddingTop: '1rem', marginTop: '2rem',
-      }}>
-        Data: Florida Legislature Lobbyist Registration · Not affiliated with the State of Florida. All data from public records.
+      <div style={{ marginTop: '3rem' }}>
+        <DataTrustBlock
+          source="Florida Legislature Lobbyist Registration"
+          sourceUrl="https://www.fllegislature.gov/Lobbyist/"
+          lastUpdated="April 2026"
+          direct={['principal (client) name', 'lobbyists retained', 'registration years']}
+          normalized={['donation totals matched from FL DOE contributions by normalized entity name']}
+          caveats={[
+            'Finance totals matched by name — corporate entities may appear under different registered names.',
+            'Principal registration is per-year, so a long-term client appears across multiple sessions.',
+          ]}
+        />
       </div>
     </main>
   );

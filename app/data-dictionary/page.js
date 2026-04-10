@@ -77,7 +77,7 @@ export default function DataDictionary() {
         <Field name="election_year" source="Division of Elections" confidence="direct">Year of the election this candidate ran in.</Field>
         <Field name="status_desc" source="Division of Elections" confidence="direct">Current filing status: &apos;Active&apos;, &apos;Inactive&apos;, &apos;Withdrew&apos;, etc.</Field>
         <Field name="total_raised" source="computed" confidence="direct">Total contributions received, from candidate contribution records.</Field>
-        <Field name="total_spent" source="computed" confidence="direct">Total expenditures, from candidate expenditure records (collection in progress).</Field>
+        <Field name="total_spent" source="computed" confidence="direct">Total expenditures, from candidate expenditure records.</Field>
       </Group>
 
       <Group title="Committees">

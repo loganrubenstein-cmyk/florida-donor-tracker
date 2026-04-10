@@ -1,4 +1,5 @@
 import CommitteesList from '@/components/committees/CommitteesList';
+import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 export const dynamic = 'force-static';
 
@@ -31,6 +32,19 @@ export default function CommitteesPage() {
         </div>
       </div>
       <CommitteesList />
+      <div style={{ marginTop: '3rem' }}>
+        <DataTrustBlock
+          source="Florida Division of Elections — Committee Registration Filings"
+          sourceUrl="https://dos.elections.myflorida.com/committees/"
+          lastUpdated="April 2026"
+          direct={['committee name', 'committee type', 'total raised', 'total spent', 'donor counts']}
+          normalized={['committee type codes mapped to plain-language labels']}
+          caveats={[
+            'Includes all registered FL political committees — PACs, ECOs, party committees, and candidate committees.',
+            'Finance totals span all available cycles in the dataset (2008–2026).',
+          ]}
+        />
+      </div>
     </main>
   );
 }
