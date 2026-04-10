@@ -91,8 +91,29 @@ export default async function Home() {
             <HeroCounter total={meta.grand_totals?.total_political_spending_tracked ?? meta.campaign_finance?.estimated_total_contributions ?? 0} />
             <br />raised in Florida<br />politics.
           </h1>
-          <svg className="hide-mobile" viewBox="0 0 200 260" style={{ width: '120px', flexShrink: 0, opacity: 0.8 }} fill="none" stroke="var(--orange)" strokeWidth="2.5" strokeLinejoin="round">
-            <path d="M68,4 L120,4 L130,10 L140,8 L155,15 L162,12 L170,18 L172,28 L168,35 L170,42 L175,48 L178,58 L174,65 L170,68 L165,75 L162,85 L158,90 L155,100 L150,108 L148,115 L145,122 L140,128 L138,135 L135,140 L130,148 L125,155 L120,162 L115,168 L110,175 L108,180 L105,185 L100,190 L95,195 L90,200 L88,210 L85,218 L82,225 L78,232 L75,238 L70,242 L65,248 L60,252 L55,255 L50,252 L48,245 L52,240 L55,235 L50,230 L45,228 L38,222 L32,218 L28,212 L25,205 L30,198 L35,192 L38,185 L35,178 L30,172 L28,165 L30,158 L35,150 L38,142 L42,135 L45,128 L48,120 L50,112 L52,105 L48,98 L45,90 L42,82 L40,75 L38,68 L36,60 L38,52 L42,45 L45,38 L48,30 L52,22 L55,15 L60,8 L68,4Z" />
+          <svg className="hide-mobile" viewBox="0 0 200 250" style={{ width: '130px', flexShrink: 0, opacity: 0.85 }} fill="none" stroke="var(--orange)" strokeWidth="3" strokeLinejoin="round" strokeLinecap="round">
+            <path d="
+              M 6,22
+              L 98,22
+              L 98,33
+              L 118,33
+              L 118,22
+              L 160,22
+              C 166,24 171,30 174,40
+              C 177,56 178,78 178,102
+              C 178,128 177,150 174,170
+              C 170,190 163,208 153,222
+              C 141,237 125,247 106,253
+              C 88,258 68,257 50,249
+              C 36,242 24,229 18,214
+              C 14,199 16,182 22,166
+              C 28,150 32,138 30,126
+              C 28,114 22,104 20,94
+              C 18,84 22,74 28,64
+              C 32,56 28,46 20,36
+              L 10,26
+              Z
+            " />
           </svg>
         </div>
 
