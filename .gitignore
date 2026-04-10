@@ -31,7 +31,7 @@ public/data/news/
 public/data/ie/
 public/data/expenditures/
 # public/data/transfers/ — committed, small (~340KB)
-public/data/industry_donors/
+# public/data/industry_donors/ — committed, small (~512KB, 16 files)
 public/data/search_index_donors.json
 
 # Logs
