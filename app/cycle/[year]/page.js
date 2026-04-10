@@ -20,6 +20,16 @@ function loadCycleDonors() {
   }
 }
 
+function loadElectionSummary() {
+  try {
+    return JSON.parse(
+      readFileSync(join(process.cwd(), 'public', 'data', 'elections', 'summary.json'), 'utf-8')
+    );
+  } catch {
+    return [];
+  }
+}
+
 export async function generateStaticParams() {
   const stats = loadStats();
   const years = [...new Set(stats.map(c => c.election_year).filter(Boolean))];
@@ -35,7 +45,9 @@ export default async function CyclePage({ params }) {
   const { year } = await params;
   const stats = loadStats();
   const cycleDonors = loadCycleDonors();
+  const electionSummary = loadElectionSummary();
   const candidates = stats.filter(c => c.election_year === year);
   const topDonors = cycleDonors[year] || [];
-  return <CycleProfile year={year} candidates={candidates} topDonors={topDonors} />;
+  const electionCycle = electionSummary.find(e => String(e.year) === String(year) && e.election_type === 'general') || null;
+  return <CycleProfile year={year} candidates={candidates} topDonors={topDonors} electionCycle={electionCycle} />;
 }

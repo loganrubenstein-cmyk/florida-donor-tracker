@@ -43,7 +43,69 @@ function SectionLabel({ children }) {
 const PARTY_COLOR  = { REP: 'var(--republican)', DEM: 'var(--democrat)' };
 const PARTY_LABEL  = { REP: 'R', DEM: 'D', NPA: 'I', OTH: 'O' };
 
-export default function CycleProfile({ year, candidates, topDonors = [] }) {
+const STATEWIDE = new Set([
+  'Governor', 'GOVERNOR AND  LT.GOVERNOR', 'United States Senator', 'U.S. Senator',
+  'Attorney General', 'ATTORNEY GENERAL', 'Chief Financial Officer', 'CHIEF FINANCIAL OFFICER',
+  'Commissioner of Agriculture', 'COMMISSIONER OF AGRICULTURE',
+]);
+
+function ElectionResultsSection({ electionCycle }) {
+  if (!electionCycle?.finance_races_top50?.length) return null;
+  const seen = new Set();
+  const statewideRaces = electionCycle.finance_races_top50.filter(r => {
+    if (!STATEWIDE.has(r.contest_name)) return false;
+    const key = r.contest_name.toLowerCase().replace(/[^a-z]/g, '');
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return r.candidates.some(c => c.finance_acct_num && c.candidate_name !== 'UnderVotes');
+  });
+  if (!statewideRaces.length) return null;
+
+  return (
+    <div style={{ marginTop: '2.5rem', marginBottom: '2rem' }}>
+      <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '1rem', paddingBottom: '0.4rem', borderBottom: '1px solid var(--border)' }}>
+        Statewide Race Results — Finance Matched
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(310px, 1fr))', gap: '0.85rem' }}>
+        {statewideRaces.map(race => {
+          const real = race.candidates.filter(c => c.finance_acct_num && c.candidate_name !== 'UnderVotes');
+          const sorted = [...real].sort((a, b) => (b.total_raised || 0) - (a.total_raised || 0));
+          const maxR = sorted[0]?.total_raised || 1;
+          const contestLabel = race.contest_name.replace('GOVERNOR AND  LT.GOVERNOR', 'Governor').replace('COMMISSIONER OF AGRICULTURE', 'Commissioner of Agriculture').replace('CHIEF FINANCIAL OFFICER', 'Chief Financial Officer').replace('ATTORNEY GENERAL', 'Attorney General');
+          return (
+            <div key={race.contest_name} style={{ border: '1px solid var(--border)', borderRadius: '4px', padding: '0.85rem 1rem', background: 'var(--surface)' }}>
+              <div style={{ fontSize: '0.65rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                {contestLabel}
+              </div>
+              {sorted.map(c => (
+                <div key={c.candidate_name} style={{ marginBottom: '0.45rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.18rem' }}>
+                    <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: PARTY_COLOR[c.party] || 'var(--text-dim)', display: 'inline-block', flexShrink: 0 }} />
+                    <span style={{ fontSize: '0.7rem', color: c.winner ? 'var(--text)' : 'var(--text-dim)', fontWeight: c.winner ? 600 : 400, flex: 1 }}>
+                      {c.winner && <span style={{ color: 'var(--green)', marginRight: '3px', fontSize: '0.58rem' }}>✓</span>}
+                      <a href={`/candidate/${c.finance_acct_num}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                        {c.candidate_name}
+                      </a>
+                    </span>
+                    <span style={{ fontSize: '0.63rem', fontFamily: 'var(--font-mono)', color: 'var(--orange)', whiteSpace: 'nowrap' }}>
+                      {fmt(c.total_raised)}
+                    </span>
+                  </div>
+                  <div style={{ height: '2px', borderRadius: '1px', background: PARTY_COLOR[c.party] || 'var(--text-dim)', width: `${Math.max(1, (c.total_raised / maxR) * 100)}%`, opacity: c.winner ? 0.7 : 0.25, marginLeft: '12px' }} />
+                </div>
+              ))}
+            </div>
+          );
+        })}
+      </div>
+      <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', marginTop: '0.6rem' }}>
+        Finance data: FL Division of Elections hard money raised through election date. Click candidate name for full profile.
+      </div>
+    </div>
+  );
+}
+
+export default function CycleProfile({ year, candidates, topDonors = [], electionCycle = null }) {
   // Aggregate totals
   const total_hard     = candidates.reduce((s, c) => s + (c.hard_money_total  || 0), 0);
   const total_soft     = candidates.reduce((s, c) => s + (c.soft_money_total  || 0), 0);
@@ -284,6 +346,8 @@ export default function CycleProfile({ year, candidates, topDonors = [] }) {
           </div>
         </div>
       )}
+
+      <ElectionResultsSection electionCycle={electionCycle} />
 
       <div style={{ marginTop: '3rem' }}>
         <DataTrustBlock

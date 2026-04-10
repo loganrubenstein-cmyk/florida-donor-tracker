@@ -1,47 +1,70 @@
-import Link from 'next/link';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+import BackLinks from '@/components/BackLinks';
+import ElectionsView from '@/components/elections/ElectionsView';
 
 export const metadata = {
   title: 'Election Results — Florida Donor Tracker',
-  description: 'Florida election results — currently being rebuilt for accuracy.',
+  description: 'Florida election results 2012–2024 — finance-matched race results, cost per vote, and statewide race breakdowns.',
 };
 
+function loadCycles() {
+  return JSON.parse(
+    readFileSync(join(process.cwd(), 'public', 'data', 'elections', 'summary.json'), 'utf-8')
+  );
+}
+
+const LEG_CONTESTS = new Set(['State Representative', 'State Senator', 'STATE REPRESENTATIVE', 'STATE SENATOR']);
+
+function loadLegLeaderboards() {
+  const years = ['2012', '2014', '2016', '2018', '2020', '2022', '2024'];
+  const result = {};
+  for (const year of years) {
+    try {
+      const d = JSON.parse(
+        readFileSync(join(process.cwd(), 'public', 'data', 'elections', `${year}_general.json`), 'utf-8')
+      );
+      const leg = (d.candidates || []).filter(c =>
+        LEG_CONTESTS.has(c.contest_name) && c.finance_acct_num && c.finance_total_raised > 0
+      );
+      if (leg.length > 0) result[year] = leg;
+    } catch {
+      // file not found for this year
+    }
+  }
+  return result;
+}
+
 export default function ElectionsPage() {
+  const cycles = loadCycles();
+  const legLeaderboards = loadLegLeaderboards();
+
+  const generals = cycles.filter(c => c.election_type === 'general');
+  const totalCycles = generals.length;
+  const totalFinanceRaces = generals.reduce((s, c) => s + c.contests_with_finance, 0);
+  const totalLegCandidates = Object.values(legLeaderboards).reduce((s, a) => s + a.length, 0);
+
   return (
-    <main style={{ maxWidth: '700px', margin: '0 auto', padding: '4rem 1.5rem', textAlign: 'center' }}>
-      <div style={{ marginBottom: '0.5rem', fontSize: '0.75rem', color: 'var(--text-dim)' }}>
-        <Link href="/" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Home</Link>
-        {' / '}
-        <span>Elections</span>
+    <main style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
+      <BackLinks links={[{ href: '/', label: 'home' }]} />
+
+      <div style={{ marginBottom: '1.75rem' }}>
+        <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', color: 'var(--text)', margin: '0 0 0.3rem' }}>
+          Election Results
+        </h1>
+        <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
+          {totalCycles} general elections · {totalFinanceRaces} races with finance data · {totalLegCandidates.toLocaleString()} FL legislative candidates matched · 2012–2024
+        </div>
       </div>
 
-      <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', color: 'var(--text)', marginBottom: '1rem' }}>
-        Election Results
-      </h1>
-
-      <div style={{
-        padding: '2rem', background: 'var(--surface)', border: '1px solid var(--border)',
-        borderRadius: '6px', marginBottom: '2rem',
-      }}>
-        <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>🔧</div>
-        <h2 style={{ fontSize: '1.1rem', color: 'var(--orange)', marginBottom: '0.75rem', fontFamily: 'var(--font-sans)' }}>
-          Being Rebuilt for Accuracy
-        </h2>
-        <p style={{ color: 'var(--text-dim)', fontSize: '0.85rem', lineHeight: 1.7, maxWidth: '500px', margin: '0 auto' }}>
-          We identified accuracy issues in our election-to-finance matching (only 15–17% of races had
-          reliable cross-references). Rather than show incomplete data, we&rsquo;re rebuilding the matching
-          engine to use structured lookups (office + district + year) instead of fuzzy name matching.
-        </p>
-        <p style={{ color: 'var(--text-dim)', fontSize: '0.8rem', lineHeight: 1.6, marginTop: '1rem', maxWidth: '500px', margin: '1rem auto 0' }}>
-          In the meantime, election cycle spending data is available on the{' '}
-          <Link href="/cycles" style={{ color: 'var(--teal)', textDecoration: 'none' }}>Election Cycles</Link> page,
-          and individual candidate finance data is on each{' '}
-          <Link href="/candidates" style={{ color: 'var(--teal)', textDecoration: 'none' }}>candidate profile</Link>.
-        </p>
+      <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', lineHeight: 1.8, marginBottom: '2rem', maxWidth: '620px', padding: '0.85rem 1rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '4px' }}>
+        <strong style={{ color: 'var(--text)' }}>About this data:</strong> FL Division of Elections results matched to campaign finance records.
+        Statewide races (US Senate, AG, CFO) have individual candidate breakdowns where finance was matched.
+        FL House and Senate races show finance-matched candidates sorted by total raised — district-level
+        groupings are not available in this dataset.
       </div>
 
-      <p style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>
-        Source: Florida Division of Elections. Not affiliated with the State of Florida.
-      </p>
+      <ElectionsView cycles={cycles} legLeaderboards={legLeaderboards} />
     </main>
   );
 }

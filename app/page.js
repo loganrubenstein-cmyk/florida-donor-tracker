@@ -261,7 +261,7 @@ export default async function Home() {
               <CardLink href="/cycles" color="var(--green)" accent="rgba(128,255,160,0.15)" title="→ election cycles" desc="10 cycles 2008–2026 — totals, top raisers, party and office splits." />
               <CardLink href="/investigations" color="var(--orange)" accent="rgba(255,176,96,0.25)" title="→ investigations" desc="11 entities with documented political influence, linked to journalism." />
               <CardLink href="/legislature" color="var(--gold)" accent="rgba(255,208,96,0.12)" title="→ legislature" desc="160 current FL House + Senate members — voting records, committee assignments, campaign finance, and who funds them." />
-              <CardLink href="/elections" color="var(--text-dim)" accent="rgba(100,140,220,0.1)" title="→ elections (rebuilding)" desc="Election results page is being rebuilt for improved accuracy." />
+              <CardLink href="/elections" color="var(--blue)" accent="rgba(160,192,255,0.12)" title="→ elections" desc="FL election results 2012–2024 — finance-matched race breakdowns, cost per vote, statewide races." />
               <CardLink href="/party-finance" color="var(--teal)" accent="rgba(77,216,240,0.1)" title="→ party finance" desc="Republican vs Democrat fundraising trends by year and office." />
             </div>
           </div>
