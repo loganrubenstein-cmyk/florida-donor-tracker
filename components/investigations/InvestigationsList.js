@@ -87,15 +87,14 @@ function ArticleCard({ article }) {
     <a href={article.url} target="_blank" rel="noopener noreferrer"
       style={{ textDecoration: 'none', display: 'block' }}>
       <div style={{
-        padding: '0.75rem',
-        background: 'rgba(100,140,220,0.04)',
-        border: '1px solid rgba(100,140,220,0.1)',
+        padding: '0.85rem 1rem',
+        background: 'rgba(8,8,24,0.5)',
+        border: '1px solid rgba(100,140,220,0.12)',
         borderRadius: '3px',
-        transition: 'border-color 0.12s',
       }}>
         <div style={{
-          fontSize: '0.78rem', color: 'var(--teal)', lineHeight: 1.45,
-          marginBottom: '0.3rem', fontWeight: 400,
+          fontSize: '0.88rem', color: 'var(--text)', lineHeight: 1.55,
+          marginBottom: '0.45rem', fontFamily: 'var(--font-serif)',
         }}>
           {article.title}
         </div>
@@ -105,8 +104,8 @@ function ArticleCard({ article }) {
           display: 'flex', gap: '0.6rem', alignItems: 'center',
         }}>
           <span style={{ color: 'var(--orange)', fontWeight: 600 }}>{article.outlet}</span>
-          {article.date && <span>{article.date.slice(0, 7)}</span>}
-          <span style={{ marginLeft: 'auto', opacity: 0.5 }}>↗</span>
+          {article.date && <span>{new Date(article.date).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>}
+          <span style={{ marginLeft: 'auto', color: 'var(--teal)', opacity: 0.7 }}>↗</span>
         </div>
       </div>
     </a>
@@ -114,28 +113,29 @@ function ArticleCard({ article }) {
 }
 
 function EntityCard({ entity }) {
-  const typeColor = TYPE_COLOR[entity.type] || 'var(--text-dim)';
-  const articles  = entity.articles || [];
-  const themes    = entity.themes   || [];
+  const typeColor   = TYPE_COLOR[entity.type] || 'var(--text-dim)';
+  const articles    = entity.articles || [];
+  const themes      = entity.themes   || [];
+  const accentColor = themes.length > 0 ? (THEME_COLORS[themes[0]] || 'rgba(100,140,220,0.5)') : 'rgba(100,140,220,0.3)';
+  const displayName = entity.canonical_name.split(' ').map(w => w.charAt(0) + w.slice(1).toLowerCase()).join(' ');
 
   return (
     <div style={{
       border: '1px solid rgba(100,140,220,0.18)',
+      borderLeft: `3px solid ${accentColor}`,
       borderRadius: '4px',
       background: 'var(--surface)',
       display: 'flex', flexDirection: 'column',
       overflow: 'hidden',
     }}>
-      {/* Card header — accent stripe */}
-      <div style={{
-        padding: '1.25rem 1.25rem 0',
-      }}>
+      <div style={{ padding: '1.5rem 1.5rem 0' }}>
         {/* Type + industry badges */}
-        <div style={{ display: 'flex', gap: '0.4rem', marginBottom: '0.65rem', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '0.4rem', marginBottom: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
           <span style={{
             fontSize: '0.58rem', padding: '0.12rem 0.45rem',
             border: `1px solid ${typeColor}`, color: typeColor,
             borderRadius: '2px', fontFamily: 'var(--font-mono)', fontWeight: 'bold',
+            letterSpacing: '0.05em',
           }}>
             {entity.type.toUpperCase()}
           </span>
@@ -151,27 +151,30 @@ function EntityCard({ entity }) {
         {/* Name */}
         <a href={entity.page_url} style={{
           color: '#fff', textDecoration: 'none',
-          fontFamily: 'var(--font-serif)', fontSize: '1.15rem',
-          fontWeight: 400, lineHeight: 1.2,
-          display: 'block', marginBottom: '0.45rem',
+          fontFamily: 'var(--font-serif)', fontSize: '1.45rem',
+          fontWeight: 400, lineHeight: 1.15,
+          display: 'block', marginBottom: '0.5rem',
         }}>
-          {entity.canonical_name.split(' ').map(w => w.charAt(0) + w.slice(1).toLowerCase()).join(' ')}
+          {displayName}
         </a>
 
         {/* Stat */}
         {entity.stat && (
           <div style={{
-            fontSize: '0.88rem', color: 'var(--orange)',
+            fontSize: '1rem', color: 'var(--orange)',
             fontFamily: 'var(--font-mono)', fontWeight: 700,
-            marginBottom: '0.75rem',
+            marginBottom: '0.85rem', letterSpacing: '-0.01em',
           }}>
-            {entity.stat_label}: {entity.stat}
+            {entity.stat}
+            <span style={{ fontSize: '0.62rem', color: 'var(--text-dim)', fontWeight: 400, marginLeft: '0.4rem' }}>
+              {entity.stat_label.toLowerCase()}
+            </span>
           </div>
         )}
 
         {/* Theme pills */}
         {themes.length > 0 && (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.3rem', marginBottom: '1rem' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', marginBottom: '1.25rem' }}>
             {themes.map(t => <ThemePill key={t} theme={t} />)}
           </div>
         )}
@@ -180,30 +183,39 @@ function EntityCard({ entity }) {
       {/* Articles section */}
       {articles.length > 0 && (
         <div style={{
-          padding: '0 1.25rem 1.25rem',
-          flex: 1, display: 'flex', flexDirection: 'column', gap: '0.5rem',
+          padding: '0 1.5rem 1.5rem',
+          flex: 1, display: 'flex', flexDirection: 'column', gap: '0.6rem',
         }}>
           <div style={{
             fontSize: '0.58rem', color: 'var(--text-dim)', textTransform: 'uppercase',
-            letterSpacing: '0.1em', marginBottom: '0.25rem',
+            letterSpacing: '0.12em', marginBottom: '0.1rem',
+            display: 'flex', alignItems: 'center', gap: '0.5rem',
           }}>
-            In the News — {articles.length} article{articles.length !== 1 ? 's' : ''}
+            <span>In the News</span>
+            <span style={{ color: 'rgba(100,140,220,0.3)' }}>·</span>
+            <span>{articles.length} article{articles.length !== 1 ? 's' : ''}</span>
           </div>
           {articles.map((a, i) => <ArticleCard key={i} article={a} />)}
         </div>
       )}
 
-      {/* Footer link */}
+      {/* Footer CTA */}
       <div style={{
         borderTop: '1px solid rgba(100,140,220,0.08)',
-        padding: '0.6rem 1.25rem',
+        padding: '0.75rem 1.5rem',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       }}>
         <a href={entity.page_url} style={{
-          fontSize: '0.65rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)',
+          fontSize: '0.68rem', color: 'var(--teal)', fontFamily: 'var(--font-mono)',
           textDecoration: 'none',
         }}>
-          → view in tracker
+          → view full finance profile
         </a>
+        {entity.stat && (
+          <span style={{ fontSize: '0.58rem', color: 'rgba(90,106,136,0.5)', fontFamily: 'var(--font-mono)' }}>
+            FL Division of Elections
+          </span>
+        )}
       </div>
     </div>
   );
@@ -271,8 +283,8 @@ export default function InvestigationsList({ entities }) {
       {/* Cards grid */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
-        gap: '1.25rem',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))',
+        gap: '1.5rem',
       }}>
         {sorted.map(e => <EntityCard key={e.id} entity={e} />)}
       </div>
