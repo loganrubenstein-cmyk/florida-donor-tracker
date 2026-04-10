@@ -44,6 +44,8 @@ export default function AboutPage() {
           ['Corporate vs. individual', 'classified donors filtered by entity type and industry.'],
           ['Lobbyist connections', 'principals cross-referenced with their donation records.'],
           ['Committee relationships', 'PACs sharing treasurers, addresses, donors, or money flows.'],
+          ['Legislators and voting records', '160 current FL House + Senate members — campaign finance, committee assignments, and floor vote history.'],
+          ['Election results', 'precinct-level results 2012–2024 matched to finance records, with cost-per-vote analysis.'],
         ].map(([title, desc]) => (
           <div key={title} style={{ display: 'flex', gap: '0.75rem', marginBottom: '0.75rem', lineHeight: 1.7 }}>
             <span style={{ color: 'var(--orange)', fontSize: '0.8rem' }}>→</span>
@@ -62,6 +64,8 @@ export default function AboutPage() {
           <li><strong>Florida Division of Elections</strong> — candidate and committee contribution filings (1996–present)</li>
           <li><strong>FL Lobbyist Registration Office</strong> — lobbyist/principal registrations and compensation reports</li>
           <li><strong>FL Department of State</strong> — committee metadata (treasurers, addresses, type codes)</li>
+          <li><strong>LegiScan</strong> — legislative session data, floor vote records, bill sponsorships</li>
+          <li><strong>FL House Lobbyist Disclosure Portal</strong> — bill-level lobbying filings (2016–present)</li>
           <li><strong>Journalism</strong> — linked annotations on <Link href="/investigations" style={{ color: 'var(--teal)' }}>/investigations</Link></li>
         </ul>
       </section>
@@ -106,11 +110,16 @@ export default function AboutPage() {
             ['/cycles', 'Election Cycles'],
             ['/ie', 'Independent Expenditures'],
             ['/elections', 'Election Results'],
-            ['/legislators', 'Legislators'],
+            ['/legislature', 'Legislature Hub'],
+            ['/legislators', 'Legislators Directory'],
+            ['/legislature/committees', 'Legislative Committees'],
             ['/investigations', 'Investigations'],
+            ['/network', 'Network Hub'],
+            ['/network/graph', 'Network Graph'],
             ['/flow', 'Money Flow'],
             ['/party-finance', 'Party Finance'],
             ['/connections', 'Committee Connections'],
+            ['/lobbying/bills', 'Lobbied Bills'],
             ['/search', 'Global Search'],
           ].map(([href, label]) => (
             <Link key={href} href={href} style={{ color: 'var(--teal)', textDecoration: 'none', padding: '0.3rem 0' }}>
