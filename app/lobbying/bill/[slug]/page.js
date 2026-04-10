@@ -4,6 +4,7 @@ import { join } from 'path';
 import { notFound } from 'next/navigation';
 import { getDb } from '@/lib/db';
 import { fmtCount } from '../../../../lib/fmt';
+import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 export const dynamic = 'force-dynamic';
 
@@ -204,6 +205,22 @@ export default async function BillLobbyingPage({ params }) {
         <Link href="/lobbying/bills" style={{ fontSize: '0.78rem', color: 'var(--teal)', textDecoration: 'none' }}>
           ← Back to most lobbied bills
         </Link>
+      </div>
+
+      <div style={{ marginTop: '2rem' }}>
+        <DataTrustBlock
+          source="FL House Lobbyist Disclosure Portal"
+          sourceUrl="https://www.flhouse.gov/Sections/Lobbyist/lobbyist.aspx"
+          lastUpdated="April 2026"
+          direct={['bill number', 'lobbyist name', 'principal name', 'firm', 'filing year']}
+          normalized={['issue tags extracted from free-text issue fields']}
+          inferred={[]}
+          caveats={[
+            'Data covers FL House lobbyist disclosures only — Senate disclosures are filed separately.',
+            'Each filing represents one lobbyist–principal pair; a single organization may appear multiple times if they used multiple lobbyists.',
+            'Bills are matched by number — the same bill number in different sessions represents different legislation.',
+          ]}
+        />
       </div>
     </main>
   );

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 export const dynamic = 'force-dynamic';
 
@@ -73,6 +74,20 @@ export default async function ResearchHub() {
           <div className="hub-card-stat">224 legislators · 546 roll calls tracked</div>
         </Link>
       </div>
+
+      <DataTrustBlock
+        source="Florida Division of Elections · FL House Lobbyist Disclosure Portal · LegiScan"
+        sourceUrl="https://dos.elections.myflorida.com/campaign-finance/"
+        lastUpdated="April 2026"
+        direct={['contribution amounts', 'filing dates', 'lobbyist registrations', 'bill disclosures']}
+        normalized={['donor names deduplicated across committees', 'industry classifications']}
+        inferred={['industry bucket from occupation keywords', 'party-linked PAC totals']}
+        caveats={[
+          'Finance data covers Florida state-level races only. Federal candidates are excluded.',
+          'Industry classifications are automated — some donors may be miscategorized.',
+          'Lobbying compensation is disclosed in ranges, not exact figures.',
+        ]}
+      />
     </main>
   );
 }

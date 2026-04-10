@@ -28,6 +28,11 @@ export async function GET(request) {
 
   const db = getDb();
 
+  // Use fast planner estimate when no filters are active; exact count for filtered queries
+  const hasFilter = donor_slug || recipient_acct || q.trim() || year || tx_type ||
+    amount_min || amount_max || date_start || date_end;
+  const countMode = hasFilter ? 'exact' : 'planned';
+
   let query = db
     .from('contributions')
     .select(
@@ -35,7 +40,7 @@ export async function GET(request) {
       'amount, contribution_date, report_year, report_type, type_code, ' +
       'in_kind_description, contributor_address, contributor_city_state_zip, ' +
       'contributor_occupation, source_file',
-      { count: 'exact' }
+      { count: countMode }
     );
 
   // ── Apply filters ────────────────────────────────────────────────────────────

@@ -100,8 +100,9 @@ export default function TransactionExplorer({
   useEffect(() => { fetch_(filters); }, [q, donorSlug, recipAcct, recipType, year,
     txType, amountMin, amountMax, dateStart, dateEnd, sort, sortDir, page]);
 
-  // Sync URL
+  // Sync URL — skip when embedded inside a profile page (would wipe ?tab= param)
   useEffect(() => {
+    if (initialRecipientAcct || initialDonorSlug) return;
     const params = new URLSearchParams();
     Object.entries(filters).forEach(([k, v]) => {
       if (v && v !== '' && !(k === 'page' && v === 1) && !(k === 'sort' && v === 'contribution_date') && !(k === 'sort_dir' && v === 'desc')) {

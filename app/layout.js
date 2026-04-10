@@ -10,7 +10,6 @@ const NAV_LINKS = [
   { href: '/candidates',    label: 'Candidates' },
   { href: '/committees',    label: 'Committees' },
   { href: '/donors',        label: 'Donors' },
-  { href: '/ie',            label: 'IEs' },
   { href: '/explorer',      label: 'Explorer' },
   { href: '/lobbying',      label: 'Lobbying' },
   { href: '/legislators',   label: 'Legislators' },
@@ -48,12 +47,24 @@ export default function RootLayout({ children }) {
               {label}
             </Link>
           ))}
-          <Link href="/search" style={{
-            color: 'var(--text-dim)', textDecoration: 'none',
-            fontSize: '0.82rem', marginLeft: 'auto', whiteSpace: 'nowrap',
-          }}>
-            Search
-          </Link>
+          <form action="/explorer" method="get" style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>
+            <input
+              name="q"
+              type="search"
+              placeholder="Search transactions…"
+              style={{
+                background: 'rgba(8,8,24,0.8)',
+                border: '1px solid rgba(100,140,220,0.2)',
+                color: 'var(--text)',
+                padding: '0.25rem 0.6rem',
+                fontSize: '0.75rem',
+                borderRadius: '3px',
+                fontFamily: 'var(--font-mono)',
+                width: '180px',
+                outline: 'none',
+              }}
+            />
+          </form>
         </nav>
         {children}
         <footer className="site-footer">

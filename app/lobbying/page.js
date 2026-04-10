@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { getDb } from '@/lib/db';
+import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 export const dynamic = 'force-dynamic';
 
@@ -74,15 +75,19 @@ export default async function LobbyingHub() {
         </Link>
       </div>
 
-      <div className="trust-block" style={{ marginTop: '3rem' }}>
-        <h4>Data Source &amp; Limits</h4>
-        <p>
-          Lobbyist and principal records are sourced from the Florida Lobbyist Registration Office annual filings.
-          Compensation ranges are disclosed in broad bands (&lt;$10K, $10K–$25K, etc.) — exact figures are not public.
-          Name matching between lobbyists/principals and campaign donor records is <span className="confidence-badge confidence-inferred">inferred</span> by fuzzy name deduplication,
-          not confirmed by election authorities. <Link href="/methodology" style={{ color: 'var(--teal)', textDecoration: 'none' }}>Full methodology →</Link>
-        </p>
-      </div>
+      <DataTrustBlock
+        source="Florida Lobbyist Registration Office"
+        sourceUrl="https://www.floridalobbyist.gov/"
+        lastUpdated="April 2026"
+        direct={['lobbyist name', 'principal name', 'registration year', 'agency']}
+        normalized={['firm grouping aggregated from individual lobbyist records']}
+        inferred={['donor cross-references matched by fuzzy name — not confirmed by election authorities']}
+        caveats={[
+          'Compensation is disclosed in broad bands (<$10K, $10K–$25K, etc.) — exact figures are not public.',
+          'Principal-to-donor name matching is inferred and may produce false positives for common names.',
+          'Bill lobbying data covers FL House disclosures only (Senate filed separately).',
+        ]}
+      />
     </main>
   );
 }
