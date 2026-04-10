@@ -4,46 +4,8 @@ import { getDb } from '@/lib/db';
 const MAX_PAGE_SIZE = 500;
 const DEFAULT_PAGE_SIZE = 50;
 
-export async function GET(request) {
-  const { searchParams } = new URL(request.url);
-
-  // ── Filters ─────────────────────────────────────────────────────────────────
-  const donor_slug     = searchParams.get('donor_slug')     || '';
-  const recipient_acct = searchParams.get('recipient_acct') || '';
-  const recipient_type = searchParams.get('recipient_type') || ''; // 'committee' | 'candidate'
-  const q              = searchParams.get('q')              || ''; // contributor name ILIKE
-  const year           = searchParams.get('year')           || '';
-  const tx_type        = searchParams.get('tx_type')        || ''; // type_code filter
-  const amount_min     = searchParams.get('amount_min')     || '';
-  const amount_max     = searchParams.get('amount_max')     || '';
-  const date_start     = searchParams.get('date_start')     || '';
-  const date_end       = searchParams.get('date_end')       || '';
-  const sort           = searchParams.get('sort')           || 'contribution_date';
-  const sort_dir       = searchParams.get('sort_dir')       || 'desc';
-  const page           = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
-  const page_size      = Math.min(
-    MAX_PAGE_SIZE,
-    Math.max(1, parseInt(searchParams.get('page_size') || String(DEFAULT_PAGE_SIZE), 10))
-  );
-
-  const db = getDb();
-
-  // Use fast planner estimate when no filters are active; exact count for filtered queries
-  const hasFilter = donor_slug || recipient_acct || q.trim() || year || tx_type ||
-    amount_min || amount_max || date_start || date_end;
-  const countMode = hasFilter ? 'exact' : 'planned';
-
-  let query = db
-    .from('contributions')
-    .select(
-      'id, recipient_type, recipient_acct, contributor_name, donor_slug, ' +
-      'amount, contribution_date, report_year, report_type, type_code, ' +
-      'in_kind_description, contributor_address, contributor_city_state_zip, ' +
-      'contributor_occupation, source_file',
-      { count: countMode }
-    );
-
-  // ── Apply filters ────────────────────────────────────────────────────────────
+// Helper: apply the same filter set to any query builder
+function applyFilters(query, { donor_slug, recipient_acct, recipient_type, q, year, tx_type, amount_min, amount_max, date_start, date_end }) {
   if (donor_slug)     query = query.eq('donor_slug', donor_slug);
   if (recipient_acct) query = query.eq('recipient_acct', recipient_acct);
   if (recipient_type) query = query.eq('recipient_type', recipient_type);
@@ -51,7 +13,6 @@ export async function GET(request) {
   if (year)           query = query.eq('report_year', parseInt(year, 10));
 
   if (q.trim()) {
-    // Split into tokens so "Smith John" matches "JOHN SMITH" (token-order independent)
     const tokens = q.trim().toUpperCase().split(/\s+/).filter(Boolean);
     for (const tok of tokens) {
       query = query.ilike('contributor_name_normalized', `%${tok}%`);
@@ -69,30 +30,79 @@ export async function GET(request) {
   if (date_start) query = query.gte('contribution_date', date_start);
   if (date_end)   query = query.lte('contribution_date', date_end);
 
-  // ── Sort ─────────────────────────────────────────────────────────────────────
+  return query;
+}
+
+export async function GET(request) {
+  const { searchParams } = new URL(request.url);
+
+  // ── Filters ─────────────────────────────────────────────────────────────────
+  const donor_slug     = searchParams.get('donor_slug')     || '';
+  const recipient_acct = searchParams.get('recipient_acct') || '';
+  const recipient_type = searchParams.get('recipient_type') || '';
+  const q              = searchParams.get('q')              || '';
+  const year           = searchParams.get('year')           || '';
+  const tx_type        = searchParams.get('tx_type')        || '';
+  const amount_min     = searchParams.get('amount_min')     || '';
+  const amount_max     = searchParams.get('amount_max')     || '';
+  const date_start     = searchParams.get('date_start')     || '';
+  const date_end       = searchParams.get('date_end')       || '';
+  const sort           = searchParams.get('sort')           || 'contribution_date';
+  const sort_dir       = searchParams.get('sort_dir')       || 'desc';
+  const page           = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
+  const page_size      = Math.min(
+    MAX_PAGE_SIZE,
+    Math.max(1, parseInt(searchParams.get('page_size') || String(DEFAULT_PAGE_SIZE), 10))
+  );
+
+  const db = getDb();
+  const filterArgs = { donor_slug, recipient_acct, recipient_type, q, year, tx_type, amount_min, amount_max, date_start, date_end };
+  const hasFilter = donor_slug || recipient_acct || q.trim() || year || tx_type ||
+    amount_min || amount_max || date_start || date_end;
+
   const ALLOWED_SORTS = new Set([
     'contribution_date', 'amount', 'report_year', 'contributor_name',
     'recipient_acct', 'recipient_type',
   ]);
   const safeSort = ALLOWED_SORTS.has(sort) ? sort : 'contribution_date';
   const ascending = sort_dir === 'asc';
-  query = query.order(safeSort, { ascending, nullsFirst: false });
-
-  // ── Pagination ───────────────────────────────────────────────────────────────
   const offset = (page - 1) * page_size;
-  query = query.range(offset, offset + page_size - 1);
 
-  const { data, count, error } = await query;
+  // ── Data query (no count — never blocked by a slow COUNT(*)) ─────────────────
+  let dataQuery = db
+    .from('contributions')
+    .select(
+      'id, recipient_type, recipient_acct, contributor_name, donor_slug, ' +
+      'amount, contribution_date, report_year, report_type, type_code, ' +
+      'in_kind_description, contributor_address, contributor_city_state_zip, ' +
+      'contributor_occupation, source_file'
+    );
+  dataQuery = applyFilters(dataQuery, filterArgs);
+  dataQuery = dataQuery.order(safeSort, { ascending, nullsFirst: false });
+  dataQuery = dataQuery.range(offset, offset + page_size - 1);
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  // ── Count query (only when filters active — skip expensive full-table count) ──
+  let countQuery = null;
+  if (hasFilter) {
+    countQuery = db.from('contributions').select('*', { count: 'exact', head: true });
+    countQuery = applyFilters(countQuery, filterArgs);
   }
 
-  const total = count || 0;
-  const pages = Math.ceil(total / page_size);
+  // ── Run in parallel ───────────────────────────────────────────────────────────
+  const [dataResult, countResult] = await Promise.all([
+    dataQuery,
+    countQuery || Promise.resolve({ count: null, error: null }),
+  ]);
 
-  // Resolve recipient names
-  const rows = data || [];
+  if (dataResult.error) {
+    return NextResponse.json({ error: dataResult.error.message }, { status: 500 });
+  }
+
+  const rows  = dataResult.data || [];
+  const total = countResult.count ?? null;
+  const pages = total !== null ? Math.ceil(total / page_size) : null;
+
+  // ── Resolve recipient names ───────────────────────────────────────────────────
   const committeeAccts = [...new Set(rows.filter(r => r.recipient_type === 'committee').map(r => r.recipient_acct))];
   const candidateAccts = [...new Set(rows.filter(r => r.recipient_type === 'candidate').map(r => r.recipient_acct))];
 

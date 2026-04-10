@@ -248,10 +248,15 @@ export default function TransactionExplorer({
       {/* Results header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem', fontSize: '0.72rem', color: 'var(--text-dim)' }}>
         <span>
-          {loading ? 'Loading…' : total !== null
-            ? `${fmtCount(total)} transactions · page ${page} of ${pages}`
-            : ''}
-          {error && <span style={{ color: 'var(--republican)' }}> Error: {error}</span>}
+          {loading
+            ? 'Loading…'
+            : error
+              ? <span style={{ color: 'var(--republican)' }}>Error: {error}</span>
+              : total !== null
+                ? `${fmtCount(total)} transactions · page ${page} of ${pages}`
+                : data.length > 0
+                  ? `Most recent ${data.length} transactions — add filters to search 10.9M+`
+                  : ''}
         </span>
         <div style={{ display: 'flex', gap: '0.4rem' }}>
           <button
