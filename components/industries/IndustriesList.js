@@ -2,9 +2,15 @@
 // Server component — reads industry_summary.json at build time
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import dynamic from 'next/dynamic';
 import BackLinks from '@/components/BackLinks';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import { slugify } from '@/lib/slugify';
+
+const AllIndustriesTrendChart = dynamic(
+  () => import('@/components/industries/AllIndustriesTrendChart'),
+  { ssr: false }
+);
 
 function fmt(n) {
   if (n >= 1_000_000_000) return `$${(n / 1_000_000_000).toFixed(2)}B`;
@@ -45,6 +51,13 @@ export default function IndustriesList() {
   const summary = JSON.parse(raw);
   const { total_amount, total_count, industries } = summary;
 
+  let trendData = null;
+  try {
+    trendData = JSON.parse(readFileSync(
+      join(process.cwd(), 'public', 'data', 'industry_trends.json'), 'utf-8'
+    ));
+  } catch {}
+
   // Sort by total desc for display
   const sorted = [...industries].sort((a, b) => b.total - a.total);
 
@@ -68,6 +81,14 @@ export default function IndustriesList() {
           <span>Florida Division of Elections</span>
         </div>
       </div>
+
+      {/* Stacked trend chart */}
+      {trendData && (
+        <AllIndustriesTrendChart
+          trendData={trendData}
+          industries={industries.map(i => i.industry)}
+        />
+      )}
 
       {/* Bar summary */}
       <div style={{

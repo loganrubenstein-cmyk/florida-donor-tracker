@@ -65,17 +65,45 @@ for p in principals:
     add(meta_entries, p['slug'], p['name'], 'principal', f"/principal/{p['slug']}", sub)
 print(f"  {len(principals):,} principals")
 
-# ── Legislators (from voting records) ────────────────────────────────────
-leg_idx_path = DATA / 'legislators' / 'index.json'
-if leg_idx_path.exists():
-    print("Loading legislators …")
-    with open(leg_idx_path) as f:
-        legislators = json.load(f)
-    for l in legislators:
-        pid = l.get('people_id', '')
-        sub = f"{l.get('role', '')} {l.get('district', '')} · {l.get('party', '')}".strip(' ·')
-        add(meta_entries, f"leg_{pid}", l['name'], 'legislator', f"/legislator/{pid}", sub)
-    print(f"  {len(legislators):,} legislators")
+# ── Legislators (from Supabase, fallback to static JSON) ─────────────────
+print("Loading legislators …")
+leg_loaded = False
+try:
+    import psycopg2, os
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).resolve().parent.parent / '.env.local')
+    db_url = os.environ.get('SUPABASE_DB_URL', '')
+    if db_url:
+        conn = psycopg2.connect(db_url)
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT people_id, display_name, chamber, party, district, leadership_title
+            FROM legislators WHERE is_current = TRUE ORDER BY display_name
+        """)
+        rows = cur.fetchall()
+        cur.close(); conn.close()
+        for pid, name, chamber, party, district, leadership in rows:
+            ch = 'H' if chamber == 'House' else 'S'
+            parts = [f'{ch}-{district}', party]
+            if leadership:
+                parts.insert(0, leadership)
+            sub = ' · '.join(p for p in parts if p)
+            add(meta_entries, f"leg_{pid}", name, 'legislator', f"/legislator/{pid}", sub)
+        print(f"  {len(rows):,} legislators (from Supabase)")
+        leg_loaded = True
+except Exception as e:
+    print(f"  Supabase unavailable ({e}), falling back to static JSON")
+
+if not leg_loaded:
+    leg_idx_path = DATA / 'legislators' / 'index.json'
+    if leg_idx_path.exists():
+        with open(leg_idx_path) as f:
+            legislators = json.load(f)
+        for l in legislators:
+            pid = l.get('people_id', '')
+            sub = f"{l.get('role', '')} {l.get('district', '')} · {l.get('party', '')}".strip(' ·')
+            add(meta_entries, f"leg_{pid}", l['name'], 'legislator', f"/legislator/{pid}", sub)
+        print(f"  {len(legislators):,} legislators (from static JSON)")
 
 # ── Lobbying Firms (unified hub from script 53) ───────────────────────────
 firm_idx_path = DATA / 'lobbying_firms' / 'index.json'

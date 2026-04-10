@@ -6,19 +6,25 @@ import BackLinks from '@/components/BackLinks';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 const TYPE_COLOR = {
-  donor:     'var(--orange)',
-  committee: 'var(--teal)',
-  candidate: 'var(--blue)',
-  lobbyist:  '#c084fc',
-  principal: 'var(--green)',
+  donor:         'var(--orange)',
+  committee:     'var(--teal)',
+  candidate:     'var(--blue)',
+  lobbyist:      '#c084fc',
+  principal:     'var(--green)',
+  legislator:    'var(--gold)',
+  lobbying_firm: 'var(--text-dim)',
+  ld_principal:  'rgba(128,255,160,0.7)',
 };
 
 const TYPE_LABEL = {
-  donor:     'Donor',
-  committee: 'Committee',
-  candidate: 'Candidate',
-  lobbyist:  'Lobbyist',
-  principal: 'Principal',
+  donor:         'Donor',
+  committee:     'Committee',
+  candidate:     'Candidate',
+  lobbyist:      'Lobbyist',
+  principal:     'Principal',
+  legislator:    'Legislator',
+  lobbying_firm: 'Firm',
+  ld_principal:  'LD Principal',
 };
 
 const TYPE_OPTIONS = [
@@ -28,6 +34,7 @@ const TYPE_OPTIONS = [
   { value: 'candidate', label: 'Candidates' },
   { value: 'lobbyist',  label: 'Lobbyists' },
   { value: 'principal', label: 'Principals' },
+  { value: 'legislator', label: 'Legislators' },
 ];
 
 export default function SearchView() {
@@ -121,7 +128,7 @@ export default function SearchView() {
         <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
           {loading
             ? 'Loading index…'
-            : <><span>{totalEntities.toLocaleString()} entities — donors, committees, candidates, lobbyists, principals</span>
+            : <><span>{totalEntities.toLocaleString()} entities — donors, committees, candidates, lobbyists, principals, legislators</span>
                {!donorsLoaded && (
                  <span style={{ color: 'rgba(100,140,220,0.5)', fontSize: '0.6rem' }}>loading donors…</span>
                )}</>
