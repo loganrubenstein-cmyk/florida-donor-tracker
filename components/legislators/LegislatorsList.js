@@ -45,6 +45,13 @@ const chipStyle = (active) => ({
   transition: 'border-color 0.12s',
 });
 
+function fmtCompact(n) {
+  if (n >= 1_000_000_000) return `$${(n / 1_000_000_000).toFixed(1)}B`;
+  if (n >= 1_000_000)     return `$${(n / 1_000_000).toFixed(0)}M`;
+  if (n >= 1_000)         return `$${(n / 1_000).toFixed(0)}K`;
+  return `$${Math.round(n)}`;
+}
+
 export default function LegislatorsList() {
   const [results, setResults] = useState({ data: [], total: 0, pages: 0 });
   const [loading, setLoading] = useState(true);
@@ -55,6 +62,14 @@ export default function LegislatorsList() {
   const [sortBy, setSortBy] = useState('display_name');
   const [sortDir, setSortDir] = useState('asc');
   const [page, setPage] = useState(1);
+  const [stats, setStats] = useState(null);
+
+  useEffect(() => {
+    fetch('/api/legislators/stats')
+      .then(r => r.json())
+      .then(setStats)
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const t = setTimeout(() => setDebouncedQ(search), 300);
@@ -83,7 +98,7 @@ export default function LegislatorsList() {
     <main style={{ maxWidth: '1040px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
       <BackLinks links={[{ href: '/', label: 'home' }]} />
 
-      <div style={{ marginBottom: '1.5rem' }}>
+      <div style={{ marginBottom: '1.25rem' }}>
         <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', color: 'var(--text)', margin: '0 0 0.3rem' }}>
           Florida Legislature
         </h1>
@@ -91,6 +106,29 @@ export default function LegislatorsList() {
           Current 2024–2026 term · House (120) + Senate (40)
         </div>
       </div>
+
+      {/* Stats strip */}
+      {stats && (
+        <div style={{
+          display: 'flex', gap: '0', marginBottom: '1.5rem',
+          border: '1px solid var(--border)', borderRadius: '4px', overflow: 'hidden',
+          flexWrap: 'wrap',
+        }}>
+          {[
+            { label: 'Combined Raised', value: fmtCompact(stats.totalRaised), color: 'var(--orange)', sub: `${stats.total} legislators` },
+            { label: 'Republicans', value: fmtCompact(stats.byParty?.R?.raised || 0), color: 'var(--republican)', sub: `${stats.byParty?.R?.count || 0} members` },
+            { label: 'Democrats', value: fmtCompact(stats.byParty?.D?.raised || 0), color: 'var(--democrat)', sub: `${stats.byParty?.D?.count || 0} members` },
+            { label: 'Senate', value: `${stats.byChamber?.Senate?.count || 0} members`, color: 'var(--teal)', sub: fmtCompact(stats.byChamber?.Senate?.raised || 0) + ' raised' },
+            { label: 'Avg Vote Participation', value: stats.avgParticipation != null ? `${Math.round(stats.avgParticipation * 100)}%` : '—', color: 'var(--green)', sub: 'floor votes' },
+          ].map(({ label, value, color, sub }, i, arr) => (
+            <div key={label} style={{ flex: '1 1 120px', padding: '0.65rem 0.85rem', borderRight: i < arr.length - 1 ? '1px solid var(--border)' : 'none' }}>
+              <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: '0.2rem' }}>{label}</div>
+              <div style={{ fontSize: '0.88rem', fontWeight: 700, color, fontFamily: 'var(--font-mono)', lineHeight: 1.2 }}>{value}</div>
+              {sub && <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', marginTop: '0.1rem' }}>{sub}</div>}
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Filters */}
       <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center', marginBottom: '1.25rem' }}>

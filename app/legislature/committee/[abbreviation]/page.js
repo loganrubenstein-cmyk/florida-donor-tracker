@@ -19,6 +19,23 @@ export async function generateMetadata({ params }) {
 
 const PARTY_COLOR  = { R: 'var(--republican)', D: 'var(--democrat)', NPA: 'var(--text-dim)' };
 const PARTY_LABEL  = { R: 'R', D: 'D', NPA: 'NPA' };
+const INDUSTRY_COLORS = {
+  'Legal':                       '#4dd8f0',
+  'Real Estate':                 '#f0a04d',
+  'Healthcare':                  '#7dd87d',
+  'Finance & Insurance':         '#a04df0',
+  'Political / Lobbying':        '#f04d4d',
+  'Agriculture':                 '#d8c84d',
+  'Construction':                '#d8884d',
+  'Education':                   '#4d88f0',
+  'Technology / Engineering':    '#4df0d8',
+  'Retail & Hospitality':        '#d84d88',
+  'Business & Consulting':       '#8888cc',
+  'Government & Public Service': '#88cc88',
+  'Retired':                     '#aaaaaa',
+  'Not Employed':                '#888899',
+  'Other':                       '#555570',
+};
 const ROLE_BG      = { Chair: 'rgba(255,176,96,0.08)', 'Vice Chair': 'rgba(77,216,240,0.07)', 'Ranking Member': 'rgba(96,165,250,0.07)' };
 const ROLE_BORDER  = { Chair: 'var(--orange)', 'Vice Chair': 'var(--teal)', 'Ranking Member': 'var(--democrat)' };
 const ROLE_COLOR   = { Chair: 'var(--orange)', 'Vice Chair': 'var(--teal)', 'Ranking Member': 'var(--democrat)' };
@@ -74,7 +91,7 @@ export default async function CommitteePage({ params }) {
   const result = await loadLegislativeCommittee(params.abbreviation);
   if (!result) return notFound();
 
-  const { committee, members, totalRaised, partyBreak, topDonors } = result;
+  const { committee, members, totalRaised, partyBreak, topDonors, industryBreakdown } = result;
 
   const leadership = members.filter(m => m.role !== 'Member');
   const regularMembers = members.filter(m => m.role === 'Member');
@@ -206,6 +223,36 @@ export default async function CommitteePage({ params }) {
           </table>
         </div>
       </div>
+
+      {/* Industry breakdown */}
+      {industryBreakdown.length > 0 && (
+        <div style={{ marginBottom: '2.5rem' }}>
+          <SectionHeader>Funding by Industry</SectionHeader>
+          <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', marginBottom: '0.75rem' }}>
+            Industry classification of contributions to committee members' campaign accounts
+          </div>
+          {/* Stacked bar */}
+          <div style={{ display: 'flex', height: '8px', borderRadius: '4px', overflow: 'hidden', marginBottom: '0.75rem' }}>
+            {industryBreakdown.slice(0, 8).map(ind => (
+              <div key={ind.industry} style={{ width: `${ind.pct}%`, background: INDUSTRY_COLORS[ind.industry] || '#444466', minWidth: '2px' }} />
+            ))}
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+            {industryBreakdown.slice(0, 8).map(ind => (
+              <div key={ind.industry} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <div style={{ width: '8px', height: '8px', borderRadius: '2px', background: INDUSTRY_COLORS[ind.industry] || '#444466', flexShrink: 0 }} />
+                <div style={{ fontSize: '0.73rem', color: 'var(--text)', minWidth: '160px' }}>{ind.industry}</div>
+                <div style={{ flex: 1, height: '4px', background: 'var(--border)', borderRadius: '2px', overflow: 'hidden' }}>
+                  <div style={{ width: `${ind.pct}%`, height: '100%', background: INDUSTRY_COLORS[ind.industry] || '#444466', borderRadius: '2px' }} />
+                </div>
+                <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', minWidth: '80px', textAlign: 'right' }}>
+                  {fmtMoneyCompact(ind.total)} <span style={{ color: 'var(--border)' }}>({ind.pct.toFixed(1)}%)</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Top donors across committee */}
       {topDonors.length > 0 && (

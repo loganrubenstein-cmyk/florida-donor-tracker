@@ -12,7 +12,7 @@ const NAV_LINKS = [
   { href: '/donors',        label: 'Donors' },
   { href: '/explorer',      label: 'Explorer' },
   { href: '/lobbying',      label: 'Lobbying' },
-  { href: '/legislators',   label: 'Legislators' },
+  { href: '/legislature',   label: 'Legislature' },
   { href: '/elections',     label: 'Elections' },
   { href: '/network',       label: 'Network' },
   { href: '/research',      label: 'Research' },
