@@ -61,7 +61,16 @@ function StatBox({ label, value, sub, color }) {
   );
 }
 
-export default function IndustryProfile({ data, totalAmount, trendData, topDonors }) {
+function fmtCompact(n) {
+  if (!n) return '—';
+  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000)     return `$${(n / 1_000).toFixed(0)}K`;
+  return `$${Math.round(n)}`;
+}
+
+const PARTY_COLOR = { R: '#f87171', D: '#60a5fa', NPA: '#5a6a88' };
+
+export default function IndustryProfile({ data, totalAmount, trendData, topDonors, topLegislators }) {
   const color = INDUSTRY_COLORS[data.industry] || '#444466';
   const candidates = data.top_candidates || [];
   // Prefer rich per-industry donor file (100 donors, full data) over summary (10 donors, name+total only)
@@ -249,6 +258,63 @@ export default function IndustryProfile({ data, totalAmount, trendData, topDonor
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {/* Current legislators funded by this industry */}
+      {topLegislators?.length > 0 && (
+        <div style={{ marginBottom: '2.5rem' }}>
+          <div style={{
+            fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.1em',
+            color: 'var(--text-dim)', marginBottom: '0.75rem',
+            paddingBottom: '0.4rem', borderBottom: '1px solid var(--border)',
+          }}>
+            Current FL Legislators — Individual Contributions from {data.industry}
+          </div>
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                  {['Member', 'Chamber', 'Party', 'District', 'From This Industry'].map(h => (
+                    <th key={h} style={{
+                      padding: '0.4rem 0.6rem', textAlign: 'left',
+                      fontSize: '0.6rem', color: 'var(--text-dim)',
+                      textTransform: 'uppercase', letterSpacing: '0.07em', fontWeight: 600,
+                    }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {topLegislators.map(leg => (
+                  <tr key={leg.people_id} style={{ borderBottom: '1px solid rgba(100,140,220,0.07)' }}>
+                    <td style={{ padding: '0.45rem 0.6rem' }}>
+                      <a href={`/legislator/${leg.people_id}`} style={{ color: 'var(--text)', textDecoration: 'none', fontWeight: 500 }}>
+                        {leg.display_name}
+                      </a>
+                    </td>
+                    <td style={{ padding: '0.45rem 0.6rem' }}>
+                      <span style={{ fontSize: '0.65rem', padding: '0.1rem 0.35rem', border: '1px solid var(--border)', borderRadius: '3px', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+                        {leg.chamber === 'House' ? 'H' : 'S'}
+                      </span>
+                    </td>
+                    <td style={{ padding: '0.45rem 0.6rem' }}>
+                      <span style={{ color: PARTY_COLOR[leg.party] || 'var(--text-dim)', fontWeight: 600, fontSize: '0.7rem' }}>{leg.party}</span>
+                    </td>
+                    <td style={{ padding: '0.45rem 0.6rem', color: 'var(--teal)', fontFamily: 'var(--font-mono)', fontSize: '0.72rem' }}>
+                      {leg.district}
+                    </td>
+                    <td style={{ padding: '0.45rem 0.6rem', color: color, fontFamily: 'var(--font-mono)', fontSize: '0.75rem', fontWeight: 600 }}>
+                      {fmtCompact(leg.industry_total)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div style={{ fontSize: '0.62rem', color: 'var(--text-dim)', marginTop: '0.5rem' }}>
+            Direct individual contributions only — does not include PAC money.{' '}
+            <a href="/legislature" style={{ color: 'var(--teal)', textDecoration: 'none' }}>← View full legislature</a>
           </div>
         </div>
       )}

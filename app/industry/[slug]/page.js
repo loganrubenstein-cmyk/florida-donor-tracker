@@ -2,8 +2,9 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import IndustryProfile from '@/components/industries/IndustryProfile';
 import { slugify } from '@/lib/slugify';
+import { getDb } from '@/lib/db';
 
-export const dynamic = 'force-static';
+export const dynamic = 'force-dynamic';
 
 function loadSummary() {
   return JSON.parse(
@@ -31,11 +32,6 @@ function loadIndustryDonors(slug) {
   }
 }
 
-export async function generateStaticParams() {
-  const summary = loadSummary();
-  return summary.industries.map(ind => ({ slug: slugify(ind.industry) }));
-}
-
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const summary = loadSummary();
@@ -50,5 +46,35 @@ export default async function IndustryPage({ params }) {
   const trends = loadTrends();
   const topDonors = loadIndustryDonors(slug);
   const ind = summary.industries.find(i => slugify(i.industry) === slug);
-  return <IndustryProfile data={ind} totalAmount={summary.total_amount} trendData={trends} topDonors={topDonors} />;
+
+  let topLegislators = [];
+  if (ind?.industry) {
+    try {
+      const db = getDb();
+      const { data: indRows } = await db
+        .from('industry_by_committee')
+        .select('acct_num, total')
+        .eq('industry', ind.industry)
+        .order('total', { ascending: false })
+        .limit(100);
+
+      if (indRows?.length) {
+        const acctNums = indRows.map(r => r.acct_num);
+        const totalsMap = Object.fromEntries(indRows.map(r => [r.acct_num, parseFloat(r.total) || 0]));
+
+        const { data: legRows } = await db
+          .from('legislators')
+          .select('people_id, display_name, chamber, party, district, acct_num')
+          .in('acct_num', acctNums)
+          .eq('is_current', true);
+
+        topLegislators = (legRows || [])
+          .map(l => ({ ...l, industry_total: totalsMap[l.acct_num] || 0 }))
+          .sort((a, b) => b.industry_total - a.industry_total)
+          .slice(0, 10);
+      }
+    } catch {}
+  }
+
+  return <IndustryProfile data={ind} totalAmount={summary.total_amount} trendData={trends} topDonors={topDonors} topLegislators={topLegislators} />;
 }
