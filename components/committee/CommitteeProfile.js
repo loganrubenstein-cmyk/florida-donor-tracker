@@ -72,6 +72,62 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
         ))}
       </div>
 
+      {/* Committee meta + connection badges */}
+      {(data.committee_meta || (data.shared_with && Object.values(data.shared_with).some(v => v > 0))) && (
+        <div style={{ marginBottom: '1.5rem', padding: '0.75rem 1rem', border: '1px solid var(--border)', borderRadius: '3px', background: 'rgba(255,255,255,0.015)' }}>
+          <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.6rem' }}>
+            Registration Details
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', fontSize: '0.72rem' }}>
+            {data.committee_meta?.treasurer_name && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <span style={{ color: 'var(--text-dim)' }}>Treasurer:</span>
+                <span style={{ color: 'var(--text)', fontFamily: 'var(--font-mono)' }}>{data.committee_meta.treasurer_name}</span>
+                {data.shared_with?.treasurer > 0 && (
+                  <a href={`/connections?committee=${data.acct_num}`} style={{
+                    fontSize: '0.6rem', color: 'var(--teal)', textDecoration: 'none',
+                    padding: '0.05rem 0.35rem', border: '1px solid rgba(77,216,240,0.3)',
+                    borderRadius: '2px', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap',
+                  }}>
+                    shared with {data.shared_with.treasurer} other{data.shared_with.treasurer !== 1 ? 's' : ''} →
+                  </a>
+                )}
+              </div>
+            )}
+            {data.committee_meta?.chair_name && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <span style={{ color: 'var(--text-dim)' }}>Chair:</span>
+                <span style={{ color: 'var(--text)', fontFamily: 'var(--font-mono)' }}>{data.committee_meta.chair_name}</span>
+                {data.shared_with?.chair > 0 && (
+                  <a href={`/connections?committee=${data.acct_num}`} style={{
+                    fontSize: '0.6rem', color: 'var(--teal)', textDecoration: 'none',
+                    padding: '0.05rem 0.35rem', border: '1px solid rgba(77,216,240,0.3)',
+                    borderRadius: '2px', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap',
+                  }}>
+                    shared with {data.shared_with.chair} other{data.shared_with.chair !== 1 ? 's' : ''} →
+                  </a>
+                )}
+              </div>
+            )}
+            {data.committee_meta?.address_line && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                <span style={{ color: 'var(--text-dim)' }}>Address:</span>
+                <span style={{ color: 'var(--text)', fontFamily: 'var(--font-mono)', fontSize: '0.68rem' }}>{data.committee_meta.address_line}</span>
+                {data.shared_with?.address > 0 && (
+                  <a href={`/connections?committee=${data.acct_num}`} style={{
+                    fontSize: '0.6rem', color: 'var(--orange)', textDecoration: 'none',
+                    padding: '0.05rem 0.35rem', border: '1px solid rgba(255,176,96,0.3)',
+                    borderRadius: '2px', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap',
+                  }}>
+                    {data.shared_with.address} committee{data.shared_with.address !== 1 ? 's' : ''} at this address →
+                  </a>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Solicitation info */}
       {data.solicitation_id && (
         <div style={{ marginBottom: '2rem', padding: '0.9rem 1.1rem', border: '1px solid var(--border)', borderRadius: '3px', background: 'rgba(255,255,255,0.02)' }}>

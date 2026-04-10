@@ -115,13 +115,24 @@ const btnBase = {
   transition: 'all 0.1s', background: 'transparent',
 };
 
-export default function FlowClient({ flows }) {
-  const [topN,          setTopN]          = useState(30);
-  const [sortBy,        setSortBy]        = useState('amount');
-  const [minAmount,     setMinAmount]     = useState(0);
-  const [search,        setSearch]        = useState('');
-  const [partyFilter,   setPartyFilter]   = useState('all');
-  const [focusedEntity, setFocusedEntity] = useState(null); // { name, info }
+export default function FlowClient({ flows, donorIndustries = {} }) {
+  const [topN,            setTopN]          = useState(30);
+  const [sortBy,          setSortBy]        = useState('amount');
+  const [minAmount,       setMinAmount]     = useState(0);
+  const [search,          setSearch]        = useState('');
+  const [partyFilter,     setPartyFilter]   = useState('all');
+  const [industryFilter,  setIndustryFilter] = useState('all');
+  const [focusedEntity,   setFocusedEntity] = useState(null); // { name, info }
+
+  // Build sorted industry list from donorIndustries (industries present in the flow set)
+  const industries = useMemo(() => {
+    const counts = {};
+    flows.forEach(f => {
+      const ind = donorIndustries[f.donor];
+      if (ind && ind !== 'Unclassified') counts[ind] = (counts[ind] || 0) + 1;
+    });
+    return Object.entries(counts).sort((a, b) => b[1] - a[1]).map(([ind]) => ind);
+  }, [flows, donorIndustries]);
 
   const handleNodeFocus = (name, info) => {
     setFocusedEntity({ name, info });
@@ -148,6 +159,10 @@ export default function FlowClient({ flows }) {
           const committeeParty = detectParty(f.committee);
           if (partyFilter === 'REP' && donorParty !== 'REP' && committeeParty !== 'REP') return false;
           if (partyFilter === 'DEM' && donorParty !== 'DEM' && committeeParty !== 'DEM') return false;
+        }
+        if (industryFilter !== 'all') {
+          const ind = donorIndustries[f.donor] || 'Unclassified';
+          if (ind !== industryFilter) return false;
         }
         return true;
       });
@@ -182,7 +197,7 @@ export default function FlowClient({ flows }) {
     const visibleCount = filtered.length;
 
     return { sankeyData: { nodes, links }, typeMap, totalFlow, visibleCount };
-  }, [flows, topN, sortBy, minAmount, search, partyFilter, focusedEntity]);
+  }, [flows, topN, sortBy, minAmount, search, partyFilter, industryFilter, donorIndustries, focusedEntity]);
 
   const nodeCount   = sankeyData.nodes.length;
   const chartHeight = Math.max(520, nodeCount * 24);
@@ -319,6 +334,27 @@ export default function FlowClient({ flows }) {
                 </button>
               );
             })}
+
+            {industries.length > 0 && (
+              <>
+                <span style={{ fontSize: '0.62rem', color: 'var(--text-dim)', marginLeft: '0.25rem' }}>Industry:</span>
+                <select
+                  value={industryFilter}
+                  onChange={e => setIndustryFilter(e.target.value)}
+                  style={{
+                    ...inputStyle,
+                    padding: '0.2rem 0.5rem',
+                    fontSize: '0.65rem',
+                    maxWidth: '140px',
+                  }}
+                >
+                  <option value="all">All</option>
+                  {industries.map(ind => (
+                    <option key={ind} value={ind}>{ind}</option>
+                  ))}
+                </select>
+              </>
+            )}
 
             <span style={{ fontSize: '0.62rem', color: 'var(--text-dim)', marginLeft: '0.25rem' }}>Min:</span>
             {MIN_AMOUNTS.map(({ label, value }) => {
