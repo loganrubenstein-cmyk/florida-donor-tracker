@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Coverage & Limits — Florida Donor Tracker',
+  title: 'Coverage & Limits',
   description: 'What data is included in Florida Donor Tracker, what years are covered, and what is missing.',
 };
 

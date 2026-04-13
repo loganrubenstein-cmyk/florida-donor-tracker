@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Network — Florida Donor Tracker',
+  title: 'Network',
   description: 'Network graph, money flow, and connection explorer for Florida campaign finance.',
 };
 

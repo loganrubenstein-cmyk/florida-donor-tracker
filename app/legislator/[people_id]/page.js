@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { loadLegislator } from '@/lib/loadLegislator';
+import { getPoliticianSlugByAcctNum } from '@/lib/loadCandidate';
 import { fmtMoney, fmtCount, fmtDate } from '@/lib/fmt';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import SourceLink from '@/components/shared/SourceLink';
@@ -10,10 +11,10 @@ export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }) {
   const { legislator } = await loadLegislator(params.people_id);
-  if (!legislator) return { title: 'Legislator — Florida Donor Tracker' };
+  if (!legislator) return { title: 'Legislator' };
   const chamber = legislator.chamber === 'Senate' ? 'Florida Senator' : 'Florida Representative';
   return {
-    title: `${legislator.display_name} — Florida Donor Tracker`,
+    title: legislator.display_name,
     description: `${chamber} ${legislator.display_name} (${legislator.party}), District ${legislator.district}. Voting record, campaign finance, and committee assignments.`,
   };
 }
@@ -47,6 +48,7 @@ export default async function LegislatorPage({ params }) {
   const partyColor = PARTY_COLOR[leg.party] || 'var(--text-dim)';
   const partyLabel = PARTY_LABEL[leg.party] || leg.party;
   const chamberLabel = leg.chamber === 'Senate' ? 'Florida Senate' : 'Florida House';
+  const politicianSlug = leg.acct_num ? getPoliticianSlugByAcctNum(leg.acct_num) : null;
 
   const totalVotes = (leg.votes_yea || 0) + (leg.votes_nay || 0) + (leg.votes_nv || 0) + (leg.votes_absent || 0);
   const partPct = leg.participation_rate != null ? Math.round(leg.participation_rate * 100) : null;
@@ -383,6 +385,12 @@ export default async function LegislatorPage({ params }) {
           </div>
         </div>
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+          {politicianSlug && (
+            <Link href={`/politician/${politicianSlug}`}
+               style={{ fontSize: '0.7rem', padding: '0.25rem 0.6rem', background: 'var(--surface)', border: '1px solid rgba(77,216,240,0.25)', borderRadius: '3px', color: 'var(--teal)', textDecoration: 'none' }}>
+              Campaign history →
+            </Link>
+          )}
           {leg.ballotpedia && (
             <a href={`https://ballotpedia.org/${encodeURIComponent(leg.ballotpedia)}`} target="_blank" rel="noopener noreferrer"
                style={{ fontSize: '0.7rem', padding: '0.25rem 0.6rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '3px', color: 'var(--teal)', textDecoration: 'none' }}>

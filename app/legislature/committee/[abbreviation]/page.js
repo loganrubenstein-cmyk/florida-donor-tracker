@@ -9,10 +9,10 @@ export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }) {
   const result = await loadLegislativeCommittee(params.abbreviation);
-  if (!result) return { title: 'Committee — Florida Donor Tracker' };
+  if (!result) return { title: 'Committee' };
   const { committee } = result;
   return {
-    title: `${committee.name} — Florida Donor Tracker`,
+    title: committee.name,
     description: `FL ${committee.chamber} ${committee.name} — membership roster, leadership, and campaign finance of committee members.`,
   };
 }

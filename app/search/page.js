@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 export const dynamic = 'force-static';
 
 export const metadata = {
-  title: 'Search | FL Donor Tracker',
+  title: 'Search',
   description: 'Search across all Florida political donors, committees, candidates, lobbyists, and principals',
 };
 

@@ -5,7 +5,7 @@ import { getDb } from '@/lib/db';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Florida Legislature — Florida Donor Tracker',
+  title: 'Florida Legislature',
   description: 'Florida Legislature — 160 current members, 65 committees, voting records, and campaign finance.',
 };
 

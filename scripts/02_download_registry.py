@@ -31,13 +31,17 @@ from config import (
     FL_ENCODING,
 )
 
-# General elections to pull candidates from (most recent first)
-# Add more IDs here to expand coverage (format: YYYYMMDD-TYPE)
+# General elections to pull candidates from (most recent first).
+# Covers 2014–2026 so retired candidates (e.g. Brandes, Scott, Galvano) remain
+# in the dataset. Add more IDs here to expand coverage (format: YYYYMMDD-TYPE).
 CANDIDATE_ELECTION_IDS = [
     "20261103-GEN",
     "20241105-GEN",
     "20221108-GEN",
     "20201103-GEN",
+    "20181106-GEN",
+    "20161108-GEN",
+    "20141104-GEN",
 ]
 
 _HEADERS = {

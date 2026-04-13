@@ -38,7 +38,10 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const { year } = await params;
-  return { title: `${year} Florida Elections | FL Donor Tracker` };
+  return {
+    title: `${year} Florida Elections`,
+    description: `${year} Florida election cycle — campaign finance totals, top raisers, statewide race results, and party breakdowns.`,
+  };
 }
 
 export default async function CyclePage({ params }) {

@@ -15,7 +15,7 @@ export async function GET(request) {
   let query = db
     .from('lobbyists')
     .select(
-      'slug, name, firm, city, state, num_principals, num_active, total_donation_influence, has_donation_match, top_principal',
+      'slug, name, firm, city, state, num_principals, num_active, total_donation_influence, has_donation_match, top_principal, total_comp',
       { count: 'exact' }
     );
 

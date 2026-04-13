@@ -4,7 +4,7 @@ import BackLinks from '@/components/BackLinks';
 import ElectionsView from '@/components/elections/ElectionsView';
 
 export const metadata = {
-  title: 'Election Results — Florida Donor Tracker',
+  title: 'Election Results',
   description: 'Florida election results 2012–2024 — finance-matched race results, cost per vote, and statewide race breakdowns.',
 };
 

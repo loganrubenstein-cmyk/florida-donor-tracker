@@ -27,9 +27,12 @@ export async function generateMetadata({ params }) {
   const { acct_num } = await params;
   try {
     const data = await loadCommittee(acct_num);
-    return { title: `${data.committee_name} | FL Donor Tracker` };
+    const { fmtMoneyCompact } = await import('@/lib/fmt');
+    const raised = data.total_received || 0;
+    const desc = `${data.committee_name} — Florida political committee.${raised > 0 ? ` ${fmtMoneyCompact(raised)} raised.` : ''}`;
+    return { title: data.committee_name, description: desc };
   } catch {
-    return { title: 'Committee | FL Donor Tracker' };
+    return { title: 'Committee' };
   }
 }
 

@@ -67,6 +67,17 @@ def main():
                 address_line,
             ))
 
+    # Deduplicate by acct_num — keep first occurrence (CSV may have duplicates)
+    seen = set()
+    deduped = []
+    for r in rows:
+        if r[0] not in seen:
+            seen.add(r[0])
+            deduped.append(r)
+    if len(deduped) < len(rows):
+        print(f"  (deduped {len(rows) - len(deduped)} duplicate acct_nums)")
+    rows = deduped
+
     print(f"Loaded {len(rows):,} committees from CSV")
 
     conn = psycopg2.connect(DB_URL)

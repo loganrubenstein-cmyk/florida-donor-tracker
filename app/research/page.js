@@ -9,7 +9,7 @@ async function getCycleCounts() {
 }
 
 export const metadata = {
-  title: 'Research — Florida Donor Tracker',
+  title: 'Research',
   description: 'Cycles, industries, investigations, and methodology for Florida campaign finance research.',
 };
 

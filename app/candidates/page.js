@@ -3,7 +3,7 @@ import CandidatesList from '@/components/candidate/CandidatesList';
 export const dynamic = 'force-static';
 
 export const metadata = {
-  title: 'Candidates | FL Donor Tracker',
+  title: 'Candidates',
 };
 
 export default function CandidatesPage() {

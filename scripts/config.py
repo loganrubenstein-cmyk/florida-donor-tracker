@@ -27,6 +27,8 @@ CONTRIB_CGI    = "https://dos.elections.myflorida.com/cgi-bin/TreFin.exe"
 CONTRIB_SEL    = "https://dos.elections.myflorida.com/cgi-bin/TreSel.exe"
 EXPEND_CGI     = "https://dos.elections.myflorida.com/cgi-bin/expend.exe"
 TRANSFER_CGI   = "https://dos.elections.myflorida.com/cgi-bin/FundXfers.exe"
+LLOB_URL       = "https://www.leg.state.fl.us/data/LLob.txt"
+ELOB_URL       = "https://www.leg.state.fl.us/data/ELob.txt"
 
 # --- HTTP behavior ---
 REQUEST_DELAY_SEC = 1.5   # seconds to sleep between requests

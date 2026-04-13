@@ -12,7 +12,12 @@ export default function CommitteeConnections({ acctNum }) {
       .catch(() => setConnections([]));
   }, [acctNum]);
 
-  if (!connections || connections.length === 0) return null;
+  if (!connections) return null;
+  if (connections.length === 0) return (
+    <div style={{ color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.75rem', padding: '1rem 0' }}>
+      No coordination signals found for this committee.
+    </div>
+  );
 
   return (
     <div style={{ marginBottom: '2rem' }}>

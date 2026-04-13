@@ -12,9 +12,10 @@ function fmt(n) {
 }
 
 const SORT_OPTIONS = [
-  { value: 'total_donation_influence', label: 'Donation Influence' },
+  { value: 'total_comp',              label: 'Est. Compensation' },
   { value: 'num_principals',           label: 'Principals (Most)' },
   { value: 'num_active',               label: 'Active (Most)' },
+  { value: 'total_donation_influence', label: 'Donation Influence' },
   { value: 'name',                     label: 'Name A–Z' },
 ];
 
@@ -32,7 +33,7 @@ export default function LobbyistsList() {
   const [search, setSearch]         = useState('');
   const [debouncedQ, setDebouncedQ] = useState('');
   const [type, setType]             = useState('all');
-  const [sortBy, setSortBy]         = useState('total_donation_influence');
+  const [sortBy, setSortBy]         = useState('total_comp');
   const [sortDir, setSortDir]       = useState('desc');
   const [page, setPage]             = useState(1);
 
@@ -117,13 +118,12 @@ export default function LobbyistsList() {
           <thead>
             <tr style={{ borderBottom: '1px solid var(--border)' }}>
               {[
-                { label: '#',                  align: 'center', width: '2rem' },
-                { label: 'Lobbyist',           align: 'left'  },
-                { label: 'Firm',               align: 'left'  },
-                { label: 'Location',           align: 'left'  },
-                { label: 'Principals',         align: 'right', sortKey: 'num_principals'           },
-                { label: 'Active',             align: 'right'                                      },
-                { label: 'Donation Influence', align: 'right', sortKey: 'total_donation_influence' },
+                { label: '#',              align: 'center', width: '2rem' },
+                { label: 'Lobbyist',       align: 'left'  },
+                { label: 'Firm',           align: 'left'  },
+                { label: 'Principals',     align: 'right', sortKey: 'num_principals' },
+                { label: 'Active',         align: 'right'                            },
+                { label: 'Est. Comp',      align: 'right', sortKey: 'total_comp'     },
               ].map(({ label, align, width, sortKey }) => {
                 const isActive = sortKey && sortBy === sortKey;
                 return (
@@ -156,7 +156,7 @@ export default function LobbyistsList() {
           <tbody>
             {!loading && pageItems.length === 0 && (
               <tr>
-                <td colSpan={7} style={{
+                <td colSpan={6} style={{
                   padding: '2.5rem 0.6rem', color: 'var(--text-dim)',
                   fontSize: '0.72rem', textAlign: 'center', fontFamily: 'var(--font-mono)',
                 }}>
@@ -184,17 +184,14 @@ export default function LobbyistsList() {
                 <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.68rem', maxWidth: '180px', wordBreak: 'break-word' }}>
                   {l.firm || '—'}
                 </td>
-                <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.68rem', whiteSpace: 'nowrap' }}>
-                  {[l.city, l.state].filter(Boolean).join(', ') || '—'}
-                </td>
                 <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--text)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>
                   {(l.num_principals || 0).toLocaleString()}
                 </td>
                 <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--teal)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>
                   {(l.num_active || 0).toLocaleString()}
                 </td>
-                <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: l.total_donation_influence > 0 ? 'var(--orange)' : 'var(--text-dim)', fontWeight: l.total_donation_influence > 0 ? 700 : 400, whiteSpace: 'nowrap' }}>
-                  {fmt(l.total_donation_influence)}
+                <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: l.total_comp > 0 ? 'var(--blue)' : 'var(--text-dim)', fontWeight: l.total_comp > 0 ? 700 : 400, whiteSpace: 'nowrap' }}>
+                  {fmt(l.total_comp)}
                 </td>
               </tr>
             ))}
@@ -233,14 +230,15 @@ export default function LobbyistsList() {
 
       <div style={{ marginTop: '3rem' }}>
         <DataTrustBlock
-          source="Florida Legislature Lobbyist Registration"
-          sourceUrl="https://www.fllegislature.gov/Lobbyist/"
+          source="Florida Lobbyist Registration Office — Registration & Compensation Reports"
+          sourceUrl="https://www.floridalobbyist.gov"
           lastUpdated="April 2026"
-          direct={['lobbyist name', 'firm', 'principals (clients)', 'registration year']}
-          normalized={['donation totals matched from FL DOE contributions by normalized name']}
+          direct={['lobbyist name', 'firm', 'principals (clients)', 'quarterly compensation reports (2007–present)']}
+          normalized={['compensation totals (midpoints below $50K; exact amounts above $50K)']}
           caveats={[
-            'Finance totals are name-matched — not all lobbyists have a matching campaign finance record.',
-            'Lobbying registration and political giving are separate disclosures. A match does not imply a connection.',
+            'Compensation below $50,000 is reported in ranges — we use midpoints for aggregation.',
+            'Amounts of $50,000+ are exact figures reported by the principal.',
+            'Compensation is aggregated across all clients and both legislative/executive branches.',
           ]}
         />
       </div>

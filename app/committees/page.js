@@ -4,7 +4,7 @@ import DataTrustBlock from '@/components/shared/DataTrustBlock';
 export const dynamic = 'force-static';
 
 export const metadata = {
-  title: 'Committees | FL Donor Tracker',
+  title: 'Committees',
   description: 'Browse all 4,440 Florida political committees with campaign finance data.',
 };
 

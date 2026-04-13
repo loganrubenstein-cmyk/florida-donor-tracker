@@ -18,6 +18,14 @@ const SORT_OPTIONS = [
   { value: 'donor_overlap_pct', label: 'Donor Overlap %' },
 ];
 
+const CAPS_KEEP = new Set(['PAC', 'LLC', 'ECO', 'NOP', 'DBA', 'INC', 'II', 'III', 'IV', 'PC', 'LP', 'LLP']);
+function toTitle(s) {
+  if (!s) return s;
+  return s.toLowerCase().replace(/\b\w+/g, w =>
+    CAPS_KEEP.has(w.toUpperCase()) ? w.toUpperCase() : w.charAt(0).toUpperCase() + w.slice(1)
+  );
+}
+
 function fmt(n) {
   if (!n || n === 0) return null;
   if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
@@ -79,7 +87,7 @@ function ConnectionRow({ row }) {
               color: 'var(--teal)', textDecoration: 'none',
               fontSize: '0.85rem', fontWeight: 500,
             }}>
-              {row.entity_a}
+              {toTitle(row.entity_a)}
             </a>
             {row.entity_a_type && (
               <span style={{ fontSize: '0.55rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', border: '1px solid var(--border)', padding: '0.05rem 0.3rem', borderRadius: '2px' }}>
@@ -92,7 +100,7 @@ function ConnectionRow({ row }) {
               color: 'var(--teal)', textDecoration: 'none',
               fontSize: '0.85rem', fontWeight: 500,
             }}>
-              {row.entity_b}
+              {toTitle(row.entity_b)}
             </a>
             {row.entity_b_type && (
               <span style={{ fontSize: '0.55rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', border: '1px solid var(--border)', padding: '0.05rem 0.3rem', borderRadius: '2px' }}>

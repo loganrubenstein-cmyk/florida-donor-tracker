@@ -171,6 +171,9 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
 
   // ── Tab content ─────────────────────────────────────────────────────────────
 
+  const isLatestCycle = cycles.length <= 1 || !cycles.some(c => c.election_year > data.election_year);
+  const hasLinkedPcsButNoSoft = data.soft_money_total === 0 && pcsWithData.length > 0;
+
   const overviewContent = (
     <div>
       {/* Combined stats grid */}
@@ -181,8 +184,8 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
       }}>
         {[
           { label: 'Hard Money (Direct)',   value: fmt(hm.total),              sub: `${(hm.num_contributions || 0).toLocaleString()} contributions` },
-          { label: 'Soft Money (Candidate PACs)', value: fmt(data.soft_money_total), sub: pcsSpecific.length > 0 ? `${pcsSpecific.length} candidate PAC${pcsSpecific.length !== 1 ? 's' : ''}${pcsAffiliated.length > 0 ? ` + ${pcsAffiliated.length} affiliated` : ''}` : pcsAffiliated.length > 0 ? `${pcsAffiliated.length} affiliated only` : '0 committees linked' },
-          { label: 'Combined Total',         value: fmt(data.total_combined),   sub: 'hard + soft' },
+          { label: 'Soft Money (Candidate PACs)', value: fmt(data.soft_money_total), sub: hasLinkedPcsButNoSoft ? 'Tracked on most recent cycle' : pcsSpecific.length > 0 ? `${pcsSpecific.length} candidate PAC${pcsSpecific.length !== 1 ? 's' : ''}${pcsAffiliated.length > 0 ? ` + ${pcsAffiliated.length} affiliated` : ''}` : pcsAffiliated.length > 0 ? `${pcsAffiliated.length} affiliated only` : '0 committees linked' },
+          { label: 'Combined Total',         value: fmt(data.total_combined),   sub: hasLinkedPcsButNoSoft ? 'hard money only' : 'hard + soft' },
         ].map(({ label, value, sub }) => (
           <div key={label} style={{ background: 'var(--bg)', padding: '1rem 1.25rem' }}>
             <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.3rem' }}>
@@ -264,7 +267,7 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
                 <tr key={i} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
                   <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2rem' }}>{i + 1}</td>
                   <td style={{ padding: '0.45rem 0.6rem', wordBreak: 'break-word' }}>
-                    <a href={`/donor/${slugify(donor.name)}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+                    <a href={`/donor/${donor.slug || slugify(donor.name)}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
                       {donor.name}
                     </a>
                   </td>
@@ -291,86 +294,116 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
     </div>
   );
 
+  const AFFILIATED_GROUP_LABELS = {
+    SOLICITATION_CONTROL:              { label: 'Solicitation or Control Relationship', desc: 'This candidate filed a solicitation statement (DS-DE 102) naming this committee, or served as a controlling officer.' },
+    STATEMENT_OF_ORG_SUPPORT:          { label: 'Statement of Organizational Support', desc: 'This committee filed a Statement of Organization (DS-DE 9) specifically naming this candidate as the supported candidate.' },
+    DIRECT_CONTRIBUTION_TO_CANDIDATE:  { label: 'Donated Directly to This Candidate', desc: 'These organizations made direct contributions to this candidate\'s campaign account. They are independent multi-candidate committees — their overall totals are not attributed to this candidate.' },
+    OTHER_DISTRIBUTION_TO_CANDIDATE:   { label: 'Other Distributions to This Candidate', desc: 'These organizations made non-contribution transfers or distributions to this candidate\'s account.' },
+    IEC_FOR_OR_AGAINST:                { label: 'Independent Expenditure Activity', desc: 'These organizations filed Independent Expenditure reports (IECs) for or against this candidate. They operate independently — not coordinated with the campaign.' },
+    ECC_FOR_OR_AGAINST:                { label: 'Electioneering Communications', desc: 'These organizations ran electioneering communications (ECCs) mentioning this candidate within 30 days of a primary or 60 days of a general election.' },
+    ADMIN_OVERLAP_ONLY:                { label: 'Administrative Overlap', desc: 'These organizations share officers or addresses with this candidate\'s committees, but have no direct financial or solicitation relationship on file.' },
+  };
+
+  const affiliatedByType = {};
+  for (const pc of pcsAffiliated) {
+    const key = pc.link_type || 'UNKNOWN';
+    if (!affiliatedByType[key]) affiliatedByType[key] = [];
+    affiliatedByType[key].push(pc);
+  }
+
+  const typeOrder = [
+    'SOLICITATION_CONTROL', 'STATEMENT_OF_ORG_SUPPORT',
+    'DIRECT_CONTRIBUTION_TO_CANDIDATE', 'OTHER_DISTRIBUTION_TO_CANDIDATE',
+    'IEC_FOR_OR_AGAINST', 'ECC_FOR_OR_AGAINST', 'ADMIN_OVERLAP_ONLY',
+  ];
+  const sortedAffiliatedTypes = typeOrder.filter(t => affiliatedByType[t]?.length > 0);
+
   const committeesContent = (
     <div>
-      {pcs.length > 0 ? (
+      {pcs.length === 0 ? (
+        <p style={{ color: 'var(--text-dim)', fontSize: '0.82rem' }}>No linked political committees found.</p>
+      ) : (
         <>
-          <SectionLabel>Linked Political Committees (Soft Money)</SectionLabel>
-          <p style={{ fontSize: '0.68rem', color: 'rgba(90,106,136,0.75)', lineHeight: 1.5, marginBottom: '0.75rem' }}>
-            Links are based on FL Division of Elections filings — solicitation statements (DS-DE 102), direct contributions, and independent expenditures.
-            Administrative overlaps alone are not shown.{' '}
-            <strong style={{ color: 'var(--text-dim)', fontWeight: 600 }}>Candidate PAC</strong> = committee specifically for this candidate (total raised counted in soft money).{' '}
-            <strong style={{ color: 'var(--text-dim)', fontWeight: 600 }}>Affiliated</strong> = multi-candidate organization with a provable link (total not attributed to this candidate alone).
-          </p>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                {['Committee', 'Type', 'Link Evidence', 'Total Raised', 'Contributions'].map(h => (
-                  <th key={h} style={{
-                    padding: '0.4rem 0.6rem',
-                    textAlign: h === 'Contributions' ? 'center' : 'left',
-                    fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase',
-                    letterSpacing: '0.08em', fontWeight: 400,
-                  }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {pcs.map((pc, i) => {
-                const isStub = !pc.pc_acct || pc.link_type === 'solicitation_stub' || pc.link_type === 'historical_stub';
-                const isHistorical = pc.link_type === 'historical' || pc.link_type === 'historical_stub';
-                const isSpecific = pc.is_candidate_specific;
-                const typeLabel = isSpecific ? 'Candidate PAC' : 'Affiliated';
-                const typeColor = isSpecific ? 'var(--teal)' : 'var(--text-dim)';
-                return (
-                  <tr key={i} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)', opacity: isHistorical ? 0.75 : 1 }}>
-                    <td style={{ padding: '0.45rem 0.6rem', wordBreak: 'break-word' }}>
-                      {isStub || !pc.pc_acct ? (
-                        <span style={{ color: 'var(--text-dim)' }}>{pc.pc_name || '—'}</span>
-                      ) : (
+          {/* ── Candidate-specific PACs ── */}
+          {pcsSpecific.length > 0 && (
+            <div style={{ marginBottom: '2rem' }}>
+              <SectionLabel>Candidate Political Committee{pcsSpecific.length !== 1 ? 's' : ''}</SectionLabel>
+              <p style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.5, marginBottom: '1rem' }}>
+                {pcsSpecific.length === 1
+                  ? 'This committee was established specifically for this candidate. Its total raised is counted in the soft money figure above.'
+                  : 'These committees were established specifically for this candidate. Their totals are counted in the soft money figure above.'}
+              </p>
+              <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
+                <thead>
+                  <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                    {['Committee', 'Basis for Link', 'Total Raised', 'Contributions'].map((h, j) => (
+                      <th key={h} style={{
+                        padding: '0.4rem 0.6rem', textAlign: j >= 2 ? 'right' : 'left',
+                        fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase',
+                        letterSpacing: '0.08em', fontWeight: 400,
+                      }}>{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {pcsSpecific.map((pc, i) => (
+                    <tr key={i} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
+                      <td style={{ padding: '0.45rem 0.6rem', wordBreak: 'break-word' }}>
                         <a href={`/committee/${pc.pc_acct}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
                           {pc.pc_name || pc.pc_acct}
                         </a>
-                      )}
-                    </td>
-                    <td style={{ padding: '0.45rem 0.6rem', whiteSpace: 'nowrap' }}>
-                      <span style={{
-                        fontSize: '0.55rem', padding: '0.1rem 0.35rem',
-                        border: `1px solid ${typeColor}55`,
-                        background: `${typeColor}11`,
-                        color: typeColor,
-                        borderRadius: '2px', fontFamily: 'var(--font-mono)',
-                      }}>
-                        {typeLabel}
-                      </span>
-                    </td>
-                    <td style={{ padding: '0.45rem 0.6rem', fontSize: '0.68rem' }}>
-                      <span title={pc.signal_evidence || undefined} style={{
-                        color: 'var(--text-dim)',
-                        cursor: pc.signal_evidence ? 'help' : 'default',
-                      }}>
+                      </td>
+                      <td style={{ padding: '0.45rem 0.6rem', fontSize: '0.68rem', color: 'var(--text-dim)' }}>
                         {LINK_TYPE_LABEL[pc.link_type] || pc.link_type}
+                      </td>
+                      <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--orange)', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap' }}>
+                        {fmt(pc.total_received)}
+                      </td>
+                      <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+                        {pc.num_contributions > 0 ? pc.num_contributions.toLocaleString() : '—'}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {/* ── Affiliated committees grouped by link type ── */}
+          {sortedAffiliatedTypes.length > 0 && (
+            <div>
+              <SectionLabel>Other Organizations with a Documented Link</SectionLabel>
+              {sortedAffiliatedTypes.map(linkType => {
+                const group = affiliatedByType[linkType];
+                const meta = AFFILIATED_GROUP_LABELS[linkType] || { label: linkType, desc: '' };
+                return (
+                  <div key={linkType} style={{ marginBottom: '1.5rem' }}>
+                    <div style={{ fontSize: '0.68rem', fontWeight: 600, color: 'var(--text)', marginBottom: '0.25rem' }}>
+                      {meta.label}
+                      <span style={{ marginLeft: '0.5rem', fontSize: '0.6rem', color: 'var(--text-dim)', fontWeight: 400 }}>
+                        {group.length} {group.length === 1 ? 'organization' : 'organizations'}
                       </span>
-                    </td>
-                    <td style={{ padding: '0.45rem 0.6rem', whiteSpace: 'nowrap' }}>
-                      {isStub
-                        ? <span style={{ color: 'var(--text-dim)', fontSize: '0.68rem' }}>data unavailable</span>
-                        : isSpecific
-                          ? <span style={{ color: 'var(--orange)' }}>{fmt(pc.total_received)}</span>
-                          : <span style={{ color: 'var(--text-dim)', fontSize: '0.68rem' }} title="Not counted in soft money total — multi-candidate org">{fmt(pc.total_received)}</span>
-                      }
-                    </td>
-                    <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center' }}>
-                      {isStub ? '—' : pc.num_contributions > 0 ? pc.num_contributions.toLocaleString() : '—'}
-                    </td>
-                  </tr>
+                    </div>
+                    <p style={{ fontSize: '0.65rem', color: 'var(--text-dim)', lineHeight: 1.5, marginBottom: '0.5rem', marginTop: 0 }}>
+                      {meta.desc}
+                    </p>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
+                      {group.map((pc, i) => (
+                        <a key={i} href={`/committee/${pc.pc_acct}`} style={{
+                          fontSize: '0.65rem', color: 'var(--text-dim)',
+                          border: '1px solid var(--border)', borderRadius: '2px',
+                          padding: '0.2rem 0.5rem', textDecoration: 'none',
+                        }}>
+                          {pc.pc_name || pc.pc_acct}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
                 );
               })}
-            </tbody>
-          </table>
+            </div>
+          )}
         </>
-      ) : (
-        <p style={{ color: 'var(--text-dim)', fontSize: '0.82rem' }}>No linked political committees found.</p>
       )}
     </div>
   );

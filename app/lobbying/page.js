@@ -6,15 +6,16 @@ export const dynamic = 'force-dynamic';
 
 async function getCounts() {
   const db = getDb();
-  const [{ count: lobbyists }, { count: principals }] = await Promise.all([
+  const [{ count: lobbyists }, { count: principals }, { count: firms }] = await Promise.all([
     db.from('lobbyists').select('*', { count: 'exact', head: true }),
     db.from('principals').select('*', { count: 'exact', head: true }),
+    db.from('lobbying_firms').select('*', { count: 'exact', head: true }),
   ]);
-  return { lobbyists: lobbyists ?? 0, principals: principals ?? 0, solicitations: 1060 };
+  return { lobbyists: lobbyists ?? 0, principals: principals ?? 0, solicitations: 1060, firms: firms ?? 0 };
 }
 
 export const metadata = {
-  title: 'Lobbying — Florida Donor Tracker',
+  title: 'Lobbying',
   description: 'Lobbyists, principals, and solicitation records for Florida state government.',
 };
 
@@ -33,7 +34,7 @@ export default async function LobbyingHub() {
         Lobbying
       </h1>
       <p style={{ color: 'var(--text-dim)', fontSize: '0.88rem', lineHeight: 1.6, marginBottom: '0.25rem' }}>
-        Florida state-registered lobbyists, their principals (clients), and compensation solicitation records.
+        Florida state-registered lobbyists, their principals (clients), and compensation reports going back to 2007.
         Data sourced from the <a href="https://www.floridalobbyist.gov/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)', textDecoration: 'none' }}>Florida Lobbyist Registration Office</a>.
       </p>
 
@@ -64,8 +65,10 @@ export default async function LobbyingHub() {
 
         <Link href="/lobbying-firms" className="hub-card">
           <div className="hub-card-title">Lobbying Firms</div>
-          <div className="hub-card-desc">Top Florida lobbying firms ranked by estimated client compensation. Quarterly breakdown and full client lists.</div>
-          <div className="hub-card-stat">439 firms · $435M+ estimated</div>
+          <div className="hub-card-desc">Top Florida lobbying firms ranked by estimated client compensation. Quarterly breakdown and full client lists, 2007–present.</div>
+          {counts.firms > 0 && (
+            <div className="hub-card-stat">{counts.firms.toLocaleString()} firms</div>
+          )}
         </Link>
 
         <Link href="/lobbying/bills" className="hub-card">
@@ -76,14 +79,14 @@ export default async function LobbyingHub() {
       </div>
 
       <DataTrustBlock
-        source="Florida Lobbyist Registration Office"
+        source="Florida Lobbyist Registration Office — Registration & Compensation Reports"
         sourceUrl="https://www.floridalobbyist.gov/"
         lastUpdated="April 2026"
-        direct={['lobbyist name', 'principal name', 'registration year', 'agency']}
-        normalized={['firm grouping aggregated from individual lobbyist records']}
+        direct={['lobbyist name', 'principal name', 'registration records', 'quarterly compensation reports (2007–present)']}
+        normalized={['firm grouping aggregated from individual lobbyist records', 'compensation totals (midpoints below $50K; exact amounts above)']}
         inferred={['donor cross-references matched by fuzzy name — not confirmed by election authorities']}
         caveats={[
-          'Compensation is disclosed in broad bands (<$10K, $10K–$25K, etc.) — exact figures are not public.',
+          'Compensation below $50K is disclosed in ranges — we use midpoints. Amounts $50K+ are exact.',
           'Principal-to-donor name matching is inferred and may produce false positives for common names.',
           'Bill lobbying data covers FL House disclosures only (Senate filed separately).',
         ]}

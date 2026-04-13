@@ -69,6 +69,17 @@ export async function GET(request) {
   const offset = (page - 1) * page_size;
 
   // ── Data query (no count — never blocked by a slow COUNT(*)) ─────────────────
+  // When no filters are applied, default to the most recent 90 days so the query
+  // uses the contribution_date index and avoids a full-table scan timeout.
+  // Also cap at today to exclude bad-data rows with future dates (e.g. year 3003).
+  const today = new Date().toISOString().slice(0, 10);
+  const ninetyDaysAgo = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const effectiveFilterArgs = hasFilter ? filterArgs : {
+    ...filterArgs,
+    date_start: ninetyDaysAgo,
+    date_end: today,
+  };
+
   let dataQuery = db
     .from('contributions')
     .select(
@@ -77,7 +88,7 @@ export async function GET(request) {
       'in_kind_description, contributor_address, contributor_city_state_zip, ' +
       'contributor_occupation, source_file'
     );
-  dataQuery = applyFilters(dataQuery, filterArgs);
+  dataQuery = applyFilters(dataQuery, effectiveFilterArgs);
   dataQuery = dataQuery.order(safeSort, { ascending, nullsFirst: false });
   dataQuery = dataQuery.range(offset, offset + page_size - 1);
 

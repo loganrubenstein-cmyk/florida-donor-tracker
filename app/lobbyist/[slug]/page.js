@@ -8,9 +8,11 @@ export async function generateMetadata({ params }) {
   const { slug } = await params;
   try {
     const data = await loadLobbyist(slug);
-    return { title: `${data.name} | FL Donor Tracker` };
+    const firm = data.firm ? ` at ${data.firm}` : '';
+    const desc = `${data.name} — Florida registered lobbyist${firm}. Represents ${data.num_principals || 0} principals.`;
+    return { title: data.name, description: desc };
   } catch {
-    return { title: 'Lobbyist | FL Donor Tracker' };
+    return { title: 'Lobbyist' };
   }
 }
 

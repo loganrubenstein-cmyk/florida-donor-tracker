@@ -194,7 +194,8 @@ def build_transfer_lookup(transfers_df: pd.DataFrame, committees_df: pd.DataFram
 
     tdf = transfers_df.copy()
     tdf["from_acct"] = tdf["transferor_name"].str.strip().str.upper().map(name_to_acct)
-    tdf["to_acct"]   = tdf["transferee_name"].str.strip().str.upper().map(name_to_acct)
+    to_col = "Funds Transferred To" if "Funds Transferred To" in tdf.columns else "transferee_name"
+    tdf["to_acct"]   = tdf[to_col].str.strip().str.upper().map(name_to_acct)
 
     lookup: dict = {}
     matched = tdf[tdf["from_acct"].notna() & tdf["to_acct"].notna()]

@@ -2,8 +2,20 @@ import './globals.css';
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Florida Donor Tracker',
-  description: 'Follow the money in Florida politics',
+  metadataBase: new URL('https://florida-donor-tracker.vercel.app'),
+  title: {
+    default: 'Florida Donor Tracker',
+    template: '%s | Florida Donor Tracker',
+  },
+  description: 'Follow the money in Florida politics — campaign contributions, donors, committees, lobbyists, and legislative finance tracked from 1996 to 2026.',
+  openGraph: {
+    siteName: 'Florida Donor Tracker',
+    type: 'website',
+    locale: 'en_US',
+  },
+  twitter: {
+    card: 'summary_large_image',
+  },
 };
 
 const NAV_LINKS = [

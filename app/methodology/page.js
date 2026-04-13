@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Methodology — Florida Donor Tracker',
+  title: 'Methodology',
   description: 'How Florida Donor Tracker collects, normalizes, classifies, and presents campaign finance data.',
 };
 

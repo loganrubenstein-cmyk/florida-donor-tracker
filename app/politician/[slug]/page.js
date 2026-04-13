@@ -2,6 +2,7 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import { notFound } from 'next/navigation';
 import { loadCandidate, loadCandidateCycles, getPoliticianBySlug, listPoliticianSlugs } from '@/lib/loadCandidate';
+import { getDb } from '@/lib/db';
 import CandidateProfile from '@/components/candidate/CandidateProfile';
 import BackLinks from '@/components/BackLinks';
 
@@ -34,6 +35,24 @@ export async function generateStaticParams() {
   return slugs.map(slug => ({ slug }));
 }
 
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const politician = getPoliticianBySlug(slug);
+  if (!politician) return { title: 'Politician' };
+  const { display_name, cycles } = politician;
+  const latest = [...cycles].sort((a, b) => Number(b.year) - Number(a.year))[0];
+  const office = OFFICE_SHORT[latest.office_code] || latest.office_desc || '';
+  const party = PARTY_LABEL[latest.party_code] || '';
+  const desc = [
+    display_name,
+    party ? `(${party})` : '',
+    office ? `\u2014 ${office}` : '',
+    latest.district ? `District ${latest.district}.` : '.',
+    `${cycles.length} Florida election cycle${cycles.length !== 1 ? 's' : ''} tracked with full campaign finance data.`,
+  ].filter(Boolean).join(' ');
+  return { title: display_name, description: desc };
+}
+
 export default async function PoliticianPage({ params, searchParams }) {
   const { slug } = await params;
   const politician = getPoliticianBySlug(slug);
@@ -59,6 +78,16 @@ export default async function PoliticianPage({ params, searchParams }) {
   // loadCandidateCycles for the acct_num (used by CandidateProfile's own pill bar)
   // We pass all cycles from the politician index instead, which is richer
   const allCyclesForAcct = loadCandidateCycles(activeCycle.acct_num);
+
+  // Check if any cycle acct_num matches a current FL legislator
+  const allAcctNums = sortedCycles.map(c => String(c.acct_num));
+  const db = getDb();
+  const { data: legRows } = await db
+    .from('legislators')
+    .select('people_id, chamber, district')
+    .in('acct_num', allAcctNums)
+    .limit(1);
+  const matchedLeg = legRows?.[0] || null;
 
   // Election results for all accounts linked to this politician
   const lookup = getElectionLookup();
@@ -106,6 +135,16 @@ export default async function PoliticianPage({ params, searchParams }) {
           <span style={{ fontSize: '0.62rem', color: 'rgba(100,140,220,0.45)', fontFamily: 'var(--font-mono)' }}>
             {sortedCycles.length} FL election cycle{sortedCycles.length !== 1 ? 's' : ''}
           </span>
+          {matchedLeg && (
+            <a href={`/legislator/${matchedLeg.people_id}`} style={{
+              fontSize: '0.62rem', padding: '0.1rem 0.45rem',
+              border: '1px solid rgba(77,216,240,0.35)',
+              color: 'var(--teal)', borderRadius: '2px',
+              fontFamily: 'var(--font-mono)', textDecoration: 'none',
+            }}>
+              Currently serving · FL {matchedLeg.chamber} D{matchedLeg.district} →
+            </a>
+          )}
         </div>
       </div>
 

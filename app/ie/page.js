@@ -6,7 +6,7 @@ import DataTrustBlock from '@/components/shared/DataTrustBlock';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Independent Expenditures — Florida Donor Tracker',
+  title: 'Independent Expenditures',
   description: 'Florida independent expenditures and electioneering communications — $70.9M tracked across 492 committees.',
 };
 

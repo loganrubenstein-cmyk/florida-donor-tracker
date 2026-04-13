@@ -2,6 +2,8 @@ import { loadDonor } from '@/lib/loadDonor';
 import { loadAnnotations } from '@/lib/loadAnnotations';
 import DonorProfile from '@/components/donors/DonorProfile';
 import { notFound } from 'next/navigation';
+import { buildMeta } from '@/lib/seo';
+import { fmtMoneyCompact } from '@/lib/fmt';
 
 // Server-rendered on demand — no static file dependency
 export const dynamic = 'force-dynamic';
@@ -10,9 +12,12 @@ export async function generateMetadata({ params }) {
   const { slug } = await params;
   try {
     const data = await loadDonor(slug);
-    return { title: `${data.name} | FL Donor Tracker` };
+    const total = data.total_amount || data.total_combined || 0;
+    const count = data.num_contributions || 0;
+    const desc = `${data.name} — ${fmtMoneyCompact(total)} across ${count.toLocaleString()} contributions to Florida political committees and candidates.`;
+    return buildMeta({ title: data.name, description: desc, path: `/donor/${slug}` });
   } catch {
-    return { title: 'Donor | FL Donor Tracker' };
+    return { title: 'Donor' };
   }
 }
 

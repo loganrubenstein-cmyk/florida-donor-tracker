@@ -7,6 +7,7 @@ import NewsBlock from '@/components/shared/NewsBlock';
 import SourceLink from '@/components/shared/SourceLink';
 import { slugify } from '@/lib/slugify';
 import { fmtMoneyCompact, fmtMoney, fmtCount } from '@/lib/fmt';
+import { getPoliticianSlugByAcctNum } from '@/lib/loadCandidate';
 
 const DonorYearChart      = dynamic(() => import('./DonorYearChart'), { ssr: false });
 const TransactionExplorer = dynamic(() => import('@/components/explorer/TransactionExplorer'), { ssr: false });
@@ -99,11 +100,12 @@ function CandidateTable({ candidates }) {
         <tbody>
           {candidates.map((c, i) => {
             const pColor = c.party === 'REP' ? 'var(--republican)' : c.party === 'DEM' ? 'var(--democrat)' : 'var(--text-dim)';
+            const polSlug = c.acct_num ? getPoliticianSlugByAcctNum(c.acct_num) : null;
             return (
               <tr key={c.acct_num} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
                 <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2rem' }}>{i + 1}</td>
                 <td style={{ padding: '0.4rem 0.6rem', maxWidth: '240px', wordBreak: 'break-word' }}>
-                  <a href={`/candidate/${c.acct_num}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+                  <a href={polSlug ? `/politician/${polSlug}` : `/candidate/${c.acct_num}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
                     {c.candidate_name || `#${c.acct_num}`}
                   </a>
                 </td>
@@ -242,7 +244,7 @@ export default function DonorProfile({ data, annotations = {} }) {
                   padding: '0.4rem 0.6rem', background: 'rgba(160,192,255,0.06)',
                   borderRadius: '3px',
                 }}>
-                  <a href={`/principal/${slugify(l.principal_name)}`}
+                  <a href={`/principal/${l.principal_slug || slugify(l.principal_name)}`}
                     style={{ color: 'var(--blue)', fontSize: '0.78rem', textDecoration: 'none' }}>
                     {l.principal_name}
                   </a>

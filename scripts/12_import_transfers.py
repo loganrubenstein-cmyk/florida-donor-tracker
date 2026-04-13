@@ -37,6 +37,7 @@ COLUMN_RENAME = {
     "Transferee Name":      "transferee_name",
     "To Name":              "transferee_name",
     "Candidate/Com Name":   "transferee_name",
+    "Funds Transferred To": "transferee_name",
     "Name":                 "transferee_name",
     # Amount
     "Amount":               "amount",

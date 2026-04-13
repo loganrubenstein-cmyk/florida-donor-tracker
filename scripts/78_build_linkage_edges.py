@@ -863,14 +863,39 @@ def pass_6_admin_overlap(
 
 # ── Post-processing: is_candidate_specific ──────────────────────────────────
 
+_NAME_SUFFIXES = {"JR", "SR", "II", "III", "IV", "V"}
+
+def _check_name_in_pac(cand_nc: str, pac_nc: str) -> bool:
+    """Candidate's last name (≥5 chars) appears as a whole word in the PAC name.
+
+    Strips common suffixes (JR, SR, II–V) so 'ALBRITTON BEN JR' → 'BEN'
+    doesn't match — we want 'ALBRITTON'.
+    """
+    parts = cand_nc.split() if cand_nc else []
+    # Strip trailing suffixes to find the actual surname
+    while parts and parts[-1] in _NAME_SUFFIXES:
+        parts.pop()
+    last_name = parts[-1] if parts else ""
+    return bool(
+        last_name and len(last_name) >= 5 and
+        re.search(r'\b' + re.escape(last_name) + r'\b', pac_nc)
+    )
+
+
 def compute_candidate_specific(
     all_edges: list,
     cand_df: pd.DataFrame,
-    sol_csv: list[dict],   # kept for signature compatibility — not used directly
-    sol_index: list[dict], # kept for signature compatibility — not used directly
+    sol_csv: list[dict] = None,    # kept for signature compatibility — not used directly
+    sol_index: list[dict] = None,  # kept for signature compatibility — not used directly
+    com_df: pd.DataFrame = None,   # optional — for diagnostic output
 ) -> list:
     """
     Mark each publishable edge as is_candidate_specific=True.
+
+    Attribution standard: a PAC is candidate-specific only when there is
+    verifiable evidence of candidate control — a DS-DE 102 filing or the
+    PAC being named after the candidate.  Spending patterns (which candidates
+    the PAC gave money to) indicate support, not control, and do not qualify.
 
     For SOLICITATION_CONTROL edges, a PAC is candidate-specific when:
       (a) The candidate's last name (≥5 chars) appears as a whole word in the PAC name, OR
@@ -886,10 +911,11 @@ def compute_candidate_specific(
     Multi-candidate PACs (e.g. "Watchdog PAC" / 5 filers):
       → affiliated for all (neither condition met).
 
-    For all other edge types: the "only one person linked" signal — if this PAC's
-      publishable edges all point to the same candidate (across cycles), it's specific.
+    For all other edge types (DIRECT_CONTRIBUTION, IEC, ECC, etc.):
+      (a) Same (candidate, PAC) pair has a specific SOLICITATION_CONTROL edge, OR
+      (b) Candidate's last name (≥5 chars) in PAC name AND direction != 'opposition'
 
-    is_candidate_specific=True means script 74 will include this PAC's total_received
+    is_candidate_specific=True means script 81 will include this PAC's total_received
     in the candidate's soft_money_total.
     """
     # Build candidate name lookup
@@ -897,22 +923,32 @@ def compute_candidate_specific(
                                    for r in cand_df.to_dict("records")}
 
     # Count distinct PEOPLE (by name_clean) per PAC who filed a SOLICITATION_CONTROL edge.
-    # Using the edges themselves (not raw solicitations text) means we work with the canonical
-    # pc_acct_num and avoid org-name matching failures (e.g. "Empower Parents PAC" vs
-    # "Friends of Ron DeSantis (now Empower Parents PAC)").
+    # Exclude withdrawn filers — a candidate who withdrew their solicitation no longer
+    # controls the PAC, so they shouldn't count toward sole_filer determination.
     sol_pac_filers: dict[str, set] = {}
     for e in all_edges:
         if e.edge_type == "SOLICITATION_CONTROL" and e.is_publishable and e.pc_acct_num:
+            if "(withdrawn)" in (e.evidence_summary or "").lower():
+                continue
             person_id = cand_names.get(e.candidate_acct_num, e.candidate_acct_num)
             sol_pac_filers.setdefault(e.pc_acct_num, set()).add(person_id)
 
-    # Count distinct PEOPLE per PAC across ALL publishable edge types (for non-solicitation edges)
-    pac_to_people: dict[str, set] = {}
+    # ── Pre-pass: identify (candidate, PAC) pairs with specific solicitation edges ──
+    # Withdrawn filers are excluded: they no longer control the PAC.
+    specific_sol_pairs: set[tuple] = set()
     for e in all_edges:
-        if e.is_publishable and e.pc_acct_num:
-            person_id = cand_names.get(e.candidate_acct_num, e.candidate_acct_num)
-            pac_to_people.setdefault(e.pc_acct_num, set()).add(person_id)
+        if e.edge_type != "SOLICITATION_CONTROL" or not e.is_publishable or not e.pc_acct_num:
+            continue
+        if "(withdrawn)" in (e.evidence_summary or "").lower():
+            continue
+        cand_nc = cand_names.get(e.candidate_acct_num, "")
+        pac_nc  = clean(e.pc_name)
+        name_in_pac = _check_name_in_pac(cand_nc, pac_nc)
+        sole_filer  = len(sol_pac_filers.get(e.pc_acct_num, set())) == 1
+        if name_in_pac or sole_filer:
+            specific_sol_pairs.add((e.candidate_acct_num, e.pc_acct_num))
 
+    # ── Main pass: compute specificity for all edges ─────────────────────────
     from dataclasses import replace
     result = []
     for e in all_edges:
@@ -921,22 +957,15 @@ def compute_candidate_specific(
             continue
 
         if e.edge_type == "SOLICITATION_CONTROL":
-            cand_nc   = cand_names.get(e.candidate_acct_num, "")
-            pac_nc    = clean(e.pc_name)
-            parts     = cand_nc.split() if cand_nc else []
-            last_name = parts[-1] if parts else ""
-            # Name-in-PAC: candidate's last name (≥5 chars) appears as a whole word in PAC name
-            name_in_pac = bool(
-                last_name and len(last_name) >= 5 and
-                re.search(r'\b' + re.escape(last_name) + r'\b', pac_nc)
-            )
-            # Sole filer: this candidate is the only one who ever filed a solicitation for this PAC
-            sole_filer = len(sol_pac_filers.get(e.pc_acct_num, set())) == 1
-            # Specific = clearly named after this candidate OR they are the only filer
-            is_specific = name_in_pac or sole_filer
+            is_specific = (e.candidate_acct_num, e.pc_acct_num) in specific_sol_pairs
         else:
-            only_one    = len(pac_to_people.get(e.pc_acct_num, set())) == 1
-            is_specific = only_one
+            # Signal 1: this (candidate, PAC) pair also has a specific solicitation edge
+            has_specific_sol = (e.candidate_acct_num, e.pc_acct_num) in specific_sol_pairs
+            # Signal 2: PAC is named after the candidate (non-opposition only)
+            cand_nc = cand_names.get(e.candidate_acct_num, "")
+            pac_nc  = clean(e.pc_name)
+            name_in_pac = _check_name_in_pac(cand_nc, pac_nc)
+            is_specific = has_specific_sol or (name_in_pac and e.direction != "opposition")
 
         result.append(replace(e, is_candidate_specific=is_specific))
 
@@ -944,6 +973,59 @@ def compute_candidate_specific(
     affiliated_count = sum(1 for e in result if e.is_publishable and not e.is_candidate_specific)
     print(f"\nCandidate-specific publishable edges: {specific_count:,}")
     print(f"Affiliated (multi-candidate) edges:   {affiliated_count:,}")
+
+    # ── Diagnostic: compare with old only_one logic ──────────────────────────
+    # Compute what the old heuristic would have produced for non-solicitation edges
+    pac_to_people: dict[str, set] = {}
+    for e in all_edges:
+        if e.is_publishable and e.pc_acct_num:
+            person_id = cand_names.get(e.candidate_acct_num, e.candidate_acct_num)
+            pac_to_people.setdefault(e.pc_acct_num, set()).add(person_id)
+
+    old_specific = 0
+    new_specific = 0
+    lost_pairs: dict[tuple, str] = {}   # (cand, pac) → pc_name
+    gained_pairs: dict[tuple, str] = {}
+    for e in result:
+        if not e.is_publishable or not e.pc_acct_num or e.edge_type == "SOLICITATION_CONTROL":
+            continue
+        pair = (e.candidate_acct_num, e.pc_acct_num)
+        old_val = len(pac_to_people.get(e.pc_acct_num, set())) == 1
+        new_val = e.is_candidate_specific
+        if old_val:
+            old_specific += 1
+        if new_val:
+            new_specific += 1
+        if old_val and not new_val and pair not in lost_pairs:
+            lost_pairs[pair] = e.pc_name
+        if new_val and not old_val and pair not in gained_pairs:
+            gained_pairs[pair] = e.pc_name
+
+    print(f"\n  ── Diagnostic: old vs new (non-solicitation edges) ──")
+    print(f"  Old (only_one) specific:  {old_specific:,}")
+    print(f"  New (sol+name) specific:  {new_specific:,}")
+    print(f"  Pairs LOST specificity:   {len(lost_pairs):,}")
+    print(f"  Pairs GAINED specificity: {len(gained_pairs):,}")
+
+    if lost_pairs and com_df is not None:
+        com_totals = {str(r["pc_acct"]): float(r.get("total_received", 0) or 0)
+                      for r in com_df.to_dict("records")}
+        lost_sorted = sorted(lost_pairs.items(),
+                             key=lambda x: com_totals.get(x[0][1], 0), reverse=True)
+        total_lost_dollars = sum(com_totals.get(p[1], 0) for p, _ in lost_sorted)
+        print(f"  Total $ losing attribution: ${total_lost_dollars:,.0f}")
+        print(f"  Top 10 PACs losing specificity:")
+        for (cand, pac), name in lost_sorted[:10]:
+            cand_name = cand_names.get(cand, cand)
+            tr = com_totals.get(pac, 0)
+            print(f"    {name[:50]:<50s} → {cand_name[:25]:<25s} ${tr:>14,.0f}")
+
+    if gained_pairs:
+        print(f"  PACs GAINING specificity (name-in-PAC on non-solicitation edges):")
+        for (cand, pac), name in list(gained_pairs.items())[:10]:
+            cand_name = cand_names.get(cand, cand)
+            print(f"    {name[:50]:<50s} → {cand_name[:25]}")
+
     return result
 
 
@@ -1010,7 +1092,7 @@ def main() -> int:
     print(f"Total edges: {len(all_edges):,}")
 
     # ── Post-processing: mark candidate-specific edges ────────────────────────
-    all_edges = compute_candidate_specific(all_edges, cand_df, sol_csv, sol_index)
+    all_edges = compute_candidate_specific(all_edges, cand_df, sol_csv, sol_index, com_df)
 
     # ── Write CSV ────────────────────────────────────────────────────────────
     OUTPUT_CSV.parent.mkdir(parents=True, exist_ok=True)

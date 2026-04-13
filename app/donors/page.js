@@ -3,7 +3,7 @@ import DonorsList from '@/components/donors/DonorsList';
 export const dynamic = 'force-static';
 
 export const metadata = {
-  title: 'Donors | FL Donor Tracker',
+  title: 'Donors',
   description: 'Search and explore all Florida political donors',
 };
 

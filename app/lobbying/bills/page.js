@@ -5,7 +5,7 @@ import { fmtCount } from '../../../lib/fmt';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 export const metadata = {
-  title: 'Most Lobbied Bills — Florida Donor Tracker',
+  title: 'Most Lobbied Bills',
   description: 'Florida bills with the most lobbyist disclosure filings. See which legislation attracted the most lobbying activity 2016–2026.',
 };
 

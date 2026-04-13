@@ -160,8 +160,9 @@ export default function PrincipalProfile({ data, compData = null }) {
             fontSize: '0.7rem', color: 'var(--text-dim)', marginBottom: '1rem', lineHeight: 1.6,
           }}>
             Estimated total: <strong style={{ color: 'var(--blue)' }}>{fmt(compData.total_comp)}</strong> across {compData.num_quarters} quarters
-            · covers {compData.branches?.join(' &amp; ')} lobbying
-            · figures are midpoints of FL-mandated compensation bands — not exact amounts.
+            · covers {compData.branches?.join(' & ')} lobbying
+            · amounts below $50K use band midpoints; $50K+ are exact reported figures.
+            {' '}Source: <a href="https://www.floridalobbyist.gov" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)', textDecoration: 'none' }}>FL Lobbyist Registration Office</a>.
           </div>
 
           {/* Top firms */}
@@ -182,7 +183,12 @@ export default function PrincipalProfile({ data, compData = null }) {
                 {compData.top_firms.map((f, i) => (
                   <tr key={i} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
                     <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2rem' }}>{i + 1}</td>
-                    <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text)' }}>{f.firm_name}</td>
+                    <td style={{ padding: '0.4rem 0.6rem' }}>
+                      {f.slug
+                        ? <a href={`/lobbying-firm/${f.slug}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>{f.firm_name}</a>
+                        : <span style={{ color: 'var(--text)' }}>{f.firm_name}</span>
+                      }
+                    </td>
                     <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--blue)', fontWeight: 700, whiteSpace: 'nowrap' }}>
                       {fmt(f.total_comp)}
                     </td>
@@ -218,7 +224,7 @@ export default function PrincipalProfile({ data, compData = null }) {
                       {i + 1}
                     </td>
                     <td style={{ padding: '0.4rem 0.6rem', maxWidth: '220px', wordBreak: 'break-word' }}>
-                      <a href={`/lobbyist/${slugify(l.lobbyist_name)}`}
+                      <a href={`/lobbyist/${l.lobbyist_slug || slugify(l.lobbyist_name)}`}
                         style={{ color: 'var(--teal)', textDecoration: 'none' }}>
                         {l.lobbyist_name}
                       </a>
@@ -408,15 +414,16 @@ export default function PrincipalProfile({ data, compData = null }) {
       </div>
 
       <DataTrustBlock
-        source="Florida Legislature Lobbyist Registration"
+        source="Florida Lobbyist Registration Office — Registration & Compensation Reports"
         sourceUrl="https://www.floridalobbyist.gov"
-        lastUpdated="January 2026"
-        direct={['entity name', 'NAICS code', 'address', 'registered lobbyists']}
-        normalized={['compensation totals (summed from band midpoints)']}
-        inferred={['donation matches (matched by principal name to contribution records)']}
+        lastUpdated="April 2026"
+        direct={['entity name', 'NAICS code', 'address', 'registered lobbyists', 'quarterly compensation reports (2007–present)']}
+        normalized={['compensation totals (midpoints below $50K; exact amounts above $50K)']}
+        inferred={['donation matches (matched by principal name to contribution records — not confirmed by election authorities)']}
         caveats={[
-          'Compensation figures are band midpoints — exact amounts not publicly reported.',
-          'Donation matches are name-based and may include false positives.',
+          'Compensation below $50,000 is reported in ranges — we use midpoints for aggregation.',
+          'Amounts of $50,000+ are exact figures reported by the principal.',
+          'Donation matches are name-based and may include false positives for common names.',
         ]}
       />
     </main>

@@ -214,7 +214,7 @@ def _clean_date_range(df: pd.DataFrame) -> dict:
     """Return {earliest, latest} from contribution_date, filtering obviously bogus years."""
     if "contribution_date" not in df.columns:
         return {"earliest": None, "latest": None}
-    dates = df["contribution_date"].dropna()
+    dates = pd.to_datetime(df["contribution_date"], errors="coerce").dropna()
     # FL Division of Elections records go back to ~1996; anything outside 1990–2099 is data noise
     dates = dates[(dates.dt.year >= 1990) & (dates.dt.year <= 2099)]
     if dates.empty:

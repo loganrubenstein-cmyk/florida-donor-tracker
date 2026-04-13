@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 const FlowClient = nextDynamic(() => import('@/components/flow/FlowClient'), { ssr: false });
 
 export const metadata = {
-  title: 'Money Flow | FL Donor Tracker',
+  title: 'Money Flow',
   description: 'Top donor-to-committee money flows in Florida politics.',
 };
 

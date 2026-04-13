@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Data Dictionary — Florida Donor Tracker',
+  title: 'Data Dictionary',
   description: 'Field-by-field reference for every value in Florida Donor Tracker profiles.',
 };
 

@@ -4,7 +4,7 @@ import ConnectionsView from '@/components/connections/ConnectionsView';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Committee Connections | FL Donor Tracker',
+  title: 'Committee Connections',
   description: 'Political committees sharing treasurers, addresses, donors, or money flows',
 };
 

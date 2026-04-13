@@ -6,6 +6,11 @@ import { DATA_LAST_UPDATED } from '@/lib/dataLastUpdated'
 
 export const dynamic = 'force-dynamic';
 
+export const metadata = {
+  title: { absolute: 'Florida Donor Tracker — Follow the Money in Florida Politics' },
+  description: 'Track billions in Florida political contributions. Search donors, committees, candidates, lobbyists, and every campaign transaction from 1996 to 2026.',
+};
+
 function formatBillions(n) {
   return '$' + (n / 1_000_000_000).toFixed(1) + 'B+'
 }
@@ -60,8 +65,22 @@ export default async function Home() {
     generated_at: new Date().toISOString(),
   };
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Florida Donor Tracker',
+    url: 'https://florida-donor-tracker.vercel.app',
+    description: 'Follow the money in Florida politics',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: 'https://florida-donor-tracker.vercel.app/search?q={search_term_string}',
+      'query-input': 'required name=search_term_string',
+    },
+  };
+
   return (
     <main>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       {/* ── Hero ── */}
       <section className="m-padx" style={{
         padding: '3.5rem 2.5rem 2.5rem',

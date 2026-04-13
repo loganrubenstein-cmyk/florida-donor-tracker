@@ -3,7 +3,7 @@ import PrincipalsList from '@/components/principals/PrincipalsList';
 export const dynamic = 'force-static';
 
 export const metadata = {
-  title: 'Lobbying Principals | FL Donor Tracker',
+  title: 'Lobbying Principals',
   description: 'Organizations and entities registered as lobbying principals with the Florida Legislature.',
 };
 

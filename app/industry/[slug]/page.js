@@ -36,8 +36,11 @@ export async function generateMetadata({ params }) {
   const { slug } = await params;
   const summary = loadSummary();
   const ind = summary.industries.find(i => slugify(i.industry) === slug);
-  if (!ind) return { title: 'Industry | FL Donor Tracker' };
-  return { title: `${ind.industry} | FL Donor Tracker` };
+  if (!ind) return { title: 'Industry' };
+  return {
+    title: ind.industry,
+    description: `${ind.industry} — Florida political contributions by sector. Top donors, cycle trends, and connected legislators.`,
+  };
 }
 
 export default async function IndustryPage({ params }) {

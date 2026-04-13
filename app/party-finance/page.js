@@ -5,7 +5,7 @@ import { join } from 'path';
 import { fmtMoney, fmtCount } from '../../lib/fmt';
 
 export const metadata = {
-  title: 'Party Finance — Florida Donor Tracker',
+  title: 'Party Finance',
   description: 'Florida campaign finance breakdown by political party. Republican vs Democrat fundraising trends 2012–2026.',
 };
 

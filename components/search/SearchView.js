@@ -66,7 +66,7 @@ export default function SearchView() {
   // Load donor index in background after meta is ready
   useEffect(() => {
     if (!metaIndex) return;
-    fetch('/data/search_index_donors.json')
+    fetch('/api/search/donors')
       .then(r => r.json())
       .then(data => { setDonorIndex(data); setDonorsLoaded(true); })
       .catch(() => { setDonorIndex([]); setDonorsLoaded(true); });

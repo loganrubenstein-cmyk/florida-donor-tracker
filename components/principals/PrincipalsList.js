@@ -12,6 +12,7 @@ function fmt(n) {
 }
 
 const SORT_OPTIONS = [
+  { value: 'total_comp',      label: 'Est. Compensation' },
   { value: 'donation_total',  label: 'Donation Activity' },
   { value: 'total_lobbyists', label: 'Lobbyists (Most)' },
   { value: 'name',            label: 'Name A–Z' },
@@ -47,7 +48,7 @@ export default function PrincipalsList() {
   const [debouncedQ, setDebouncedQ] = useState('');
   const [type, setType]             = useState('all');
   const [industry, setIndustry]     = useState('all');
-  const [sortBy, setSortBy]         = useState('donation_total');
+  const [sortBy, setSortBy]         = useState('total_comp');
   const [sortDir, setSortDir]       = useState('desc');
   const [page, setPage]             = useState(1);
 
@@ -137,9 +138,9 @@ export default function PrincipalsList() {
               {[
                 { label: '#',              align: 'center', width: '2rem' },
                 { label: 'Principal',      align: 'left'  },
-                { label: 'Location',       align: 'left'  },
                 { label: 'Lobbyists',      align: 'right', sortKey: 'total_lobbyists' },
                 { label: 'Active',         align: 'right' },
+                { label: 'Est. Comp',      align: 'right', sortKey: 'total_comp'     },
                 { label: 'Donation Match', align: 'right', sortKey: 'donation_total'  },
               ].map(({ label, align, width, sortKey }) => {
                 const isActive = sortKey && sortBy === sortKey;
@@ -173,7 +174,7 @@ export default function PrincipalsList() {
           <tbody>
             {!loading && pageItems.length === 0 && (
               <tr>
-                <td colSpan={6} style={{
+                <td colSpan={7} style={{
                   padding: '2.5rem 0.6rem', color: 'var(--text-dim)',
                   fontSize: '0.72rem', textAlign: 'center', fontFamily: 'var(--font-mono)',
                 }}>
@@ -203,14 +204,14 @@ export default function PrincipalsList() {
                     </div>
                   )}
                 </td>
-                <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.68rem', whiteSpace: 'nowrap' }}>
-                  {[p.city, p.state].filter(Boolean).join(', ') || '—'}
-                </td>
                 <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--text)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>
                   {(p.total_lobbyists || 0).toLocaleString()}
                 </td>
                 <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--teal)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>
                   {(p.num_active || 0).toLocaleString()}
+                </td>
+                <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: p.total_comp > 0 ? 'var(--blue)' : 'var(--text-dim)', fontWeight: p.total_comp > 0 ? 700 : 400, whiteSpace: 'nowrap' }}>
+                  {fmt(p.total_comp)}
                 </td>
                 <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: p.donation_total > 0 ? 'var(--orange)' : 'var(--text-dim)', fontWeight: p.donation_total > 0 ? 700 : 400, whiteSpace: 'nowrap' }}>
                   {fmt(p.donation_total)}
@@ -251,12 +252,17 @@ export default function PrincipalsList() {
 
       <div style={{ marginTop: '3rem' }}>
         <DataTrustBlock
-          source="Florida Legislature Lobbyist Registration"
-          sourceUrl="https://www.fllegislature.gov/Lobbyist/"
+          source="Florida Lobbyist Registration Office — Registration & Compensation Reports"
+          sourceUrl="https://www.floridalobbyist.gov"
           lastUpdated="April 2026"
-          direct={['principal (client) name', 'lobbyists retained', 'registration years']}
-          normalized={['donation totals matched from FL DOE contributions by normalized entity name']}
+          direct={['principal (client) name', 'lobbyists retained', 'quarterly compensation reports (2007–present)']}
+          normalized={[
+            'compensation totals (midpoints below $50K; exact amounts above $50K)',
+            'donation totals matched from FL DOE contributions by normalized entity name',
+          ]}
           caveats={[
+            'Compensation below $50,000 is reported in ranges — we use midpoints for aggregation.',
+            'Amounts of $50,000+ are exact figures reported by the principal.',
             'Finance totals matched by name — corporate entities may appear under different registered names.',
             'Principal registration is per-year, so a long-term client appears across multiple sessions.',
           ]}

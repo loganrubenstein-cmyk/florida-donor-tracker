@@ -76,9 +76,9 @@ async function loadBill(slug) {
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const data = await loadBill(slug);
-  if (!data) return { title: 'Bill — Florida Donor Tracker' };
+  if (!data) return { title: 'Bill — Lobbying Disclosures' };
   return {
-    title: `${data.bill} — Lobbying Disclosures — Florida Donor Tracker`,
+    title: `${data.bill} — Lobbying Disclosures`,
     description: `Who lobbied on Florida ${data.bill}. ${data.entries.length} lobbyist-principal filings across ${data.years.join(', ')}.`,
   };
 }

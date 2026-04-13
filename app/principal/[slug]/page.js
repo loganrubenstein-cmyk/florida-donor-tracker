@@ -8,9 +8,12 @@ export async function generateMetadata({ params }) {
   const { slug } = await params;
   try {
     const data = await loadPrincipal(slug);
-    return { title: `${data.name} | FL Donor Tracker` };
+    const { fmtMoneyCompact } = await import('@/lib/fmt');
+    const comp = data.comp?.total_comp || 0;
+    const desc = `${data.name} — lobbying principal with ${data.total_lobbyists || 0} FL lobbyists.${comp > 0 ? ` ${fmtMoneyCompact(comp)} in compensation.` : ''}`;
+    return { title: data.name, description: desc };
   } catch {
-    return { title: 'Principal | FL Donor Tracker' };
+    return { title: 'Principal' };
   }
 }
 

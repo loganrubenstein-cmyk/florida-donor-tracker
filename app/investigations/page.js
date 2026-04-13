@@ -8,7 +8,7 @@ import { getDb } from '@/lib/db';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Investigations | FL Donor Tracker',
+  title: 'Investigations',
   description: 'Florida political entities with documented influence — cross-referenced with investigative journalism.',
 };
 

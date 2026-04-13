@@ -4,6 +4,7 @@ import { getPartyFromName } from '@/lib/partyUtils';
 import BackLinks from '@/components/BackLinks';
 import { fmtArticleDate } from '@/lib/dateUtils';
 import { slugify } from '@/lib/slugify';
+import { getPoliticianSlugByAcctNum } from '@/lib/loadCandidate';
 import CommitteeConnections from './CommitteeConnections';
 import TabbedProfile from '@/components/shared/TabbedProfile';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
@@ -224,7 +225,7 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
                     {i + 1}
                   </td>
                   <td style={{ padding: '0.45rem 0.6rem', wordBreak: 'break-word' }}>
-                    <a href={`/donor/${slugify(donor.name)}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+                    <a href={`/donor/${donor.slug || slugify(donor.name)}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
                       {donor.name}
                     </a>
                   </td>
@@ -256,9 +257,11 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
             Linked Candidates ({linkedCandidates.length})
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', background: 'var(--border)', border: '1px solid var(--border)', borderRadius: '3px', overflow: 'hidden' }}>
-            {linkedCandidates.map((c, i) => (
+            {linkedCandidates.map((c, i) => {
+              const polSlug = c.acct_num ? getPoliticianSlugByAcctNum(c.acct_num) : null;
+              return (
               <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.5rem 0.75rem', background: 'var(--bg)' }}>
-                <a href={`/candidate/${c.acct_num}`} style={{
+                <a href={polSlug ? `/politician/${polSlug}` : `/candidate/${c.acct_num}`} style={{
                   color: 'var(--teal)', textDecoration: 'none', fontSize: '0.72rem', flex: 1,
                   minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
                 }}>
@@ -278,7 +281,8 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
                   {c.link_type}
                 </span>
               </div>
-            ))}
+              );
+            })}
           </div>
         </>
       ) : (

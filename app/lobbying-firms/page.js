@@ -5,7 +5,7 @@ import DataTrustBlock from '@/components/shared/DataTrustBlock';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Lobbying Firms — Florida Donor Tracker',
+  title: 'Lobbying Firms',
   description: 'Top lobbying firms in Florida by estimated annual compensation.',
 };
 
@@ -18,11 +18,13 @@ function fmt(n) {
 
 export default async function LobbyingFirmsPage() {
   const db = getDb();
-  const { data: firms } = await db
-    .from('lobbying_firms')
-    .select('slug, firm_name, total_comp, num_principals, num_quarters')
-    .order('total_comp', { ascending: false })
-    .limit(100);
+  const [{ data: firms }, { count: totalFirms }] = await Promise.all([
+    db.from('lobbying_firms')
+      .select('slug, firm_name, total_comp, num_principals, num_quarters, first_year, last_year')
+      .order('total_comp', { ascending: false })
+      .limit(100),
+    db.from('lobbying_firms').select('*', { count: 'exact', head: true }),
+  ]);
 
   const rows = firms || [];
 
@@ -40,18 +42,21 @@ export default async function LobbyingFirmsPage() {
         Lobbying Firms
       </h1>
       <p style={{ color: 'var(--text-dim)', fontSize: '0.85rem', lineHeight: 1.6, marginBottom: '0.4rem' }}>
-        Top {rows.length} Florida lobbying firms by estimated compensation. Figures are midpoints of FL-mandated
-        disclosure bands — not exact amounts. Data from the Florida Lobbyist Registration Office.
+        Top {rows.length} Florida lobbying firms by estimated compensation, 2007–present. Figures are midpoints of FL-mandated
+        disclosure bands — not exact amounts. Source:{' '}
+        <a href="https://www.floridalobbyist.gov" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+          Florida Lobbyist Registration Office
+        </a>.
       </p>
       <p style={{ color: 'rgba(90,106,136,0.7)', fontSize: '0.72rem', marginBottom: '1.5rem' }}>
-        Compensation is self-reported in ranges (&lt;$10K, $10K–$24K, $25K–$49K, etc.). Totals shown are midpoint estimates.
+        Compensation below $50K is reported in ranges — we use midpoints. Amounts of $50K+ are exact figures reported by the principal.
       </p>
 
       <div style={{ overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid var(--border)' }}>
-              {['#', 'Firm', 'Clients', 'Quarters', 'Est. Compensation'].map((h, j) => (
+              {['#', 'Firm', 'Years', 'Clients', 'Est. Compensation'].map((h, j) => (
                 <th key={h} style={{
                   padding: '0.4rem 0.6rem', fontSize: '0.6rem', color: 'var(--text-dim)',
                   textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 400,
@@ -71,11 +76,11 @@ export default async function LobbyingFirmsPage() {
                     {f.firm_name}
                   </Link>
                 </td>
-                <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>
-                  {(f.num_principals || 0).toLocaleString()}
+                <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', whiteSpace: 'nowrap' }}>
+                  {f.first_year && f.last_year ? `${f.first_year}–${f.last_year}` : '—'}
                 </td>
                 <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>
-                  {f.num_quarters || '—'}
+                  {(f.num_principals || 0).toLocaleString()}
                 </td>
                 <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--blue)', fontWeight: 700, whiteSpace: 'nowrap' }}>
                   {fmt(f.total_comp)}
@@ -87,20 +92,20 @@ export default async function LobbyingFirmsPage() {
       </div>
 
       <div style={{ marginTop: '2rem', fontSize: '0.72rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
-        439 registered firms in the full dataset — top 100 shown here. Click any firm to see their full client list and quarterly breakdown.
+        {(totalFirms || 0).toLocaleString()} firms in the full dataset — top {rows.length} shown here. Click any firm to see their full client list and quarterly breakdown.
       </div>
 
       <div style={{ marginTop: '2rem' }}>
         <DataTrustBlock
-          source="Florida Legislature Lobbyist Registration — Compensation Disclosures"
-          sourceUrl="https://www.fllegislature.gov/Lobbyist/"
+          source="Florida Lobbyist Registration Office — Quarterly Compensation Reports"
+          sourceUrl="https://www.floridalobbyist.gov"
           lastUpdated="April 2026"
-          direct={['firm name', 'client count', 'quarterly filings']}
-          normalized={['total compensation estimated from disclosed ranges (midpoint of band)'] }
-          inferred={['annual total = sum of quarterly midpoint estimates across all clients']}
+          direct={['firm name', 'client list', 'quarterly compensation reports (2007–present)']}
+          normalized={['compensation totals (midpoints for amounts under $50K; exact amounts above $50K)']}
           caveats={[
-            'Compensation is disclosed in bands (<$10K, $10K–$25K, etc.) — exact figures are not public.',
-            'Estimates use midpoint of each band. Actual compensation may differ.',
+            'Compensation below $50,000 is reported in ranges — we use midpoints for aggregation.',
+            'Amounts of $50,000+ are exact figures reported by the principal.',
+            'Both legislative and executive branch lobbying are included.',
           ]}
         />
       </div>

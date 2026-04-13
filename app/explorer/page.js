@@ -9,7 +9,7 @@ const TransactionExplorer = dynamic(
 );
 
 export const metadata = {
-  title: 'Transaction Explorer — Florida Donor Tracker',
+  title: 'Transaction Explorer',
   description: 'Browse every contribution transaction in the Florida campaign finance database.',
 };
 

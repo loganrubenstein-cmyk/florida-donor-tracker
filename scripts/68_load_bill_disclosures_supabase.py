@@ -32,6 +32,7 @@ BILLS_DIR = ROOT / 'public' / 'data' / 'lobbyist_disclosures' / 'by_bill'
 conn = psycopg2.connect(DB_URL)
 conn.autocommit = True
 cur = conn.cursor()
+cur.execute("SET statement_timeout = 0")
 
 print("── Creating bill_disclosures table ────────────────────────────────────")
 cur.execute("DROP TABLE IF EXISTS bill_disclosures")

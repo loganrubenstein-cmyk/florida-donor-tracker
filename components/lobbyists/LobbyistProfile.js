@@ -50,6 +50,7 @@ export default function LobbyistProfile({ data }) {
   const principals = data.principals || [];
   const activePrincipals = principals.filter(p => p.is_active);
   const inactivePrincipals = principals.filter(p => !p.is_active);
+  const compHistory = data.compHistory || [];
 
   const location = [data.city, data.state].filter(Boolean).join(', ');
 
@@ -108,18 +109,62 @@ export default function LobbyistProfile({ data }) {
         display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
         gap: '1px', background: 'var(--border)', marginBottom: '2rem',
       }}>
+        <StatBox label="Est. Compensation" value={data.totalComp > 0 ? fmt(data.totalComp) : '—'}
+          sub={compHistory.length > 0 ? `${compHistory[0]?.year}–${compHistory[compHistory.length - 1]?.year}` : null}
+          color="var(--blue)" />
         <StatBox label="Total Principals" value={(data.num_principals || 0).toLocaleString()} />
         <StatBox label="Active Registrations" value={(data.num_active || 0).toLocaleString()}
           color="var(--teal)" />
-        <StatBox label="Donation Influence"
-          value={data.total_donation_influence > 0
-            ? fmt(data.total_donation_influence)
-            : '—'}
-          sub={data.total_donation_influence > 0 ? 'Matched principal donations' : null}
-          color={data.total_donation_influence > 0 ? 'var(--orange)' : 'var(--text-dim)'} />
         <StatBox label="Inactive / Withdrawn" value={(inactivePrincipals.length).toLocaleString()}
           color="var(--text-dim)" />
       </div>
+
+      {/* Compensation history */}
+      {compHistory.length > 0 && (
+        <div style={{ marginBottom: '2rem' }}>
+          <SectionLabel>Annual Compensation History ({compHistory[0]?.year}–{compHistory[compHistory.length - 1]?.year})</SectionLabel>
+          <p style={{ fontSize: '0.7rem', color: 'rgba(90,106,136,0.7)', marginBottom: '0.75rem', lineHeight: 1.5 }}>
+            Estimated compensation from quarterly reports filed with the{' '}
+            <a href="https://www.floridalobbyist.gov" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+              FL Lobbyist Registration Office
+            </a>.
+            Amounts below $50K use band midpoints; $50K+ are exact reported figures.
+          </p>
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                  {['Year', 'Firm', 'Clients', 'Est. Comp'].map((h, j) => (
+                    <th key={h} style={{
+                      padding: '0.35rem 0.6rem', fontSize: '0.6rem', color: 'var(--text-dim)',
+                      textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 400,
+                      textAlign: j >= 2 ? 'right' : 'left',
+                    }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {[...compHistory].reverse().map((c, i) => (
+                  <tr key={`${c.year}-${c.firm_name}`} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
+                    <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>
+                      {c.year}
+                    </td>
+                    <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text)', fontSize: '0.72rem' }}>
+                      {c.firm_name}
+                    </td>
+                    <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>
+                      {c.num_principals || '—'}
+                    </td>
+                    <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--blue)', fontWeight: 600, whiteSpace: 'nowrap' }}>
+                      {fmt(parseFloat(c.total_comp) || 0)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
 
       {/* Active principals */}
       {activePrincipals.length > 0 && (
@@ -145,7 +190,7 @@ export default function LobbyistProfile({ data }) {
                       {i + 1}
                     </td>
                     <td style={{ padding: '0.4rem 0.6rem', maxWidth: '360px', wordBreak: 'break-word' }}>
-                      <a href={`/principal/${slugify(p.name)}`}
+                      <a href={`/principal/${p.principal_slug || slugify(p.name)}`}
                         style={{ color: 'var(--teal)', textDecoration: 'none' }}>
                         {p.name}
                       </a>
@@ -193,8 +238,11 @@ export default function LobbyistProfile({ data }) {
                     <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2rem' }}>
                       {i + 1}
                     </td>
-                    <td style={{ padding: '0.4rem 0.6rem', maxWidth: '320px', wordBreak: 'break-word', color: 'var(--text)' }}>
-                      {p.name}
+                    <td style={{ padding: '0.4rem 0.6rem', maxWidth: '320px', wordBreak: 'break-word' }}>
+                      {p.principal_slug
+                        ? <a href={`/principal/${p.principal_slug}`} style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>{p.name}</a>
+                        : <span style={{ color: 'var(--text)' }}>{p.name}</span>
+                      }
                     </td>
                     <td style={{ padding: '0.4rem 0.6rem', textAlign: 'center' }}>
                       <span style={{
@@ -237,16 +285,16 @@ export default function LobbyistProfile({ data }) {
       </div>
 
       <DataTrustBlock
-        source="Florida Legislature Lobbyist Registration"
+        source="Florida Lobbyist Registration Office — Registration & Compensation Reports"
         sourceUrl="https://www.floridalobbyist.gov"
-        lastUpdated="January 2026"
-        direct={['name', 'firm', 'phone', 'address', 'registration status']}
-        normalized={['principal names', 'compensation amounts']}
-        inferred={['donation influence (matched by name to contribution records)']}
+        lastUpdated="April 2026"
+        direct={['name', 'firm', 'phone', 'registration status', 'quarterly compensation reports (2007–present)']}
+        normalized={['compensation totals (midpoints below $50K; exact amounts above $50K)']}
+        inferred={['donation influence (matched by name to contribution records — not confirmed by election authorities)']}
         caveats={[
-          'Compensation figures are reported in bands (e.g. "$50K–$100K"), not exact amounts.',
+          'Compensation below $50,000 is reported in ranges — we use midpoints for aggregation.',
+          'Amounts of $50,000+ are exact figures reported by the principal.',
           'Donation matches are approximate — same name does not guarantee same person.',
-          'Active registrations only; historical filings may be incomplete.',
         ]}
       />
     </main>

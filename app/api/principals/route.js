@@ -16,7 +16,7 @@ export async function GET(request) {
   let query = db
     .from('principals')
     .select(
-      'slug, name, naics, city, state, total_lobbyists, num_active, donation_total, num_contributions, industry',
+      'slug, name, naics, city, state, total_lobbyists, num_active, donation_total, num_contributions, industry, total_comp',
       { count: 'exact' }
     );
 
@@ -27,7 +27,8 @@ export async function GET(request) {
   if (type === 'active')  query = query.gt('num_active', 0);
   if (industry !== 'all') query = query.eq('industry', industry);
 
-  const sortCol    = sort === 'total_lobbyists' ? 'total_lobbyists' : sort === 'name' ? 'name' : 'donation_total';
+  const allowedSorts = ['total_lobbyists', 'name', 'donation_total', 'total_comp'];
+  const sortCol    = allowedSorts.includes(sort) ? sort : 'total_comp';
   const defaultAsc = sort === 'name';
   const ascending  = sortDir === 'asc' ? true : sortDir === 'desc' ? false : defaultAsc;
   query = query.order(sortCol, { ascending });

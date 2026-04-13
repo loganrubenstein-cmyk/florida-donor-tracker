@@ -7,7 +7,7 @@ import DataTrustBlock from '@/components/shared/DataTrustBlock';
 export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Florida Legislative Committees — Florida Donor Tracker',
+  title: 'Florida Legislative Committees',
   description: 'All 65 Florida House and Senate legislative committees — membership, leadership, and campaign finance.',
 };
 

@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import BackLinks from '@/components/BackLinks';
 import { slugify } from '@/lib/slugify';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import { getPoliticianSlugByAcctNum } from '@/lib/loadCandidate';
 
 const IndustryTrendChart = dynamic(() => import('./IndustryTrendChart'), { ssr: false });
 
@@ -72,7 +73,15 @@ const PARTY_COLOR = { R: '#f87171', D: '#60a5fa', NPA: '#5a6a88' };
 
 export default function IndustryProfile({ data, totalAmount, trendData, topDonors, topLegislators }) {
   const color = INDUSTRY_COLORS[data.industry] || '#444466';
-  const candidates = data.top_candidates || [];
+  // Dedup by name — same politician can appear with multiple acct_nums (different cycles); keep highest total
+  const rawCandidates = data.top_candidates || [];
+  const seen = new Map();
+  for (const c of rawCandidates) {
+    const key = (c.name || '').trim().toLowerCase();
+    const existing = seen.get(key);
+    if (!existing || parseFloat(c.total || 0) > parseFloat(existing.total || 0)) seen.set(key, c);
+  }
+  const candidates = [...seen.values()];
   // Prefer rich per-industry donor file (100 donors, full data) over summary (10 donors, name+total only)
   const richDonors = topDonors?.top_donors || null;
   const donors     = data.top_donors     || [];
@@ -149,13 +158,14 @@ export default function IndustryProfile({ data, totalAmount, trendData, topDonor
               <tbody>
                 {candidates.map((c, i) => {
                   const pct = data.total > 0 ? (c.total / data.total) * 100 : 0;
+                  const polSlug = c.acct_num ? getPoliticianSlugByAcctNum(c.acct_num) : null;
                   return (
                     <tr key={c.acct_num} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
                       <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2rem' }}>
                         {i + 1}
                       </td>
                       <td style={{ padding: '0.4rem 0.6rem' }}>
-                        <a href={`/candidate/${c.acct_num}`}
+                        <a href={polSlug ? `/politician/${polSlug}` : `/candidate/${c.acct_num}`}
                           style={{ color: 'var(--teal)', textDecoration: 'none' }}>
                           {c.name || `#${c.acct_num}`}
                         </a>
@@ -292,6 +302,11 @@ export default function IndustryProfile({ data, totalAmount, trendData, topDonor
                       <a href={`/legislator/${leg.people_id}`} style={{ color: 'var(--text)', textDecoration: 'none', fontWeight: 500 }}>
                         {leg.display_name}
                       </a>
+                      {leg.acct_num && (
+                        <a href={`/candidate/${leg.acct_num}`} style={{ marginLeft: '0.5rem', fontSize: '0.6rem', color: 'var(--text-dim)', textDecoration: 'none' }}>
+                          fundraising →
+                        </a>
+                      )}
                     </td>
                     <td style={{ padding: '0.45rem 0.6rem' }}>
                       <span style={{ fontSize: '0.65rem', padding: '0.1rem 0.35rem', border: '1px solid var(--border)', borderRadius: '3px', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
