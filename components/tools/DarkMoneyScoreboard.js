@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { fmtMoney, fmtMoneyCompact } from '@/lib/fmt';
+import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 export default function DarkMoneyScoreboard() {
   const [sort, setSort] = useState('least');
@@ -102,6 +103,22 @@ export default function DarkMoneyScoreboard() {
         corporations and other PACs score lower because the original source of money is harder to trace.
         Only committees with over $50,000 in total fundraising are included. Scores are based on the top
         donors in our database, not every individual contribution.
+      </div>
+
+      <div style={{ marginTop: '1rem' }}>
+        <DataTrustBlock
+          source="Florida Division of Elections — Campaign Finance Database"
+          sourceUrl="https://dos.elections.myflorida.com/campaign-finance/contributions/"
+          lastUpdated="April 2026"
+          direct={['committee name', 'total received', 'contribution counts']}
+          classified={['donor type (individual, corporate, committee) from FL DOE type codes']}
+          inferred={['transparency score (% of top-donor money from identifiable individuals)']}
+          caveats={[
+            'Only committees with over $50,000 in total fundraising are scored.',
+            'Scores are based on top donors in our database, not every individual contribution.',
+            'FL DOE type codes (CHE, INK) are normalized to individual/corporate — some misclassification possible.',
+          ]}
+        />
       </div>
     </div>
   );

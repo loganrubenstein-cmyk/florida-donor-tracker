@@ -27,6 +27,7 @@ const NAV_LINKS = [
   { href: '/legislature',   label: 'Legislature' },
   { href: '/elections',     label: 'Elections' },
   { href: '/network',       label: 'Network' },
+  { href: '/tools',         label: 'Tools' },
   { href: '/research',      label: 'Research' },
   { href: '/data',          label: 'Data' },
 ];

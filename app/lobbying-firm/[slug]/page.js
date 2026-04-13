@@ -218,6 +218,29 @@ export default async function LobbyingFirmPage({ params }) {
         </div>
       )}
 
+      {/* Research links */}
+      <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.25rem', marginBottom: '2rem' }}>
+        <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
+          Research
+        </div>
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+          {[
+            { label: 'Find Donor Overlap →', href: '/compare' },
+            { label: 'All Lobbying Firms →', href: '/lobbying-firms' },
+            { label: 'FL Lobbyist Registry →', href: 'https://www.floridalobbyist.gov', external: true },
+          ].map(({ label, href, external }) => (
+            <Link key={label} href={href} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+              style={{
+                padding: '0.35rem 0.75rem', border: '1px solid var(--border)',
+                color: external ? 'var(--text-dim)' : 'var(--teal)', fontSize: '0.72rem', borderRadius: '3px',
+                textDecoration: 'none', fontFamily: 'var(--font-mono)',
+              }}>
+              {label}
+            </Link>
+          ))}
+        </div>
+      </div>
+
       <DataTrustBlock
         source="Florida Lobbyist Registration Office — Quarterly Compensation Reports"
         sourceUrl="https://www.floridalobbyist.gov"

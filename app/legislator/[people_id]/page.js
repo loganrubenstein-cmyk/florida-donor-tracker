@@ -398,6 +398,16 @@ export default async function LegislatorPage({ params }) {
             </a>
           )}
           {leg.acct_num && (
+            <Link href={`/timeline?acct=${leg.acct_num}`}
+               style={{ fontSize: '0.7rem', padding: '0.25rem 0.6rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '3px', color: 'var(--teal)', textDecoration: 'none' }}>
+              Fundraising timeline →
+            </Link>
+          )}
+          <Link href={`/district?chamber=${leg.chamber}&district=${leg.district}`}
+             style={{ fontSize: '0.7rem', padding: '0.25rem 0.6rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '3px', color: 'var(--teal)', textDecoration: 'none' }}>
+            District money →
+          </Link>
+          {leg.acct_num && (
             <SourceLink type="candidate" id={leg.acct_num} />
           )}
         </div>

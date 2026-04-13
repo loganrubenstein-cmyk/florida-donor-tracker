@@ -24,14 +24,21 @@ export async function GET(request) {
   // For each committee, get donor type counts
   const acctNums = committees.map(c => c.acct_num);
 
-  const { data: donorTypes } = await db
-    .from('committee_top_donors')
-    .select('acct_num, type, total_amount')
-    .in('acct_num', acctNums);
+  // Batch the .in() query to avoid PostgREST URL length limits
+  const BATCH = 100;
+  const donorTypes = [];
+  for (let i = 0; i < acctNums.length; i += BATCH) {
+    const batch = acctNums.slice(i, i + BATCH);
+    const { data } = await db
+      .from('committee_top_donors')
+      .select('acct_num, type, total_amount')
+      .in('acct_num', batch);
+    if (data) donorTypes.push(...data);
+  }
 
   // Aggregate by committee
   const typeMap = {};
-  for (const d of (donorTypes || [])) {
+  for (const d of donorTypes) {
     if (!typeMap[d.acct_num]) typeMap[d.acct_num] = { individual: 0, corporate: 0, committee: 0, other: 0, total: 0 };
     const amt = parseFloat(d.total_amount) || 0;
     const type = d.type || 'other';

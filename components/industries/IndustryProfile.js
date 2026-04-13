@@ -334,7 +334,33 @@ export default function IndustryProfile({ data, totalAmount, trendData, topDonor
         </div>
       )}
 
-      <div style={{ marginTop: '3rem' }}>
+      {/* Research links */}
+      <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.25rem', marginTop: '2rem', marginBottom: '2rem' }}>
+        <div style={{
+          fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase',
+          letterSpacing: '0.1em', marginBottom: '0.75rem',
+        }}>
+          Research
+        </div>
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+          {[
+            { label: 'Dark Money Scoreboard →', href: '/transparency', internal: true },
+            { label: 'Find Donor Overlap →', href: '/compare', internal: true },
+            { label: 'All Industries →', href: '/industries', internal: true },
+          ].map(({ label, href, internal }) => (
+            <a key={label} href={href}
+              style={{
+                padding: '0.35rem 0.75rem', border: '1px solid var(--border)',
+                color: 'var(--teal)', fontSize: '0.72rem', borderRadius: '3px',
+                textDecoration: 'none', fontFamily: 'var(--font-mono)',
+              }}>
+              {label}
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ marginTop: '1rem' }}>
         <DataTrustBlock
           source="Florida Division of Elections — Campaign Finance Filings"
           sourceUrl="https://dos.elections.myflorida.com/campaign-finance/"

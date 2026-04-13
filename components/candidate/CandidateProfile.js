@@ -155,7 +155,6 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
   const pcsStubOnly  = pcs.filter(pc => !pc.pc_acct || pc.link_type === 'solicitation_stub' || pc.link_type === 'historical_stub');
   const pcsWithData  = pcs.filter(pc => pc.pc_acct && pc.link_type !== 'solicitation_stub' && pc.link_type !== 'historical_stub');
   const pcsSpecific  = pcsWithData.filter(pc => pc.is_candidate_specific);
-  const pcsAffiliated = pcsWithData.filter(pc => !pc.is_candidate_specific);
   const party  = data.party_code;
   const partyColor = PARTY_COLOR[party] || null;
 
@@ -163,6 +162,8 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
     .filter(Boolean).join(' · ');
 
   const researchLinks = [
+    { label: 'Fundraising Timeline →', href: `/timeline?acct=${data.acct_num}`, internal: true },
+    { label: 'Find Donor Overlap →', href: `/compare`, internal: true },
     { label: 'FL DOE Candidate Page →', href: `https://dos.elections.myflorida.com/candidates/CanDetail.asp?account=${data.acct_num}` },
     { label: 'Campaign Finance Activity →', href: `https://dos.elections.myflorida.com/cgi-bin/TreSel.exe?account=${data.acct_num}` },
     { label: 'Google News →', href: `https://news.google.com/search?q=${encodeURIComponent((data.candidate_name || '') + ' Florida')}` },
@@ -184,7 +185,7 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
       }}>
         {[
           { label: 'Hard Money (Direct)',   value: fmt(hm.total),              sub: `${(hm.num_contributions || 0).toLocaleString()} contributions` },
-          { label: 'Soft Money (Candidate PACs)', value: fmt(data.soft_money_total), sub: hasLinkedPcsButNoSoft ? 'Tracked on most recent cycle' : pcsSpecific.length > 0 ? `${pcsSpecific.length} candidate PAC${pcsSpecific.length !== 1 ? 's' : ''}${pcsAffiliated.length > 0 ? ` + ${pcsAffiliated.length} affiliated` : ''}` : pcsAffiliated.length > 0 ? `${pcsAffiliated.length} affiliated only` : '0 committees linked' },
+          { label: 'Soft Money (Candidate PACs)', value: fmt(data.soft_money_total), sub: hasLinkedPcsButNoSoft ? 'Tracked on most recent cycle' : pcsSpecific.length > 0 ? `${pcsSpecific.length} candidate PAC${pcsSpecific.length !== 1 ? 's' : ''}` : '0 committees linked' },
           { label: 'Combined Total',         value: fmt(data.total_combined),   sub: hasLinkedPcsButNoSoft ? 'hard money only' : 'hard + soft' },
         ].map(({ label, value, sub }) => (
           <div key={label} style={{ background: 'var(--bg)', padding: '1rem 1.25rem' }}>
@@ -294,30 +295,6 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
     </div>
   );
 
-  const AFFILIATED_GROUP_LABELS = {
-    SOLICITATION_CONTROL:              { label: 'Solicitation or Control Relationship', desc: 'This candidate filed a solicitation statement (DS-DE 102) naming this committee, or served as a controlling officer.' },
-    STATEMENT_OF_ORG_SUPPORT:          { label: 'Statement of Organizational Support', desc: 'This committee filed a Statement of Organization (DS-DE 9) specifically naming this candidate as the supported candidate.' },
-    DIRECT_CONTRIBUTION_TO_CANDIDATE:  { label: 'Donated Directly to This Candidate', desc: 'These organizations made direct contributions to this candidate\'s campaign account. They are independent multi-candidate committees — their overall totals are not attributed to this candidate.' },
-    OTHER_DISTRIBUTION_TO_CANDIDATE:   { label: 'Other Distributions to This Candidate', desc: 'These organizations made non-contribution transfers or distributions to this candidate\'s account.' },
-    IEC_FOR_OR_AGAINST:                { label: 'Independent Expenditure Activity', desc: 'These organizations filed Independent Expenditure reports (IECs) for or against this candidate. They operate independently — not coordinated with the campaign.' },
-    ECC_FOR_OR_AGAINST:                { label: 'Electioneering Communications', desc: 'These organizations ran electioneering communications (ECCs) mentioning this candidate within 30 days of a primary or 60 days of a general election.' },
-    ADMIN_OVERLAP_ONLY:                { label: 'Administrative Overlap', desc: 'These organizations share officers or addresses with this candidate\'s committees, but have no direct financial or solicitation relationship on file.' },
-  };
-
-  const affiliatedByType = {};
-  for (const pc of pcsAffiliated) {
-    const key = pc.link_type || 'UNKNOWN';
-    if (!affiliatedByType[key]) affiliatedByType[key] = [];
-    affiliatedByType[key].push(pc);
-  }
-
-  const typeOrder = [
-    'SOLICITATION_CONTROL', 'STATEMENT_OF_ORG_SUPPORT',
-    'DIRECT_CONTRIBUTION_TO_CANDIDATE', 'OTHER_DISTRIBUTION_TO_CANDIDATE',
-    'IEC_FOR_OR_AGAINST', 'ECC_FOR_OR_AGAINST', 'ADMIN_OVERLAP_ONLY',
-  ];
-  const sortedAffiliatedTypes = typeOrder.filter(t => affiliatedByType[t]?.length > 0);
-
   const committeesContent = (
     <div>
       {pcs.length === 0 ? (
@@ -369,40 +346,6 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
             </div>
           )}
 
-          {/* ── Affiliated committees grouped by link type ── */}
-          {sortedAffiliatedTypes.length > 0 && (
-            <div>
-              <SectionLabel>Other Organizations with a Documented Link</SectionLabel>
-              {sortedAffiliatedTypes.map(linkType => {
-                const group = affiliatedByType[linkType];
-                const meta = AFFILIATED_GROUP_LABELS[linkType] || { label: linkType, desc: '' };
-                return (
-                  <div key={linkType} style={{ marginBottom: '1.5rem' }}>
-                    <div style={{ fontSize: '0.68rem', fontWeight: 600, color: 'var(--text)', marginBottom: '0.25rem' }}>
-                      {meta.label}
-                      <span style={{ marginLeft: '0.5rem', fontSize: '0.6rem', color: 'var(--text-dim)', fontWeight: 400 }}>
-                        {group.length} {group.length === 1 ? 'organization' : 'organizations'}
-                      </span>
-                    </div>
-                    <p style={{ fontSize: '0.65rem', color: 'var(--text-dim)', lineHeight: 1.5, marginBottom: '0.5rem', marginTop: 0 }}>
-                      {meta.desc}
-                    </p>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
-                      {group.map((pc, i) => (
-                        <a key={i} href={`/committee/${pc.pc_acct}`} style={{
-                          fontSize: '0.65rem', color: 'var(--text-dim)',
-                          border: '1px solid var(--border)', borderRadius: '2px',
-                          padding: '0.2rem 0.5rem', textDecoration: 'none',
-                        }}>
-                          {pc.pc_name || pc.pc_acct}
-                        </a>
-                      ))}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
         </>
       )}
     </div>
@@ -474,10 +417,10 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
     <div>
       <SectionLabel>Research Links</SectionLabel>
       <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
-        {researchLinks.map(({ label, href }) => (
-          <a key={label} href={href} target="_blank" rel="noopener noreferrer" style={{
+        {researchLinks.map(({ label, href, internal }) => (
+          <a key={label} href={href} {...(!internal ? { target: '_blank', rel: 'noopener noreferrer' } : {})} style={{
             padding: '0.35rem 0.75rem', border: '1px solid var(--border)',
-            color: 'var(--text-dim)', fontSize: '0.72rem', borderRadius: '3px',
+            color: internal ? 'var(--teal)' : 'var(--text-dim)', fontSize: '0.72rem', borderRadius: '3px',
             textDecoration: 'none', fontFamily: 'var(--font-mono)',
           }}>
             {label}

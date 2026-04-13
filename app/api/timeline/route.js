@@ -37,7 +37,7 @@ export async function GET(request) {
       .eq('acct_num', acct)
       .order('quarter', { ascending: true }),
     db.from('candidates')
-      .select('candidate_name, office_desc, election_year, party_code, hard_money, total_received')
+      .select('candidate_name, office_desc, election_year, party_code, hard_money_total, total_combined')
       .eq('acct_num', acct)
       .maybeSingle(),
     db.from('candidate_pc_links')
@@ -99,8 +99,8 @@ export async function GET(request) {
       office: candidate.office_desc,
       year: candidate.election_year,
       party: candidate.party_code,
-      hard_money: parseFloat(candidate.hard_money) || 0,
-      total: parseFloat(candidate.total_received) || 0,
+      hard_money: parseFloat(candidate.hard_money_total) || 0,
+      total: parseFloat(candidate.total_combined) || 0,
     },
     quarters,
     pacs,

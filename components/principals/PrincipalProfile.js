@@ -66,6 +66,11 @@ export default function PrincipalProfile({ data, compData = null }) {
 
   const researchLinks = [
     {
+      label: 'Find Donor Overlap →',
+      href: '/compare',
+      internal: true,
+    },
+    {
       label: 'FL Lobbyist Registry →',
       href: `https://www.leg.state.fl.us/Lobbyist/index.cfm?Tab=principalsearch`,
     },
@@ -400,11 +405,11 @@ export default function PrincipalProfile({ data, compData = null }) {
       <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.25rem', marginBottom: '2rem' }}>
         <SectionLabel>Research</SectionLabel>
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-          {researchLinks.map(({ label, href }) => (
-            <a key={label} href={href} target="_blank" rel="noopener noreferrer"
+          {researchLinks.map(({ label, href, internal }) => (
+            <a key={label} href={href} {...(!internal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
               style={{
                 padding: '0.35rem 0.75rem', border: '1px solid var(--border)',
-                color: 'var(--text-dim)', fontSize: '0.72rem', borderRadius: '3px',
+                color: internal ? 'var(--teal)' : 'var(--text-dim)', fontSize: '0.72rem', borderRadius: '3px',
                 textDecoration: 'none', fontFamily: 'var(--font-mono)',
               }}>
               {label}

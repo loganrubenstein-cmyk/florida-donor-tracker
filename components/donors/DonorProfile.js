@@ -281,14 +281,15 @@ export default function DonorProfile({ data, annotations = {} }) {
       <SectionLabel>Research Links</SectionLabel>
       <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
         {[
+          { label: 'Find Donor Overlap →', href: '/compare', internal: true },
           { label: 'FL Elections Search →', href: `https://dos.elections.myflorida.com/campaign-finance/contributions/#${encodeURIComponent(data.name || '')}` },
           { label: 'Google →', href: `https://www.google.com/search?q=${encodeURIComponent((data.name || '') + ' Florida political donation')}` },
           ...(lobbyists.length > 0 ? [{ label: 'FL Lobbyist Registry →', href: 'https://www.leg.state.fl.us/Lobbyist/index.cfm?Tab=lobbyistsearch' }] : []),
-        ].map(({ label, href }) => (
-          <a key={label} href={href} target="_blank" rel="noopener noreferrer"
+        ].map(({ label, href, internal }) => (
+          <a key={label} href={href} {...(!internal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
             style={{
               padding: '0.35rem 0.75rem', border: '1px solid var(--border)',
-              color: 'var(--text-dim)', fontSize: '0.72rem', borderRadius: '3px',
+              color: internal ? 'var(--teal)' : 'var(--text-dim)', fontSize: '0.72rem', borderRadius: '3px',
               textDecoration: 'none', fontFamily: 'var(--font-mono)',
             }}>
             {label}

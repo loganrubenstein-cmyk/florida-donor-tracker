@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { fmtMoney, fmtMoneyCompact } from '@/lib/fmt';
+import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 const PARTY_COLOR = { R: 'var(--republican)', D: 'var(--democrat)', I: 'var(--orange)', NPA: 'var(--text-dim)' };
 const PARTY_LABEL = { R: 'Republican', D: 'Democrat', I: 'Independent', NPA: 'No Party Affiliation' };
@@ -15,8 +16,30 @@ export default function DistrictLookup() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const didAutoLoad = useRef(false);
 
   const maxDistrict = chamber === 'Senate' ? 40 : 120;
+
+  // Auto-load from URL params (e.g. ?chamber=House&district=1)
+  useEffect(() => {
+    if (didAutoLoad.current) return;
+    const params = new URLSearchParams(window.location.search);
+    const ch = params.get('chamber');
+    const dist = params.get('district');
+    if (ch && dist) {
+      didAutoLoad.current = true;
+      const validChamber = ch === 'Senate' ? 'Senate' : 'House';
+      setChamber(validChamber);
+      setDistrict(dist);
+      // Trigger lookup after state is set
+      setLoading(true);
+      fetch(`/api/district?chamber=${validChamber}&district=${dist}`)
+        .then(r => r.json())
+        .then(json => setData(json))
+        .catch(e => setError('Network error'))
+        .finally(() => setLoading(false));
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function handleLookup() {
     const num = parseInt(district, 10);
@@ -115,6 +138,21 @@ export default function DistrictLookup() {
       )}
 
       {data && <DistrictResult data={data} />}
+
+      <div style={{ marginTop: '2rem' }}>
+        <DataTrustBlock
+          source="Florida Division of Elections + LegiScan"
+          sourceUrl="https://dos.elections.myflorida.com/campaign-finance/contributions/"
+          lastUpdated="April 2026"
+          direct={['legislator name', 'district', 'party', 'counties', 'total raised', 'voting record']}
+          normalized={['donor names and types', 'chamber average/median fundraising']}
+          caveats={[
+            'Top donors shown are from direct campaign account only — PAC/soft money not included.',
+            'Chamber averages include all current members with fundraising > $0.',
+            'Voting record sourced from LegiScan roll call data for current legislative session.',
+          ]}
+        />
+      </div>
     </div>
   );
 }

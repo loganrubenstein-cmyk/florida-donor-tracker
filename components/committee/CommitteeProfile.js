@@ -39,8 +39,10 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
   const partyColor = party === 'R' ? 'var(--republican)' : party === 'D' ? 'var(--democrat)' : null;
 
   const researchLinks = [
+    { label: 'Decode This Committee →', href: `/decode?acct=${data.acct_num}`, internal: true },
     ...(data.website_url ? [{ label: 'Official Website →', href: data.website_url }] : []),
     { label: 'Committee Connections →', href: `/connections?committee=${data.acct_num}`, internal: true },
+    { label: 'Find Donor Overlap →', href: `/compare`, internal: true },
     { label: 'View in Network →', href: `/network/graph?acct=${data.acct_num}`, internal: true },
     { label: 'FL DOE Committee Page →', href: `https://dos.elections.myflorida.com/committees/ComDetail.asp?account=${data.acct_num}` },
     { label: 'Campaign Finance Activity →', href: `https://dos.elections.myflorida.com/cgi-bin/TreSel.exe?account=${data.acct_num}` },

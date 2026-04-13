@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { fmtMoney, fmtMoneyCompact } from '@/lib/fmt';
+import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 const PARTY_COLOR = { REP: 'var(--republican)', DEM: 'var(--democrat)' };
 
@@ -14,6 +15,13 @@ export default function InfluenceTimeline() {
   const [error, setError] = useState(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const timerRef = useRef(null);
+
+  // Auto-load if ?acct= is in URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const acct = params.get('acct');
+    if (acct) loadTimeline(acct, '');
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function handleSearch(val) {
     setQuery(val);
@@ -50,7 +58,7 @@ export default function InfluenceTimeline() {
   const suggestions = [
     { acct: '79799', name: 'Ron DeSantis (Gov 2022)' },
     { acct: '88746', name: 'Michelle Salzman (House)' },
-    { acct: '79571', name: 'Charlie Crist (Gov 2022)' },
+    { acct: '79408', name: 'Charlie Crist (Gov 2022)' },
   ];
 
   return (
@@ -121,6 +129,22 @@ export default function InfluenceTimeline() {
       )}
 
       {data && <TimelineView data={data} />}
+
+      <div style={{ marginTop: '2rem' }}>
+        <DataTrustBlock
+          source="Florida Division of Elections — Campaign Finance Database"
+          sourceUrl="https://dos.elections.myflorida.com/campaign-finance/contributions/"
+          lastUpdated="April 2026"
+          direct={['quarterly contribution totals', 'candidate name and office', 'election year']}
+          normalized={['connected PAC linkages (Statement of Organization filings)']}
+          inferred={['donation spikes (quarters exceeding 2.5x the median)', 'PAC formation dates']}
+          caveats={[
+            'Quarterly totals are aggregated from individual contribution records filed with FL DOE.',
+            'Spike detection uses a 2.5x-median threshold — a statistical heuristic, not an official designation.',
+            'Connected PACs are derived from FL DOE Statement of Organization filings and may not capture all relationships.',
+          ]}
+        />
+      </div>
     </div>
   );
 }

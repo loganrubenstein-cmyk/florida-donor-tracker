@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { fmtMoney, fmtMoneyCompact } from '@/lib/fmt';
+import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 const TYPE_COLOR = { individual: '#80ffa0', corporate: '#a0c0ff', committee: '#ffb060', unknown: '#888' };
 const TYPE_LABEL = { individual: 'Individual', corporate: 'Corporate', committee: 'Committee/PAC', unknown: 'Other' };
@@ -67,6 +68,21 @@ export default function DonorOverlap() {
       )}
 
       {result && <OverlapResult data={result} />}
+
+      <div style={{ marginTop: '2rem' }}>
+        <DataTrustBlock
+          source="Florida Division of Elections — Campaign Finance Database"
+          sourceUrl="https://dos.elections.myflorida.com/campaign-finance/contributions/"
+          lastUpdated="April 2026"
+          direct={['donor names', 'contribution amounts', 'entity type']}
+          normalized={['donor slug matching (name normalization for cross-entity comparison)']}
+          caveats={[
+            'Overlap is computed from pre-aggregated top donors per entity — not every individual contribution.',
+            'Donor matching uses normalized name slugs. Different legal entities with similar names may merge.',
+            'Overlap percentages are relative to top-donor totals, not full fundraising.',
+          ]}
+        />
+      </div>
     </div>
   );
 }
