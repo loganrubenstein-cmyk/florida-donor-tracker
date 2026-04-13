@@ -225,6 +225,7 @@ def main() -> int:
 
         if args.force:
             print("  --force: clearing previous candidate-side manifest + rows")
+            conn.commit()  # close any open transaction before switching autocommit
             conn.autocommit = True
             cur.execute("DELETE FROM contributions_load_manifest WHERE recipient_type='candidate'")
             cur.execute("DELETE FROM contributions WHERE recipient_type='candidate'")

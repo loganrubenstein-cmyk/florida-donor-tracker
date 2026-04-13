@@ -262,7 +262,7 @@ def main() -> int:
 
         if args.force:
             print("  --force: clearing previous committee-side manifest + rows")
-            # Use autocommit for large deletes — avoids connection pooler timeouts
+            conn.commit()  # close any open transaction before switching autocommit
             conn.autocommit = True
             cur.execute("DELETE FROM contributions_load_manifest WHERE recipient_type='committee'")
             cur.execute("DELETE FROM contributions WHERE recipient_type='committee'")

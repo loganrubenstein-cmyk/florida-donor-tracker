@@ -146,9 +146,16 @@ def load_candidates(cur):
             continue
 
         hm = d.get("hard_money", {})
+        def int_or_none(v):
+            if v is None or v == '':
+                return None
+            try:
+                return int(v)
+            except (ValueError, TypeError):
+                return None
         cand_rows.append((
             str(acct), d.get("candidate_name"), d.get("election_id"),
-            d.get("election_year"), d.get("office_code"), d.get("office_desc"),
+            int_or_none(d.get("election_year")), d.get("office_code"), d.get("office_desc"),
             d.get("party_code"), d.get("district"), d.get("status_desc"),
             hm.get("total", 0), hm.get("corporate_total", 0),
             hm.get("individual_total", 0), hm.get("num_contributions", 0),
@@ -277,11 +284,13 @@ def load_principals(cur):
     print("  Loading principal detail tables...")
     pl_rows, pdm_rows = [], []
     for fpath in (DATA_DIR / "principals").glob("*.json"):
-        if fpath.name == "index.json":
+        if fpath.name in ("index.json", "influence_index.json"):
             continue
         try:
             d = load_json(fpath)
         except Exception:
+            continue
+        if not isinstance(d, dict):
             continue
         slug = d.get("slug", fpath.stem)
         for lob in d.get("lobbyists", []):

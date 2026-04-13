@@ -161,12 +161,13 @@ cur.execute("""
 """)
 ghost_summary = cur.fetchone()
 
-print(f"  Total ghost slugs:   {ghost_summary['distinct_ghost_slugs']:,}")
-print(f"  Total ghost rows:    {ghost_summary['total_ghost_rows']:,}")
-print(f"  Total ghost dollars: ${ghost_summary['total_ghost_amount']:,.2f}")
-print(f"\n  Top 20 by dollar value:\n")
-for r in list(rows_c)[:20]:
-    print(f"  {r['donor_slug'][:45]:<45}  ${r['total_amount']:>12,.2f}  ({r['num_contributions']} rows)  [{r['sample_name'][:30]}]")
+print(f"  Total ghost slugs:   {ghost_summary['distinct_ghost_slugs'] or 0:,}")
+print(f"  Total ghost rows:    {ghost_summary['total_ghost_rows'] or 0:,}")
+print(f"  Total ghost dollars: ${ghost_summary['total_ghost_amount'] or 0:,.2f}")
+if ghost_summary['distinct_ghost_slugs']:
+    print(f"\n  Top 20 by dollar value:\n")
+    for r in list(rows_c)[:20]:
+        print(f"  {r['donor_slug'][:45]:<45}  ${r['total_amount']:>12,.2f}  ({r['num_contributions']} rows)  [{r['sample_name'][:30]}]")
 
 report["check_c_ghost_slugs_summary"] = dict(ghost_summary)
 report["check_c_ghost_slugs_top100"] = [dict(r) for r in rows_c]
