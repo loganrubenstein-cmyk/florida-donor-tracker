@@ -1,13 +1,13 @@
 {
-  "total_amount": 147386021.83,
-  "total_transfers": 1987,
-  "num_sending_committees": 83,
-  "num_unique_recipients": 301,
-  "num_linked_to_committee": 26,
+  "total_amount": 195796762.44,
+  "total_transfers": 2495,
+  "num_sending_committees": 95,
+  "num_unique_recipients": 312,
+  "num_linked_to_committee": 37,
   "date_range": {
-    "start": "1996-01-24",
-    "end": "2026-02-09"
+    "start": "1996-01-04",
+    "end": "2026-03-31"
   },
-  "dropped_rows_out_of_range_date": 774,
+  "dropped_rows_out_of_range_date": 840,
   "generated_by": "scripts/43_export_transfers.py"
 }
