@@ -38,34 +38,21 @@ if not DB_URL:
 # soft_money_total — their full fundraising should not be attributed to one candidate.
 UPDATE_SQL = """
 WITH specific_links AS (
-  -- Candidate-specific publishable edges only
+  -- Candidate-specific publishable edges only (no lineage expansion —
+  -- lineage grouping produces false positives that inflate totals)
   SELECT DISTINCT candidate_acct_num, pc_acct_num
   FROM candidate_pc_edges
   WHERE is_publishable = true
     AND is_candidate_specific = true
     AND pc_acct_num IS NOT NULL
 ),
-lineage_links AS (
-  -- Expand through lineage: if candidate is specifically linked to PC A,
-  -- and PC B is in the same lineage group as PC A, also attribute PC B.
-  SELECT DISTINCT sl.candidate_acct_num, l2.acct_num AS pc_acct_num
-  FROM specific_links sl
-  JOIN committee_lineage l1 ON l1.acct_num = sl.pc_acct_num
-  JOIN committee_lineage l2 ON l2.group_id = l1.group_id
-                            AND l2.acct_num != sl.pc_acct_num
-),
-all_specific AS (
-  SELECT candidate_acct_num, pc_acct_num FROM specific_links
-  UNION
-  SELECT candidate_acct_num, pc_acct_num FROM lineage_links
-),
 soft AS (
   SELECT
-    al.candidate_acct_num,
+    sl.candidate_acct_num,
     COALESCE(SUM(com.total_received), 0) AS soft_total
-  FROM all_specific al
-  JOIN committees com ON com.acct_num = al.pc_acct_num
-  GROUP BY al.candidate_acct_num
+  FROM specific_links sl
+  JOIN committees com ON com.acct_num = sl.pc_acct_num
+  GROUP BY sl.candidate_acct_num
 )
 UPDATE candidates c
 SET

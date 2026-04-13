@@ -30,15 +30,22 @@ EDGES_CSV   = ROOT / "data" / "processed" / "candidate_pc_edges.csv"
 LINEAGE_CSV = ROOT / "data" / "processed" / "committee_lineage.csv"
 
 
+CHUNK_SIZE = 10_000
+
+
 def copy_table(cur, df: pd.DataFrame, table: str, columns: list[str]) -> int:
-    buf = StringIO()
-    df[columns].to_csv(buf, index=False, header=False)
-    buf.seek(0)
-    cur.copy_expert(
-        f"COPY {table} ({', '.join(columns)}) FROM STDIN WITH CSV",
-        buf,
-    )
-    return len(df)
+    total = 0
+    for start in range(0, len(df), CHUNK_SIZE):
+        chunk = df.iloc[start:start + CHUNK_SIZE]
+        buf = StringIO()
+        chunk[columns].to_csv(buf, index=False, header=False)
+        buf.seek(0)
+        cur.copy_expert(
+            f"COPY {table} ({', '.join(columns)}) FROM STDIN WITH CSV",
+            buf,
+        )
+        total += len(chunk)
+    return total
 
 
 def main() -> int:

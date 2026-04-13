@@ -151,9 +151,11 @@ function ElectionContextCard({ results }) {
 export default function CandidateProfile({ data, cycles = [], electionResults = [] }) {
   const hm     = data.hard_money || {};
   const donors = hm.top_donors  || [];
-  const pcs        = data.linked_pcs || [];
-  const pcsWithData = pcs.filter(pc => pc.pc_acct && pc.link_type !== 'solicitation_stub' && pc.link_type !== 'historical_stub');
-  const pcsStubOnly = pcs.filter(pc => !pc.pc_acct || pc.link_type === 'solicitation_stub' || pc.link_type === 'historical_stub');
+  const pcs         = data.linked_pcs || [];
+  const pcsStubOnly  = pcs.filter(pc => !pc.pc_acct || pc.link_type === 'solicitation_stub' || pc.link_type === 'historical_stub');
+  const pcsWithData  = pcs.filter(pc => pc.pc_acct && pc.link_type !== 'solicitation_stub' && pc.link_type !== 'historical_stub');
+  const pcsSpecific  = pcsWithData.filter(pc => pc.is_candidate_specific);
+  const pcsAffiliated = pcsWithData.filter(pc => !pc.is_candidate_specific);
   const party  = data.party_code;
   const partyColor = PARTY_COLOR[party] || null;
 
@@ -179,7 +181,7 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
       }}>
         {[
           { label: 'Hard Money (Direct)',   value: fmt(hm.total),              sub: `${(hm.num_contributions || 0).toLocaleString()} contributions` },
-          { label: 'Soft Money (Linked PCs)', value: fmt(data.soft_money_total), sub: pcsWithData.length > 0 ? `${pcsWithData.length} committee${pcsWithData.length !== 1 ? 's' : ''} linked${pcsStubOnly.length > 0 ? ` + ${pcsStubOnly.length} historical` : ''}` : pcs.length > 0 ? `${pcs.length} affiliated (data unavailable)` : '0 committees linked' },
+          { label: 'Soft Money (Candidate PACs)', value: fmt(data.soft_money_total), sub: pcsSpecific.length > 0 ? `${pcsSpecific.length} candidate PAC${pcsSpecific.length !== 1 ? 's' : ''}${pcsAffiliated.length > 0 ? ` + ${pcsAffiliated.length} affiliated` : ''}` : pcsAffiliated.length > 0 ? `${pcsAffiliated.length} affiliated only` : '0 committees linked' },
           { label: 'Combined Total',         value: fmt(data.total_combined),   sub: 'hard + soft' },
         ].map(({ label, value, sub }) => (
           <div key={label} style={{ background: 'var(--bg)', padding: '1rem 1.25rem' }}>
@@ -296,12 +298,14 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
           <SectionLabel>Linked Political Committees (Soft Money)</SectionLabel>
           <p style={{ fontSize: '0.68rem', color: 'rgba(90,106,136,0.75)', lineHeight: 1.5, marginBottom: '0.75rem' }}>
             Links are based on FL Division of Elections filings — solicitation statements (DS-DE 102), direct contributions, and independent expenditures.
-            Administrative overlaps (shared treasurer, address, phone) alone are not shown. Hover a confidence badge to see the source evidence.
+            Administrative overlaps alone are not shown.{' '}
+            <strong style={{ color: 'var(--text-dim)', fontWeight: 600 }}>Candidate PAC</strong> = committee specifically for this candidate (total raised counted in soft money).{' '}
+            <strong style={{ color: 'var(--text-dim)', fontWeight: 600 }}>Affiliated</strong> = multi-candidate organization with a provable link (total not attributed to this candidate alone).
           </p>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                {['Committee', 'Link Evidence', 'Total Raised', 'Contributions'].map(h => (
+                {['Committee', 'Type', 'Link Evidence', 'Total Raised', 'Contributions'].map(h => (
                   <th key={h} style={{
                     padding: '0.4rem 0.6rem',
                     textAlign: h === 'Contributions' ? 'center' : 'left',
@@ -315,9 +319,9 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
               {pcs.map((pc, i) => {
                 const isStub = !pc.pc_acct || pc.link_type === 'solicitation_stub' || pc.link_type === 'historical_stub';
                 const isHistorical = pc.link_type === 'historical' || pc.link_type === 'historical_stub';
-                const isStrong = pc.confidence_tier === 'strong';
-                const tierColor  = isStrong ? 'var(--teal)' : 'var(--orange)';
-                const tierLabel  = isStrong ? 'Strong' : 'Possible';
+                const isSpecific = pc.is_candidate_specific;
+                const typeLabel = isSpecific ? 'Candidate PAC' : 'Affiliated';
+                const typeColor = isSpecific ? 'var(--teal)' : 'var(--text-dim)';
                 return (
                   <tr key={i} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)', opacity: isHistorical ? 0.75 : 1 }}>
                     <td style={{ padding: '0.45rem 0.6rem', wordBreak: 'break-word' }}>
@@ -329,26 +333,31 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
                         </a>
                       )}
                     </td>
+                    <td style={{ padding: '0.45rem 0.6rem', whiteSpace: 'nowrap' }}>
+                      <span style={{
+                        fontSize: '0.55rem', padding: '0.1rem 0.35rem',
+                        border: `1px solid ${typeColor}55`,
+                        background: `${typeColor}11`,
+                        color: typeColor,
+                        borderRadius: '2px', fontFamily: 'var(--font-mono)',
+                      }}>
+                        {typeLabel}
+                      </span>
+                    </td>
                     <td style={{ padding: '0.45rem 0.6rem', fontSize: '0.68rem' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
-                        <span style={{ color: 'var(--text-dim)' }}>{LINK_TYPE_LABEL[pc.link_type] || pc.link_type}</span>
-                        <span title={pc.signal_evidence || undefined} style={{
-                          fontSize: '0.55rem', padding: '0.1rem 0.35rem',
-                          border: `1px solid ${tierColor}55`,
-                          background: `${tierColor}11`,
-                          color: tierColor,
-                          borderRadius: '2px', fontFamily: 'var(--font-mono)',
-                          cursor: pc.signal_evidence ? 'help' : 'default',
-                          whiteSpace: 'nowrap',
-                        }}>
-                          {tierLabel}
-                        </span>
-                      </div>
+                      <span title={pc.signal_evidence || undefined} style={{
+                        color: 'var(--text-dim)',
+                        cursor: pc.signal_evidence ? 'help' : 'default',
+                      }}>
+                        {LINK_TYPE_LABEL[pc.link_type] || pc.link_type}
+                      </span>
                     </td>
                     <td style={{ padding: '0.45rem 0.6rem', whiteSpace: 'nowrap' }}>
                       {isStub
                         ? <span style={{ color: 'var(--text-dim)', fontSize: '0.68rem' }}>data unavailable</span>
-                        : <span style={{ color: 'var(--orange)' }}>{fmt(pc.total_received)}</span>
+                        : isSpecific
+                          ? <span style={{ color: 'var(--orange)' }}>{fmt(pc.total_received)}</span>
+                          : <span style={{ color: 'var(--text-dim)', fontSize: '0.68rem' }} title="Not counted in soft money total — multi-candidate org">{fmt(pc.total_received)}</span>
                       }
                     </td>
                     <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center' }}>

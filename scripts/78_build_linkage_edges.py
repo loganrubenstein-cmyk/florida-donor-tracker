@@ -49,7 +49,7 @@ OUTPUT_CSV   = PROCESSED_DIR / "candidate_pc_edges.csv"
 FUZZY_CAND_THRESHOLD   = 88
 FUZZY_CAND_STRICT      = 90   # higher bar for expenditure vendor→candidate matching
 FUZZY_COM_SORT         = 85
-FUZZY_COM_SET          = 88
+FUZZY_COM_SET          = 90
 PROF_TREASURER_MIN     = 5    # treasurer serving N+ committees = professional
 COMMON_SURNAME_MIN     = 10   # surname shared by N+ candidates = common
 COMMON_SURNAME_SCORE   = 95   # suppress admin-overlap if fuzzy + common name below this
@@ -434,52 +434,46 @@ def pass_2_direct_contributions(
     can_rows = exp_df[exp_df["type_code"] == "CAN"]
     print(f"Pass 2: {len(can_rows):,} CAN-type expenditure rows to process")
 
-    # Build committee lookup by acct
-    com_by_acct = {}
-    for _, c in com_df.iterrows():
-        com_by_acct[str(c["pc_acct"])] = c.to_dict()
+    # Build committee lookup by acct (vectorized — avoid iterrows)
+    com_by_acct = {str(r["pc_acct"]): r for r in com_df.to_dict("records")}
 
-    for _, row in can_rows.iterrows():
-        # Extract source committee acct from source_file
-        m = re.match(r"Expend_(\d+)\.txt", str(row.get("source_file", "")))
-        if not m:
-            continue
-        pc_acct = m.group(1)
-        vendor = str(row.get("vendor_name", "")).strip()
-        if not vendor:
-            continue
+    # Aggregate CAN rows to (pc_acct, vendor_clean) pairs using pandas groupby
+    can_rows = can_rows.copy()
+    can_rows["pc_acct"] = can_rows["source_file"].str.extract(r"Expend_(\d+)\.txt")[0]
+    can_rows = can_rows.dropna(subset=["pc_acct"])
+    can_rows["vendor_clean"] = can_rows["vendor_name"].apply(
+        lambda v: clean(str(v).strip()) if str(v).strip() else ""
+    )
+    can_rows = can_rows[can_rows["vendor_clean"] != ""]
+    can_rows["amount_f"] = pd.to_numeric(can_rows["amount"], errors="coerce").fillna(0)
+    can_rows["expenditure_date"] = can_rows["expenditure_date"].fillna("").astype(str)
 
-        try:
-            amt = float(row.get("amount", 0))
-        except (ValueError, TypeError):
-            amt = 0
+    grp = can_rows.groupby(["pc_acct", "vendor_clean", "vendor_name"]).agg(
+        total_amount=("amount_f", "sum"),
+        count=("amount_f", "count"),
+        latest_date=("expenditure_date", "max"),
+    ).reset_index()
 
-        vendor_clean = clean(vendor)
-        key = (pc_acct, vendor_clean)
-        if key not in seen_pairs:
-            com = com_by_acct.get(pc_acct, {})
-            seen_pairs[key] = {
-                "pc_acct": pc_acct,
-                "pc_name": com.get("pc_name", f"Committee {pc_acct}"),
-                "pc_type": com.get("pc_type", ""),
-                "vendor_name": vendor,
-                "total_amount": 0,
-                "count": 0,
-                "latest_date": "",
-            }
-        seen_pairs[key]["total_amount"] += amt
-        seen_pairs[key]["count"] += 1
-        date_val = str(row.get("expenditure_date", ""))
-        if date_val > seen_pairs[key]["latest_date"]:
-            seen_pairs[key]["latest_date"] = date_val
+    for _, row in grp.iterrows():
+        pc_acct = row["pc_acct"]
+        com = com_by_acct.get(pc_acct, {})
+        seen_pairs[(pc_acct, row["vendor_clean"])] = {
+            "pc_acct": pc_acct,
+            "pc_name": com.get("pc_name", f"Committee {pc_acct}"),
+            "pc_type": com.get("pc_type", ""),
+            "vendor_name": row["vendor_name"],
+            "total_amount": float(row["total_amount"]),
+            "count": int(row["count"]),
+            "latest_date": row["latest_date"],
+        }
 
     # Now we have aggregated (committee, vendor_campaign) pairs.
     # vendor_name is the candidate campaign name — we need to link back to a candidate_acct_num.
     cand_name_to_accts: dict[str, list] = {}
-    for _, c in cand_df.iterrows():
-        nc = c["name_clean"]
+    for r in cand_df.to_dict("records"):
+        nc = r["name_clean"]
         if nc:
-            cand_name_to_accts.setdefault(nc, []).append(str(c["candidate_acct"]))
+            cand_name_to_accts.setdefault(nc, []).append(str(r["candidate_acct"]))
 
     for key, agg in seen_pairs.items():
         vendor = agg["vendor_name"]
@@ -730,6 +724,14 @@ def pass_6_admin_overlap(
 
     com_list = com_df.to_dict("records")
 
+    # Pre-compute name_contains lookup: list of (name_clean, acct, candidate_name)
+    # Avoids 1,887 × 11,586 iterrows() calls — O(n) build, O(k) per committee
+    name_contains_list = [
+        (row["name_clean"], str(row["candidate_acct"]), row["candidate_name"])
+        for _, row in cand_df.iterrows()
+        if row["name_clean"] and len(row["name_clean"]) >= 5
+    ]
+
     for com in com_list:
         evidence_parts: dict[str, list] = {}   # candidate_acct → [evidence strings]
 
@@ -831,14 +833,10 @@ def pass_6_admin_overlap(
                         is_publishable=False,
                     ))
 
-        # Sub-signal E: Committee name contains candidate name
+        # Sub-signal E: Committee name contains candidate name (vectorized)
         com_name_upper = clean(com["pc_name"])
-        for _, cand in cand_df.iterrows():
-            cand_nc = cand["name_clean"]
-            if not cand_nc or len(cand_nc) < 5:
-                continue
+        for cand_nc, acct, cand_name in name_contains_list:
             if cand_nc in com_name_upper:
-                acct = str(cand["candidate_acct"])
                 key = (acct, str(com["pc_acct"]), "name_contains")
                 if key not in seen:
                     seen.add(key)
@@ -849,7 +847,7 @@ def pass_6_admin_overlap(
                         pc_type=com.get("pc_type", ""),
                         edge_type="ADMIN_OVERLAP_ONLY",
                         direction="",
-                        evidence_summary=f"Committee name contains candidate name: {cand['candidate_name']}",
+                        evidence_summary=f"Committee name contains candidate name: {cand_name}",
                         source_type="registry",
                         source_record_id=f"committees.csv:{com['pc_acct']}",
                         match_method="name_contains",
@@ -865,47 +863,84 @@ def pass_6_admin_overlap(
 
 # ── Post-processing: is_candidate_specific ──────────────────────────────────
 
-def compute_candidate_specific(all_edges: list, cand_df: pd.DataFrame) -> list:
+def compute_candidate_specific(
+    all_edges: list,
+    cand_df: pd.DataFrame,
+    sol_csv: list[dict],   # kept for signature compatibility — not used directly
+    sol_index: list[dict], # kept for signature compatibility — not used directly
+) -> list:
     """
-    Mark each publishable edge as is_candidate_specific=True when:
-      (a) The PAC name contains the candidate's cleaned name (≥5 chars), OR
-      (b) This PAC has publishable edges for only ONE candidate across the entire dataset.
+    Mark each publishable edge as is_candidate_specific=True.
+
+    For SOLICITATION_CONTROL edges, a PAC is candidate-specific when:
+      (a) The candidate's last name (≥5 chars) appears as a whole word in the PAC name, OR
+      (b) This candidate is the ONLY person who ever filed a solicitation for this PAC
+          (determined from the edges themselves, not raw org-name text — avoids matching
+          failures when committees are renamed, e.g. "Empower Parents PAC" vs
+          "Friends of Ron DeSantis (now Empower Parents PAC)").
+
+    Running-mate pairs (e.g. DeSantis + Nunez both filed for "Friends of Ron DeSantis"):
+      DeSantis → specific (name in PAC), Nunez → affiliated (name not in PAC, not sole filer).
+    Sole-filer PACs without candidate name (e.g. "Florida Green PAC" / Simpson):
+      Simpson → specific (sole filer).
+    Multi-candidate PACs (e.g. "Watchdog PAC" / 5 filers):
+      → affiliated for all (neither condition met).
+
+    For all other edge types: the "only one person linked" signal — if this PAC's
+      publishable edges all point to the same candidate (across cycles), it's specific.
 
     is_candidate_specific=True means script 74 will include this PAC's total_received
-    in the candidate's soft_money_total. False = affiliated PAC shown on profile but
-    NOT included in the soft money total (avoids attributing $14M multi-candidate PAC
-    to a single candidate based on one solicitation filing).
+    in the candidate's soft_money_total.
     """
     # Build candidate name lookup
-    cand_names: dict[str, str] = {}  # candidate_acct → name_clean
-    for _, row in cand_df.iterrows():
-        cand_names[str(row["candidate_acct"])] = row["name_clean"]
+    cand_names: dict[str, str] = {str(r["candidate_acct"]): r["name_clean"]
+                                   for r in cand_df.to_dict("records")}
 
-    # Count how many distinct candidates each PAC is linked to via publishable edges
-    pac_to_candidates: dict[str, set] = {}
+    # Count distinct PEOPLE (by name_clean) per PAC who filed a SOLICITATION_CONTROL edge.
+    # Using the edges themselves (not raw solicitations text) means we work with the canonical
+    # pc_acct_num and avoid org-name matching failures (e.g. "Empower Parents PAC" vs
+    # "Friends of Ron DeSantis (now Empower Parents PAC)").
+    sol_pac_filers: dict[str, set] = {}
+    for e in all_edges:
+        if e.edge_type == "SOLICITATION_CONTROL" and e.is_publishable and e.pc_acct_num:
+            person_id = cand_names.get(e.candidate_acct_num, e.candidate_acct_num)
+            sol_pac_filers.setdefault(e.pc_acct_num, set()).add(person_id)
+
+    # Count distinct PEOPLE per PAC across ALL publishable edge types (for non-solicitation edges)
+    pac_to_people: dict[str, set] = {}
     for e in all_edges:
         if e.is_publishable and e.pc_acct_num:
-            pac_to_candidates.setdefault(e.pc_acct_num, set()).add(e.candidate_acct_num)
+            person_id = cand_names.get(e.candidate_acct_num, e.candidate_acct_num)
+            pac_to_people.setdefault(e.pc_acct_num, set()).add(person_id)
 
+    from dataclasses import replace
     result = []
     for e in all_edges:
         if not e.is_publishable or not e.pc_acct_num:
             result.append(e)
             continue
 
-        cand_nc = cand_names.get(e.candidate_acct_num, "")
-        pac_nc  = clean(e.pc_name)
+        if e.edge_type == "SOLICITATION_CONTROL":
+            cand_nc   = cand_names.get(e.candidate_acct_num, "")
+            pac_nc    = clean(e.pc_name)
+            parts     = cand_nc.split() if cand_nc else []
+            last_name = parts[-1] if parts else ""
+            # Name-in-PAC: candidate's last name (≥5 chars) appears as a whole word in PAC name
+            name_in_pac = bool(
+                last_name and len(last_name) >= 5 and
+                re.search(r'\b' + re.escape(last_name) + r'\b', pac_nc)
+            )
+            # Sole filer: this candidate is the only one who ever filed a solicitation for this PAC
+            sole_filer = len(sol_pac_filers.get(e.pc_acct_num, set())) == 1
+            # Specific = clearly named after this candidate OR they are the only filer
+            is_specific = name_in_pac or sole_filer
+        else:
+            only_one    = len(pac_to_people.get(e.pc_acct_num, set())) == 1
+            is_specific = only_one
 
-        # (a) PAC name contains candidate name token
-        name_in_pac = bool(cand_nc and len(cand_nc) >= 5 and cand_nc in pac_nc)
+        result.append(replace(e, is_candidate_specific=is_specific))
 
-        # (b) PAC is linked to exactly 1 candidate
-        only_one = len(pac_to_candidates.get(e.pc_acct_num, set())) == 1
-
-        from dataclasses import replace
-        result.append(replace(e, is_candidate_specific=(name_in_pac or only_one)))
-
-    specific_count = sum(1 for e in result if e.is_publishable and e.is_candidate_specific)
+    specific_count   = sum(1 for e in result if e.is_publishable and e.is_candidate_specific)
     affiliated_count = sum(1 for e in result if e.is_publishable and not e.is_candidate_specific)
     print(f"\nCandidate-specific publishable edges: {specific_count:,}")
     print(f"Affiliated (multi-candidate) edges:   {affiliated_count:,}")
@@ -975,7 +1010,7 @@ def main() -> int:
     print(f"Total edges: {len(all_edges):,}")
 
     # ── Post-processing: mark candidate-specific edges ────────────────────────
-    all_edges = compute_candidate_specific(all_edges, cand_df)
+    all_edges = compute_candidate_specific(all_edges, cand_df, sol_csv, sol_index)
 
     # ── Write CSV ────────────────────────────────────────────────────────────
     OUTPUT_CSV.parent.mkdir(parents=True, exist_ok=True)

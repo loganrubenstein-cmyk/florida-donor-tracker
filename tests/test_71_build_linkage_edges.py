@@ -6,7 +6,7 @@ from pathlib import Path
 
 _spec = importlib.util.spec_from_file_location(
     "link71",
-    Path(__file__).parent.parent / "scripts" / "71_build_linkage_edges.py",
+    Path(__file__).parent.parent / "scripts" / "78_build_linkage_edges.py",
 )
 _mod = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(_mod)
