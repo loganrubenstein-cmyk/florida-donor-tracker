@@ -405,12 +405,13 @@ def test_multi_candidate_pac_not_specific():
     assert all(not e.is_candidate_specific for e in processed)
 
 
-# ── Test 15: single-candidate PAC (only-one check) is candidate-specific ─────
+# ── Test 15: sole-filer solicitation PAC is candidate-specific ──────────────
 
-def test_single_candidate_pac_is_specific():
+def test_sole_filer_solicitation_pac_is_specific():
     """
-    A PAC linked to exactly 1 candidate → is_candidate_specific=True even if the PAC
-    name doesn't contain the candidate's name.
+    A PAC with a SOLICITATION_CONTROL edge from exactly 1 candidate
+    → is_candidate_specific=True even if the PAC name doesn't contain the
+    candidate's name (sole filer rule).
     """
     cand_rows = [
         {"acct_num": "D004", "first_name": "Dan", "last_name": "Davis",
@@ -430,5 +431,224 @@ def test_single_candidate_pac_is_specific():
     ]
 
     processed = compute_candidate_specific(edges, cand_df)
-    # Only 1 candidate linked → is_candidate_specific=True
     assert processed[0].is_candidate_specific
+
+
+# ── Test 16: non-solicitation edge to only-one PAC is NOT specific ──────────
+
+def test_only_one_contribution_not_specific():
+    """
+    A PAC that gave money to only 1 candidate but has no solicitation filing and
+    no candidate name in PAC name → is_candidate_specific=False.
+    Spending on a candidate is evidence of support, not control.
+    """
+    cand_rows = [
+        {"acct_num": "E005", "first_name": "Eve", "last_name": "Edwards",
+         "voter_id": "VE005", "phone": "", "addr1": ""},
+    ]
+    cand_df = make_cand_df(cand_rows)
+
+    edges = [
+        Edge(
+            candidate_acct_num="E005", pc_acct_num="PAC88",
+            pc_name="Citizens for Better Roads", pc_type="PAC",
+            edge_type="DIRECT_CONTRIBUTION_TO_CANDIDATE", direction="support",
+            evidence_summary="Committee contributed $5,000",
+            source_type="committee_expenditure", source_record_id="Expend_PAC88.txt",
+            match_method="exact_name", match_score="100.0",
+            amount="5000.00", edge_date="2024-01-15",
+            is_publishable=True, is_candidate_specific=False,
+        )
+    ]
+
+    processed = compute_candidate_specific(edges, cand_df)
+    assert not processed[0].is_candidate_specific
+
+
+# ── Test 17: non-solicitation edge with candidate name in PAC → specific ────
+
+def test_name_in_pac_on_contribution_edge():
+    """
+    A PAC named 'Friends of Frank Edwards' gives money to Frank Edwards
+    but has no solicitation filing → is_candidate_specific=True via name-in-PAC.
+    """
+    cand_rows = [
+        {"acct_num": "F006", "first_name": "Frank", "last_name": "Edwards",
+         "voter_id": "VF006", "phone": "", "addr1": ""},
+    ]
+    cand_df = make_cand_df(cand_rows)
+
+    edges = [
+        Edge(
+            candidate_acct_num="F006", pc_acct_num="PAC55",
+            pc_name="Friends of Frank Edwards", pc_type="PAC",
+            edge_type="DIRECT_CONTRIBUTION_TO_CANDIDATE", direction="support",
+            evidence_summary="Committee contributed $10,000",
+            source_type="committee_expenditure", source_record_id="Expend_PAC55.txt",
+            match_method="exact_name", match_score="100.0",
+            amount="10000.00", edge_date="2024-03-01",
+            is_publishable=True, is_candidate_specific=False,
+        )
+    ]
+
+    processed = compute_candidate_specific(edges, cand_df)
+    assert processed[0].is_candidate_specific
+
+
+# ��─ Test 18: solicitation crossover inherits specificity ────────────────────
+
+def test_solicitation_crossover_inherits():
+    """
+    Candidate has a specific SOLICITATION_CONTROL edge to a PAC. A
+    DIRECT_CONTRIBUTION edge from the same PAC inherits specificity.
+    """
+    cand_rows = [
+        {"acct_num": "G007", "first_name": "Grace", "last_name": "Garcia",
+         "voter_id": "VG007", "phone": "", "addr1": ""},
+        {"acct_num": "H008", "first_name": "Hank", "last_name": "Harris",
+         "voter_id": "VH008", "phone": "", "addr1": ""},
+    ]
+    cand_df = make_cand_df(cand_rows)
+
+    from dataclasses import replace as dc_replace
+    sol_edge = Edge(
+        candidate_acct_num="G007", pc_acct_num="PAC66",
+        pc_name="Florida Green PAC", pc_type="PAC",
+        edge_type="SOLICITATION_CONTROL", direction="", evidence_summary="Solicitation filed",
+        source_type="solicitation_index", source_record_id="100",
+        match_method="fuzzy_name", match_score="95.0",
+        amount="", edge_date="2023-06-01",
+        is_publishable=True, is_candidate_specific=False,
+    )
+    contrib_edge = Edge(
+        candidate_acct_num="G007", pc_acct_num="PAC66",
+        pc_name="Florida Green PAC", pc_type="PAC",
+        edge_type="DIRECT_CONTRIBUTION_TO_CANDIDATE", direction="support",
+        evidence_summary="Committee contributed $50,000",
+        source_type="committee_expenditure", source_record_id="Expend_PAC66.txt",
+        match_method="exact_name", match_score="100.0",
+        amount="50000.00", edge_date="2024-01-15",
+        is_publishable=True, is_candidate_specific=False,
+    )
+    # Also a contribution edge from the same PAC to a different candidate
+    other_contrib = Edge(
+        candidate_acct_num="H008", pc_acct_num="PAC66",
+        pc_name="Florida Green PAC", pc_type="PAC",
+        edge_type="DIRECT_CONTRIBUTION_TO_CANDIDATE", direction="support",
+        evidence_summary="Committee contributed $2,000",
+        source_type="committee_expenditure", source_record_id="Expend_PAC66.txt",
+        match_method="exact_name", match_score="100.0",
+        amount="2000.00", edge_date="2024-02-01",
+        is_publishable=True, is_candidate_specific=False,
+    )
+
+    processed = compute_candidate_specific([sol_edge, contrib_edge, other_contrib], cand_df)
+    sol_result = [e for e in processed if e.edge_type == "SOLICITATION_CONTROL"][0]
+    contrib_result = [e for e in processed
+                      if e.edge_type == "DIRECT_CONTRIBUTION_TO_CANDIDATE"
+                      and e.candidate_acct_num == "G007"][0]
+    other_result = [e for e in processed
+                    if e.edge_type == "DIRECT_CONTRIBUTION_TO_CANDIDATE"
+                    and e.candidate_acct_num == "H008"][0]
+
+    assert sol_result.is_candidate_specific       # sole filer → specific
+    assert contrib_result.is_candidate_specific    # inherits from solicitation
+    assert not other_result.is_candidate_specific  # H008 has no solicitation → not specific
+
+
+# ── Test 19: opposition IEC with name-in-PAC is NOT specific ────────────────
+
+def test_opposition_iec_not_specific():
+    """
+    An IEC edge with direction='opposition' should NOT be candidate-specific
+    even if the candidate's name appears in the PAC name. 'Citizens Against
+    Edwards' opposing Edwards should not attribute money TO Edwards.
+    """
+    cand_rows = [
+        {"acct_num": "I009", "first_name": "Isaac", "last_name": "Edwards",
+         "voter_id": "VI009", "phone": "", "addr1": ""},
+    ]
+    cand_df = make_cand_df(cand_rows)
+
+    edges = [
+        Edge(
+            candidate_acct_num="I009", pc_acct_num="PAC44",
+            pc_name="Citizens Against Edwards", pc_type="PAC",
+            edge_type="IEC_FOR_OR_AGAINST", direction="opposition",
+            evidence_summary="IEC opposing Edwards",
+            source_type="committee_expenditure", source_record_id="Expend_PAC44.txt",
+            match_method="fuzzy_name", match_score="90.0",
+            amount="25000.00", edge_date="2024-10-01",
+            is_publishable=True, is_candidate_specific=False,
+        )
+    ]
+
+    processed = compute_candidate_specific(edges, cand_df)
+    assert not processed[0].is_candidate_specific
+
+
+# ── Test: suffix stripping in name-in-PAC check ─────────────────────────────
+
+_check_name_in_pac = _mod._check_name_in_pac
+
+def test_name_in_pac_strips_jr_suffix():
+    """'BEN ALBRITTON JR' should match on 'ALBRITTON' not 'JR'."""
+    assert _check_name_in_pac("BEN ALBRITTON JR", "FRIENDS OF BEN ALBRITTON")
+    assert not _check_name_in_pac("BEN ALBRITTON JR", "FRIENDS OF BEN JR")
+
+
+def test_name_in_pac_strips_sr_suffix():
+    assert _check_name_in_pac("WILTON SIMPSON SR", "FRIENDS OF WILTON SIMPSON")
+
+
+def test_name_in_pac_strips_roman_numeral():
+    assert _check_name_in_pac("MARK JOHNSON III", "FRIENDS OF MARK JOHNSON")
+
+
+def test_name_in_pac_no_suffix_still_works():
+    assert _check_name_in_pac("RON DESANTIS", "FRIENDS OF RON DESANTIS")
+
+
+# ── Test: withdrawn filers excluded from sole_filer count ────────────────────
+
+def test_withdrawn_filer_not_counted_for_sole_filer():
+    """
+    PAC has 2 solicitation filers but one withdrew. The remaining active filer
+    should be treated as sole filer → is_candidate_specific=True.
+    """
+    cand_rows = [
+        {"acct_num": "W001", "first_name": "Alice", "last_name": "Walker",
+         "voter_id": "VW001", "phone": "", "addr1": ""},
+        {"acct_num": "W002", "first_name": "Bob", "last_name": "Brown",
+         "voter_id": "VW002", "phone": "", "addr1": ""},
+    ]
+    cand_df = make_cand_df(cand_rows)
+
+    edges = [
+        Edge(
+            candidate_acct_num="W001", pc_acct_num="PAC99",
+            pc_name="Florida Progress PAC", pc_type="PAC",
+            edge_type="SOLICITATION_CONTROL", direction="",
+            evidence_summary="Statement of solicitation filed for Florida Progress PAC (2020-01-15)",
+            source_type="solicitation_index", source_record_id="1",
+            match_method="fuzzy_name", match_score="90.0",
+            amount="", edge_date="", is_publishable=True, is_candidate_specific=False,
+        ),
+        Edge(
+            candidate_acct_num="W002", pc_acct_num="PAC99",
+            pc_name="Florida Progress PAC", pc_type="PAC",
+            edge_type="SOLICITATION_CONTROL", direction="",
+            evidence_summary="Statement of solicitation filed (withdrawn) for Florida Progress PAC (2021-03-01)",
+            source_type="solicitation_index", source_record_id="2",
+            match_method="fuzzy_name", match_score="90.0",
+            amount="", edge_date="", is_publishable=True, is_candidate_specific=False,
+        ),
+    ]
+
+    processed = compute_candidate_specific(edges, cand_df)
+    # Walker (active filer) should be specific — sole active filer
+    walker_edge = [e for e in processed if e.candidate_acct_num == "W001"][0]
+    assert walker_edge.is_candidate_specific
+    # Brown (withdrawn) should NOT be specific
+    brown_edge = [e for e in processed if e.candidate_acct_num == "W002"][0]
+    assert not brown_edge.is_candidate_specific

@@ -60,6 +60,47 @@ Two filters reduce noise in the `ADMIN_OVERLAP_ONLY` pass:
 
 ---
 
+## Candidate-Specific Attribution (`is_candidate_specific`)
+
+The `is_candidate_specific` flag determines whether a PAC's total fundraising (`total_received`) is counted toward a candidate's `soft_money_total`. Only PACs with verifiable evidence of candidate control are attributed. Spending patterns alone (which candidates a PAC gave money to) indicate *support*, not *control*, and do not qualify.
+
+### Attribution standard
+
+A journalist asking "why do you say this PAC belongs to Candidate X?" should get one of two answers:
+
+1. **"The candidate filed a Statement of Solicitation (DS-DE 102) declaring the relationship."** — Public record at `doesecure.dos.state.fl.us/PublicSolicitations/`.
+2. **"The PAC is named after the candidate."** — Verifiable from the committee registry.
+
+### How it works
+
+**For SOLICITATION_CONTROL edges** (DS-DE 102 filings):
+- `is_candidate_specific = True` if:
+  - (a) The candidate's last name (≥5 chars) appears as a whole word in the PAC name (`name_in_pac`), OR
+  - (b) The candidate is the only person who ever filed a solicitation for this PAC (`sole_filer`, counted by `pc_acct_num` from the edges themselves to survive committee renames)
+
+**For all other edge types** (DIRECT_CONTRIBUTION, IEC, ECC, etc.):
+- `is_candidate_specific = True` if:
+  - (a) The same (candidate, PAC) pair also has a specific SOLICITATION_CONTROL edge (crossover), OR
+  - (b) The candidate's last name (≥5 chars) is in the PAC name AND the edge direction is not "opposition"
+
+### What this means in practice
+
+| Scenario | Specific? | Reasoning |
+|----------|-----------|-----------|
+| DeSantis → "Friends of Ron DeSantis" | Yes | Name in PAC + solicitation |
+| Simpson → "Florida Green PAC" | Yes | Sole solicitation filer |
+| Nunez → "Friends of Ron DeSantis" | No | Name not in PAC, 2 filers (DeSantis + Nunez) |
+| Ingoglia → "Empower Parents PAC" (acct 70275) | No | Name not in PAC, 2+ filers |
+| "Watchdog PAC" (5 filers) → any candidate | No | Multi-filer, no name match |
+| Random industry PAC gave to one candidate | No | Contribution ≠ control |
+| "Friends of Candidate X" PAC gave to X (no solicitation) | Yes | Name in PAC |
+
+### Why "only gave to one candidate" is not sufficient
+
+A PAC that gave money to exactly one candidate is not necessarily controlled by that candidate. The Florida Realtors PAC might focus on a single race; a small business PAC might make one strategic donation. Attributing their entire fundraising total to a candidate based on one contribution is not defensible. Control is established through legal filings (DS-DE 102), not spending patterns.
+
+---
+
 ## Committee Lineage (Predecessor/Successor Groups)
 
 Some candidates have PACs that disbanded and re-registered under a new account number. The `committee_lineage` table groups these accounts so soft-money totals can include predecessor committee fundraising.
