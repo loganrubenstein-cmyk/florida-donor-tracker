@@ -68,6 +68,7 @@ export default function TransactionExplorer({
   const [loading,     setLoading]     = useState(true);
   const [error,       setError]       = useState(null);
   const [exporting,   setExporting]   = useState(false);
+  const [isDefault,   setIsDefault]   = useState(false);
 
   const abortRef = useRef(null);
 
@@ -90,6 +91,7 @@ export default function TransactionExplorer({
       setData(json.data || []);
       setTotal(json.total ?? null);
       setPages(json.pages || 1);
+      setIsDefault(json.is_default || false);
     } catch (e) {
       if (e.name !== 'AbortError') setError(e.message);
     } finally {
@@ -283,6 +285,17 @@ export default function TransactionExplorer({
           </button>
         </div>
       </div>
+
+      {/* Default state banner */}
+      {isDefault && data.length > 0 && (
+        <div style={{
+          padding: '0.6rem 1rem', marginBottom: '0.75rem', fontSize: '0.72rem',
+          color: 'var(--text-dim)', background: 'rgba(255,176,96,0.06)',
+          border: '1px solid rgba(255,176,96,0.15)', borderRadius: '3px',
+        }}>
+          Showing the largest recent contributions. Use the filters above to search all {total ? total.toLocaleString() + '+ ' : ''}transactions.
+        </div>
+      )}
 
       {/* Table */}
       <div style={{ overflowX: 'auto' }}>

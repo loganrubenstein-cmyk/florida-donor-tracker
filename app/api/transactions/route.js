@@ -69,16 +69,22 @@ export async function GET(request) {
   const offset = (page - 1) * page_size;
 
   // ── Data query (no count — never blocked by a slow COUNT(*)) ─────────────────
-  // When no filters are applied, default to the most recent 90 days so the query
-  // uses the contribution_date index and avoids a full-table scan timeout.
-  // Also cap at today to exclude bad-data rows with future dates (e.g. year 3003).
+  // When no filters are applied, show the largest contributions from the most
+  // recent 2 years to give users a compelling default view. Cap at today to
+  // exclude bad-data rows with future dates (e.g. year 3003).
   const today = new Date().toISOString().slice(0, 10);
-  const ninetyDaysAgo = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-  const effectiveFilterArgs = hasFilter ? filterArgs : {
+  const twoYearsAgo = new Date(Date.now() - 730 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const isDefault = !hasFilter;
+  const effectiveFilterArgs = isDefault ? {
     ...filterArgs,
-    date_start: ninetyDaysAgo,
+    date_start: twoYearsAgo,
     date_end: today,
-  };
+    amount_min: '10000',
+  } : filterArgs;
+
+  // When showing defaults, sort by amount desc regardless of user sort
+  const effectiveSort = isDefault ? 'amount' : safeSort;
+  const effectiveAscending = isDefault ? false : ascending;
 
   let dataQuery = db
     .from('contributions')
@@ -89,7 +95,7 @@ export async function GET(request) {
       'contributor_occupation, source_file'
     );
   dataQuery = applyFilters(dataQuery, effectiveFilterArgs);
-  dataQuery = dataQuery.order(safeSort, { ascending, nullsFirst: false });
+  dataQuery = dataQuery.order(effectiveSort, { ascending: effectiveAscending, nullsFirst: false });
   dataQuery = dataQuery.range(offset, offset + page_size - 1);
 
   // ── Count query (only when filters active — skip expensive full-table count) ──
@@ -137,6 +143,7 @@ export async function GET(request) {
     page,
     pages,
     page_size,
+    is_default: isDefault,
     filters_applied: {
       donor_slug:     donor_slug || null,
       recipient_acct: recipient_acct || null,

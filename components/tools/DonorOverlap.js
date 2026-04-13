@@ -61,6 +61,31 @@ export default function DonorOverlap() {
         {loading ? 'Comparing…' : 'Find Shared Donors'}
       </button>
 
+      {/* Quick-select pairs */}
+      {!result && (
+        <div style={{ marginBottom: '1.5rem' }}>
+          <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.5rem' }}>
+            Try a comparison
+          </div>
+          <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap' }}>
+            {[
+              { a: { acct_num: '79799', name: 'Ron DeSantis (2022)' }, b: { acct_num: '79408', name: 'Charlie Crist (2022)' }, label: 'DeSantis vs Crist' },
+              { a: { acct_num: '70275', name: 'Friends of Ron DeSantis' }, b: { acct_num: '68898', name: 'Republican Party of FL' }, label: 'DeSantis PAC vs RPOF' },
+              { a: { acct_num: '88746', name: 'Michelle Salzman' }, b: { acct_num: '84844', name: 'Byron Donalds (2026)' }, label: 'Salzman vs Donalds' },
+            ].map(pair => (
+              <button key={pair.label} onClick={() => { setEntityA(pair.a); setEntityB(pair.b); }}
+                style={{
+                  padding: '0.25rem 0.6rem', fontSize: '0.68rem', fontFamily: 'var(--font-mono)',
+                  background: 'transparent', color: 'var(--text-dim)', border: '1px solid var(--border)',
+                  borderRadius: '3px', cursor: 'pointer',
+                }}>
+                {pair.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {error && (
         <div style={{ padding: '0.75rem 1rem', background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.3)', borderRadius: '3px', color: '#f87171', fontSize: '0.78rem', marginBottom: '1rem' }}>
           {error}
