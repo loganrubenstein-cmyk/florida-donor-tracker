@@ -3,11 +3,13 @@
 import { useState, useEffect } from 'react';
 import BackLinks from '@/components/BackLinks';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import GlossaryTerm from '@/components/shared/GlossaryTerm';
 
 function fmt(n) {
   if (!n || n === 0) return '$0';
-  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000)     return `$${(n / 1_000).toFixed(0)}K`;
+  if (n >= 1_000_000_000) return `$${(n / 1_000_000_000).toFixed(2).replace(/\.?0+$/, '')}B`;
+  if (n >= 1_000_000)     return `$${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000)         return `$${(n / 1_000).toFixed(0)}K`;
   return `$${n.toFixed(0)}`;
 }
 
@@ -99,7 +101,7 @@ export default function DonorsList() {
           Donors
         </h1>
         <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
-          <span>Donors with $1K+ in contributions · Florida Division of Elections</span>
+          <span>Filtered view: donors with $1K+ in aggregate contributions. Full underlying index covers every reported contributor. Source: Florida Division of Elections.</span>
         </div>
       </div>
 
@@ -145,10 +147,10 @@ export default function DonorsList() {
                 { label: 'Type',       align: 'center' },
                 { label: 'Location',   align: 'left'   },
                 { label: 'Committees', align: 'right'  },
-                { label: 'Soft Money', align: 'right', sortKey: 'total_soft'     },
-                { label: 'Hard Money', align: 'right', sortKey: 'total_hard'     },
-                { label: 'Combined',   align: 'right', sortKey: 'total_combined' },
-              ].map(({ label, align, width, sortKey }) => {
+                { label: 'Soft Money', align: 'right', sortKey: 'total_soft',     glossary: 'SOFT'     },
+                { label: 'Hard Money', align: 'right', sortKey: 'total_hard',     glossary: 'HARD'     },
+                { label: 'Combined',   align: 'right', sortKey: 'total_combined', glossary: 'COMBINED' },
+              ].map(({ label, align, width, sortKey, glossary }) => {
                 const isActive = sortKey && sortBy === sortKey;
                 return (
                   <th key={label}
@@ -169,7 +171,7 @@ export default function DonorsList() {
                       userSelect: 'none', whiteSpace: 'nowrap',
                     }}
                   >
-                    {label}
+                    {glossary ? <GlossaryTerm term={glossary}>{label}</GlossaryTerm> : label}
                     {isActive && <span style={{ color: 'var(--orange)', marginLeft: '0.25rem' }}>{sortDir === 'asc' ? '↑' : '↓'}</span>}
                     {!isActive && sortKey && <span style={{ color: 'rgba(90,106,136,0.3)', marginLeft: '0.25rem' }}>↕</span>}
                   </th>

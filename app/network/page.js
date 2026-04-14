@@ -17,9 +17,28 @@ export default function NetworkHub() {
       <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', color: 'var(--text)', marginBottom: '0.5rem' }}>
         Network
       </h1>
-      <p style={{ color: 'var(--text-dim)', fontSize: '0.88rem', lineHeight: 1.6, marginBottom: '0.25rem' }}>
+      <p style={{ color: 'var(--text-dim)', fontSize: '0.88rem', lineHeight: 1.6, marginBottom: '1rem' }}>
         Tools for exploring relationships between donors, committees, candidates, and lobbyists.
       </p>
+
+      <div style={{
+        border: '1px solid var(--border)',
+        borderLeft: '3px solid var(--teal)',
+        background: 'var(--surface)',
+        padding: '0.85rem 1rem',
+        borderRadius: '3px',
+        marginBottom: '1.5rem',
+        fontSize: '0.78rem',
+        color: 'var(--text-dim)',
+        lineHeight: 1.55,
+      }}>
+        <strong style={{ color: 'var(--text)', fontWeight: 600 }}>New here?</strong> Start with{' '}
+        <Link href="/network/graph" style={{ color: 'var(--teal)' }}>Network Graph</Link>{' '}
+        to see an interactive map of who funds whom, or{' '}
+        <Link href="/flow" style={{ color: 'var(--teal)' }}>Money Flow</Link>{' '}
+        to trace the biggest donations cycle by cycle. Nothing here is static —
+        every entity is clickable and drills down to its own profile.
+      </div>
 
       <div className="hub-grid">
         <Link href="/network/graph" className="hub-card">

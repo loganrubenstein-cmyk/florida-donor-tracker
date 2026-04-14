@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import BackLinks from '@/components/BackLinks';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import GlossaryTerm from '@/components/shared/GlossaryTerm';
 
 const PARTY_COLOR = { REP: 'var(--republican)', DEM: 'var(--democrat)' };
 
@@ -138,10 +139,10 @@ export default function CandidatesList() {
                 { label: 'Office',   align: 'left'   },
                 { label: 'Party',    align: 'center' },
                 { label: 'Cycles',   align: 'center' },
-                { label: 'Hard',     align: 'right',  sortKey: 'hard_money_all'     },
-                { label: 'Soft',     align: 'right',  sortKey: 'soft_money_all'     },
-                { label: 'Combined', align: 'right',  sortKey: 'total_combined_all' },
-              ].map(({ label, align, width, sortKey }) => {
+                { label: 'Hard',     align: 'right',  sortKey: 'hard_money_all',     glossary: 'HARD'     },
+                { label: 'Soft',     align: 'right',  sortKey: 'soft_money_all',     glossary: 'SOFT'     },
+                { label: 'Combined', align: 'right',  sortKey: 'total_combined_all', glossary: 'COMBINED' },
+              ].map(({ label, align, width, sortKey, glossary }) => {
                 const isActive = sortKey && sortBy === sortKey;
                 return (
                   <th key={label}
@@ -162,7 +163,7 @@ export default function CandidatesList() {
                       userSelect: 'none', whiteSpace: 'nowrap',
                     }}
                   >
-                    {label}
+                    {glossary ? <GlossaryTerm term={glossary}>{label}</GlossaryTerm> : label}
                     {isActive && <span style={{ color: 'var(--orange)', marginLeft: '0.25rem' }}>{sortDir === 'asc' ? '↑' : '↓'}</span>}
                     {!isActive && sortKey && <span style={{ color: 'rgba(90,106,136,0.3)', marginLeft: '0.25rem' }}>↕</span>}
                   </th>

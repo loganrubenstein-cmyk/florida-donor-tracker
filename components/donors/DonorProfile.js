@@ -379,6 +379,24 @@ export default function DonorProfile({ data, annotations = {} }) {
           <span>{fmtCount(data.num_contributions)} contributions recorded</span>
         </div>
         <SourceLink type="donor" />
+        {data.name && /state\s+of\s+florida/i.test(data.name) && (
+          <div style={{
+            marginTop: '0.75rem',
+            border: '1px solid var(--border)',
+            borderLeft: '3px solid var(--gold)',
+            background: 'var(--surface)',
+            padding: '0.7rem 0.9rem',
+            borderRadius: '3px',
+            fontSize: '0.72rem',
+            color: 'var(--text-dim)',
+            lineHeight: 1.55,
+          }}>
+            <strong style={{ color: 'var(--text)' }}>Not a political donor in the usual sense.</strong>{' '}
+            The State of Florida appears here because of the state&rsquo;s tax check-off
+            contribution system, which routes small per-taxpayer amounts to qualifying
+            candidates. These are public funds, not discretionary donations.
+          </div>
+        )}
       </div>
 
       <TabbedProfile tabs={tabs} defaultTab="overview" />

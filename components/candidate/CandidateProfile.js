@@ -5,6 +5,7 @@ import TabbedProfile from '@/components/shared/TabbedProfile';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import NewsBlock from '@/components/shared/NewsBlock';
 import SourceLink from '@/components/shared/SourceLink';
+import GlossaryTerm from '@/components/shared/GlossaryTerm';
 import { slugify } from '@/lib/slugify';
 import { fmtMoneyCompact, fmtMoney } from '@/lib/fmt';
 
@@ -191,12 +192,14 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
         {[
           {
             label: 'Hard Money (Direct)',
+            glossary: 'HARD',
             value: fmt(hm.total),
             valueColor: 'var(--orange)',
             sub: `${(hm.num_contributions || 0).toLocaleString()} contributions`,
           },
           {
             label: 'Soft Money (Candidate PACs)',
+            glossary: 'SOFT',
             value: hasLinkedPcsButNoSoft ? '—' : fmt(data.soft_money_total),
             valueColor: hasLinkedPcsButNoSoft ? 'var(--text-dim)' : 'var(--orange)',
             sub: hasLinkedPcsButNoSoft
@@ -209,14 +212,15 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
           },
           {
             label: 'Combined Total',
+            glossary: 'COMBINED',
             value: fmt(data.total_combined),
             valueColor: 'var(--orange)',
             sub: hasLinkedPcsButNoSoft ? 'hard money only' : 'hard + soft',
           },
-        ].map(({ label, value, valueColor, sub }) => (
+        ].map(({ label, glossary, value, valueColor, sub }) => (
           <div key={label} style={{ background: 'var(--bg)', padding: '1rem 1.25rem' }}>
             <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.3rem' }}>
-              {label}
+              {glossary ? <GlossaryTerm term={glossary}>{label}</GlossaryTerm> : label}
             </div>
             <div style={{ fontSize: '1rem', color: valueColor, fontWeight: 700 }}>{value}</div>
             <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', marginTop: '0.2rem' }}>{sub}</div>
@@ -238,8 +242,8 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
             {[
               { label: 'Individual', value: fmt(hm.individual_total) },
               { label: 'Corporate',  value: fmt(hm.corporate_total) },
-              { label: 'Earliest',   value: hm.date_range?.earliest ? fmtDate(hm.date_range.earliest) : 'Not on file' },
-              { label: 'Latest',     value: hm.date_range?.latest   ? fmtDate(hm.date_range.latest)   : 'Not on file' },
+              { label: 'Earliest',   value: hm.date_range?.earliest ? fmtDate(hm.date_range.earliest) : '—' },
+              { label: 'Latest',     value: hm.date_range?.latest   ? fmtDate(hm.date_range.latest)   : '—' },
             ].map(({ label, value }) => (
               <div key={label} style={{ background: 'var(--bg)', padding: '0.75rem 1rem' }}>
                 <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.25rem' }}>{label}</div>
