@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import BackLinks from '@/components/BackLinks';
+import SectionHeader from '@/components/shared/SectionHeader';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 const PARTY_COLOR = { R: 'var(--republican)', D: 'var(--democrat)' };
@@ -99,13 +100,9 @@ export default function LegislatorsList() {
     <main style={{ maxWidth: '1040px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
       <BackLinks links={[{ href: '/', label: 'home' }]} />
 
-      <div style={{ marginBottom: '1.25rem' }}>
-        <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', color: 'var(--text)', margin: '0 0 0.3rem' }}>
-          Florida Legislature
-        </h1>
-        <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
-          Current 2024–2026 term · House (120) + Senate (40)
-        </div>
+      <SectionHeader title="Florida Legislature" eyebrow="FL Legislature · 2024–2026 Term" />
+      <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', marginTop: '-0.75rem', marginBottom: '1.25rem' }}>
+        Current 2024–2026 term · House (120) + Senate (40)
       </div>
 
       {/* Stats strip */}

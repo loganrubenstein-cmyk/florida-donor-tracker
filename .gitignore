@@ -50,3 +50,7 @@ node_modules/
 
 # macOS junk
 .DS_Store
+
+# T2 visual overhaul scratch
+prototypes/
+visual_audit/

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import SectionHeader from '@/components/shared/SectionHeader';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { fmtCount } from '../../../lib/fmt';
@@ -64,10 +65,8 @@ export default function LobbyingBillsPage() {
         <span>Bills</span>
       </div>
 
-      <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', color: 'var(--text)', marginBottom: '0.25rem' }}>
-        Most Lobbied Bills
-      </h1>
-      <p style={{ color: 'var(--text-dim)', fontSize: '0.88rem', lineHeight: 1.6, marginBottom: '0.25rem' }}>
+      <SectionHeader title="Most Lobbied Bills" eyebrow="FL Lobbying · 2016–2026" />
+      <p style={{ color: 'var(--text-dim)', fontSize: '0.88rem', lineHeight: 1.6, marginBottom: '0.25rem', marginTop: '-0.75rem' }}>
         Florida House bills ranked by number of lobbyist disclosure filings. Each filing represents one
         lobbyist–principal pair reporting activity on the bill for a given year.
       </p>

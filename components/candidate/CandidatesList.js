@@ -1,7 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import BackLinks from '@/components/BackLinks';
+import SectionHeader from '@/components/shared/SectionHeader';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import GlossaryTerm from '@/components/shared/GlossaryTerm';
 
@@ -39,16 +41,22 @@ const YEARS = [2026, 2024, 2022, 2020, 2018, 2016, 2014, 2012, 2010, 2008, 2006]
 const PAGE_SIZE = 50;
 
 export default function CandidatesList() {
+  const router       = useRouter();
+  const pathname     = usePathname();
+  const searchParams = useSearchParams();
+  const didMount     = useRef(false);
+
   const [results, setResults]       = useState({ data: [], total: 0, pages: 0 });
   const [loading, setLoading]       = useState(true);
-  const [search, setSearch]         = useState('');
-  const [debouncedQ, setDebouncedQ] = useState('');
-  const [party, setParty]           = useState('all');
-  const [office, setOffice]         = useState('all');
-  const [year, setYear]             = useState('all');
-  const [sortBy, setSortBy]         = useState('total_combined_all');
+  const [search, setSearch]         = useState(() => searchParams?.get('q') || '');
+  const [debouncedQ, setDebouncedQ] = useState(() => searchParams?.get('q') || '');
+  const [party, setParty]           = useState(() => searchParams?.get('party') || 'all');
+  const [office, setOffice]         = useState(() => searchParams?.get('office') || 'all');
+  const [year, setYear]             = useState(() => searchParams?.get('year') || 'all');
+  const [sortBy, setSortBy]         = useState(() => searchParams?.get('sort') || 'total_combined_all');
   const [sortDir, setSortDir]       = useState('desc');
   const [page, setPage]             = useState(1);
+  const [exporting, setExporting]   = useState(false);
 
   useEffect(() => {
     const t = setTimeout(() => setDebouncedQ(search), 300);
@@ -56,6 +64,19 @@ export default function CandidatesList() {
   }, [search]);
 
   useEffect(() => { setPage(1); }, [debouncedQ, party, office, year, sortBy, sortDir]);
+
+  // Sync filter state to URL
+  useEffect(() => {
+    if (!didMount.current) { didMount.current = true; return; }
+    const params = new URLSearchParams();
+    if (debouncedQ)        params.set('q', debouncedQ);
+    if (party !== 'all')   params.set('party', party);
+    if (office !== 'all')  params.set('office', office);
+    if (year !== 'all')    params.set('year', year);
+    if (sortBy !== 'total_combined_all') params.set('sort', sortBy);
+    const qs = params.toString();
+    router.replace(`${pathname}${qs ? '?' + qs : ''}`, { scroll: false });
+  }, [debouncedQ, party, office, year, sortBy]);
 
   useEffect(() => {
     setLoading(true);
@@ -65,6 +86,39 @@ export default function CandidatesList() {
       .then(json => { setResults(json); setLoading(false); })
       .catch(() => setLoading(false));
   }, [debouncedQ, party, office, year, sortBy, sortDir, page]);
+
+  async function handleExportCSV() {
+    setExporting(true);
+    try {
+      const params = new URLSearchParams({ q: debouncedQ, party, office, year, sort: sortBy, sort_dir: sortDir, export: '1' });
+      const res = await fetch(`/api/politicians?${params}`);
+      const json = await res.json();
+      const rows = json.data || [];
+      const headers = ['Name', 'Party', 'Office', 'District', 'Cycles', 'Hard Money', 'Soft Money', 'Combined'];
+      const lines = [
+        headers.join(','),
+        ...rows.map(p => [
+          `"${(p.display_name || '').replace(/"/g, '""')}"`,
+          p.party || '',
+          `"${(p.latest_office || '').replace(/"/g, '""')}"`,
+          p.latest_district || '',
+          p.num_cycles || 0,
+          p.hard_money_all || 0,
+          p.soft_money_all || 0,
+          p.total_combined_all || 0,
+        ].join(','))
+      ];
+      const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `fl-candidates-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } finally {
+      setExporting(false);
+    }
+  }
 
   const inputStyle = {
     background: '#0d0d22', border: '1px solid var(--border)',
@@ -80,16 +134,9 @@ export default function CandidatesList() {
 
       <BackLinks links={[{ href: '/', label: 'home' }]} />
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <h1 style={{
-          fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.4rem, 3vw, 2rem)',
-          fontWeight: 400, color: '#fff', marginBottom: '0.4rem',
-        }}>
-          Candidates
-        </h1>
-        <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>
-          {loading ? 'Loading…' : `${total.toLocaleString()} people with Florida campaign finance data`} · Florida Division of Elections
-        </div>
+      <SectionHeader title="Candidates" eyebrow="FL Candidates · 1996–2026" patch="candidates" />
+      <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', marginTop: '-0.75rem', marginBottom: '1.25rem' }}>
+        {loading ? 'Loading…' : `${total.toLocaleString()} people with Florida campaign finance data`} · Florida Division of Elections
       </div>
 
       {/* Filters */}
@@ -120,6 +167,19 @@ export default function CandidatesList() {
         <select value={sortBy} onChange={e => setSortBy(e.target.value)} style={inputStyle}>
           {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
         </select>
+        <button
+          onClick={handleExportCSV}
+          disabled={exporting || loading || results.total === 0}
+          style={{
+            ...inputStyle,
+            border: '1px solid rgba(77,216,240,0.3)',
+            color: exporting ? 'var(--text-dim)' : 'var(--teal)',
+            cursor: exporting || loading || results.total === 0 ? 'default' : 'pointer',
+            background: 'transparent', whiteSpace: 'nowrap',
+          }}
+        >
+          {exporting ? 'Exporting…' : '↓ CSV'}
+        </button>
       </div>
 
       <div style={{

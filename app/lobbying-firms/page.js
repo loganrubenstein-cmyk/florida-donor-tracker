@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getDb } from '@/lib/db';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import SectionHeader from '@/components/shared/SectionHeader';
 
 export const dynamic = 'force-dynamic';
 
@@ -39,9 +40,7 @@ export default async function LobbyingFirmsPage() {
         <span>Firms</span>
       </div>
 
-      <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', color: 'var(--text)', marginBottom: '0.4rem' }}>
-        Lobbying Firms
-      </h1>
+      <SectionHeader title="Lobbying Firms" eyebrow="FL Lobbying · 2007–present" />
       <p style={{ color: 'var(--text-dim)', fontSize: '0.85rem', lineHeight: 1.6, marginBottom: '0.4rem' }}>
         Top {rows.length} Florida lobbying firms by estimated compensation, 2007–present. Figures are midpoints of FL-mandated
         disclosure bands — not exact amounts. Source:{' '}

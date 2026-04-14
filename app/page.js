@@ -1,4 +1,5 @@
 import DonorTable from '@/components/donors/DonorTable'
+import FloridaOutline from '@/components/shared/FloridaOutline'
 import HeroCounter from '@/components/home/HeroCounter'
 import { getDb } from '@/lib/db'
 import { FEDERAL_OFFICE_CODES } from '@/lib/officeCodes'
@@ -87,7 +88,9 @@ export default async function Home() {
         borderBottom: '1px solid rgba(100,140,220,0.1)',
         maxWidth: '900px',
         margin: '0 auto',
+        position: 'relative',
       }}>
+        <div className="star-field" />
         <div style={{
           fontSize: '0.6rem',
           letterSpacing: '0.18em',
@@ -110,31 +113,11 @@ export default async function Home() {
             <HeroCounter total={meta.grand_totals?.total_political_spending_tracked ?? meta.campaign_finance?.estimated_total_contributions ?? 0} />
             <br />raised in Florida<br />politics.
           </h1>
-          <svg className="hide-mobile" viewBox="0 0 200 250" style={{ width: '130px', flexShrink: 0, opacity: 0.85 }} fill="none" stroke="var(--orange)" strokeWidth="3" strokeLinejoin="round" strokeLinecap="round">
-            {/* Florida outline — clockwise from NW panhandle corner */}
-            <path d="
-              M 6,18
-              L 96,18
-              L 96,32
-              L 114,32
-              L 114,18
-              L 158,18
-              C 164,20 170,26 174,38
-              C 177,56 178,78 177,102
-              C 177,128 176,150 173,170
-              C 169,190 162,208 151,222
-              C 138,236 120,246 100,250
-              C 80,252 60,247 44,235
-              C 32,223 25,208 25,193
-              C 25,178 30,163 32,149
-              C 32,136 28,122 24,109
-              C 21,97 22,86 26,75
-              C 30,64 26,53 18,46
-              C 14,42 10,38 6,34
-              L 6,18
-              Z
-            " />
-          </svg>
+          <FloridaOutline
+            size="hero"
+            className="hide-mobile"
+            style={{ flexShrink: 0, opacity: 0.9 }}
+          />
         </div>
 
         <p style={{
@@ -202,7 +185,7 @@ export default async function Home() {
           <div className="rg-4" style={{ gap: '1.5rem', flex: 1 }}>
             {[
               { value: formatBillions(meta.grand_totals?.total_political_spending_tracked ?? meta.campaign_finance?.estimated_total_contributions ?? 0), label: 'total political\nspending tracked', color: 'var(--orange)' },
-              { value: (meta.campaign_finance?.total_donors ?? 0).toLocaleString(),               label: 'donors\nindexed',              color: 'var(--teal)'   },
+              { value: (meta.campaign_finance?.total_donors ?? 0).toLocaleString(),               label: 'donor\nprofiles',              color: 'var(--teal)'   },
               { value: (meta.committees?.total_committees ?? meta.lobbyist_registrations?.total_principals ?? 0).toLocaleString(), label: 'committees\ntracked',  color: 'var(--green)'  },
               { value: (meta.candidates?.total_candidates ?? 0).toLocaleString(), label: 'candidates\ntracked',       color: 'var(--blue)'   },
             ].map(({ value, label, color }) => (
@@ -260,7 +243,7 @@ export default async function Home() {
               Who gave
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <CardLink href="/donors" color="var(--orange)" accent="rgba(255,176,96,0.2)" title="→ donors" desc="Search 336K donors — total giving, committee funding, lobbyist connections." />
+              <CardLink href="/donors" color="var(--orange)" accent="rgba(255,176,96,0.2)" title="→ donors" desc="Search 336K deduped donor profiles — total giving, committee funding, lobbyist connections." />
               <CardLink href="/explorer" color="var(--orange)" accent="rgba(255,176,96,0.35)" title="→ transaction explorer" desc="Browse every contribution row — filter by name, amount, date, recipient." highlight />
               <CardLink href="/industries" color="var(--blue)" accent="rgba(160,192,255,0.15)" title="→ industries" desc="Legal, Real Estate, Healthcare, Finance — see which sectors fund what." />
               <CardLink href="/lobbyists" color="var(--blue)" accent="rgba(160,192,255,0.15)" title="→ lobbyists" desc="2,480 registered FL lobbyists cross-referenced with donation records." />
@@ -282,6 +265,7 @@ export default async function Home() {
               <CardLink href="/legislature" color="var(--gold)" accent="rgba(255,208,96,0.12)" title="→ legislature" desc="160 current FL House + Senate members — voting records, committee assignments, campaign finance, and who funds them." />
               <CardLink href="/elections" color="var(--blue)" accent="rgba(160,192,255,0.12)" title="→ elections" desc="FL election results 2012–2024 — finance-matched race breakdowns, cost per vote, statewide races." />
               <CardLink href="/party-finance" color="var(--teal)" accent="rgba(77,216,240,0.1)" title="→ party finance" desc="Republican vs Democrat fundraising trends by year and office." />
+              <CardLink href="/contracts" color="var(--gold)" accent="rgba(255,208,96,0.15)" title="→ state contracts" desc="FL vendors who received state contracts — cross-referenced with campaign donors." />
             </div>
           </div>
 

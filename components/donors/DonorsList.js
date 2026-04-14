@@ -1,7 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import BackLinks from '@/components/BackLinks';
+import SectionHeader from '@/components/shared/SectionHeader';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import GlossaryTerm from '@/components/shared/GlossaryTerm';
 
@@ -49,15 +51,21 @@ const INDUSTRY_OPTIONS = [
 const PAGE_SIZE = 50;
 
 export default function DonorsList() {
+  const router       = useRouter();
+  const pathname     = usePathname();
+  const searchParams = useSearchParams();
+  const didMount     = useRef(false);
+
   const [results, setResults]       = useState({ data: [], total: 0, pages: 0 });
   const [loading, setLoading]       = useState(true);
-  const [search, setSearch]         = useState('');
-  const [debouncedQ, setDebouncedQ] = useState('');
-  const [type, setType]             = useState('all');
-  const [industry, setIndustry]     = useState('all');
-  const [sortBy, setSortBy]         = useState('total_combined');
+  const [search, setSearch]         = useState(() => searchParams?.get('q') || '');
+  const [debouncedQ, setDebouncedQ] = useState(() => searchParams?.get('q') || '');
+  const [type, setType]             = useState(() => searchParams?.get('type') || 'all');
+  const [industry, setIndustry]     = useState(() => searchParams?.get('industry') || 'all');
+  const [sortBy, setSortBy]         = useState(() => searchParams?.get('sort') || 'total_combined');
   const [sortDir, setSortDir]       = useState('desc');
   const [page, setPage]             = useState(1);
+  const [exporting, setExporting]   = useState(false);
 
   // Debounce search input by 300ms
   useEffect(() => {
@@ -68,6 +76,18 @@ export default function DonorsList() {
   // Reset to page 1 when filters change
   useEffect(() => { setPage(1); }, [debouncedQ, type, industry, sortBy, sortDir]);
 
+  // Sync filter state to URL (skip on first mount to avoid replacing initial params)
+  useEffect(() => {
+    if (!didMount.current) { didMount.current = true; return; }
+    const params = new URLSearchParams();
+    if (debouncedQ)     params.set('q', debouncedQ);
+    if (type !== 'all') params.set('type', type);
+    if (industry !== 'all') params.set('industry', industry);
+    if (sortBy !== 'total_combined') params.set('sort', sortBy);
+    const qs = params.toString();
+    router.replace(`${pathname}${qs ? '?' + qs : ''}`, { scroll: false });
+  }, [debouncedQ, type, industry, sortBy]);
+
   // Fetch from API
   useEffect(() => {
     setLoading(true);
@@ -77,6 +97,40 @@ export default function DonorsList() {
       .then(json => { setResults(json); setLoading(false); })
       .catch(() => setLoading(false));
   }, [debouncedQ, type, industry, sortBy, sortDir, page]);
+
+  async function handleExportCSV() {
+    setExporting(true);
+    try {
+      const params = new URLSearchParams({ q: debouncedQ, type, industry, sort: sortBy, sort_dir: sortDir, export: '1' });
+      const res = await fetch(`/api/donors?${params}`);
+      const json = await res.json();
+      const rows = json.data || [];
+      const headers = ['Name', 'Type', 'Location', 'Industry', 'Soft Money', 'Hard Money', 'Combined', 'Committees', 'Contributions'];
+      const lines = [
+        headers.join(','),
+        ...rows.map(d => [
+          `"${(d.name || '').replace(/"/g, '""')}"`,
+          d.is_corporate ? 'Corporate/Org' : 'Individual',
+          `"${(d.top_location || '').replace(/"/g, '""')}"`,
+          `"${(d.industry || '').replace(/"/g, '""')}"`,
+          d.total_soft || 0,
+          d.total_hard || 0,
+          d.total_combined || 0,
+          d.num_committees || 0,
+          d.num_contributions || 0,
+        ].join(','))
+      ];
+      const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `fl-donors-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } finally {
+      setExporting(false);
+    }
+  }
 
   const inputStyle = {
     background: '#0d0d22', border: '1px solid var(--border)',
@@ -92,17 +146,9 @@ export default function DonorsList() {
 
       <BackLinks links={[{ href: '/', label: 'home' }]} />
 
-      {/* Header */}
-      <div style={{ marginBottom: '1.5rem' }}>
-        <h1 style={{
-          fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.4rem, 3vw, 2rem)',
-          fontWeight: 400, color: '#fff', marginBottom: '0.4rem',
-        }}>
-          Donors
-        </h1>
-        <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
-          <span>Filtered view: donors with $1K+ in aggregate contributions. Full underlying index covers every reported contributor. Source: Florida Division of Elections.</span>
-        </div>
+      <SectionHeader title="Donors" eyebrow="FL Donors · 1996–2026" patch="donors" />
+      <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', marginTop: '-0.75rem', marginBottom: '1.25rem' }}>
+        Filtered view: donors with $1K+ in aggregate contributions. Full underlying index covers every reported contributor. Source: Florida Division of Elections.
       </div>
 
       {/* Filters */}
@@ -126,6 +172,19 @@ export default function DonorsList() {
         <select value={sortBy} onChange={e => setSortBy(e.target.value)} style={inputStyle}>
           {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
         </select>
+        <button
+          onClick={handleExportCSV}
+          disabled={exporting || loading || results.total === 0}
+          style={{
+            ...inputStyle,
+            border: '1px solid rgba(77,216,240,0.3)',
+            color: exporting ? 'var(--text-dim)' : 'var(--teal)',
+            cursor: exporting || loading || results.total === 0 ? 'default' : 'pointer',
+            background: 'transparent', whiteSpace: 'nowrap',
+          }}
+        >
+          {exporting ? 'Exporting…' : '↓ CSV'}
+        </button>
       </div>
 
       {/* Result count */}

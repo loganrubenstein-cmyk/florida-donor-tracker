@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import SectionHeader from '@/components/shared/SectionHeader';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { fmtMoney, fmtCount } from '../../lib/fmt';
@@ -69,10 +70,8 @@ export default function PartyFinancePage() {
         <span>Party Finance</span>
       </div>
 
-      <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', color: 'var(--text)', marginBottom: '0.25rem' }}>
-        Party Finance
-      </h1>
-      <p style={{ color: 'var(--text-dim)', fontSize: '0.88rem', lineHeight: 1.6, marginBottom: '0.25rem' }}>
+      <SectionHeader title="Party Finance" eyebrow="Florida · Republican vs. Democrat" />
+      <p style={{ color: 'var(--text-dim)', fontSize: '0.88rem', lineHeight: 1.6, marginBottom: '0.25rem', marginTop: '-0.75rem' }}>
         Florida candidate fundraising aggregated by political party. Hard and soft money totals, office breakdown,
         and year-over-year trends.
       </p>

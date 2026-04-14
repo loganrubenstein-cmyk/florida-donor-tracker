@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getDb } from '@/lib/db';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import SectionHeader from '@/components/shared/SectionHeader';
 
 export const dynamic = 'force-dynamic';
 
@@ -30,9 +31,7 @@ export default async function LobbyingHub() {
         <span>Lobbying</span>
       </div>
 
-      <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', color: 'var(--text)', marginBottom: '0.5rem' }}>
-        Lobbying
-      </h1>
+      <SectionHeader title="Lobbying" eyebrow="FL Lobbying · 2007–present" />
       <p style={{ color: 'var(--text-dim)', fontSize: '0.88rem', lineHeight: 1.6, marginBottom: '0.25rem' }}>
         Florida state-registered lobbyists, their principals (clients), and compensation reports going back to 2007.
         Data sourced from the <a href="https://www.floridalobbyist.gov/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)', textDecoration: 'none' }}>Florida Lobbyist Registration Office</a>.

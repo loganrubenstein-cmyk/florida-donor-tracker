@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import SectionHeader from '@/components/shared/SectionHeader';
 
 export const metadata = {
   title: 'Network',
@@ -14,10 +15,8 @@ export default function NetworkHub() {
         <span>Network</span>
       </div>
 
-      <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', color: 'var(--text)', marginBottom: '0.5rem' }}>
-        Network
-      </h1>
-      <p style={{ color: 'var(--text-dim)', fontSize: '0.88rem', lineHeight: 1.6, marginBottom: '1rem' }}>
+      <SectionHeader title="Network" eyebrow="Florida · Follow the Money" patch="network" />
+      <p style={{ color: 'var(--text-dim)', fontSize: '0.88rem', lineHeight: 1.6, marginTop: '-0.75rem', marginBottom: '1rem' }}>
         Tools for exploring relationships between donors, committees, candidates, and lobbyists.
       </p>
 

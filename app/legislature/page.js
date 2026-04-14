@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import BackLinks from '@/components/BackLinks';
 import { getDb } from '@/lib/db';
+import SectionHeader from '@/components/shared/SectionHeader';
 
 export const dynamic = 'force-dynamic';
 
@@ -60,13 +61,9 @@ export default async function LegislaturePage() {
     <main style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
       <BackLinks links={[{ href: '/', label: 'home' }]} />
 
-      <div style={{ marginBottom: '1.75rem' }}>
-        <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', color: 'var(--text)', margin: '0 0 0.3rem' }}>
-          Florida Legislature
-        </h1>
-        <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
-          2024–2026 term · {houseCount} House + {senateCount} Senate members
-        </div>
+      <SectionHeader title="Florida Legislature" eyebrow="FL Legislature · 2024–2026 Term" />
+      <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginTop: '-0.75rem', marginBottom: '1.75rem' }}>
+        {houseCount} House + {senateCount} Senate members
       </div>
 
       {/* Stats row */}

@@ -13,6 +13,10 @@
   --blue:      #a0c0ff;
   --green:     #80ffa0;
   --gold:      #ffd060;
+  /* Citrus-grade vocabulary — additive, no existing values changed */
+  --cobalt:    #4a7fdf;
+  --sea-green: #3db89f;
+  --cinnabar:  #e06b4a;
   --font-mono: "Courier New", "Courier", monospace;
   --font-serif: 'Instrument Serif', serif;
   --font-sans:  'Instrument Sans', sans-serif;

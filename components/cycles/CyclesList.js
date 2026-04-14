@@ -3,6 +3,7 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import BackLinks from '@/components/BackLinks';
+import SectionHeader from '@/components/shared/SectionHeader';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 function fmt(n) {
@@ -42,19 +43,11 @@ export default function CyclesList() {
 
       <BackLinks links={[{ href: '/', label: 'home' }]} />
 
-      {/* Header */}
-      <div style={{ marginBottom: '1.5rem' }}>
-        <h1 style={{
-          fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.4rem, 3vw, 2rem)',
-          fontWeight: 400, color: '#fff', marginBottom: '0.4rem',
-        }}>
-          Election Cycles
-        </h1>
-        <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
-          <span>{cycles.length} election cycles tracked</span>
-          <span style={{ color: 'var(--orange)', fontWeight: 700 }}>{fmt(grandTotal)} total</span>
-          <span>Florida candidates · 2008–present</span>
-        </div>
+      <SectionHeader title="Election Cycles" eyebrow="Florida · 2008–present" />
+      <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap', marginTop: '-0.75rem', marginBottom: '1.25rem' }}>
+        <span>{cycles.length} election cycles tracked</span>
+        <span style={{ color: 'var(--orange)', fontWeight: 700 }}>{fmt(grandTotal)} total</span>
+        <span>Florida candidates · 2008–present</span>
       </div>
 
       {/* Timeline bar */}

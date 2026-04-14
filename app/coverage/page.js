@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import SectionHeader from '@/components/shared/SectionHeader';
 
 export const metadata = {
   title: 'Coverage & Limits',
@@ -41,9 +42,7 @@ export default function CoveragePage() {
         <span>Coverage</span>
       </div>
 
-      <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', color: 'var(--text)', marginBottom: '0.5rem' }}>
-        Coverage &amp; Limits
-      </h1>
+      <SectionHeader title="Coverage & Limits" eyebrow="Florida Donor Tracker · Scope & Caveats" />
       <p style={{ color: 'var(--text-dim)', fontSize: '0.85rem', lineHeight: 1.6, marginBottom: '2.5rem' }}>
         What this site covers, what years are included, and what is known to be missing or incomplete.
       </p>

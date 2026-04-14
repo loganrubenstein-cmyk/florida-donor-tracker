@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import SectionHeader from '@/components/shared/SectionHeader';
 import { getDb } from '@/lib/db';
 import { fmtMoney, fmtMoneyCompact, fmtCount } from '../../lib/fmt';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
@@ -81,10 +82,8 @@ export default async function IEPage() {
         <span>Independent Expenditures</span>
       </div>
 
-      <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', color: 'var(--text)', marginBottom: '0.25rem' }}>
-        Independent Expenditures
-      </h1>
-      <p style={{ color: 'var(--text-dim)', fontSize: '0.88rem', lineHeight: 1.6, marginBottom: '0.25rem' }}>
+      <SectionHeader title="Independent Expenditures" eyebrow="Florida · Outside Spending" />
+      <p style={{ color: 'var(--text-dim)', fontSize: '0.88rem', lineHeight: 1.6, marginBottom: '0.25rem', marginTop: '-0.75rem' }}>
         Florida independent expenditures (IE) and electioneering communications (EC) — spending by committees
         to advocate for or against candidates, without coordinating with campaigns.
       </p>

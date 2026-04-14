@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import BackLinks from '@/components/BackLinks';
+import SectionHeader from '@/components/shared/SectionHeader';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 function fmt(n) {
@@ -70,18 +71,10 @@ export default function LobbyistsList() {
 
       <BackLinks links={[{ href: '/', label: 'home' }]} />
 
-      {/* Header */}
-      <div style={{ marginBottom: '1.5rem' }}>
-        <h1 style={{
-          fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.4rem, 3vw, 2rem)',
-          fontWeight: 400, color: '#fff', marginBottom: '0.4rem',
-        }}>
-          Lobbyists
-        </h1>
-        <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
-          <span>{loading ? '…' : total.toLocaleString()} registered lobbyists</span>
-          <span>FL Legislature · 2014–present</span>
-        </div>
+      <SectionHeader title="Lobbyists" eyebrow="FL Lobbying · 2014–present" />
+      <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap', marginTop: '-0.75rem', marginBottom: '1.25rem' }}>
+        <span>{loading ? '…' : total.toLocaleString()} registered lobbyists</span>
+        <span>FL Legislature · 2014–present</span>
       </div>
 
       {/* Filters */}

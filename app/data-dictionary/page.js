@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import SectionHeader from '@/components/shared/SectionHeader';
 
 export const metadata = {
   title: 'Data Dictionary',
@@ -36,9 +37,7 @@ export default function DataDictionary() {
         <span>Data Dictionary</span>
       </div>
 
-      <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', color: 'var(--text)', marginBottom: '0.5rem' }}>
-        Data Dictionary
-      </h1>
+      <SectionHeader title="Data Dictionary" eyebrow="Florida Donor Tracker · Field Reference" />
       <p style={{ color: 'var(--text-dim)', fontSize: '0.85rem', lineHeight: 1.6, marginBottom: '2.5rem' }}>
         Every field shown on this site, where it comes from, and what it means.
         Confidence labels: <span className="confidence-badge confidence-direct">direct</span> = verbatim from filing,{' '}

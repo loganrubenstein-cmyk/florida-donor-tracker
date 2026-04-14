@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import SectionHeader from '@/components/shared/SectionHeader';
 
 export const metadata = {
   title: 'About',
@@ -14,9 +15,7 @@ export default function AboutPage() {
         <span>About</span>
       </div>
 
-      <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '2.2rem', color: '#fff', marginBottom: '1.5rem', fontWeight: 400, lineHeight: 1.1 }}>
-        About Florida Donor Tracker
-      </h1>
+      <SectionHeader title="About Florida Donor Tracker" eyebrow="Florida Donor Tracker · Mission & Methods" />
 
       <section style={{ marginBottom: '2.5rem' }}>
         <div style={{ fontSize: '0.6rem', letterSpacing: '0.15em', color: 'var(--text-dim)', textTransform: 'uppercase', marginBottom: '1rem' }}>
@@ -120,7 +119,14 @@ export default function AboutPage() {
             ['/party-finance', 'Party Finance'],
             ['/connections', 'Committee Connections'],
             ['/lobbying/bills', 'Lobbied Bills'],
+            ['/contracts', 'State Contracts'],
             ['/search', 'Global Search'],
+            ['/tools', 'Investigative Tools'],
+            ['/decode', 'Committee Decoder'],
+            ['/compare', 'Donor Overlap'],
+            ['/district', 'Money in Your District'],
+            ['/timeline', 'Influence Timeline'],
+            ['/transparency', 'Dark Money Scoreboard'],
           ].map(([href, label]) => (
             <Link key={href} href={href} style={{ color: 'var(--teal)', textDecoration: 'none', padding: '0.3rem 0' }}>
               → {label}

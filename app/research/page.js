@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import SectionHeader from '@/components/shared/SectionHeader';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,9 +25,7 @@ export default async function ResearchHub() {
         <span>Research</span>
       </div>
 
-      <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', color: 'var(--text)', marginBottom: '0.5rem' }}>
-        Research
-      </h1>
+      <SectionHeader title="Research" eyebrow="Florida Campaign Finance · Analysis" />
       <p style={{ color: 'var(--text-dim)', fontSize: '0.88rem', lineHeight: 1.6, marginBottom: '0.25rem' }}>
         Analysis tools, investigations, and reference material for understanding Florida campaign finance patterns.
       </p>

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import SectionHeader from '@/components/shared/SectionHeader';
 
 export const metadata = {
   title: 'Investigative Tools',
@@ -46,9 +47,7 @@ const tools = [
 export default function ToolsPage() {
   return (
     <div className="container" style={{ paddingTop: '2rem', paddingBottom: '3rem' }}>
-      <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.6rem', color: 'var(--orange)', margin: '0 0 0.35rem' }}>
-        Investigative Tools
-      </h1>
+      <SectionHeader title="Investigative Tools" eyebrow="Florida · Follow the Money" />
       <p style={{ color: 'var(--text-dim)', fontSize: '0.78rem', marginBottom: '2rem', maxWidth: '600px' }}>
         Five tools for following the money in Florida politics. Decode opaque committee names, compare
         donor networks, visualize fundraising timelines, and surface dark money.
