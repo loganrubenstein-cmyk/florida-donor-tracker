@@ -221,6 +221,21 @@ export default function CommitteesList() {
         </div>
       )}
 
+      {/* Sibling pages */}
+      <div style={{ marginTop: '2.5rem', paddingTop: '1.25rem', borderTop: '1px solid var(--border)', display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+        <span style={{ fontSize: '0.68rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginRight: '0.25rem' }}>Also see:</span>
+        {[
+          { href: '/candidates',  label: 'Candidates',              color: 'var(--blue)',     border: 'rgba(160,192,255,0.25)' },
+          { href: '/donors',      label: 'Donors',                  color: 'var(--orange)',   border: 'rgba(255,176,96,0.25)'  },
+          { href: '/explorer',    label: 'All Transactions',        color: 'var(--text-dim)', border: 'var(--border)'          },
+          { href: '/connections', label: 'Committee Connections',   color: 'var(--teal)',     border: 'rgba(77,216,240,0.25)'  },
+          { href: '/ie',          label: 'Independent Expenditures', color: 'var(--orange)',  border: 'rgba(255,176,96,0.25)'  },
+        ].map(({ href, label, color, border }) => (
+          <a key={href} href={href} style={{ fontSize: '0.72rem', color, textDecoration: 'none', border: `1px solid ${border}`, borderRadius: '3px', padding: '0.2rem 0.55rem' }}>
+            {label}
+          </a>
+        ))}
+      </div>
     </div>
   );
 }

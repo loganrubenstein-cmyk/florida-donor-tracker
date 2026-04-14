@@ -9,11 +9,11 @@ const TYPE_COLOR = {
   donor:         'var(--orange)',
   committee:     'var(--teal)',
   candidate:     'var(--blue)',
-  lobbyist:      '#c084fc',
+  lobbyist:      'var(--purple)',
   principal:     'var(--green)',
   legislator:    'var(--gold)',
-  lobbying_firm: 'var(--text-dim)',
-  ld_principal:  'rgba(128,255,160,0.7)',
+  lobbying_firm: 'var(--blue)',
+  ld_principal:  'var(--green)',
 };
 
 const TYPE_LABEL = {
@@ -24,7 +24,7 @@ const TYPE_LABEL = {
   principal:     'Principal',
   legislator:    'Legislator',
   lobbying_firm: 'Firm',
-  ld_principal:  'LD Principal',
+  ld_principal:  'Lobbying Client',
 };
 
 const TYPE_OPTIONS = [
@@ -202,11 +202,27 @@ export default function SearchView() {
 
       {/* Empty state */}
       {!query.trim() && !loading && (
-        <div style={{
-          padding: '3rem 0', textAlign: 'center',
-          fontSize: '0.78rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)',
-        }}>
-          Type a name to search across all entities
+        <div style={{ padding: '2.5rem 0' }}>
+          <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)', marginBottom: '1.5rem', textAlign: 'center' }}>
+            Type any name — donor, candidate, committee, lobbyist, or firm
+          </div>
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+            {[
+              { href: '/candidates', label: 'Browse Candidates', color: 'var(--blue)',   border: 'rgba(160,192,255,0.3)' },
+              { href: '/committees', label: 'Browse Committees', color: 'var(--teal)',   border: 'rgba(77,216,240,0.3)'  },
+              { href: '/donors',     label: 'Browse Donors',     color: 'var(--orange)', border: 'rgba(255,176,96,0.3)'  },
+              { href: '/lobbyists',  label: 'Browse Lobbyists',  color: 'var(--purple)', border: 'rgba(192,132,252,0.3)' },
+              { href: '/principals', label: 'Browse Principals', color: 'var(--green)',  border: 'rgba(128,255,160,0.3)' },
+              { href: '/explorer',   label: 'All Transactions',  color: 'var(--text-dim)', border: 'var(--border)'       },
+            ].map(({ href, label, color, border }) => (
+              <a key={href} href={href} style={{
+                fontSize: '0.72rem', color, textDecoration: 'none',
+                border: `1px solid ${border}`, borderRadius: '3px', padding: '0.3rem 0.7rem',
+              }}>
+                {label}
+              </a>
+            ))}
+          </div>
         </div>
       )}
 
@@ -224,7 +240,7 @@ export default function SearchView() {
               onMouseLeave={ev => ev.currentTarget.style.background = 'var(--bg)'}
             >
               <span style={{
-                fontSize: '0.55rem', padding: '0.1rem 0.4rem',
+                fontSize: '0.62rem', padding: '0.1rem 0.45rem',
                 border: `1px solid ${TYPE_COLOR[e.t] || 'var(--border)'}`,
                 color: TYPE_COLOR[e.t] || 'var(--text-dim)',
                 borderRadius: '2px', fontFamily: 'var(--font-mono)',
