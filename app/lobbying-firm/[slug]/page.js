@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getDb } from '@/lib/db';
 import { notFound } from 'next/navigation';
 import SourceLink from '@/components/shared/SourceLink';
+import EntityHeader from '@/components/shared/EntityHeader';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import { buildMeta } from '@/lib/seo';
 
@@ -72,25 +73,16 @@ export default async function LobbyingFirmPage({ params }) {
         <span>{firm.firm_name}</span>
       </div>
 
-      {/* Header */}
-      <div style={{ marginBottom: '1.75rem' }}>
-        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.5rem' }}>
-          <span style={{
-            fontSize: '0.65rem', padding: '0.15rem 0.5rem',
-            border: '1px solid var(--blue)', color: 'var(--blue)',
-            borderRadius: '2px', fontFamily: 'var(--font-mono)',
-          }}>
-            LOBBYING FIRM
-          </span>
-        </div>
-        <h1 style={{
-          fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.4rem, 3vw, 2rem)',
-          fontWeight: 400, color: '#fff', lineHeight: 1.2, marginBottom: '0.4rem',
-        }}>
-          {firm.firm_name}
-        </h1>
+      <EntityHeader
+        name={firm.firm_name}
+        typeBadge={{ label: 'LOBBYING FIRM', color: 'var(--blue)' }}
+        meta={[
+          firm.first_year && firm.last_year ? `${firm.first_year}–${firm.last_year}` : null,
+          firm.num_principals ? `${firm.num_principals} clients` : null,
+        ]}
+      >
         <SourceLink type="firm" />
-      </div>
+      </EntityHeader>
 
       {/* Stats */}
       <div style={{

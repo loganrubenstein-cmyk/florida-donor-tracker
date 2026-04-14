@@ -2,6 +2,7 @@
 import BackLinks from '@/components/BackLinks';
 import SourceLink from '@/components/shared/SourceLink';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import EntityHeader from '@/components/shared/EntityHeader';
 import { slugify } from '@/lib/slugify';
 import { fmtMoney, fmtMoneyCompact, fmtCount } from '@/lib/fmt';
 
@@ -81,56 +82,18 @@ export default function PrincipalProfile({ data, compData = null }) {
         { href: '/principals', label: 'principals' },
       ]} />
 
-      {/* Header */}
-      <div style={{ marginBottom: '1.75rem' }}>
-        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
-          <span style={{
-            fontSize: '0.65rem', padding: '0.15rem 0.5rem',
-            border: '1px solid var(--teal)', color: 'var(--teal)',
-            borderRadius: '2px', fontFamily: 'var(--font-mono)', fontWeight: 'bold',
-          }}>
-            PRINCIPAL
-          </span>
-          {industry && industrySlug && (
-            <a href={`/industry/${industrySlug}`} style={{
-              fontSize: '0.65rem', padding: '0.15rem 0.5rem',
-              border: '1px solid rgba(100,140,220,0.4)', color: 'var(--text-dim)',
-              borderRadius: '2px', fontFamily: 'var(--font-mono)', textDecoration: 'none',
-            }}>
-              {industry}
-            </a>
-          )}
-          {data.donation_total > 0 && (
-            <span style={{
-              fontSize: '0.65rem', padding: '0.15rem 0.5rem',
-              border: '1px solid var(--orange)', color: 'var(--orange)',
-              borderRadius: '2px', fontFamily: 'var(--font-mono)',
-            }}>
-              DONATION MATCH
-            </span>
-          )}
-          {stateContracts.length > 0 && (
-            <span style={{
-              fontSize: '0.65rem', padding: '0.15rem 0.5rem',
-              border: '1px solid var(--gold)', color: 'var(--gold)',
-              borderRadius: '2px', fontFamily: 'var(--font-mono)', fontWeight: 'bold',
-            }}>
-              STATE CONTRACTOR
-            </span>
-          )}
-        </div>
-        <h1 style={{
-          fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.5rem, 4vw, 2.4rem)',
-          fontWeight: 400, color: '#fff', marginBottom: '0.4rem', lineHeight: 1.1,
-        }}>
-          {data.name}
-        </h1>
-        <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-          {location && <span>{location}</span>}
-          {data.naics && <span>NAICS {data.naics}</span>}
-        </div>
+      <EntityHeader
+        name={data.name}
+        typeBadge={{ label: 'PRINCIPAL', color: 'var(--teal)' }}
+        badges={[
+          ...(industry && industrySlug ? [{ label: industry, color: 'rgba(100,140,220,0.6)', href: `/industry/${industrySlug}` }] : []),
+          ...(data.donation_total > 0 ? [{ label: 'DONATION MATCH', color: 'var(--orange)' }] : []),
+          ...(stateContracts.length > 0 ? [{ label: 'STATE CONTRACTOR', color: 'var(--gold)' }] : []),
+        ]}
+        meta={[location, data.naics ? `NAICS ${data.naics}` : null]}
+      >
         <SourceLink type="principal" />
-      </div>
+      </EntityHeader>
 
       {/* Stats grid */}
       <div style={{

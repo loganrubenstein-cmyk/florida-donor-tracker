@@ -5,6 +5,7 @@ import TabbedProfile from '@/components/shared/TabbedProfile';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import NewsBlock from '@/components/shared/NewsBlock';
 import SourceLink from '@/components/shared/SourceLink';
+import EntityHeader from '@/components/shared/EntityHeader';
 import GlossaryTerm from '@/components/shared/GlossaryTerm';
 import { slugify } from '@/lib/slugify';
 import { fmtMoneyCompact, fmtMoney } from '@/lib/fmt';
@@ -559,52 +560,20 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
 
       <BackLinks links={[{ href: '/', label: 'home' }, { href: '/candidates', label: 'candidates' }]} />
 
-      {/* Header */}
-      <div style={{ marginBottom: '1.75rem' }}>
-        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.6rem', flexWrap: 'wrap' }}>
-          <span style={{
-            fontSize: '0.65rem', padding: '0.15rem 0.5rem',
-            border: '1px solid var(--teal)', color: 'var(--teal)',
-            borderRadius: '3px', textTransform: 'uppercase', letterSpacing: '0.06em',
-          }}>
-            candidate
-          </span>
-          {party && (
-            <span style={{
-              fontSize: '0.65rem', padding: '0.15rem 0.45rem',
-              border: `1px solid ${partyColor}`, color: partyColor,
-              borderRadius: '3px', letterSpacing: '0.06em', fontWeight: 'bold',
-            }}>
-              {party}
-            </span>
-          )}
-          {data.election_year && (
-            <span style={{
-              fontSize: '0.65rem', padding: '0.15rem 0.45rem',
-              border: '1px solid var(--border)', color: 'var(--text-dim)',
-              borderRadius: '3px', fontFamily: 'var(--font-mono)',
-            }}>
-              {data.election_year}
-            </span>
-          )}
-        </div>
-        <h1 style={{
-          fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.4rem, 3vw, 2rem)',
-          fontWeight: 400, color: '#fff', lineHeight: 1.2, marginBottom: '0.4rem',
-        }}>
-          {data.candidate_name || `Account #${data.acct_num}`}
-        </h1>
-        {officeLabel && (
-          <div style={{ fontSize: '0.8rem', color: 'var(--text-dim)', marginBottom: '0.2rem' }}>
-            {officeLabel}
-          </div>
-        )}
-        <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)' }}>
-          Acct #{data.acct_num}
-          {data.status_desc ? ` · ${data.status_desc}` : ''}
-        </div>
+      <EntityHeader
+        name={data.candidate_name || `Account #${data.acct_num}`}
+        typeBadge={{ label: 'CANDIDATE', color: 'var(--teal)' }}
+        badges={[
+          ...(party ? [{ label: party, color: partyColor }] : []),
+          ...(data.election_year ? [{ label: String(data.election_year), color: 'var(--border)' }] : []),
+        ]}
+        meta={[
+          officeLabel || null,
+          `Acct #${data.acct_num}${data.status_desc ? ` · ${data.status_desc}` : ''}`,
+        ]}
+      >
         <SourceLink type="candidate" id={data.acct_num} />
-      </div>
+      </EntityHeader>
 
       {/* Cycle connector pill bar */}
       {cycles.length > 0 && (

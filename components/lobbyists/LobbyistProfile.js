@@ -2,6 +2,7 @@
 import BackLinks from '@/components/BackLinks';
 import SourceLink from '@/components/shared/SourceLink';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import EntityHeader from '@/components/shared/EntityHeader';
 import { slugify } from '@/lib/slugify';
 
 function fmt(n) {
@@ -75,39 +76,16 @@ export default function LobbyistProfile({ data }) {
 
       <BackLinks links={[{ href: '/', label: 'home' }, { href: '/lobbyists', label: 'lobbyists' }]} />
 
-      {/* Header */}
-      <div style={{ marginBottom: '1.75rem' }}>
-        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
-          <span style={{
-            fontSize: '0.65rem', padding: '0.15rem 0.5rem',
-            border: '1px solid var(--teal)', color: 'var(--teal)',
-            borderRadius: '2px', fontFamily: 'var(--font-mono)', fontWeight: 'bold',
-          }}>
-            LOBBYIST
-          </span>
-          {data.total_donation_influence > 0 && (
-            <span style={{
-              fontSize: '0.65rem', padding: '0.15rem 0.5rem',
-              border: '1px solid var(--orange)', color: 'var(--orange)',
-              borderRadius: '2px', fontFamily: 'var(--font-mono)',
-            }}>
-              DONATION MATCH
-            </span>
-          )}
-        </div>
-        <h1 style={{
-          fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.5rem, 4vw, 2.4rem)',
-          fontWeight: 400, color: '#fff', marginBottom: '0.4rem', lineHeight: 1.1,
-        }}>
-          {data.name}
-        </h1>
-        <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-          {data.firm && <span>{data.firm}</span>}
-          {location && <span>{location}</span>}
-          {data.phone && <span>{data.phone}</span>}
-        </div>
+      <EntityHeader
+        name={data.name}
+        typeBadge={{ label: 'LOBBYIST', color: 'var(--teal)' }}
+        badges={[
+          ...(data.total_donation_influence > 0 ? [{ label: 'DONATION MATCH', color: 'var(--orange)' }] : []),
+        ]}
+        meta={[data.firm, location, data.phone]}
+      >
         <SourceLink type="lobbyist" id={data.lobbyist_id} />
-      </div>
+      </EntityHeader>
 
       {/* Stats grid */}
       <div style={{

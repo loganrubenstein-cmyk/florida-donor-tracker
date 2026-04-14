@@ -5,6 +5,7 @@ import { loadCandidate, loadCandidateCycles, getPoliticianBySlug, listPolitician
 import { getDb } from '@/lib/db';
 import CandidateProfile from '@/components/candidate/CandidateProfile';
 import BackLinks from '@/components/BackLinks';
+import EntityHeader from '@/components/shared/EntityHeader';
 import { buildMeta } from '@/lib/seo';
 
 let _electionLookup = null;
@@ -111,43 +112,17 @@ export default async function PoliticianPage({ params, searchParams }) {
         { href: '/candidates', label: 'candidates' },
       ]} />
 
-      {/* Header */}
-      <div style={{ marginBottom: '1.75rem' }}>
-        <h1 style={{
-          fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.5rem, 3.5vw, 2.2rem)',
-          fontWeight: 400, color: '#fff', marginBottom: '0.4rem',
-        }}>
-          {display_name.split(' ').map(w => w.charAt(0) + w.slice(1).toLowerCase()).join(' ')}
-        </h1>
-        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'center' }}>
-          {party && (
-            <span style={{
-              fontSize: '0.62rem', padding: '0.1rem 0.45rem',
-              border: `1px solid ${partyColor || 'var(--border)'}`,
-              color: partyColor || 'var(--text-dim)',
-              borderRadius: '2px', fontFamily: 'var(--font-mono)',
-            }}>
-              {PARTY_LABEL[party] || party}
-            </span>
-          )}
-          <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
-            {officeLabel}{districtStr} · {activeCycle.year}
-          </span>
-          <span style={{ fontSize: '0.62rem', color: 'rgba(100,140,220,0.45)', fontFamily: 'var(--font-mono)' }}>
-            {sortedCycles.length} FL election cycle{sortedCycles.length !== 1 ? 's' : ''}
-          </span>
-          {matchedLeg && (
-            <a href={`/legislator/${matchedLeg.people_id}`} style={{
-              fontSize: '0.62rem', padding: '0.1rem 0.45rem',
-              border: '1px solid rgba(77,216,240,0.35)',
-              color: 'var(--teal)', borderRadius: '2px',
-              fontFamily: 'var(--font-mono)', textDecoration: 'none',
-            }}>
-              Currently serving · FL {matchedLeg.chamber} D{matchedLeg.district} →
-            </a>
-          )}
-        </div>
-      </div>
+      <EntityHeader
+        name={display_name.split(' ').map(w => w.charAt(0) + w.slice(1).toLowerCase()).join(' ')}
+        badges={[
+          ...(party ? [{ label: PARTY_LABEL[party] || party, color: partyColor || 'var(--border)' }] : []),
+          ...(matchedLeg ? [{ label: `Currently serving · FL ${matchedLeg.chamber} D${matchedLeg.district} →`, color: 'var(--teal)', href: `/legislator/${matchedLeg.people_id}` }] : []),
+        ]}
+        meta={[
+          `${officeLabel}${districtStr} · ${activeCycle.year}`,
+          `${sortedCycles.length} FL election cycle${sortedCycles.length !== 1 ? 's' : ''}`,
+        ]}
+      />
 
       {/* Cycle selector */}
       {sortedCycles.length > 1 && (
