@@ -131,6 +131,40 @@ export default async function Home() {
           who funds Florida&rsquo;s politicians, how the money flows, and what it buys.
         </p>
 
+        {/* Search bar */}
+        <form action="/search" method="GET" style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.25rem', maxWidth: '500px' }}>
+          <input
+            type="text"
+            name="q"
+            placeholder="Search donors, candidates, committees, lobbyists…"
+            style={{
+              flex: 1,
+              background: 'rgba(8,8,24,0.8)',
+              border: '1px solid rgba(100,140,220,0.35)',
+              color: 'var(--text)',
+              padding: '0.6rem 0.9rem',
+              fontSize: '0.75rem',
+              borderRadius: '3px',
+              fontFamily: 'var(--font-mono)',
+              outline: 'none',
+            }}
+          />
+          <button type="submit" style={{
+            background: 'var(--orange)',
+            color: '#01010d',
+            border: 'none',
+            padding: '0.6rem 1.1rem',
+            fontSize: '0.72rem',
+            fontWeight: 700,
+            fontFamily: 'var(--font-sans)',
+            borderRadius: '3px',
+            cursor: 'pointer',
+            whiteSpace: 'nowrap',
+          }}>
+            Search
+          </button>
+        </form>
+
         <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
           <a href="#donors" style={{
             background: 'var(--orange)',

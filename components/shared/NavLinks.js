@@ -7,14 +7,15 @@ const NAV_LINKS = [
   { href: '/candidates',  label: 'Candidates' },
   { href: '/committees',  label: 'Committees' },
   { href: '/donors',      label: 'Donors' },
-  { href: '/explorer',    label: 'Explorer' },
+  { href: '/explorer',    label: 'Transactions' },
   { href: '/lobbying',    label: 'Lobbying' },
   { href: '/legislature', label: 'Legislature' },
   { href: '/elections',   label: 'Elections' },
+  { href: '/influence',   label: 'Influence' },
   { href: '/network',     label: 'Network' },
   { href: '/tools',       label: 'Tools' },
   { href: '/research',    label: 'Research' },
-  { href: '/data',        label: 'Data' },
+  { href: '/data',        label: 'Sources' },
 ];
 
 export default function NavLinks() {
