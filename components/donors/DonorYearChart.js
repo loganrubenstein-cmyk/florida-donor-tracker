@@ -18,7 +18,7 @@ const CustomTooltip = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
   return (
     <div style={{
-      background: '#0d0d22', border: '1px solid var(--border)',
+      background: 'var(--surface)', border: '1px solid var(--border)',
       padding: '0.5rem 0.75rem', fontSize: '0.72rem', fontFamily: 'var(--font-mono)',
     }}>
       <div style={{ color: 'var(--text)', marginBottom: '0.3rem' }}>{label}</div>

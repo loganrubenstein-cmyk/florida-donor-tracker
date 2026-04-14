@@ -433,13 +433,13 @@ export default function DonorProfile({ data, annotations = {} }) {
   );
 
   const tabs = [
-    { id: 'overview',     label: 'Overview',     content: overviewContent },
-    { id: 'committees',   label: 'Committees',   content: committeesContent },
-    { id: 'candidates',   label: 'Candidates',   content: candidatesContent },
-    { id: 'transactions', label: 'Transactions', content: transactionsContent },
-    { id: 'lobbying',     label: 'Lobbying',     content: lobbyingContent },
-    ...(contracts.length > 0 ? [{ id: 'contracts', label: 'Contracts', content: contractsContent }] : []),
-    { id: 'sources',      label: 'Sources',      content: sourcesContent },
+    { id: 'overview',     label: 'Overview',     description: 'Total contributions, giving history, and top recipients',       content: overviewContent },
+    { id: 'committees',   label: 'Committees',   description: 'Political committees (PACs) this donor contributed to',         content: committeesContent },
+    { id: 'candidates',   label: 'Candidates',   description: 'Candidates who received direct contributions from this donor',  content: candidatesContent },
+    { id: 'transactions', label: 'Transactions', description: 'Individual contribution records from the FL Division of Elections', content: transactionsContent },
+    { id: 'lobbying',     label: 'Lobbying',     description: 'FL registered lobbying principal linked to this donor by name', content: lobbyingContent },
+    ...(contracts.length > 0 ? [{ id: 'contracts', label: 'Contracts', description: 'FL state contracts awarded to this entity', content: contractsContent }] : []),
+    { id: 'sources',      label: 'Sources',      description: 'Data sources, confidence levels, and research links',           content: sourcesContent },
   ];
 
   return (

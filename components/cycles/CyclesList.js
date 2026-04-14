@@ -133,7 +133,7 @@ export default function CyclesList() {
         <DataTrustBlock
           source="Florida Division of Elections — Campaign Finance Filings"
           sourceUrl="https://dos.elections.myflorida.com/campaign-finance/"
-          lastUpdated="April 2026"
+          
           direct={['total raised per cycle', 'candidate and committee counts', 'party breakdown']}
           normalized={['soft money linked from committee contributions (2020 onward)', 'hard money direct from candidate filings (2008+)']}
           caveats={[

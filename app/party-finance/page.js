@@ -3,7 +3,7 @@ import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import SectionHeader from '@/components/shared/SectionHeader';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { fmtMoney, fmtCount } from '../../lib/fmt';
+import { fmtMoney, fmtMoneyCompact, fmtCount } from '../../lib/fmt';
 
 export const metadata = {
   title: 'Party Finance',
@@ -102,11 +102,11 @@ export default function PartyFinancePage() {
                   <div key={y.year} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                     <div style={{ width: '36px', fontSize: '0.72rem', color: 'var(--text-dim)', textAlign: 'right', flexShrink: 0 }}>{y.year}</div>
                     <div style={{ flex: 1, display: 'flex', gap: '2px', height: '20px', alignItems: 'stretch' }}>
-                      <div style={{ width: `${repW}%`, background: 'var(--republican)', borderRadius: '2px 0 0 2px', minWidth: y.rep > 0 ? '2px' : '0' }} title={`R: ${fmtMoney(y.rep)}`} />
-                      <div style={{ width: `${demW}%`, background: 'var(--democrat)', borderRadius: '0 2px 2px 0', minWidth: y.dem > 0 ? '2px' : '0' }} title={`D: ${fmtMoney(y.dem)}`} />
+                      <div style={{ width: `${repW}%`, background: 'var(--republican)', borderRadius: '2px 0 0 2px', minWidth: y.rep > 0 ? '2px' : '0' }} title={`R: ${fmtMoneyCompact(y.rep)}`} />
+                      <div style={{ width: `${demW}%`, background: 'var(--democrat)', borderRadius: '0 2px 2px 0', minWidth: y.dem > 0 ? '2px' : '0' }} title={`D: ${fmtMoneyCompact(y.dem)}`} />
                     </div>
-                    <div style={{ width: '80px', fontSize: '0.7rem', color: 'var(--republican)', textAlign: 'right', fontFamily: 'var(--font-mono)', flexShrink: 0 }}>{fmtMoney(y.rep)}</div>
-                    <div style={{ width: '80px', fontSize: '0.7rem', color: 'var(--democrat)', textAlign: 'right', fontFamily: 'var(--font-mono)', flexShrink: 0 }}>{fmtMoney(y.dem)}</div>
+                    <div style={{ width: '56px', fontSize: '0.7rem', color: 'var(--republican)', textAlign: 'right', fontFamily: 'var(--font-mono)', flexShrink: 0 }}>{fmtMoneyCompact(y.rep)}</div>
+                    <div style={{ width: '56px', fontSize: '0.7rem', color: 'var(--democrat)', textAlign: 'right', fontFamily: 'var(--font-mono)', flexShrink: 0 }}>{fmtMoneyCompact(y.dem)}</div>
                   </div>
                 );
               })}
@@ -154,9 +154,9 @@ export default function PartyFinancePage() {
                     <span style={{ color: 'var(--text-dim)', fontSize: '0.72rem', marginLeft: '0.5rem' }}>{p.party_label}</span>
                   </td>
                   <td style={{ padding: '0.45rem 0.75rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', textAlign: 'right' }}>{fmtCount(p.num_candidates)}</td>
-                  <td style={{ padding: '0.45rem 0.75rem', color: 'var(--orange)', fontFamily: 'var(--font-mono)', textAlign: 'right', fontWeight: 600 }}>{fmtMoney(p.total_raised)}</td>
-                  <td style={{ padding: '0.45rem 0.75rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', textAlign: 'right' }}>{fmtMoney(p.hard_money)}</td>
-                  <td style={{ padding: '0.45rem 0.75rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', textAlign: 'right' }}>{fmtMoney(p.soft_money)}</td>
+                  <td style={{ padding: '0.45rem 0.75rem', color: 'var(--orange)', fontFamily: 'var(--font-mono)', textAlign: 'right', fontWeight: 600 }}>{fmtMoneyCompact(p.total_raised)}</td>
+                  <td style={{ padding: '0.45rem 0.75rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', textAlign: 'right' }}>{fmtMoneyCompact(p.hard_money)}</td>
+                  <td style={{ padding: '0.45rem 0.75rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', textAlign: 'right' }}>{fmtMoneyCompact(p.soft_money)}</td>
                 </tr>
               ))}
             </tbody>
@@ -173,7 +173,7 @@ export default function PartyFinancePage() {
       <DataTrustBlock
         source="Florida Division of Elections — Candidate Finance Records"
         sourceUrl="https://dos.elections.myflorida.com/campaign-finance/"
-        lastUpdated="April 2026"
+        
         direct={['party affiliation', 'total raised', 'contribution amounts']}
         normalized={['hard money vs soft money split', 'office-level aggregation']}
         caveats={[
@@ -195,7 +195,7 @@ function PartyCard({ party, color, total }) {
       <div style={{ fontSize: '0.95rem', fontWeight: 700, color, marginBottom: '0.75rem' }}>{partyLabel}</div>
       <div style={{ marginBottom: '1rem' }}>
         <div style={{ fontSize: '1.6rem', fontWeight: 700, color: 'var(--text)', fontFamily: 'var(--font-mono)' }}>
-          {fmtMoney(party.total_raised)}
+          {fmtMoneyCompact(party.total_raised)}
         </div>
         <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>total raised · {pct}% of all FL candidate fundraising</div>
       </div>
@@ -206,7 +206,7 @@ function PartyCard({ party, color, total }) {
         </div>
         <div>
           <div style={{ color: 'var(--text-dim)' }}>Hard Money</div>
-          <div style={{ color: 'var(--text)', fontFamily: 'var(--font-mono)' }}>{fmtMoney(party.hard_money)}</div>
+          <div style={{ color: 'var(--text)', fontFamily: 'var(--font-mono)' }}>{fmtMoneyCompact(party.hard_money)}</div>
         </div>
       </div>
     </div>
@@ -229,7 +229,7 @@ function OfficeBreakdown({ party, color }) {
             <div key={o.office_code}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', marginBottom: '2px' }}>
                 <span style={{ color: 'var(--text-dim)' }}>{label}</span>
-                <span style={{ color: 'var(--text)', fontFamily: 'var(--font-mono)' }}>{fmtMoney(o.total_raised)}</span>
+                <span style={{ color: 'var(--text)', fontFamily: 'var(--font-mono)' }}>{fmtMoneyCompact(o.total_raised)}</span>
               </div>
               <div style={{ height: '4px', background: 'var(--border)', borderRadius: '2px' }}>
                 <div style={{ height: '100%', width: `${pct}%`, background: color, borderRadius: '2px', opacity: 0.7 }} />

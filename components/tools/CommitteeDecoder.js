@@ -81,9 +81,9 @@ export default function CommitteeDecoder() {
   }
 
   const inputStyle = {
-    background: '#0d0d22',
+    background: 'var(--surface)',
     border: '2px solid var(--orange)',
-    color: '#fff',
+    color: 'var(--text)',
     padding: '0.75rem 1rem',
     fontSize: '1rem',
     borderRadius: '3px',
@@ -106,7 +106,7 @@ export default function CommitteeDecoder() {
         </div>
         <h1 style={{
           fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.6rem, 4vw, 2.4rem)',
-          fontWeight: 400, color: '#fff', marginBottom: '0.5rem', lineHeight: 1.2,
+          fontWeight: 400, color: 'var(--text)', marginBottom: '0.5rem', lineHeight: 1.2,
         }}>
           Who's Behind This Committee?
         </h1>
@@ -136,7 +136,7 @@ export default function CommitteeDecoder() {
         {showResults && results.length > 0 && (
           <div style={{
             position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 50,
-            background: '#0a0a20', border: '1px solid var(--border)', borderRadius: '0 0 3px 3px',
+            background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '0 0 3px 3px',
             maxHeight: '320px', overflowY: 'auto',
           }}>
             {results.map(r => (
@@ -164,7 +164,7 @@ export default function CommitteeDecoder() {
         {showResults && results.length === 0 && !searching && query.trim().length >= 2 && (
           <div style={{
             position: 'absolute', top: '100%', left: 0, right: 0,
-            background: '#0a0a20', border: '1px solid var(--border)', borderRadius: '0 0 3px 3px',
+            background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '0 0 3px 3px',
             padding: '1rem', color: 'var(--text-dim)', fontSize: '0.72rem', fontFamily: 'var(--font-mono)',
           }}>
             No committees found matching "{query}"
@@ -210,7 +210,7 @@ export default function CommitteeDecoder() {
         <DataTrustBlock
           source="Florida Division of Elections — Campaign Finance Database"
           sourceUrl="https://dos.elections.myflorida.com/campaign-finance/contributions/"
-          lastUpdated="April 2026"
+          
           direct={['committee name', 'treasurer', 'chair', 'contributions received', 'expenditures']}
           normalized={['donor industry classifications', 'candidate linkages (PAC-to-candidate edges)']}
           caveats={[
@@ -238,7 +238,7 @@ function DecodeResult({ data }) {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.5rem' }}>
           <div>
             <h2 style={{
-              fontFamily: 'var(--font-serif)', fontSize: '1.3rem', fontWeight: 400, color: '#fff',
+              fontFamily: 'var(--font-serif)', fontSize: '1.3rem', fontWeight: 400, color: 'var(--text)',
               marginBottom: '0.25rem',
             }}>
               {c.name}

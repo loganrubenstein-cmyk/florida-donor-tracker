@@ -15,12 +15,12 @@ function CustomTooltip({ active, payload, label }) {
   const { amount } = payload[0].payload;
   return (
     <div style={{
-      background: '#0d0d22', border: '1px solid #2a3a5a',
+      background: 'var(--surface)', border: '1px solid var(--border)',
       padding: '0.6rem 0.9rem', fontSize: '0.72rem',
       fontFamily: 'var(--font-mono)',
     }}>
-      <div style={{ color: '#fff', marginBottom: '0.2rem' }}>{label}</div>
-      <div style={{ color: '#ffb060' }}>${amount.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</div>
+      <div style={{ color: 'var(--text)', marginBottom: '0.2rem' }}>{label}</div>
+      <div style={{ color: 'var(--orange)' }}>${amount.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</div>
     </div>
   );
 }

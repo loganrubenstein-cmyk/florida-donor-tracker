@@ -51,8 +51,8 @@ export default function CoveragePage() {
         <h2 style={{ fontSize: '0.85rem', color: 'var(--teal)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem' }}>
           Data Categories
         </h2>
-        <Row label="Committee contributions (receipts)" status="complete" note="~7.7M rows, all committees on file with FL Division of Elections" />
-        <Row label="Candidate contributions (receipts)" status="complete" note="~3.2M rows" />
+        <Row label="Committee contributions (receipts)" status="complete" note="~19.3M rows — active and dissolved committees on file with FL Division of Elections" />
+        <Row label="Candidate contributions (receipts)" status="complete" note="~2.6M rows" />
         <Row label="Committee expenditures (disbursements)" status="complete" note="Summary totals + top vendors for 1,673 committees; $2.78B tracked" />
         <Row label="Candidate expenditures" status="complete" note="Summary totals + top vendors for all candidates" />
         <Row label="Independent expenditures (IEs)" status="complete" note="$70.9M total across 492 committees; committee-level totals (transaction detail not yet included)" />

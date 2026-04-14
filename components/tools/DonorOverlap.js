@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { fmtMoney, fmtMoneyCompact } from '@/lib/fmt';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
-const TYPE_COLOR = { individual: '#80ffa0', corporate: '#a0c0ff', committee: '#ffb060', unknown: '#888' };
+const TYPE_COLOR = { individual: 'var(--green)', corporate: 'var(--blue)', committee: 'var(--orange)', unknown: 'var(--text-dim)' };
 const TYPE_LABEL = { individual: 'Individual', corporate: 'Corporate', committee: 'Committee/PAC', unknown: 'Other' };
 
 export default function DonorOverlap() {
@@ -87,7 +87,7 @@ export default function DonorOverlap() {
       )}
 
       {error && (
-        <div style={{ padding: '0.75rem 1rem', background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.3)', borderRadius: '3px', color: '#f87171', fontSize: '0.78rem', marginBottom: '1rem' }}>
+        <div style={{ padding: '0.75rem 1rem', background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.3)', borderRadius: '3px', color: 'var(--republican)', fontSize: '0.78rem', marginBottom: '1rem' }}>
           {error}
         </div>
       )}
@@ -98,7 +98,7 @@ export default function DonorOverlap() {
         <DataTrustBlock
           source="Florida Division of Elections — Campaign Finance Database"
           sourceUrl="https://dos.elections.myflorida.com/campaign-finance/contributions/"
-          lastUpdated="April 2026"
+          
           direct={['donor names', 'contribution amounts', 'entity type']}
           normalized={['donor slug matching (name normalization for cross-entity comparison)']}
           caveats={[
@@ -261,15 +261,15 @@ function OverlapResult({ data }) {
               <div style={{ display: 'flex', height: '16px', borderRadius: '3px', overflow: 'hidden', marginBottom: '0.5rem' }}>
                 {Object.entries(type_breakdown).sort((a, b) => b[1] - a[1]).map(([type, amount]) => {
                   const pct = (amount / summary.total_overlap_amount) * 100;
-                  return <div key={type} style={{ width: `${pct}%`, background: TYPE_COLOR[type] || '#888', opacity: 0.7, minWidth: pct > 0 ? '2px' : 0 }} />;
+                  return <div key={type} style={{ width: `${pct}%`, background: TYPE_COLOR[type] || 'var(--text-dim)', opacity: 0.7, minWidth: pct > 0 ? '2px' : 0 }} />;
                 })}
               </div>
               <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', fontSize: '0.68rem' }}>
                 {Object.entries(type_breakdown).sort((a, b) => b[1] - a[1]).map(([type, amount]) => (
                   <span key={type} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-                    <span style={{ width: '8px', height: '8px', borderRadius: '2px', background: TYPE_COLOR[type] || '#888', display: 'inline-block' }} />
+                    <span style={{ width: '8px', height: '8px', borderRadius: '2px', background: TYPE_COLOR[type] || 'var(--text-dim)', display: 'inline-block' }} />
                     <span style={{ color: 'var(--text)' }}>{TYPE_LABEL[type] || type}:</span>
-                    <span style={{ color: TYPE_COLOR[type] || '#888', fontFamily: 'var(--font-mono)' }}>{fmtMoneyCompact(amount)}</span>
+                    <span style={{ color: TYPE_COLOR[type] || 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>{fmtMoneyCompact(amount)}</span>
                   </span>
                 ))}
               </div>

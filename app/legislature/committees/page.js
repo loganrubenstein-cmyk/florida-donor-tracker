@@ -105,7 +105,7 @@ export default async function CommitteesPage() {
       <div style={{ marginTop: '3rem' }}>
         <DataTrustBlock
           source="FL House + FL Senate websites · LobbyTools member export"
-          lastUpdated="April 2026"
+          
           direct={['committee name', 'membership roster', 'leadership roles']}
           normalized={['campaign finance totals matched from FL DoE candidate records']}
           caveats={[

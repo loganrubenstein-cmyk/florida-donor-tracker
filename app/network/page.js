@@ -54,7 +54,8 @@ export default function NetworkHub() {
 
         <Link href="/connections" className="hub-card">
           <div className="hub-card-title">Connections</div>
-          <div className="hub-card-desc">Explore shared donors between committees — find which PACs and candidates draw from the same funding networks.</div>
+          <div className="hub-card-desc">Explore shared donors between committees — find which PACs and candidates draw from the same funding networks. Identifies shared treasurers, shared chairs, shared addresses, and donor overlap.</div>
+          <div className="hub-card-stat">500 committee pairs · 4 signal types</div>
         </Link>
       </div>
     </main>

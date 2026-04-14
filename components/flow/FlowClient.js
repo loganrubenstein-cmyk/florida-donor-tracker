@@ -87,22 +87,22 @@ function FlowTooltip({ active, payload }) {
   const isLink = d.source?.name != null;
   return (
     <div style={{
-      background: '#080818', border: '1px solid rgba(100,140,220,0.25)',
+      background: 'var(--surface)', border: '1px solid rgba(100,140,220,0.25)',
       padding: '0.5rem 0.75rem', fontSize: '0.7rem', fontFamily: 'Courier New, monospace',
       maxWidth: '280px',
     }}>
       {isLink ? (
         <>
-          <div style={{ color: '#c8d8f0', marginBottom: '0.2rem', lineHeight: 1.4 }}>
-            {d.source.name} <span style={{ color: '#5a6a88' }}>→</span> {d.target.name}
+          <div style={{ color: 'var(--text)', marginBottom: '0.2rem', lineHeight: 1.4 }}>
+            {d.source.name} <span style={{ color: 'var(--text-dim)' }}>→</span> {d.target.name}
           </div>
-          <div style={{ color: '#ffb060', fontWeight: 700 }}>{fmt(d.value)}</div>
+          <div style={{ color: 'var(--orange)', fontWeight: 700 }}>{fmt(d.value)}</div>
         </>
       ) : (
         <>
-          <div style={{ color: '#c8d8f0', marginBottom: '0.2rem' }}>{d.name}</div>
-          <div style={{ color: '#ffb060', fontWeight: 700 }}>{fmt(d.value)}</div>
-          <div style={{ color: '#5a6a88', fontSize: '0.62rem', marginTop: '0.2rem' }}>click to focus</div>
+          <div style={{ color: 'var(--text)', marginBottom: '0.2rem' }}>{d.name}</div>
+          <div style={{ color: 'var(--orange)', fontWeight: 700 }}>{fmt(d.value)}</div>
+          <div style={{ color: 'var(--text-dim)', fontSize: '0.62rem', marginTop: '0.2rem' }}>click to focus</div>
         </>
       )}
     </div>
@@ -217,7 +217,7 @@ export default function FlowClient({ flows, flowsByCycle = null, donorIndustries
   );
 
   const inputStyle = {
-    background: '#0d0d22', border: '1px solid var(--border)',
+    background: 'var(--surface)', border: '1px solid var(--border)',
     color: 'var(--text)', padding: '0.3rem 0.6rem',
     fontSize: '0.65rem', borderRadius: '2px',
     fontFamily: 'var(--font-mono)', outline: 'none',
@@ -256,7 +256,7 @@ export default function FlowClient({ flows, flowsByCycle = null, donorIndustries
         </div>
         <h1 style={{
           fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.5rem, 4vw, 2.4rem)',
-          fontWeight: 400, color: '#fff', marginBottom: '0.4rem', lineHeight: 1.1,
+          fontWeight: 400, color: 'var(--text)', marginBottom: '0.4rem', lineHeight: 1.1,
         }}>
           Donor → Committee Flow
         </h1>
@@ -502,7 +502,7 @@ export default function FlowClient({ flows, flowsByCycle = null, donorIndustries
         <DataTrustBlock
           source="Florida Division of Elections — Campaign Finance Filings"
           sourceUrl="https://dos.elections.myflorida.com/campaign-finance/"
-          lastUpdated="April 2026"
+          
           direct={['donor name', 'committee name', 'contribution amounts', 'contribution counts']}
           normalized={['flows aggregated by donor → committee pair across all years']}
           inferred={['party color derived from name pattern matching — not an official classification']}

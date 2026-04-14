@@ -58,7 +58,7 @@ export default function EntityHeader({ name, typeBadge, badges = [], meta = [], 
       {/* Name */}
       <h1 style={{
         fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.5rem, 4vw, 2.4rem)',
-        fontWeight: 400, color: '#fff', marginBottom: '0.4rem', lineHeight: 1.1,
+        fontWeight: 400, color: 'var(--text)', marginBottom: '0.4rem', lineHeight: 1.1,
       }}>
         {name}
       </h1>

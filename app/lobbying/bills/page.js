@@ -167,7 +167,7 @@ export default function LobbyingBillsPage() {
         <DataTrustBlock
           source="FL House Lobbyist Disclosure Portal"
           sourceUrl="https://www.flhouse.gov/Sections/Lobbyist/lobbyist.aspx"
-          lastUpdated="April 2026"
+          
           direct={['bill number', 'lobbyist name', 'principal name', 'filing year', 'issue category']}
           normalized={['filings aggregated by bill across years and lobbyist-principal pairs']}
           caveats={[

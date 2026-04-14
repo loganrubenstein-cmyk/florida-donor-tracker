@@ -84,7 +84,7 @@ export default function SolicitationsList() {
   }, [records]);
 
   const inputStyle = {
-    background: '#0d0d22', border: '1px solid var(--border)',
+    background: 'var(--surface)', border: '1px solid var(--border)',
     color: 'var(--text)', padding: '0.4rem 0.6rem',
     fontSize: '0.72rem', borderRadius: '3px',
     fontFamily: 'var(--font-mono)', outline: 'none',
@@ -119,7 +119,7 @@ export default function SolicitationsList() {
         </div>
         <h1 style={{
           fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.4rem, 3vw, 2rem)',
-          fontWeight: 400, color: '#fff', marginBottom: '0.4rem',
+          fontWeight: 400, color: 'var(--text)', marginBottom: '0.4rem',
         }}>
           Public Solicitations
         </h1>
@@ -277,7 +277,7 @@ export default function SolicitationsList() {
         <DataTrustBlock
           source="Florida Division of Elections — Public Solicitations Registry"
           sourceUrl="https://dos.elections.myflorida.com/solicitations/"
-          lastUpdated="April 2026"
+          
           direct={['organization name', 'website', 'solicitor names', 'registration / expiration dates', 'status']}
           caveats={[
             'Includes organizations registered to solicit political contributions in Florida — not a list of donors.',

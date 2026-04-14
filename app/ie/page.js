@@ -94,7 +94,7 @@ export default async function IEPage() {
       {/* Stats bar */}
       <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', marginBottom: '2.5rem', padding: '1rem 1.25rem', background: 'var(--surface)', borderRadius: '6px', border: '1px solid var(--border)' }}>
         <div>
-          <div style={{ fontSize: '1.6rem', fontWeight: 700, color: 'var(--orange)', fontFamily: 'var(--font-mono)' }}>{fmtMoney(summary.total_amount || 0)}</div>
+          <div style={{ fontSize: '1.6rem', fontWeight: 700, color: 'var(--orange)', fontFamily: 'var(--font-mono)' }}>{fmtMoneyCompact(summary.total_amount || 0)}</div>
           <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Total IE / EC Spending</div>
         </div>
         <StatBox value={fmtCount(summary.num_committees)} label="Committees" />
@@ -196,7 +196,7 @@ export default async function IEPage() {
                       {c.candidate_name}
                     </Link>
                     <span style={{ fontSize: '0.78rem', fontWeight: 700, color: 'var(--orange)', fontFamily: 'var(--font-mono)', flexShrink: 0, marginLeft: '0.5rem' }}>
-                      {fmtMoney(c.total_ie_amount)}
+                      {fmtMoneyCompact(c.total_ie_amount)}
                     </span>
                   </div>
                   <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
@@ -213,7 +213,7 @@ export default async function IEPage() {
         <DataTrustBlock
           source="Florida Division of Elections — IE/EC Filings"
           sourceUrl="https://dos.elections.myflorida.com/independent-expenditures/"
-          lastUpdated="April 2026"
+          
           direct={['committee name', 'total amount', 'transaction count', 'expenditure type']}
           normalized={['IE vs EC classification (based on filing type code)']}
           caveats={[
@@ -252,7 +252,7 @@ function CommitteeRow({ committee: c, rank, maxAmount }) {
           </Link>
         </div>
         <span style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--orange)', fontFamily: 'var(--font-mono)', marginLeft: '0.5rem', flexShrink: 0 }}>
-          {fmtMoney(c.total_amount)}
+          {fmtMoneyCompact(c.total_amount)}
         </span>
       </div>
       <div style={{ height: '3px', background: 'var(--border)', borderRadius: '2px', marginBottom: '0.3rem' }}>

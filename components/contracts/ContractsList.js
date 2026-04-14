@@ -55,7 +55,7 @@ export default function ContractsList() {
   }, [debouncedQ, filter, sortBy, page]);
 
   const inputStyle = {
-    background: '#0d0d22', border: '1px solid var(--border)',
+    background: 'var(--surface)', border: '1px solid var(--border)',
     color: 'var(--text)', padding: '0.4rem 0.6rem',
     fontSize: '0.72rem', borderRadius: '3px',
     fontFamily: 'var(--font-mono)', outline: 'none',
@@ -72,7 +72,7 @@ export default function ContractsList() {
       <div style={{ marginBottom: '1.5rem' }}>
         <h1 style={{
           fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.4rem, 3vw, 2rem)',
-          fontWeight: 400, color: '#fff', marginBottom: '0.4rem',
+          fontWeight: 400, color: 'var(--text)', marginBottom: '0.4rem',
         }}>
           Florida State Contracts
         </h1>

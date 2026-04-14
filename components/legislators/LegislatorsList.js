@@ -11,8 +11,9 @@ const PARTY_LABEL = { R: 'Republican', D: 'Democrat', NPA: 'NPA' };
 
 function fmtMoney(n) {
   if (!n || n === 0) return null;
-  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000) return `$${(n / 1_000).toFixed(0)}K`;
+  if (n >= 1_000_000_000) return `$${(n / 1_000_000_000).toFixed(1).replace(/\.0$/, '')}B`;
+  if (n >= 1_000_000)     return `$${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000)         return `$${(n / 1_000).toFixed(0)}K`;
   return `$${Math.round(n).toLocaleString()}`;
 }
 
@@ -25,7 +26,7 @@ const SORT_OPTIONS = [
 ];
 
 const inputStyle = {
-  background: '#0d0d22',
+  background: 'var(--surface)',
   border: '1px solid var(--border)',
   color: 'var(--text)',
   padding: '0.4rem 0.6rem',
@@ -291,7 +292,7 @@ export default function LegislatorsList() {
       <div style={{ marginTop: '3rem' }}>
         <DataTrustBlock
           source="LobbyTools member export · LegiScan API · FL Division of Elections"
-          lastUpdated="April 2026"
+          
           direct={['name', 'party', 'district', 'chamber', 'leadership title', 'contact info']}
           normalized={['campaign finance totals matched from FL DoE candidate records by name + district']}
           caveats={[

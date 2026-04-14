@@ -70,7 +70,7 @@ export default function IndustriesList() {
       <div style={{ marginBottom: '1.5rem' }}>
         <h1 style={{
           fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.4rem, 3vw, 2rem)',
-          fontWeight: 400, color: '#fff', marginBottom: '0.4rem',
+          fontWeight: 400, color: 'var(--text)', marginBottom: '0.4rem',
         }}>
           Industries
         </h1>
@@ -184,7 +184,7 @@ export default function IndustriesList() {
         <DataTrustBlock
           source="Florida Division of Elections — Campaign Finance Filings"
           sourceUrl="https://dos.elections.myflorida.com/campaign-finance/"
-          lastUpdated="April 2026"
+          
           direct={['contribution amounts', 'contributor occupation field']}
           normalized={['industry bucket derived from occupation using keyword classifier']}
           inferred={['industry assignment is automated — some contributors may be miscategorized']}

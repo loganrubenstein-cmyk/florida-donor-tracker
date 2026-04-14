@@ -106,7 +106,7 @@ function NetworkClientInner({ data, annotations }) {
             value={industryFilter || ''}
             onChange={e => setIndustryFilter(e.target.value || null)}
             style={{
-              background: '#0d0d22', border: '1px solid var(--border)',
+              background: 'var(--surface)', border: '1px solid var(--border)',
               color: industryFilter ? 'var(--teal)' : 'var(--text-dim)',
               fontFamily: 'var(--font-mono)', fontSize: '0.7rem',
               padding: '0.25rem 0.5rem', borderRadius: '3px', cursor: 'pointer', outline: 'none',
@@ -133,9 +133,9 @@ function NetworkClientInner({ data, annotations }) {
         {!industryFilter ? (
           <div style={{ display: 'flex', gap: '0.85rem', fontSize: '0.68rem', color: 'var(--text-dim)', flexWrap: 'wrap', alignItems: 'center' }}>
             {[
-              { color: '#f87171', label: 'Republican' },
-              { color: '#60a5fa', label: 'Democrat' },
-              { color: '#ffb060', label: 'PAC (unclassified)' },
+              { color: 'var(--republican)', label: 'Republican' },
+              { color: 'var(--democrat)', label: 'Democrat' },
+              { color: 'var(--orange)', label: 'PAC (unclassified)' },
               { color: '#94a3b8', label: 'Corporate' },
               { color: '#c4b5fd', label: 'Individual' },
             ].map(({ color, label }) => (

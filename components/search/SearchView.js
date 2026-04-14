@@ -103,7 +103,7 @@ export default function SearchView() {
   }, [index, debouncedQ, typeFilter]);
 
   const inputStyle = {
-    background: '#0d0d22', border: '1px solid var(--border)',
+    background: 'var(--surface)', border: '1px solid var(--border)',
     color: 'var(--text)', padding: '0.4rem 0.6rem',
     fontSize: '0.72rem', borderRadius: '3px',
     fontFamily: 'var(--font-mono)', outline: 'none',
@@ -128,7 +128,7 @@ export default function SearchView() {
       <div style={{ marginBottom: '1.5rem' }}>
         <h1 style={{
           fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.4rem, 3vw, 2rem)',
-          fontWeight: 400, color: '#fff', marginBottom: '0.4rem',
+          fontWeight: 400, color: 'var(--text)', marginBottom: '0.4rem',
         }}>
           Search
         </h1>
@@ -233,7 +233,7 @@ export default function SearchView() {
                 {(TYPE_LABEL[e.t] || e.t).toUpperCase()}
               </span>
               <div style={{ minWidth: 0 }}>
-                <div style={{ fontSize: '0.82rem', color: '#fff', lineHeight: 1.3, wordBreak: 'break-word' }}>
+                <div style={{ fontSize: '0.82rem', color: 'var(--text)', lineHeight: 1.3, wordBreak: 'break-word' }}>
                   {e.n}
                 </div>
                 {e.s && (
@@ -262,7 +262,7 @@ export default function SearchView() {
       <div style={{ marginTop: '3rem' }}>
         <DataTrustBlock
           source="Florida Division of Elections · FL Legislature Lobbyist Registration"
-          lastUpdated="April 2026"
+          
           direct={['entity name', 'entity type']}
           normalized={['search index built at deploy time from Supabase tables']}
           caveats={[

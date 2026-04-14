@@ -21,7 +21,7 @@ export default function CommitteesPage() {
         <DataTrustBlock
           source="Florida Division of Elections — Committee Registration Filings"
           sourceUrl="https://dos.elections.myflorida.com/committees/"
-          lastUpdated="April 2026"
+          
           direct={['committee name', 'committee type', 'total raised', 'total spent', 'donor counts']}
           normalized={['committee type codes mapped to plain-language labels']}
           caveats={[

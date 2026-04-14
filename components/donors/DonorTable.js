@@ -24,9 +24,9 @@ function normalizeDonor(d) {
 
 function TypeBadge({ type }) {
   const styles = {
-    committee: { background: 'rgba(128,255,160,0.08)', color: '#80ffa0' },
-    corporate:  { background: 'rgba(255,176,96,0.10)',  color: '#ffb060' },
-    individual: { background: 'rgba(77,216,240,0.08)',  color: '#4dd8f0' },
+    committee: { background: 'rgba(128,255,160,0.08)', color: 'var(--green)' },
+    corporate:  { background: 'rgba(255,176,96,0.10)',  color: 'var(--orange)' },
+    individual: { background: 'rgba(77,216,240,0.08)',  color: 'var(--teal)' },
   }
   const s = styles[type] || styles.individual
   return (

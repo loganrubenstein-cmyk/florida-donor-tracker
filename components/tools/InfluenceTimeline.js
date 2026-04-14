@@ -125,7 +125,7 @@ export default function InfluenceTimeline() {
 
       {loading && <div style={{ color: 'var(--text-dim)', fontSize: '0.78rem' }}>Loading timeline…</div>}
       {error && (
-        <div style={{ padding: '0.75rem 1rem', background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.3)', borderRadius: '3px', color: '#f87171', fontSize: '0.78rem' }}>
+        <div style={{ padding: '0.75rem 1rem', background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.3)', borderRadius: '3px', color: 'var(--republican)', fontSize: '0.78rem' }}>
           {error}
         </div>
       )}
@@ -136,7 +136,7 @@ export default function InfluenceTimeline() {
         <DataTrustBlock
           source="Florida Division of Elections — Campaign Finance Database"
           sourceUrl="https://dos.elections.myflorida.com/campaign-finance/contributions/"
-          lastUpdated="April 2026"
+          
           direct={['quarterly contribution totals', 'candidate name and office', 'election year']}
           normalized={['connected PAC linkages (Statement of Organization filings)']}
           inferred={['donation spikes (quarters exceeding 2.5x the median)', 'PAC formation dates']}
@@ -223,7 +223,7 @@ function TimelineView({ data }) {
                 )}
                 {/* Tooltip on hover via title */}
                 <div
-                  title={`${q.quarter}: ${fmtMoney(q.amount)}${q.annotation ? ` (${q.annotation})` : ''}${q.is_spike ? ' ⚡ SPIKE' : ''}`}
+                  title={`${q.quarter}: ${fmtMoneyCompact(q.amount)}${q.annotation ? ` (${q.annotation})` : ''}${q.is_spike ? ' ⚡ SPIKE' : ''}`}
                   style={{
                     width: '18px', height: `${height}px`, background: barColor,
                     opacity: 0.75, borderRadius: '2px 2px 0 0', cursor: 'default',

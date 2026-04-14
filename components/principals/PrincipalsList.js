@@ -6,8 +6,9 @@ import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 function fmt(n) {
   if (!n || n === 0) return '—';
-  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000)     return `$${(n / 1_000).toFixed(0)}K`;
+  if (n >= 1_000_000_000) return `$${(n / 1_000_000_000).toFixed(1).replace(/\.0$/, '')}B`;
+  if (n >= 1_000_000)     return `$${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000)         return `$${(n / 1_000).toFixed(0)}K`;
   return `$${n.toFixed(0)}`;
 }
 
@@ -72,7 +73,7 @@ export default function PrincipalsList() {
   }, [debouncedQ, type, industry, sortBy, page]);
 
   const inputStyle = {
-    background: '#0d0d22', border: '1px solid var(--border)',
+    background: 'var(--surface)', border: '1px solid var(--border)',
     color: 'var(--text)', padding: '0.4rem 0.6rem',
     fontSize: '0.72rem', borderRadius: '3px',
     fontFamily: 'var(--font-mono)', outline: 'none',
@@ -89,7 +90,7 @@ export default function PrincipalsList() {
       <div style={{ marginBottom: '1.5rem' }}>
         <h1 style={{
           fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.4rem, 3vw, 2rem)',
-          fontWeight: 400, color: '#fff', marginBottom: '0.4rem',
+          fontWeight: 400, color: 'var(--text)', marginBottom: '0.4rem',
         }}>
           Lobbying Principals
         </h1>
@@ -254,7 +255,7 @@ export default function PrincipalsList() {
         <DataTrustBlock
           source="Florida Lobbyist Registration Office — Registration & Compensation Reports"
           sourceUrl="https://www.floridalobbyist.gov"
-          lastUpdated="April 2026"
+          
           direct={['principal (client) name', 'lobbyists retained', 'quarterly compensation reports (2007–present)']}
           normalized={[
             'compensation totals (midpoints below $50K; exact amounts above $50K)',

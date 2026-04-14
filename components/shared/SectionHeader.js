@@ -31,7 +31,7 @@ export default function SectionHeader({ title, eyebrow, patch, rule = true }) {
             fontFamily: 'var(--font-serif)',
             fontSize: 'clamp(1.6rem, 3.5vw, 2.4rem)',
             fontWeight: 400,
-            color: '#fff',
+            color: 'var(--text)',
             lineHeight: 1,
             margin: 0,
           }}>

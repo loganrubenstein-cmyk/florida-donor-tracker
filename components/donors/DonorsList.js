@@ -133,7 +133,7 @@ export default function DonorsList() {
   }
 
   const inputStyle = {
-    background: '#0d0d22', border: '1px solid var(--border)',
+    background: 'var(--surface)', border: '1px solid var(--border)',
     color: 'var(--text)', padding: '0.4rem 0.6rem',
     fontSize: '0.72rem', borderRadius: '3px',
     fontFamily: 'var(--font-mono)', outline: 'none',
@@ -347,7 +347,7 @@ export default function DonorsList() {
         <DataTrustBlock
           source="Florida Division of Elections — Campaign Finance Filings"
           sourceUrl="https://dos.elections.myflorida.com/campaign-finance/"
-          lastUpdated="April 2026"
+          
           direct={['donor name', 'contribution amounts', 'employer / occupation']}
           normalized={['donors deduplicated by normalized name across committees', 'corporate flag derived from entity-type keywords']}
           inferred={['total combined = hard money + soft money from linked committees']}
