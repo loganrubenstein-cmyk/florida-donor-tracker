@@ -105,6 +105,10 @@ function ElectionResultsSection({ electionCycle }) {
   );
 }
 
+const HOUSE_CODES      = new Set(['STR']);
+const SENATE_CODES     = new Set(['STS']);
+const STATEWIDE_CODES  = new Set(['GOV', 'LTG', 'ATG', 'CFO', 'CAG']);
+
 export default function CycleProfile({ year, candidates, topDonors = [], electionCycle = null }) {
   // Aggregate totals
   const total_hard     = candidates.reduce((s, c) => s + (c.hard_money_total  || 0), 0);
@@ -139,6 +143,17 @@ export default function CycleProfile({ year, candidates, topDonors = [], electio
   }
   const partyRows = Object.entries(byParty)
     .sort(([, a], [, b]) => b.total - a.total);
+
+  // Chamber breakdown
+  const byChamber = { House: { total: 0, count: 0 }, Senate: { total: 0, count: 0 }, Statewide: { total: 0, count: 0 }, Other: { total: 0, count: 0 } };
+  for (const c of candidates) {
+    const code = (c.office_code || '').toUpperCase();
+    const key = HOUSE_CODES.has(code) ? 'House' : SENATE_CODES.has(code) ? 'Senate' : STATEWIDE_CODES.has(code) ? 'Statewide' : 'Other';
+    byChamber[key].total += c.total_combined || 0;
+    byChamber[key].count++;
+  }
+  const chamberEntries = Object.entries(byChamber).filter(([, v]) => v.total > 0);
+  const chamberMax = Math.max(...chamberEntries.map(([, v]) => v.total));
 
   return (
     <main style={{ maxWidth: '960px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
@@ -183,54 +198,89 @@ export default function CycleProfile({ year, candidates, topDonors = [], electio
           color="var(--text-dim)" />
       </div>
 
-      {/* By office */}
+      {/* Party + Chamber breakdown */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem', marginBottom: '2rem' }}>
-        <div>
-          <SectionLabel>By Office — Top Races</SectionLabel>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.75rem' }}>
-            <tbody>
-              {topOffices.map(([office, data]) => (
-                <tr key={office} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
-                  <td style={{ padding: '0.35rem 0.5rem', color: 'var(--text-dim)', fontSize: '0.68rem', maxWidth: '160px', wordBreak: 'break-word' }}>
-                    {office}
-                  </td>
-                  <td style={{ padding: '0.35rem 0.5rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.65rem' }}>
-                    {data.count}
-                  </td>
-                  <td style={{ padding: '0.35rem 0.5rem', textAlign: 'right', color: 'var(--orange)', fontFamily: 'var(--font-mono)', fontSize: '0.68rem', whiteSpace: 'nowrap' }}>
-                    {fmt(data.total)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
 
+        {/* Party — visual bars */}
         <div>
           <SectionLabel>By Party</SectionLabel>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.75rem' }}>
-            <tbody>
-              {partyRows.map(([party, data]) => (
-                <tr key={party} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
-                  <td style={{ padding: '0.35rem 0.5rem' }}>
-                    <span style={{
-                      color: PARTY_COLOR[party] || 'var(--text-dim)',
-                      fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '0.7rem',
-                    }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+            {partyRows.map(([party, pdata]) => {
+              const pct = total_combined > 0 ? (pdata.total / total_combined) * 100 : 0;
+              const color = PARTY_COLOR[party] || 'var(--text-dim)';
+              return (
+                <div key={party}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.2rem' }}>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '0.72rem', color }}>
                       {PARTY_LABEL[party] || party}
+                      <span style={{ fontWeight: 400, color: 'var(--text-dim)', marginLeft: '0.4rem', fontSize: '0.62rem' }}>
+                        {pdata.count}
+                      </span>
                     </span>
-                  </td>
-                  <td style={{ padding: '0.35rem 0.5rem', color: 'var(--text-dim)', fontSize: '0.68rem' }}>
-                    {data.count} candidates
-                  </td>
-                  <td style={{ padding: '0.35rem 0.5rem', textAlign: 'right', color: PARTY_COLOR[party] || 'var(--orange)', fontFamily: 'var(--font-mono)', fontSize: '0.68rem', whiteSpace: 'nowrap' }}>
-                    {fmt(data.total)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.68rem', color, whiteSpace: 'nowrap' }}>
+                      {fmt(pdata.total)}
+                    </span>
+                  </div>
+                  <div style={{ height: '4px', background: 'var(--border)', borderRadius: '2px' }}>
+                    <div style={{ height: '100%', width: `${pct}%`, background: color, borderRadius: '2px', opacity: 0.7 }} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
+
+        {/* Chamber breakdown */}
+        <div>
+          <SectionLabel>By Chamber</SectionLabel>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+            {chamberEntries.map(([chamber, cdata]) => {
+              const pct = chamberMax > 0 ? (cdata.total / chamberMax) * 100 : 0;
+              const color = chamber === 'House' ? 'var(--teal)' : chamber === 'Senate' ? 'var(--blue)' : chamber === 'Statewide' ? 'var(--orange)' : 'var(--text-dim)';
+              return (
+                <div key={chamber}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.2rem' }}>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '0.72rem', color }}>
+                      {chamber}
+                      <span style={{ fontWeight: 400, color: 'var(--text-dim)', marginLeft: '0.4rem', fontSize: '0.62rem' }}>
+                        {cdata.count}
+                      </span>
+                    </span>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.68rem', color: 'var(--orange)', whiteSpace: 'nowrap' }}>
+                      {fmt(cdata.total)}
+                    </span>
+                  </div>
+                  <div style={{ height: '4px', background: 'var(--border)', borderRadius: '2px' }}>
+                    <div style={{ height: '100%', width: `${pct}%`, background: color, borderRadius: '2px', opacity: 0.6 }} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+      </div>
+
+      {/* By office */}
+      <div style={{ marginBottom: '2rem' }}>
+        <SectionLabel>By Office — Top Races</SectionLabel>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.75rem' }}>
+          <tbody>
+            {topOffices.map(([office, data]) => (
+              <tr key={office} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
+                <td style={{ padding: '0.35rem 0.5rem', color: 'var(--text-dim)', fontSize: '0.68rem', maxWidth: '160px', wordBreak: 'break-word' }}>
+                  {office}
+                </td>
+                <td style={{ padding: '0.35rem 0.5rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.65rem' }}>
+                  {data.count}
+                </td>
+                <td style={{ padding: '0.35rem 0.5rem', textAlign: 'right', color: 'var(--orange)', fontFamily: 'var(--font-mono)', fontSize: '0.68rem', whiteSpace: 'nowrap' }}>
+                  {fmt(data.total)}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       {/* Top 20 candidates */}
@@ -364,7 +414,7 @@ export default function CycleProfile({ year, candidates, topDonors = [], electio
         <DataTrustBlock
           source="Florida Division of Elections — Campaign Finance Filings"
           sourceUrl="https://dos.elections.myflorida.com/campaign-finance/"
-          lastUpdated="April 2026"
+          
           direct={['candidate and committee totals per cycle', 'party breakdown', 'office breakdown']}
           normalized={['soft money linked from committee contributions (2020 onward)', 'combined totals = hard + linked soft money']}
           caveats={[

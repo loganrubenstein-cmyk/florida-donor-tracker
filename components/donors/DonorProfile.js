@@ -191,6 +191,63 @@ export default function DonorProfile({ data, annotations = {} }) {
         </div>
       )}
 
+      {/* Top recipients preview */}
+      {(committees.length > 0 || candidates.length > 0) && (() => {
+        const topCommittees = committees.slice(0, 5).map(c => ({
+          name: c.committee_name || `Committee #${c.acct_num}`,
+          href: `/committee/${c.acct_num}`,
+          amount: c.total,
+          color: 'var(--teal)',
+        }));
+        const topCandidates = candidates.slice(0, 3).map(c => ({
+          name: c.candidate_name || `#${c.acct_num}`,
+          href: c.acct_num ? `/candidate/${c.acct_num}` : '#',
+          amount: c.total,
+          color: 'var(--blue)',
+        }));
+        const rows = [...topCommittees, ...topCandidates]
+          .sort((a, b) => b.amount - a.amount)
+          .slice(0, 6);
+        return (
+          <div style={{ marginBottom: '2rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+              <SectionLabel>Top Recipients</SectionLabel>
+              <a href={`?tab=committees`} style={{ fontSize: '0.65rem', color: 'var(--teal)', textDecoration: 'none' }}>
+                View all →
+              </a>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+              {rows.map((r, i) => {
+                const pct = data.total_combined > 0 ? (r.amount / data.total_combined) * 100 : 0;
+                return (
+                  <div key={i} style={{
+                    display: 'grid', gridTemplateColumns: '1fr auto',
+                    alignItems: 'center', gap: '0.75rem',
+                    padding: '0.45rem 0',
+                    borderBottom: i < rows.length - 1 ? '1px solid rgba(100,140,220,0.06)' : 'none',
+                  }}>
+                    <div style={{ minWidth: 0 }}>
+                      <a href={r.href} style={{
+                        color: r.color, textDecoration: 'none', fontSize: '0.75rem',
+                        display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                      }}>
+                        {r.name}
+                      </a>
+                      <div style={{ height: '3px', background: 'var(--border)', borderRadius: '2px', marginTop: '0.25rem' }}>
+                        <div style={{ height: '100%', width: `${Math.min(pct, 100)}%`, background: r.color, borderRadius: '2px', opacity: 0.6 }} />
+                      </div>
+                    </div>
+                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--orange)', fontWeight: 700, whiteSpace: 'nowrap' }}>
+                      {fmtMoneyCompact(r.amount)}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })()}
+
       {/* Industry cross-reference */}
       {data.industry && data.industry !== 'Not Employed' && data.industry !== 'Other' && (
         <div style={{ marginBottom: '1rem' }}>
