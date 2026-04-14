@@ -60,11 +60,11 @@ export default function RootLayout({ children }) {
               {label}
             </Link>
           ))}
-          <form action="/explorer" method="get" style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>
+          <form action="/search" method="get" style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>
             <input
               name="q"
               type="search"
-              placeholder="Search transactions…"
+              placeholder="Search donors, committees, politicians…"
               style={{
                 background: 'rgba(8,8,24,0.8)',
                 border: '1px solid rgba(100,140,220,0.2)',

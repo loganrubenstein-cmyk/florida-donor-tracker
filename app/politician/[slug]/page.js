@@ -5,6 +5,7 @@ import { loadCandidate, loadCandidateCycles, getPoliticianBySlug, listPolitician
 import { getDb } from '@/lib/db';
 import CandidateProfile from '@/components/candidate/CandidateProfile';
 import BackLinks from '@/components/BackLinks';
+import { buildMeta } from '@/lib/seo';
 
 let _electionLookup = null;
 function getElectionLookup() {
@@ -50,7 +51,7 @@ export async function generateMetadata({ params }) {
     latest.district ? `District ${latest.district}.` : '.',
     `${cycles.length} Florida election cycle${cycles.length !== 1 ? 's' : ''} tracked with full campaign finance data.`,
   ].filter(Boolean).join(' ');
-  return { title: display_name, description: desc };
+  return buildMeta({ title: display_name, description: desc, path: `/politician/${slug}` });
 }
 
 export default async function PoliticianPage({ params, searchParams }) {

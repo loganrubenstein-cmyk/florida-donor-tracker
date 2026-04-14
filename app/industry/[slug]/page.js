@@ -3,6 +3,7 @@ import { join } from 'path';
 import IndustryProfile from '@/components/industries/IndustryProfile';
 import { slugify } from '@/lib/slugify';
 import { getDb } from '@/lib/db';
+import { buildMeta } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
@@ -37,10 +38,11 @@ export async function generateMetadata({ params }) {
   const summary = loadSummary();
   const ind = summary.industries.find(i => slugify(i.industry) === slug);
   if (!ind) return { title: 'Industry' };
-  return {
+  return buildMeta({
     title: ind.industry,
     description: `${ind.industry} — Florida political contributions by sector. Top donors, cycle trends, and connected legislators.`,
-  };
+    path: `/industry/${slug}`,
+  });
 }
 
 export default async function IndustryPage({ params }) {

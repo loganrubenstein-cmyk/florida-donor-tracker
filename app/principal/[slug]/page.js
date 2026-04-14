@@ -1,6 +1,7 @@
 import { loadPrincipal } from '@/lib/loadLobbyist';
 import PrincipalProfile from '@/components/principals/PrincipalProfile';
 import { notFound } from 'next/navigation';
+import { buildMeta } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,7 +12,7 @@ export async function generateMetadata({ params }) {
     const { fmtMoneyCompact } = await import('@/lib/fmt');
     const comp = data.comp?.total_comp || 0;
     const desc = `${data.name} — lobbying principal with ${data.total_lobbyists || 0} FL lobbyists.${comp > 0 ? ` ${fmtMoneyCompact(comp)} in compensation.` : ''}`;
-    return { title: data.name, description: desc };
+    return buildMeta({ title: data.name, description: desc, path: `/principal/${slug}` });
   } catch {
     return { title: 'Principal' };
   }

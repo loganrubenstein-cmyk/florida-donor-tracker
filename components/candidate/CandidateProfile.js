@@ -174,6 +174,11 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
 
   const isLatestCycle = cycles.length <= 1 || !cycles.some(c => c.election_year > data.election_year);
   const hasLinkedPcsButNoSoft = data.soft_money_total === 0 && pcsWithData.length > 0;
+  const laterCycle = hasLinkedPcsButNoSoft && !isLatestCycle
+    ? [...cycles]
+        .filter(c => c.election_year > data.election_year)
+        .sort((a, b) => b.election_year - a.election_year)[0]
+    : null;
 
   const overviewContent = (
     <div>
@@ -184,15 +189,36 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
         marginBottom: '2rem', overflow: 'hidden',
       }}>
         {[
-          { label: 'Hard Money (Direct)',   value: fmt(hm.total),              sub: `${(hm.num_contributions || 0).toLocaleString()} contributions` },
-          { label: 'Soft Money (Candidate PACs)', value: fmt(data.soft_money_total), sub: hasLinkedPcsButNoSoft ? 'Tracked on most recent cycle' : pcsSpecific.length > 0 ? `${pcsSpecific.length} candidate PAC${pcsSpecific.length !== 1 ? 's' : ''}` : '0 committees linked' },
-          { label: 'Combined Total',         value: fmt(data.total_combined),   sub: hasLinkedPcsButNoSoft ? 'hard money only' : 'hard + soft' },
-        ].map(({ label, value, sub }) => (
+          {
+            label: 'Hard Money (Direct)',
+            value: fmt(hm.total),
+            valueColor: 'var(--orange)',
+            sub: `${(hm.num_contributions || 0).toLocaleString()} contributions`,
+          },
+          {
+            label: 'Soft Money (Candidate PACs)',
+            value: hasLinkedPcsButNoSoft ? '—' : fmt(data.soft_money_total),
+            valueColor: hasLinkedPcsButNoSoft ? 'var(--text-dim)' : 'var(--orange)',
+            sub: hasLinkedPcsButNoSoft
+              ? (laterCycle
+                  ? <>Tracked on <a href={`/candidate/${laterCycle.acct_num}`} style={{ color: 'var(--teal)' }}>{laterCycle.year} cycle →</a></>
+                  : 'Tracked on most recent cycle')
+              : pcsSpecific.length > 0
+                ? `${pcsSpecific.length} candidate PAC${pcsSpecific.length !== 1 ? 's' : ''}`
+                : '0 committees linked',
+          },
+          {
+            label: 'Combined Total',
+            value: fmt(data.total_combined),
+            valueColor: 'var(--orange)',
+            sub: hasLinkedPcsButNoSoft ? 'hard money only' : 'hard + soft',
+          },
+        ].map(({ label, value, valueColor, sub }) => (
           <div key={label} style={{ background: 'var(--bg)', padding: '1rem 1.25rem' }}>
             <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.3rem' }}>
               {label}
             </div>
-            <div style={{ fontSize: '1rem', color: 'var(--orange)', fontWeight: 700 }}>{value}</div>
+            <div style={{ fontSize: '1rem', color: valueColor, fontWeight: 700 }}>{value}</div>
             <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', marginTop: '0.2rem' }}>{sub}</div>
           </div>
         ))}
@@ -212,8 +238,8 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
             {[
               { label: 'Individual', value: fmt(hm.individual_total) },
               { label: 'Corporate',  value: fmt(hm.corporate_total) },
-              { label: 'Earliest',   value: fmtDate(hm.date_range?.earliest) },
-              { label: 'Latest',     value: fmtDate(hm.date_range?.latest) },
+              { label: 'Earliest',   value: hm.date_range?.earliest ? fmtDate(hm.date_range.earliest) : 'Not on file' },
+              { label: 'Latest',     value: hm.date_range?.latest   ? fmtDate(hm.date_range.latest)   : 'Not on file' },
             ].map(({ label, value }) => (
               <div key={label} style={{ background: 'var(--bg)', padding: '0.75rem 1rem' }}>
                 <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.25rem' }}>{label}</div>

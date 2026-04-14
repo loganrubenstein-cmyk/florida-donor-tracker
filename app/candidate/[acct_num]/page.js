@@ -5,6 +5,7 @@ import { getDb } from '@/lib/db';
 import { slugify } from '@/lib/slugify';
 import CandidateProfile from '@/components/candidate/CandidateProfile';
 import { notFound } from 'next/navigation';
+import { buildMeta } from '@/lib/seo';
 
 let _electionLookup = null;
 function getElectionLookup() {
@@ -38,8 +39,7 @@ export async function generateMetadata({ params }) {
     const raised = data.hard_money_total || 0;
     const desc = `${name}${party ? ` (${party})` : ''}${office ? ` — ${office}` : ''}${year ? ` ${year}` : ''}.${raised > 0 ? ` ${fmtMoneyCompact(raised)} raised in direct contributions.` : ''}`;
     return {
-      title: name,
-      description: desc,
+      ...buildMeta({ title: name, description: desc, path: `/candidate/${acct_num}` }),
       ...(canonical ? { alternates: { canonical } } : {}),
     };
   } catch {

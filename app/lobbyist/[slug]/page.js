@@ -1,6 +1,7 @@
 import { loadLobbyist } from '@/lib/loadLobbyist';
 import LobbyistProfile from '@/components/lobbyists/LobbyistProfile';
 import { notFound } from 'next/navigation';
+import { buildMeta } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,7 +11,7 @@ export async function generateMetadata({ params }) {
     const data = await loadLobbyist(slug);
     const firm = data.firm ? ` at ${data.firm}` : '';
     const desc = `${data.name} — Florida registered lobbyist${firm}. Represents ${data.num_principals || 0} principals.`;
-    return { title: data.name, description: desc };
+    return buildMeta({ title: data.name, description: desc, path: `/lobbyist/${slug}` });
   } catch {
     return { title: 'Lobbyist' };
   }

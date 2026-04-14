@@ -6,6 +6,7 @@ import { fmtMoney, fmtCount, fmtDate } from '@/lib/fmt';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import SourceLink from '@/components/shared/SourceLink';
 import TabbedProfile from '@/components/shared/TabbedProfile';
+import { buildMeta } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
@@ -13,10 +14,11 @@ export async function generateMetadata({ params }) {
   const { legislator } = await loadLegislator(params.people_id);
   if (!legislator) return { title: 'Legislator' };
   const chamber = legislator.chamber === 'Senate' ? 'Florida Senator' : 'Florida Representative';
-  return {
+  return buildMeta({
     title: legislator.display_name,
     description: `${chamber} ${legislator.display_name} (${legislator.party}), District ${legislator.district}. Voting record, campaign finance, and committee assignments.`,
-  };
+    path: `/legislator/${params.people_id}`,
+  });
 }
 
 const PARTY_COLOR = { R: 'var(--republican)', D: 'var(--democrat)' };

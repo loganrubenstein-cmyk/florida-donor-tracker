@@ -4,6 +4,7 @@ import { loadLegislativeCommittee } from '@/lib/loadLegislativeCommittee';
 import { fmtMoney, fmtMoneyCompact } from '@/lib/fmt';
 import BackLinks from '@/components/BackLinks';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import { buildMeta } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,10 +12,11 @@ export async function generateMetadata({ params }) {
   const result = await loadLegislativeCommittee(params.abbreviation);
   if (!result) return { title: 'Committee' };
   const { committee } = result;
-  return {
+  return buildMeta({
     title: committee.name,
     description: `FL ${committee.chamber} ${committee.name} — membership roster, leadership, and campaign finance of committee members.`,
-  };
+    path: `/legislature/committee/${params.abbreviation}`,
+  });
 }
 
 const PARTY_COLOR  = { R: 'var(--republican)', D: 'var(--democrat)', NPA: 'var(--text-dim)' };

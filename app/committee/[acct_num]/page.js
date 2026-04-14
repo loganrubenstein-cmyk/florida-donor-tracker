@@ -3,6 +3,7 @@ import { loadAnnotations } from '@/lib/loadAnnotations';
 import CommitteeProfile from '@/components/committee/CommitteeProfile';
 import { notFound } from 'next/navigation';
 import { getDb } from '@/lib/db';
+import { buildMeta } from '@/lib/seo';
 
 // Server-rendered on demand — no static file dependency
 export const dynamic = 'force-dynamic';
@@ -30,7 +31,7 @@ export async function generateMetadata({ params }) {
     const { fmtMoneyCompact } = await import('@/lib/fmt');
     const raised = data.total_received || 0;
     const desc = `${data.committee_name} — Florida political committee.${raised > 0 ? ` ${fmtMoneyCompact(raised)} raised.` : ''}`;
-    return { title: data.committee_name, description: desc };
+    return buildMeta({ title: data.committee_name, description: desc, path: `/committee/${acct_num}` });
   } catch {
     return { title: 'Committee' };
   }

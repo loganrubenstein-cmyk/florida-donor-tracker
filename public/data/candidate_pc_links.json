@@ -99,6 +99,22 @@
       "confidence": 1.0
     }
   ],
+  "80078": [
+    {
+      "pc_acct": "54504",
+      "pc_name": "Floridians for Fiscal Responsibility",
+      "pc_type": "ECO",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "73717",
+      "pc_name": "Impact Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "84542": [
     {
       "pc_acct": "89964",
@@ -112,6 +128,15 @@
       "pc_name": "Floridians for Ethical Leadership",
       "pc_type": "PAC",
       "link_type": "treasurer",
+      "confidence": 1.0
+    }
+  ],
+  "60171": [
+    {
+      "pc_acct": "60579",
+      "pc_name": "Citizens for Integrity in Government",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -196,6 +221,24 @@
       "pc_name": "Vision & Integrity for Florida",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "83705": [
+    {
+      "pc_acct": "79844",
+      "pc_name": "Florida Always First",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "88773": [
+    {
+      "pc_acct": "88612",
+      "pc_name": "People First Leadership PC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -328,6 +371,15 @@
       "confidence": 1.0
     }
   ],
+  "74130": [
+    {
+      "pc_acct": "64987",
+      "pc_name": "Latino Rising",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "69529": [
     {
       "pc_acct": "70258",
@@ -398,6 +450,31 @@
       "pc_type": "PAC",
       "link_type": "treasurer",
       "confidence": 0.89
+    },
+    {
+      "pc_acct": "83794",
+      "pc_name": "Florida Forward",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "79112": [
+    {
+      "pc_acct": "79466",
+      "pc_name": "Shumaker Florida Political Committee",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "80006": [
+    {
+      "pc_acct": "80290",
+      "pc_name": "Running with Andy Thomson",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
     }
   ],
   "69938": [
@@ -416,6 +493,13 @@
       "pc_type": "PAC",
       "link_type": "chair",
       "confidence": 1.0
+    },
+    {
+      "pc_acct": "88679",
+      "pc_name": "Keep Our City Beautiful",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
     }
   ],
   "79426": [
@@ -433,6 +517,15 @@
       "pc_name": "People Power for Florida",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "74235": [
+    {
+      "pc_acct": "74282",
+      "pc_name": "For A Brighter Future",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -472,6 +565,15 @@
       "confidence": 1.0
     }
   ],
+  "80094": [
+    {
+      "pc_acct": "60702",
+      "pc_name": "Florida Justice PAC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "84875": [
     {
       "pc_acct": "89308",
@@ -487,6 +589,22 @@
       "pc_name": "Transforming Florida PC",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "89537": [
+    {
+      "pc_acct": "83494",
+      "pc_name": "Building A Majority PC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "65859",
+      "pc_name": "Trusted Leadership Political Committee",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -629,6 +747,24 @@
       "confidence": 1.0
     }
   ],
+  "88828": [
+    {
+      "pc_acct": "74484",
+      "pc_name": "Florida Values Coalition",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "60225": [
+    {
+      "pc_acct": "89964",
+      "pc_name": "Floridians for Ethical Leadership",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "83859": [
     {
       "pc_acct": "83911",
@@ -644,6 +780,15 @@
       "pc_name": "Freedom on the Move",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "89206": [
+    {
+      "pc_acct": "89238",
+      "pc_name": "Friends of Bill Poteet",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -775,6 +920,13 @@
       "pc_type": "PAC",
       "link_type": "chair",
       "confidence": 1.0
+    },
+    {
+      "pc_acct": "64555",
+      "pc_name": "More Jobs And Better Schools For Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
     }
   ],
   "69532": [
@@ -840,6 +992,40 @@
       "confidence": 1.0
     }
   ],
+  "80843": [
+    {
+      "pc_acct": "89065",
+      "pc_name": "Liberty Rising",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "73905": [
+    {
+      "pc_acct": "64781",
+      "pc_name": "Fighting For Florida's Future PC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "74853",
+      "pc_name": "Onward Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "79035": [
+    {
+      "pc_acct": "70003",
+      "pc_name": "Conservatives for Rural Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "64579": [
     {
       "pc_acct": "88548",
@@ -873,6 +1059,13 @@
       "pc_name": "Friends of Bobby Powell",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "64778",
+      "pc_name": "Affectionately Building Communities PC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -975,6 +1168,15 @@
       "confidence": 1.0
     }
   ],
+  "90006": [
+    {
+      "pc_acct": "89430",
+      "pc_name": "Building Back Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "71053": [
     {
       "pc_acct": "74915",
@@ -1074,6 +1276,15 @@
       "confidence": 1.0
     }
   ],
+  "89042": [
+    {
+      "pc_acct": "89043",
+      "pc_name": "Friends of Byron Donalds PAC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "65175": [
     {
       "pc_acct": "70068",
@@ -1128,12 +1339,39 @@
       "confidence": 1.0
     }
   ],
+  "83750": [
+    {
+      "pc_acct": "80281",
+      "pc_name": "Friends of Carolina Amesty",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "70687": [
+    {
+      "pc_acct": "70514",
+      "pc_name": "Moving Pinellas Forward",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "83839": [
     {
       "pc_acct": "83825",
       "pc_name": "Imperial PAC",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "88776": [
+    {
+      "pc_acct": "84392",
+      "pc_name": "Friends of Chad Johnson",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -1216,6 +1454,15 @@
       "confidence": 1.0
     }
   ],
+  "88929": [
+    {
+      "pc_acct": "88907",
+      "pc_name": "Friends of Brannan",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "80015": [
     {
       "pc_acct": "80401",
@@ -1240,6 +1487,15 @@
       "pc_name": "Faith Family Freedom Coalition",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "83847": [
+    {
+      "pc_acct": "69696",
+      "pc_name": "Citizens Helping Improve Policy",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -1295,6 +1551,15 @@
       "pc_type": "PAC",
       "link_type": "chair",
       "confidence": 0.91
+    }
+  ],
+  "88578": [
+    {
+      "pc_acct": "78932",
+      "pc_name": "Building Stronger Communities",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
     }
   ],
   "74515": [
@@ -1450,6 +1715,15 @@
       "confidence": 1.0
     }
   ],
+  "88775": [
+    {
+      "pc_acct": "84687",
+      "pc_name": "Daley for Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "89560": [
     {
       "pc_acct": "88729",
@@ -1530,6 +1804,15 @@
       "confidence": 1.0
     }
   ],
+  "73904": [
+    {
+      "pc_acct": "69555",
+      "pc_name": "Defending Conservatism and Democracy",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "60122": [
     {
       "pc_acct": "60754",
@@ -1544,6 +1827,13 @@
       "pc_type": "PAC",
       "link_type": "treasurer",
       "confidence": 0.92
+    },
+    {
+      "pc_acct": "60995",
+      "pc_name": "JaxBiz",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
     }
   ],
   "68201": [
@@ -1715,6 +2005,51 @@
       "confidence": 1.0
     }
   ],
+  "83897": [
+    {
+      "pc_acct": "84027",
+      "pc_name": "Friends of Danny Nix",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "83965": [
+    {
+      "pc_acct": "74129",
+      "pc_name": "Keep Florida Moving Forward",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "79062": [
+    {
+      "pc_acct": "60928",
+      "pc_name": "Floridians for Common Sense",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "88835": [
+    {
+      "pc_acct": "84689",
+      "pc_name": "Rising Stars PC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "84776": [
+    {
+      "pc_acct": "84446",
+      "pc_name": "North Florida Families PAC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "70904": [
     {
       "pc_acct": "79487",
@@ -1773,6 +2108,15 @@
       "confidence": 0.88
     }
   ],
+  "60271": [
+    {
+      "pc_acct": "61046",
+      "pc_name": "Citizens for Law Order and Ethics",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "74452": [
     {
       "pc_acct": "78928",
@@ -1809,12 +2153,62 @@
       "confidence": 1.0
     }
   ],
+  "89243": [
+    {
+      "pc_acct": "89151",
+      "pc_name": "Florida 2026",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "71721": [
     {
       "pc_acct": "79561",
       "pc_name": "Coral Gables Professional Firefighters Local 1210 PAC",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "80091": [
+    {
+      "pc_acct": "60445",
+      "pc_name": "Changing Florida's Future PC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "60446",
+      "pc_name": "Floridians for Better Government PC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "82465": [
+    {
+      "pc_acct": "89176",
+      "pc_name": "Florida First",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "84028": [
+    {
+      "pc_acct": "61047",
+      "pc_name": "Floridians for Economic Leadership",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "83447",
+      "pc_name": "Friends of David Silvers",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -1890,6 +2284,15 @@
       "confidence": 0.88
     }
   ],
+  "88827": [
+    {
+      "pc_acct": "79432",
+      "pc_name": "True Conservatives",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "84391": [
     {
       "pc_acct": "61035",
@@ -1928,6 +2331,13 @@
       "pc_name": "Friends of Debbie Mayfield",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "89822",
+      "pc_name": "Preserve Florida PC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -2045,6 +2455,13 @@
       "pc_type": "PAC",
       "link_type": "chair",
       "confidence": 1.0
+    },
+    {
+      "pc_acct": "61394",
+      "pc_name": "Citizens for Fiscal Leadership",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
     }
   ],
   "64677": [
@@ -2065,12 +2482,39 @@
       "confidence": 1.0
     }
   ],
+  "83604": [
+    {
+      "pc_acct": "73995",
+      "pc_name": "Floridians for Uniting Strong Families",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "84245": [
     {
       "pc_acct": "84254",
       "pc_name": "The Partnership for An Affordable Florida",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "64747": [
+    {
+      "pc_acct": "69993",
+      "pc_name": "Floridians for Conservative Values",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "69635": [
+    {
+      "pc_acct": "85993",
+      "pc_name": "Florida Freedom Fund",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -2107,6 +2551,15 @@
       "pc_name": "Victory Now",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "69589": [
+    {
+      "pc_acct": "64916",
+      "pc_name": "Floridians for Limited Government",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -2155,6 +2608,15 @@
       "confidence": 1.0
     }
   ],
+  "64577": [
+    {
+      "pc_acct": "60413",
+      "pc_name": "Principled Leadership for Florida PC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "71456": [
     {
       "pc_acct": "74015",
@@ -2191,12 +2653,28 @@
       "confidence": 1.0
     }
   ],
+  "64538": [
+    {
+      "pc_acct": "83440",
+      "pc_name": "Florida Leadership Council PC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "62649": [
     {
       "pc_acct": "60747",
       "pc_name": "Creating Possibilities",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "61422",
+      "pc_name": "Florida's Voice for Early Learning",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -2298,6 +2776,24 @@
       "confidence": 1.0
     }
   ],
+  "88926": [
+    {
+      "pc_acct": "88694",
+      "pc_name": "Conservative Solutions for Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "79534": [
+    {
+      "pc_acct": "83959",
+      "pc_name": "Together For Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "89694": [
     {
       "pc_acct": "79520",
@@ -2311,6 +2807,15 @@
       "pc_name": "Republican Party of Florida",
       "pc_type": "PTY",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "79514": [
+    {
+      "pc_acct": "79532",
+      "pc_name": "Florida Future Fund",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -2377,12 +2882,89 @@
       "confidence": 1.0
     }
   ],
+  "89305": [
+    {
+      "pc_acct": "84255",
+      "pc_name": "Fentrice for Florida PC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "79662",
+      "pc_name": "How We All Win",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "88932": [
+    {
+      "pc_acct": "74365",
+      "pc_name": "Friends of Sarasota",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "65252": [
+    {
+      "pc_acct": "64970",
+      "pc_name": "Engaged Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "89608": [
     {
       "pc_acct": "89653",
       "pc_name": "Friends of Frank Lago",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "83773": [
+    {
+      "pc_acct": "64745",
+      "pc_name": "Panhandle Prosperity",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "88739": [
+    {
+      "pc_acct": "83336",
+      "pc_name": "Fighting for the Future",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "60881",
+      "pc_name": "Florida Pharmacist Political Committee",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "64961": [
+    {
+      "pc_acct": "83494",
+      "pc_name": "Building A Majority PC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "65356": [
+    {
+      "pc_acct": "74279",
+      "pc_name": "Floridians for Strong Families",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -2458,12 +3040,39 @@
       "confidence": 1.0
     }
   ],
+  "83724": [
+    {
+      "pc_acct": "84062",
+      "pc_name": "Common Sense Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "83952": [
     {
       "pc_acct": "83966",
       "pc_name": "Friends of Greg Folley",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "83798": [
+    {
+      "pc_acct": "79522",
+      "pc_name": "Friends of Griff Griffitts",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "77628": [
+    {
+      "pc_acct": "83742",
+      "pc_name": "A Better South Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -2542,6 +3151,15 @@
       "confidence": 1.0
     }
   ],
+  "69598": [
+    {
+      "pc_acct": "64372",
+      "pc_name": "Southernmost Preservation Fund",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "89342": [
     {
       "pc_acct": "89343",
@@ -2599,6 +3217,24 @@
       "confidence": 1.0
     }
   ],
+  "79612": [
+    {
+      "pc_acct": "78816",
+      "pc_name": "Putting Floridians First",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "88780": [
+    {
+      "pc_acct": "79989",
+      "pc_name": "Grow Florida's Future",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "60120": [
     {
       "pc_acct": "60982",
@@ -2615,6 +3251,20 @@
       "pc_type": "PAC",
       "link_type": "chair",
       "confidence": 1.0
+    },
+    {
+      "pc_acct": "64349",
+      "pc_name": "Leadership for Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "62432",
+      "pc_name": "Working Together For Florida PAC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
     }
   ],
   "64775": [
@@ -2623,6 +3273,15 @@
       "pc_name": "Florida Leadership Committee",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "88799": [
+    {
+      "pc_acct": "89008",
+      "pc_name": "Pathway to Prosperity",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -2725,6 +3384,15 @@
       "confidence": 1.0
     }
   ],
+  "89600": [
+    {
+      "pc_acct": "89604",
+      "pc_name": "Florida First PAC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "75037": [
     {
       "pc_acct": "60755",
@@ -2741,6 +3409,13 @@
       "pc_type": "PAC",
       "link_type": "treasurer",
       "confidence": 1.0
+    },
+    {
+      "pc_acct": "83955",
+      "pc_name": "Friends of James St. George",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
     }
   ],
   "89041": [
@@ -2749,6 +3424,58 @@
       "pc_name": "Friends of James Uthmeier",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "60100": [
+    {
+      "pc_acct": "71409",
+      "pc_name": "Committee for Responsible Government",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "89291": [
+    {
+      "pc_acct": "89294",
+      "pc_name": "Friends of Jane Aman",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "79693": [
+    {
+      "pc_acct": "79692",
+      "pc_name": "Democracy and Freedom",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "60208": [
+    {
+      "pc_acct": "64711",
+      "pc_name": "Let's Get It Done",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "74152": [
+    {
+      "pc_acct": "60579",
+      "pc_name": "Citizens for Integrity in Government",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "84472",
+      "pc_name": "Florida Future Leaders",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -2781,6 +3508,13 @@
       "pc_name": "Freedom and Liberty Fund",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "60457",
+      "pc_name": "The Committee for Justice, Transportation and Business",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -2832,6 +3566,15 @@
       "confidence": 1.0
     }
   ],
+  "79222": [
+    {
+      "pc_acct": "89021",
+      "pc_name": "Keep Florida Red",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "81778": [
     {
       "pc_acct": "89533",
@@ -2865,6 +3608,20 @@
       "pc_name": "New Opportunity Florida",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "70363",
+      "pc_name": "New Leadership for Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "66402",
+      "pc_name": "Protecting Coastal Communities",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -2901,6 +3658,13 @@
       "pc_name": "Protect Our Florida Values",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "74347",
+      "pc_name": "Honest Leadership",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -2946,6 +3710,13 @@
       "pc_name": "Leadership for South Miami",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "74437",
+      "pc_name": "Future Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -2997,6 +3768,31 @@
       "confidence": 1.0
     }
   ],
+  "84017": [
+    {
+      "pc_acct": "84472",
+      "pc_name": "Florida Future Leaders",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "88660",
+      "pc_name": "New Future Leaders Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "81346": [
+    {
+      "pc_acct": "64745",
+      "pc_name": "Panhandle Prosperity",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "89322": [
     {
       "pc_acct": "84472",
@@ -3010,6 +3806,22 @@
       "pc_name": "Jayden For Florida",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "79133": [
+    {
+      "pc_acct": "69971",
+      "pc_name": "21st Century Public Servant",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "64745",
+      "pc_name": "Panhandle Prosperity",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -3029,6 +3841,13 @@
       "pc_type": "PAC",
       "link_type": "chair",
       "confidence": 1.0
+    },
+    {
+      "pc_acct": "60457",
+      "pc_name": "The Committee for Justice, Transportation and Business",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
     }
   ],
   "64450": [
@@ -3040,12 +3859,75 @@
       "confidence": 1.0
     }
   ],
+  "65057": [
+    {
+      "pc_acct": "84511",
+      "pc_name": "Foundation for Florida's Future PAC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "69457": [
+    {
+      "pc_acct": "60790",
+      "pc_name": "Liberty Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "60222": [
+    {
+      "pc_acct": "83494",
+      "pc_name": "Building A Majority PC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "74554": [
+    {
+      "pc_acct": "89447",
+      "pc_name": "Conservative Coalition",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "88833": [
+    {
+      "pc_acct": "79588",
+      "pc_name": "Veterans for Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "80085": [
+    {
+      "pc_acct": "80075",
+      "pc_name": "Bright Future Tampa Bay",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "74085": [
     {
       "pc_acct": "74626",
       "pc_name": "Conservative Legacy Fund",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "83480": [
+    {
+      "pc_acct": "74643",
+      "pc_name": "Women Building the Future",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -3100,6 +3982,60 @@
       "pc_name": "Friends of Jennifer Winkler",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "70065": [
+    {
+      "pc_acct": "79432",
+      "pc_name": "True Conservatives",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "74821": [
+    {
+      "pc_acct": "84630",
+      "pc_name": "Central Florida Leadership PC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "83948": [
+    {
+      "pc_acct": "74667",
+      "pc_name": "A Bold Florida Future",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "89546": [
+    {
+      "pc_acct": "89545",
+      "pc_name": "Moving Florida Forward",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "88664": [
+    {
+      "pc_acct": "64778",
+      "pc_name": "Affectionately Building Communities PC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "88832": [
+    {
+      "pc_acct": "83791",
+      "pc_name": "Conservative Majority Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -3183,6 +4119,47 @@
       "confidence": 1.0
     }
   ],
+  "79232": [
+    {
+      "pc_acct": "83591",
+      "pc_name": "Keep Florida Free PC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "86162": [
+    {
+      "pc_acct": "79209",
+      "pc_name": "Citizens for Solutions",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "68041",
+      "pc_name": "Florida Conservatives United",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "84851",
+      "pc_name": "Friends of Joe Gruters",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "79038": [
+    {
+      "pc_acct": "89447",
+      "pc_name": "Conservative Coalition",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "60181": [
     {
       "pc_acct": "89558",
@@ -3213,6 +4190,38 @@
       "pc_type": "PAC",
       "link_type": "chair",
       "confidence": 0.89
+    },
+    {
+      "pc_acct": "84630",
+      "pc_name": "Central Florida Leadership PC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "83670": [
+    {
+      "pc_acct": "70128",
+      "pc_name": "Committee to Protect Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "88905": [
+    {
+      "pc_acct": "89618",
+      "pc_name": "Friends of Johanna Lopez",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "89036",
+      "pc_name": "Pa Lante Together",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
     }
   ],
   "89627": [
@@ -3346,6 +4355,15 @@
       "confidence": 1.0
     }
   ],
+  "88860": [
+    {
+      "pc_acct": "80344",
+      "pc_name": "Protecting our Future",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "79447": [
     {
       "pc_acct": "79615",
@@ -3445,6 +4463,15 @@
       "pc_name": "Friends of Jonathan Albert PC",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "83633": [
+    {
+      "pc_acct": "83403",
+      "pc_name": "Friends of Jonathan Martin",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -3704,6 +4731,15 @@
       "confidence": 1.0
     }
   ],
+  "86014": [
+    {
+      "pc_acct": "85639",
+      "pc_name": "Blue Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "89582": [
     {
       "pc_acct": "88715",
@@ -3728,6 +4764,33 @@
       "pc_name": "Friends of Karen Gonzalez Pittman",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "83640": [
+    {
+      "pc_acct": "81671",
+      "pc_name": "Friends of Katherine Waldron",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "73959": [
+    {
+      "pc_acct": "62432",
+      "pc_name": "Working Together For Florida PAC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "69518": [
+    {
+      "pc_acct": "64751",
+      "pc_name": "Florida Speaks",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -3776,6 +4839,15 @@
       "confidence": 1.0
     }
   ],
+  "88673": [
+    {
+      "pc_acct": "78850",
+      "pc_name": "Protect Our Future PC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "89468": [
     {
       "pc_acct": "89441",
@@ -3785,12 +4857,37 @@
       "confidence": 1.0
     }
   ],
+  "88934": [
+    {
+      "pc_acct": "79535",
+      "pc_name": "For Our Children's Future",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "82137": [
     {
       "pc_acct": "89066",
       "pc_name": "Miami Beach Forward",
       "pc_type": "PAC",
       "link_type": "treasurer",
+      "confidence": 1.0
+    }
+  ],
+  "69536": [
+    {
+      "pc_acct": "74220",
+      "pc_name": "Friends of Kevin Ruane",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "78816",
+      "pc_name": "Putting Floridians First",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -3839,6 +4936,15 @@
       "pc_name": "Friends of Kevin Steele",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "88839": [
+    {
+      "pc_acct": "83851",
+      "pc_name": "Friends of Kim Kendall",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -4046,6 +5152,15 @@
       "confidence": 1.0
     }
   ],
+  "89153": [
+    {
+      "pc_acct": "89260",
+      "pc_name": "Sun Coast Conservative Alliance",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "79839": [
     {
       "pc_acct": "83890",
@@ -4097,6 +5212,22 @@
       "pc_name": "Faith In Florida's Future",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "74093": [
+    {
+      "pc_acct": "80298",
+      "pc_name": "Leadership for Broward",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "64349",
+      "pc_name": "Leadership for Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -4172,6 +5303,15 @@
       "confidence": 1.0
     }
   ],
+  "88794": [
+    {
+      "pc_acct": "88518",
+      "pc_name": "Friends of Leonard Spencer",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "88877": [
     {
       "pc_acct": "89592",
@@ -4238,6 +5378,13 @@
       "pc_name": "Momentum Jax",
       "pc_type": "PAC",
       "link_type": "treasurer",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "60445",
+      "pc_name": "Changing Florida's Future PC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -4322,6 +5469,15 @@
       "confidence": 1.0
     }
   ],
+  "88795": [
+    {
+      "pc_acct": "70514",
+      "pc_name": "Moving Pinellas Forward",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "89679": [
     {
       "pc_acct": "89146",
@@ -4338,6 +5494,15 @@
       "pc_type": "PAC",
       "link_type": "chair",
       "confidence": 0.95
+    }
+  ],
+  "64999": [
+    {
+      "pc_acct": "84132",
+      "pc_name": "Protect Florida Families",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
     }
   ],
   "64695": [
@@ -4376,6 +5541,15 @@
       "confidence": 1.0
     }
   ],
+  "79116": [
+    {
+      "pc_acct": "69825",
+      "pc_name": "Friends of Lori Berman",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "74708": [
     {
       "pc_acct": "89431",
@@ -4394,12 +5568,48 @@
       "confidence": 0.91
     }
   ],
+  "89109": [
+    {
+      "pc_acct": "89247",
+      "pc_name": "Fair Deal Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "89442": [
+    {
+      "pc_acct": "73995",
+      "pc_name": "Floridians for Uniting Strong Families",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "73954": [
+    {
+      "pc_acct": "64813",
+      "pc_name": "Free Markets for Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "88864": [
     {
       "pc_acct": "89190",
       "pc_name": "Hyatt for Florida",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "65031": [
+    {
+      "pc_acct": "89545",
+      "pc_name": "Moving Florida Forward",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -4436,6 +5646,15 @@
       "pc_name": "Strong Voices for Florida",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "66433": [
+    {
+      "pc_acct": "74500",
+      "pc_name": "Citizens for Community Care",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -5082,6 +6301,24 @@
       "confidence": 1.0
     }
   ],
+  "64528": [
+    {
+      "pc_acct": "89548",
+      "pc_name": "Floridians for Freedom",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "69624": [
+    {
+      "pc_acct": "64587",
+      "pc_name": "Florida Sunshine Alliance",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "59939": [
     {
       "pc_acct": "69372",
@@ -5127,6 +6364,15 @@
       "confidence": 1.0
     }
   ],
+  "73963": [
+    {
+      "pc_acct": "64763",
+      "pc_name": "Floridians for Public Safety PC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "74681": [
     {
       "pc_acct": "79910",
@@ -5140,6 +6386,31 @@
       "pc_name": "Florida Bold Leadership",
       "pc_type": "PAC",
       "link_type": "treasurer",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "70363",
+      "pc_name": "New Leadership for Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "88865": [
+    {
+      "pc_acct": "83941",
+      "pc_name": "Friends of Megan Weinberger",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "73953": [
+    {
+      "pc_acct": "69993",
+      "pc_name": "Floridians for Conservative Values",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -5183,6 +6454,38 @@
       "pc_name": "Leadership We Can Trust",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "84434",
+      "pc_name": "New Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "84199": [
+    {
+      "pc_acct": "73989",
+      "pc_name": "Defending Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "85295",
+      "pc_name": "Floridians for Justice",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "79088": [
+    {
+      "pc_acct": "67333",
+      "pc_name": "Governing Responsibly to Achieve a New Tomorrow",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -5524,6 +6827,15 @@
       "confidence": 1.0
     }
   ],
+  "88830": [
+    {
+      "pc_acct": "79390",
+      "pc_name": "Common Sense Conservatives",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "88975": [
     {
       "pc_acct": "84197",
@@ -5540,6 +6852,15 @@
       "pc_type": "PAC",
       "link_type": "chair",
       "confidence": 0.92
+    }
+  ],
+  "88796": [
+    {
+      "pc_acct": "78939",
+      "pc_name": "Florida Always and Forever Ours",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
     }
   ],
   "89290": [
@@ -5590,6 +6911,13 @@
       "pc_type": "PAC",
       "link_type": "chair",
       "confidence": 1.0
+    },
+    {
+      "pc_acct": "70128",
+      "pc_name": "Committee to Protect Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
     }
   ],
   "83792": [
@@ -5621,6 +6949,22 @@
       "pc_name": "Friends of Michelle Salzman",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "64929": [
+    {
+      "pc_acct": "78970",
+      "pc_name": "Conservative for Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "73946",
+      "pc_name": "People for Coastal Common Sense",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -5688,6 +7032,15 @@
       "confidence": 1.0
     }
   ],
+  "65118": [
+    {
+      "pc_acct": "83579",
+      "pc_name": "Common Sense For Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "61287": [
     {
       "pc_acct": "78965",
@@ -5739,6 +7092,22 @@
       "pc_name": "Friends of Mike Giallombardo",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "69563": [
+    {
+      "pc_acct": "84249",
+      "pc_name": "Floridians for Housing Opportunity",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "74266",
+      "pc_name": "One Penny Too Many",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -5814,6 +7183,15 @@
       "confidence": 1.0
     }
   ],
+  "70224": [
+    {
+      "pc_acct": "60413",
+      "pc_name": "Principled Leadership for Florida PC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "84126": [
     {
       "pc_acct": "85020",
@@ -5836,6 +7214,15 @@
       "pc_name": "Boyles for Florida",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "86817": [
+    {
+      "pc_acct": "88687",
+      "pc_name": "Friends of Nathan Bruemmer PC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -5950,12 +7337,64 @@
       "confidence": 0.91
     }
   ],
+  "60487": [
+    {
+      "pc_acct": "89435",
+      "pc_name": "And Justice For All P.A.C.",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "60770",
+      "pc_name": "Justice for All",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "74542": [
     {
       "pc_acct": "74488",
       "pc_name": "Seminole Forward",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "74685": [
+    {
+      "pc_acct": "73679",
+      "pc_name": "Floridians United",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "88831": [
+    {
+      "pc_acct": "75046",
+      "pc_name": "Service and Honor",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "89414": [
+    {
+      "pc_acct": "89415",
+      "pc_name": "Friends of Paul Renner",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "61164": [
+    {
+      "pc_acct": "60981",
+      "pc_name": "Alliance for Progressive Representation PAC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -6048,6 +7487,15 @@
       "confidence": 1.0
     }
   ],
+  "89434": [
+    {
+      "pc_acct": "89046",
+      "pc_name": "Representing You",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "79135": [
     {
       "pc_acct": "79137",
@@ -6093,6 +7541,15 @@
       "confidence": 0.9
     }
   ],
+  "79141": [
+    {
+      "pc_acct": "69405",
+      "pc_name": "Better Lives For Floridians",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "61065": [
     {
       "pc_acct": "79535",
@@ -6129,6 +7586,15 @@
       "confidence": 1.0
     }
   ],
+  "75218": [
+    {
+      "pc_acct": "75217",
+      "pc_name": "Very Conservative",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "74449": [
     {
       "pc_acct": "61310",
@@ -6162,6 +7628,24 @@
       "pc_name": "PASCO PAC",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "81472": [
+    {
+      "pc_acct": "83428",
+      "pc_name": "Defend Democracy PC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "70470": [
+    {
+      "pc_acct": "70128",
+      "pc_name": "Committee to Protect Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -6237,6 +7721,22 @@
       "confidence": 1.0
     }
   ],
+  "87827": [
+    {
+      "pc_acct": "60579",
+      "pc_name": "Citizens for Integrity in Government",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "84472",
+      "pc_name": "Florida Future Leaders",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "60766": [
     {
       "pc_acct": "74919",
@@ -6293,6 +7793,15 @@
       "pc_name": "Friends of Richard Green",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "55049": [
+    {
+      "pc_acct": "84062",
+      "pc_name": "Common Sense Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -6431,6 +7940,33 @@
       "confidence": 1.0
     }
   ],
+  "83793": [
+    {
+      "pc_acct": "83794",
+      "pc_name": "Florida Forward",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "88901": [
+    {
+      "pc_acct": "79860",
+      "pc_name": "Voice of the People",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "83880": [
+    {
+      "pc_acct": "83917",
+      "pc_name": "Friends of Robyn Hattaway",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "84181": [
     {
       "pc_acct": "84180",
@@ -6455,6 +7991,13 @@
       "pc_name": "Friends of Ron DeSantis (now Empower Parents PAC)",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "85993",
+      "pc_name": "Florida Freedom Fund",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -6482,6 +8025,24 @@
       "pc_name": "Friends of Ron DeSantis (now Empower Parents PAC)",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "83937": [
+    {
+      "pc_acct": "79781",
+      "pc_name": "Democracy Forever PC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "88941": [
+    {
+      "pc_acct": "83758",
+      "pc_name": "Friends of Ryan Chamberlin",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -6576,6 +8137,15 @@
       "confidence": 1.0
     }
   ],
+  "89589": [
+    {
+      "pc_acct": "89539",
+      "pc_name": "Sunshine State Values",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "70540": [
     {
       "pc_acct": "9192",
@@ -6639,6 +8209,13 @@
       "pc_name": "Friends of Scott Plakon",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "79759",
+      "pc_name": "Floridians for Economic Prosperity",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -6847,6 +8424,29 @@
       "confidence": 0.89
     }
   ],
+  "83840": [
+    {
+      "pc_acct": "69962",
+      "pc_name": "Florida Strong Finish",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "79488",
+      "pc_name": "Making Florida Better",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "83959",
+      "pc_name": "Together For Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "87605": [
     {
       "pc_acct": "88452",
@@ -6889,6 +8489,24 @@
       "pc_name": "Friends of Spencer Roach",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "60108": [
+    {
+      "pc_acct": "79989",
+      "pc_name": "Grow Florida's Future",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "71273": [
+    {
+      "pc_acct": "73747",
+      "pc_name": "South Florida Accountability Project",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -7064,6 +8682,24 @@
       "confidence": 1.0
     }
   ],
+  "89469": [
+    {
+      "pc_acct": "79502",
+      "pc_name": "For the Future We Want",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "60262": [
+    {
+      "pc_acct": "55213",
+      "pc_name": "Nature Coast Conservatives",
+      "pc_type": "ECO",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "60126": [
     {
       "pc_acct": "61024",
@@ -7168,6 +8804,24 @@
       "confidence": 1.0
     }
   ],
+  "80066": [
+    {
+      "pc_acct": "75001",
+      "pc_name": "Florida Country",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "83732": [
+    {
+      "pc_acct": "74406",
+      "pc_name": "Americans For Progress",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "69694": [
     {
       "pc_acct": "69996",
@@ -7233,6 +8887,24 @@
       "pc_name": "SAVE Action, PAC",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "88974": [
+    {
+      "pc_acct": "79228",
+      "pc_name": "True Freedom PC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "64367": [
+    {
+      "pc_acct": "73993",
+      "pc_name": "Launching Florida's Future",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -7389,6 +9061,24 @@
       "confidence": 1.0
     }
   ],
+  "83821": [
+    {
+      "pc_acct": "71236",
+      "pc_name": "Together We Stand",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "70061": [
+    {
+      "pc_acct": "79551",
+      "pc_name": "For A Better Jacksonville",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "74415": [
     {
       "pc_acct": "84434",
@@ -7404,6 +9094,15 @@
       "pc_name": "New Florida",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "69494": [
+    {
+      "pc_acct": "62350",
+      "pc_name": "First Coast Conservatives",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -7522,6 +9221,13 @@
       "pc_type": "PAC",
       "link_type": "chair",
       "confidence": 1.0
+    },
+    {
+      "pc_acct": "54534",
+      "pc_name": "Common Sense",
+      "pc_type": "ECO",
+      "link_type": "solicitation",
+      "confidence": 1.0
     }
   ],
   "83651": [
@@ -7533,6 +9239,24 @@
       "confidence": 1.0
     }
   ],
+  "79177": [
+    {
+      "pc_acct": "64987",
+      "pc_name": "Latino Rising",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "89034": [
+    {
+      "pc_acct": "88779",
+      "pc_name": "Miami-Dade United",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
   "89584": [
     {
       "pc_acct": "74986",
@@ -7540,6 +9264,13 @@
       "pc_type": "PAC",
       "link_type": "chair",
       "confidence": 0.89
+    },
+    {
+      "pc_acct": "89747",
+      "pc_name": "Frontline Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
     }
   ],
   "79513": [
@@ -7596,6 +9327,33 @@
       "pc_name": "Building a Prosperous Florida",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "88958": [
+    {
+      "pc_acct": "74976",
+      "pc_name": "Preserving Freedom",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "88872": [
+    {
+      "pc_acct": "60413",
+      "pc_name": "Principled Leadership for Florida PC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "83451": [
+    {
+      "pc_acct": "74129",
+      "pc_name": "Keep Florida Moving Forward",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -7665,6 +9423,13 @@
       "pc_name": "Home Grown PAC",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    },
+    {
+      "pc_acct": "78838",
+      "pc_name": "The Rotten Egg PC",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],
@@ -7770,6 +9535,33 @@
       "pc_name": "Friends of Yoni Anijar",
       "pc_type": "PAC",
       "link_type": "chair",
+      "confidence": 1.0
+    }
+  ],
+  "88829": [
+    {
+      "pc_acct": "84272",
+      "pc_name": "Friends of Yvette Benarroch",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "85641": [
+    {
+      "pc_acct": "85942",
+      "pc_name": "Drucker For Florida",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
+      "confidence": 1.0
+    }
+  ],
+  "84293": [
+    {
+      "pc_acct": "83356",
+      "pc_name": "For the People",
+      "pc_type": "PAC",
+      "link_type": "solicitation",
       "confidence": 1.0
     }
   ],

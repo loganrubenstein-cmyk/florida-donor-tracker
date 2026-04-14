@@ -45,7 +45,7 @@ export default function ExplorerPage() {
         normalized={['contributor_name_normalized']}
         inferred={['donor profile links (name-matched)']}
         caveats={[
-          'Committee contributions (~7.7M rows) are fully loaded. Candidate contributions (~3.2M rows) loading in progress.',
+          '~10.4M contribution rows loaded (committee + candidate). URL params supported: ?q=, ?recipient=, ?donor_slug=, ?year=, ?amount_min=.',
           'Donor profile links are inferred by exact normalized name match — the same real-world person may appear unlinked under different name spellings.',
           'Expenditures (who got paid) are not yet available in the explorer.',
         ]}

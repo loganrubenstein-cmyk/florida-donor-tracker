@@ -1,6 +1,7 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import CycleProfile from '@/components/cycles/CycleProfile';
+import { buildMeta } from '@/lib/seo';
 
 export const dynamic = 'force-static';
 
@@ -38,10 +39,11 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const { year } = await params;
-  return {
+  return buildMeta({
     title: `${year} Florida Elections`,
     description: `${year} Florida election cycle — campaign finance totals, top raisers, statewide race results, and party breakdowns.`,
-  };
+    path: `/cycle/${year}`,
+  });
 }
 
 export default async function CyclePage({ params }) {

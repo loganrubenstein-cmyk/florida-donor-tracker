@@ -3,13 +3,15 @@ import { getDb } from '@/lib/db';
 import { notFound } from 'next/navigation';
 import SourceLink from '@/components/shared/SourceLink';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import { buildMeta } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
 function fmt(n) {
   if (!n) return '—';
-  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000)     return `$${(n / 1_000).toFixed(0)}K`;
+  if (n >= 1_000_000_000) return `$${(n / 1_000_000_000).toFixed(2).replace(/\.?0+$/, '')}B`;
+  if (n >= 1_000_000)     return `$${(n / 1_000_000).toFixed(1)}M`;
+  if (n >= 1_000)         return `$${(n / 1_000).toFixed(0)}K`;
   return `$${n}`;
 }
 
@@ -26,7 +28,7 @@ export async function generateMetadata({ params }) {
   const clients = data.num_principals ? `${data.num_principals} clients` : '';
   const parts = [comp, clients].filter(Boolean).join(' across ');
   const desc = `${data.firm_name} — Florida lobbying firm.${parts ? ` ${parts}.` : ''}`;
-  return { title: `${data.firm_name} — Lobbying Firm`, description: desc };
+  return buildMeta({ title: data.firm_name, description: desc, path: `/lobbying-firm/${slug}` });
 }
 
 export default async function LobbyingFirmPage({ params }) {

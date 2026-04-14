@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { getDb } from '@/lib/db';
 import { fmtCount } from '../../../../lib/fmt';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import { buildMeta } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
@@ -76,11 +77,12 @@ async function loadBill(slug) {
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const data = await loadBill(slug);
-  if (!data) return { title: 'Bill — Lobbying Disclosures' };
-  return {
-    title: `${data.bill} — Lobbying Disclosures`,
+  if (!data) return { title: 'Bill' };
+  return buildMeta({
+    title: `${data.bill} Lobbying`,
     description: `Who lobbied on Florida ${data.bill}. ${data.entries.length} lobbyist-principal filings across ${data.years.join(', ')}.`,
-  };
+    path: `/lobbying/bill/${slug}`,
+  });
 }
 
 export default async function BillLobbyingPage({ params }) {

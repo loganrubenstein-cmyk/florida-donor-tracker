@@ -41,15 +41,14 @@ SOL_INDEX    = ROOT / "public" / "data" / "solicitations" / "index.json"
 SOL_CSV      = PROCESSED_DIR.parent / "raw" / "solicitations" / "solicitations.csv"
 COMMITTEES   = PROCESSED_DIR / "committees.csv"
 CANDIDATES   = PROCESSED_DIR / "candidates.csv"
-EXPENDITURES = PROCESSED_DIR / "expenditures.csv"
 OUTPUT_CSV   = PROCESSED_DIR / "candidate_pc_edges.csv"
 
 # ── Thresholds ────────────────────────────────────────────────────────────────
 
 FUZZY_CAND_THRESHOLD   = 88
-FUZZY_CAND_STRICT      = 90   # higher bar for expenditure vendor→candidate matching
-FUZZY_COM_SORT         = 85
+FUZZY_COM_SORT         = 90   # raised from 85; blocks near-synonyms like "Forward"↔"Onward"
 FUZZY_COM_SET          = 90
+FUZZY_COM_RATIO_FLOOR  = 65   # min character-level ratio to be eligible in match_committee()
 PROF_TREASURER_MIN     = 5    # treasurer serving N+ committees = professional
 COMMON_SURNAME_MIN     = 10   # surname shared by N+ candidates = common
 COMMON_SURNAME_SCORE   = 95   # suppress admin-overlap if fuzzy + common name below this
@@ -64,6 +63,19 @@ _PREFIX    = re.compile(
     re.I,
 )
 _SUFFIX_TOKS = {"JR", "SR", "II", "III", "IV", "ESQ", "PHD", "MD", "CPA"}
+
+# Legal entity suffixes to strip before name ratio checks.
+# After clean(), punctuation is gone — match space-separated tokens at end.
+_LEGAL_SUFFIX_RE = re.compile(
+    r"\s+(COMMITTEE\s+INC|COMMITTEE\s+LLC|COMMITTEE|INCORPORATED|INC|LLC|CORP|"
+    r"FOUNDATION|FEDERATION|ASSOCIATION|ASSOC|ASSN|ORGANIZATION)$"
+)
+
+
+def _strip_legal(s: str) -> str:
+    """Strip leading 'THE' and trailing legal entity tokens for name matching."""
+    s = re.sub(r"^THE\s+", "", s)
+    return _LEGAL_SUFFIX_RE.sub("", s).strip()
 
 
 def clean(s: str) -> str:
@@ -213,18 +225,32 @@ def expand_to_all_accounts(best_cand: dict, person_idx: dict,
 # ── Committee matching ───────────────────────────────────────────────────────
 
 def match_committee(org_name: str, com_list: list[dict]) -> tuple[dict | None, float]:
-    """Returns (best_committee, score) or (None, 0)."""
+    """Returns (best_committee, score) or (None, 0).
+
+    Selection uses token_sort/token_set but penalises candidates whose
+    character-level ratio is below 65. This prevents word-transposition
+    false positives (e.g. "Forward Florida" vs "Florida Forward", ratio≈47%)
+    from winning the selection and then either passing or displacing the
+    correct match. The ratio penalty is applied during selection, not just
+    as a post-filter, so that a failing candidate can never push aside a
+    better-ratio match.
+    """
     org_c = clean(org_name)
     if not org_c:
         return None, 0
 
-    best_combo = 0
-    best_com   = None
+    best_combo  = 0
+    best_com    = None
 
     for com in com_list:
-        s_sort = fuzz.token_sort_ratio(org_c, com["name_clean"])
-        s_set  = fuzz.token_set_ratio(org_c, com["name_clean"])
-        combo  = max(s_sort, s_set * 0.95)
+        s_sort  = fuzz.token_sort_ratio(org_c, com["name_clean"])
+        s_set   = fuzz.token_set_ratio(org_c, com["name_clean"])
+        s_ratio = fuzz.ratio(org_c, com["name_clean"])
+        # Exclude candidates that fail the ratio floor — they cannot be
+        # best_com regardless of their token scores.
+        if s_ratio < FUZZY_COM_RATIO_FLOOR:
+            continue
+        combo = max(s_sort, s_set * 0.95)
         if combo > best_combo:
             best_combo = combo
             best_com   = com
@@ -415,288 +441,6 @@ def pass_1_solicitation_control(
 
     p1b_count = len(edges) - p1a_count
     print(f"Pass 1 (SOLICITATION_CONTROL): {len(edges)} edges ({p1a_count} from index, {p1b_count} from CSV)")
-    return edges
-
-
-# ── Pass 2: DIRECT_CONTRIBUTION_TO_CANDIDATE ─────────────────────────────────
-
-def pass_2_direct_contributions(
-    exp_df: pd.DataFrame, cand_df: pd.DataFrame, cand_idx: dict,
-    person_idx: dict, nameclean_idx: dict, com_df: pd.DataFrame,
-) -> list[Edge]:
-    """
-    CAN-type expenditures = committee paying directly to a candidate campaign.
-    vendor_name is the candidate/campaign name; source_file gives us the committee acct.
-    """
-    edges: list[Edge] = []
-    seen_pairs: dict[tuple, dict] = {}   # (pc_acct, vendor_clean) → aggregation
-
-    can_rows = exp_df[exp_df["type_code"] == "CAN"]
-    print(f"Pass 2: {len(can_rows):,} CAN-type expenditure rows to process")
-
-    # Build committee lookup by acct (vectorized — avoid iterrows)
-    com_by_acct = {str(r["pc_acct"]): r for r in com_df.to_dict("records")}
-
-    # Aggregate CAN rows to (pc_acct, vendor_clean) pairs using pandas groupby
-    can_rows = can_rows.copy()
-    can_rows["pc_acct"] = can_rows["source_file"].str.extract(r"Expend_(\d+)\.txt")[0]
-    can_rows = can_rows.dropna(subset=["pc_acct"])
-    can_rows["vendor_clean"] = can_rows["vendor_name"].apply(
-        lambda v: clean(str(v).strip()) if str(v).strip() else ""
-    )
-    can_rows = can_rows[can_rows["vendor_clean"] != ""]
-    can_rows["amount_f"] = pd.to_numeric(can_rows["amount"], errors="coerce").fillna(0)
-    can_rows["expenditure_date"] = can_rows["expenditure_date"].fillna("").astype(str)
-
-    grp = can_rows.groupby(["pc_acct", "vendor_clean", "vendor_name"]).agg(
-        total_amount=("amount_f", "sum"),
-        count=("amount_f", "count"),
-        latest_date=("expenditure_date", "max"),
-    ).reset_index()
-
-    for _, row in grp.iterrows():
-        pc_acct = row["pc_acct"]
-        com = com_by_acct.get(pc_acct, {})
-        seen_pairs[(pc_acct, row["vendor_clean"])] = {
-            "pc_acct": pc_acct,
-            "pc_name": com.get("pc_name", f"Committee {pc_acct}"),
-            "pc_type": com.get("pc_type", ""),
-            "vendor_name": row["vendor_name"],
-            "total_amount": float(row["total_amount"]),
-            "count": int(row["count"]),
-            "latest_date": row["latest_date"],
-        }
-
-    # Now we have aggregated (committee, vendor_campaign) pairs.
-    # vendor_name is the candidate campaign name — we need to link back to a candidate_acct_num.
-    cand_name_to_accts: dict[str, list] = {}
-    for r in cand_df.to_dict("records"):
-        nc = r["name_clean"]
-        if nc:
-            cand_name_to_accts.setdefault(nc, []).append(str(r["candidate_acct"]))
-
-    for key, agg in seen_pairs.items():
-        vendor = agg["vendor_name"]
-        # Try to match vendor to a candidate
-        # Clean the vendor name: strip "CAMPAIGN", "FOR", "COMMITTEE" etc.
-        vendor_stripped = re.sub(
-            r"\b(CAMPAIGN|COMMITTEE|FOR|PAC|FUND|FRIENDS OF|CITIZENS FOR|"
-            r"PEOPLE FOR|ELECT|ELECTION|ACCOUNT|RE-ELECT|REELECT)\b",
-            "", clean(vendor)
-        ).strip()
-        vendor_stripped = " ".join(vendor_stripped.split())
-
-        if not vendor_stripped:
-            continue
-
-        cand, score = match_candidate(vendor_stripped, cand_idx, threshold=FUZZY_CAND_STRICT)
-        if not cand:
-            # Try direct name_clean lookup
-            if vendor_stripped in cand_name_to_accts:
-                for ca in cand_name_to_accts[vendor_stripped]:
-                    edges.append(Edge(
-                        candidate_acct_num=ca,
-                        pc_acct_num=agg["pc_acct"],
-                        pc_name=agg["pc_name"],
-                        pc_type=agg["pc_type"],
-                        edge_type="DIRECT_CONTRIBUTION_TO_CANDIDATE",
-                        direction="support",
-                        evidence_summary=f"Committee contributed ${agg['total_amount']:,.2f} to {vendor} ({agg['count']} payments)",
-                        source_type="committee_expenditure",
-                        source_record_id=f"Expend_{agg['pc_acct']}.txt",
-                        match_method="exact_name",
-                        match_score="100.0",
-                        amount=f"{agg['total_amount']:.2f}",
-                        edge_date=agg["latest_date"],
-                        is_publishable=True,
-                    ))
-            continue
-
-        for c in expand_to_all_accounts(cand, person_idx, nameclean_idx):
-            edges.append(Edge(
-                candidate_acct_num=str(c["candidate_acct"]),
-                pc_acct_num=agg["pc_acct"],
-                pc_name=agg["pc_name"],
-                pc_type=agg["pc_type"],
-                edge_type="DIRECT_CONTRIBUTION_TO_CANDIDATE",
-                direction="support",
-                evidence_summary=f"Committee contributed ${agg['total_amount']:,.2f} to {vendor} ({agg['count']} payments)",
-                source_type="committee_expenditure",
-                source_record_id=f"Expend_{agg['pc_acct']}.txt",
-                match_method="fuzzy_name",
-                match_score=f"{score:.1f}",
-                amount=f"{agg['total_amount']:.2f}",
-                edge_date=agg["latest_date"],
-                is_publishable=True,
-            ))
-
-    print(f"Pass 2 (DIRECT_CONTRIBUTION_TO_CANDIDATE): {len(edges)} edges")
-    return edges
-
-
-# ── Pass 3: OTHER_DISTRIBUTION_TO_CANDIDATE ──────────────────────────────────
-
-def pass_3_other_distributions(
-    exp_df: pd.DataFrame, cand_idx: dict, com_df: pd.DataFrame,
-) -> list[Edge]:
-    edges: list[Edge] = []
-    dis_rows = exp_df[exp_df["type_code"] == "DIS"]
-
-    com_by_acct = {}
-    for _, c in com_df.iterrows():
-        com_by_acct[str(c["pc_acct"])] = c.to_dict()
-
-    for _, row in dis_rows.iterrows():
-        m = re.match(r"Expend_(\d+)\.txt", str(row.get("source_file", "")))
-        if not m:
-            continue
-        pc_acct = m.group(1)
-        vendor = str(row.get("vendor_name", "")).strip()
-        purpose = str(row.get("purpose", "")).strip()
-        if not vendor:
-            continue
-
-        # Try matching vendor or purpose to a candidate
-        cand, score = match_candidate(vendor, cand_idx, threshold=FUZZY_CAND_STRICT)
-        if not cand and purpose:
-            cand, score = match_candidate(purpose, cand_idx, threshold=FUZZY_CAND_STRICT)
-
-        if not cand:
-            continue
-
-        try:
-            amt = float(row.get("amount", 0))
-        except (ValueError, TypeError):
-            amt = 0
-
-        com = com_by_acct.get(pc_acct, {})
-        edges.append(Edge(
-            candidate_acct_num=str(cand["candidate_acct"]),
-            pc_acct_num=pc_acct,
-            pc_name=com.get("pc_name", f"Committee {pc_acct}"),
-            pc_type=com.get("pc_type", ""),
-            edge_type="OTHER_DISTRIBUTION_TO_CANDIDATE",
-            direction="support",
-            evidence_summary=f"Distribution to {vendor}: {purpose} (${amt:,.2f})",
-            source_type="committee_expenditure",
-            source_record_id=str(row.get("source_file", "")),
-            match_method="fuzzy_name",
-            match_score=f"{score:.1f}",
-            amount=f"{amt:.2f}",
-            edge_date=str(row.get("expenditure_date", "")),
-            is_publishable=True,
-        ))
-
-    print(f"Pass 3 (OTHER_DISTRIBUTION_TO_CANDIDATE): {len(edges)} edges from {len(dis_rows)} DIS rows")
-    return edges
-
-
-# ── Pass 4/5: IEC and ECC ───────────────────────────────────────────────────
-
-_DIRECTION_RE = re.compile(
-    r"\b(FOR|SUPPORT|SUPPORTING|FAVOR|FAVORING|AGAINST|OPPOSE|OPPOSING|OPPOSITION)\b",
-    re.I,
-)
-_CANDIDATE_RE = re.compile(
-    r"(?:FOR|AGAINST|SUPPORT|OPPOSE)\s+([A-Z][A-Z\s,.'()-]+?)(?:\s*(?:CAMPAIGN|CANDIDATE|SIGNS?|MAILER|RADIO|TV|AD|ADVERTISEMENT)|$)",
-    re.I,
-)
-
-
-def _parse_direction(purpose: str) -> str:
-    m = _DIRECTION_RE.search(purpose)
-    if not m:
-        return ""
-    word = m.group(1).upper()
-    if word in ("FOR", "SUPPORT", "SUPPORTING", "FAVOR", "FAVORING"):
-        return "support"
-    return "opposition"
-
-
-def _extract_candidate_from_purpose(purpose: str) -> str:
-    """Try to extract a candidate name from purpose text."""
-    m = _CANDIDATE_RE.search(purpose.upper())
-    if m:
-        name = m.group(1).strip().rstrip(",. ")
-        if len(name) > 3 and len(name.split()) <= 5:
-            return name
-    # Also try: purpose contains a name-like string
-    # e.g. "IND EXP FOR FRANK CAROLLO SIGN"
-    parts = purpose.upper().split()
-    # Look for "FOR NAME NAME" pattern
-    for i, p in enumerate(parts):
-        if p in ("FOR", "AGAINST") and i + 2 < len(parts):
-            name_parts = []
-            for j in range(i + 1, min(i + 4, len(parts))):
-                if parts[j] in ("SIGN", "SIGNS", "MAILER", "CAMPAIGN", "RADIO", "TV",
-                                "AD", "ADS", "ADVERTISEMENT", "PRINTING", "DECALS",
-                                "BANNER", "BANNERS", "BUS", "BENCH"):
-                    break
-                name_parts.append(parts[j])
-            if len(name_parts) >= 2:
-                return " ".join(name_parts)
-    return ""
-
-
-def pass_4_5_iec_ecc(
-    exp_df: pd.DataFrame, cand_idx: dict, com_df: pd.DataFrame,
-    edge_type: str, type_codes: list[str],
-) -> list[Edge]:
-    edges: list[Edge] = []
-    rows = exp_df[exp_df["type_code"].isin(type_codes)]
-
-    com_by_acct = {}
-    for _, c in com_df.iterrows():
-        com_by_acct[str(c["pc_acct"])] = c.to_dict()
-
-    for _, row in rows.iterrows():
-        m = re.match(r"Expend_(\d+)\.txt", str(row.get("source_file", "")))
-        if not m:
-            continue
-        pc_acct = m.group(1)
-        purpose = str(row.get("purpose", "")).strip()
-        vendor  = str(row.get("vendor_name", "")).strip()
-
-        # Try to extract candidate name from purpose
-        cand_name = _extract_candidate_from_purpose(purpose)
-        cand = None
-        score = 0
-
-        if cand_name:
-            cand, score = match_candidate(cand_name, cand_idx, threshold=FUZZY_CAND_THRESHOLD)
-
-        if not cand:
-            # Try vendor name as candidate (rare but possible)
-            cand, score = match_candidate(vendor, cand_idx, threshold=FUZZY_CAND_STRICT)
-
-        if not cand:
-            continue
-
-        direction = _parse_direction(purpose)
-        try:
-            amt = float(row.get("amount", 0))
-        except (ValueError, TypeError):
-            amt = 0
-
-        com = com_by_acct.get(pc_acct, {})
-        edges.append(Edge(
-            candidate_acct_num=str(cand["candidate_acct"]),
-            pc_acct_num=pc_acct,
-            pc_name=com.get("pc_name", f"Committee {pc_acct}"),
-            pc_type=com.get("pc_type", ""),
-            edge_type=edge_type,
-            direction=direction,
-            evidence_summary=f"{edge_type.replace('_', ' ').title()}: {purpose[:80]} (${amt:,.2f})",
-            source_type="committee_expenditure",
-            source_record_id=str(row.get("source_file", "")),
-            match_method="fuzzy_name",
-            match_score=f"{score:.1f}",
-            amount=f"{amt:.2f}",
-            edge_date=str(row.get("expenditure_date", "")),
-            is_publishable=True,
-        ))
-
-    print(f"Pass {'4' if 'IEC' in edge_type else '5'} ({edge_type}): {len(edges)} edges from {len(rows)} rows")
     return edges
 
 
@@ -918,35 +662,224 @@ def compute_candidate_specific(
     is_candidate_specific=True means script 81 will include this PAC's total_received
     in the candidate's soft_money_total.
     """
-    # Build candidate name lookup
+    # Build candidate name lookups
     cand_names: dict[str, str] = {str(r["candidate_acct"]): r["name_clean"]
                                    for r in cand_df.to_dict("records")}
+    # Last-name lookup used for sole_filer identity check
+    cand_last: dict[str, str] = {
+        str(r["candidate_acct"]): clean(str(r.get("last_name", "")))
+        for r in cand_df.to_dict("records")
+    }
+    # Committee chair last-name lookup: pc_acct_num → cleaned chair_last.
+    # Used to grant is_candidate_specific when the candidate is the registered
+    # chair of the matched committee but a co-filer (e.g. a running-mate) blocks
+    # the sole_filer path. Chair status plus a solicitation filing = direct control.
+    com_chair_last: dict[str, str] = {}
+    if com_df is not None:
+        for r in com_df.to_dict("records"):
+            acct = str(r.get("pc_acct", ""))   # load_committees() renames acct_num→pc_acct
+            last = clean(str(r.get("chair_last", "")))
+            if acct and last:
+                com_chair_last[acct] = last
 
-    # Count distinct PEOPLE (by name_clean) per PAC who filed a SOLICITATION_CONTROL edge.
-    # Exclude withdrawn filers — a candidate who withdrew their solicitation no longer
-    # controls the PAC, so they shouldn't count toward sole_filer determination.
-    sol_pac_filers: dict[str, set] = {}
-    for e in all_edges:
-        if e.edge_type == "SOLICITATION_CONTROL" and e.is_publishable and e.pc_acct_num:
-            if "(withdrawn)" in (e.evidence_summary or "").lower():
-                continue
-            person_id = cand_names.get(e.candidate_acct_num, e.candidate_acct_num)
-            sol_pac_filers.setdefault(e.pc_acct_num, set()).add(person_id)
+    # Count distinct filers per normalized org name using the raw sol_csv.
+    # We key by org name (not pc_acct_num) because fuzzy committee matching can map
+    # many differently-named orgs to the same acct_num, making a sole-filer PAC
+    # (e.g. "Conservative Florida" / McClure) appear multi-candidate.
+    # Using the org name directly avoids that pollution.
+    #
+    # Recency rule: when an org has multiple filers, only count filers whose
+    # most recent filing is within 6 years of the newest filing for that org.
+    # This handles committee succession (e.g. Hukill 2013 → DeSantis 2024 for
+    # Florida Freedom Fund) where old filings are never retroactively marked
+    # withdrawn in the source data even though the committee changed hands.
+    from collections import defaultdict
+    from datetime import datetime, timedelta
+
+    # Step 1: collect (last, first, date) per org
+    _org_filer_dates: dict[str, list] = defaultdict(list)  # norm_org → [(last, first, date)]
+    for row in (sol_csv or []):
+        ft = row.get("form_type", "")
+        if "statement of solicitation" not in ft.lower():
+            continue
+        org  = clean(row.get("organization", ""))
+        last = row.get("last_name", "").strip().upper()
+        frst = row.get("first_name", "").strip().upper()
+        raw_date = row.get("received_date", "") or ""
+        try:
+            filing_date = datetime.strptime(raw_date[:10], "%Y-%m-%d")
+        except ValueError:
+            filing_date = datetime.min
+        if org and last:
+            _org_filer_dates[org].append((last, frst, filing_date))
+
+    # Step 2: for each org, find the most recent filing date, then keep only
+    # filers whose latest filing is within 6 years of that most-recent date.
+    _RECENCY_WINDOW = timedelta(days=6 * 365)
+    _sol_org_filers: dict[str, set] = defaultdict(set)  # norm_org → set of (last, first)
+    for org, entries in _org_filer_dates.items():
+        most_recent = max(e[2] for e in entries)
+        cutoff = most_recent - _RECENCY_WINDOW
+        # Keep only filers whose latest filing for this org is on or after cutoff
+        filer_latest: dict[tuple, datetime] = {}
+        for last, frst, dt in entries:
+            key = (last, frst)
+            if key not in filer_latest or dt > filer_latest[key]:
+                filer_latest[key] = dt
+        for (last, frst), latest_dt in filer_latest.items():
+            if latest_dt >= cutoff:
+                _sol_org_filers[org].add((last, frst))
+
+    def _extract_org_from_evidence(evidence: str) -> str:
+        """Pull org name from 'Statement of solicitation filed for ORG (DATE)'."""
+        import re as _re
+        m = _re.search(r"filed(?:\s*\(withdrawn\))?\s+for\s+(.+?)\s*\(", evidence or "", _re.I)
+        return clean(m.group(1)) if m else ""
 
     # ── Pre-pass: identify (candidate, PAC) pairs with specific solicitation edges ──
-    # Withdrawn filers are excluded: they no longer control the PAC.
-    specific_sol_pairs: set[tuple] = set()
+    # Specificity rules (applied to ALL solicitation edges, including withdrawn):
+    #   name_in_pac — candidate's last name (≥5 chars) is in the PAC name. Withdrawal
+    #                 doesn't un-name the PAC, so this check is withdrawal-agnostic.
+    #   sole_filer  — only one person ever filed a solicitation for this exact org name
+    #                 (non-withdrawn filings only, keyed by normalized org name).
+    #
+    # Exclusion: if a PAC's registered name contains another candidate's last name
+    # (i.e. it's a "named PAC"), sole_filer does not override for a different candidate.
+    # This prevents e.g. Ingoglia from claiming Friends of Ron DeSantis via sole_filer
+    # on "Empower Parents PAC" (the renamed version of the same acct).
+
+    # First, identify which PAC acct_nums are "named" (contain a candidate's surname ≥5 chars)
+    # and which candidate name is embedded.
+    named_pac_accts: dict[str, str] = {}  # pc_acct_num → name_clean of the naming candidate
     for e in all_edges:
         if e.edge_type != "SOLICITATION_CONTROL" or not e.is_publishable or not e.pc_acct_num:
             continue
-        if "(withdrawn)" in (e.evidence_summary or "").lower():
+        cand_nc = cand_names.get(e.candidate_acct_num, "")
+        pac_nc  = clean(e.pc_name)
+        if _check_name_in_pac(cand_nc, pac_nc):
+            named_pac_accts[e.pc_acct_num] = cand_nc
+
+    # Track specificity candidates with metadata for the tie-breaking pass.
+    # Maps (cand_acct, pc_acct) → {'via_name': bool, 'date': datetime}
+    _spec_candidates: dict[tuple, dict] = {}
+
+    def _parse_edge_date(evidence: str) -> "datetime":
+        """Extract filing date from evidence string '... (MM/DD/YYYY)'."""
+        import re as _re
+        m = _re.search(r"\((\d{2}/\d{2}/\d{4})\)", evidence or "")
+        if m:
+            try:
+                return datetime.strptime(m.group(1), "%m/%d/%Y")
+            except ValueError:
+                pass
+        return datetime.min
+
+    for e in all_edges:
+        if e.edge_type != "SOLICITATION_CONTROL" or not e.is_publishable or not e.pc_acct_num:
             continue
         cand_nc = cand_names.get(e.candidate_acct_num, "")
         pac_nc  = clean(e.pc_name)
         name_in_pac = _check_name_in_pac(cand_nc, pac_nc)
-        sole_filer  = len(sol_pac_filers.get(e.pc_acct_num, set())) == 1
-        if name_in_pac or sole_filer:
-            specific_sol_pairs.add((e.candidate_acct_num, e.pc_acct_num))
+
+        # sole_filer: check against the specific org name in the evidence, not the acct_num.
+        # Suppressed when the PAC is a named PAC and this candidate's name isn't the one in it.
+        is_withdrawn = "(withdrawn)" in (e.evidence_summary or "").lower()
+        pac_is_named_for_other = (
+            e.pc_acct_num in named_pac_accts and
+            named_pac_accts[e.pc_acct_num] != cand_nc
+        )
+        if not is_withdrawn and not pac_is_named_for_other:
+            org_key    = _extract_org_from_evidence(e.evidence_summary)
+            # Also require the org name to genuinely match the registered committee name.
+            # fuzz.ratio (not token_set_ratio) prevents subset false-positives like
+            # "Conservative Principles for Florida" matching to "Conservative Florida".
+            # _strip_legal removes leading "THE" and trailing legal suffixes (INC, LLC,
+            # COMMITTEE, etc.) before comparison — handles cases like "All About Florida"
+            # (sol filing) vs "All About Florida Committee, Inc." (registered name).
+            _org_norm = _strip_legal(org_key) if org_key else org_key
+            _pac_norm = _strip_legal(clean(e.pc_name))
+            org_matches_pac = bool(
+                org_key and fuzz.ratio(_org_norm, _pac_norm) >= 90
+            )
+            filers = _sol_org_filers.get(org_key, set())
+            if org_matches_pac and len(filers) == 1:
+                # Verify this candidate IS the sole filer (not just that one exists).
+                # Prevents e.g. Powell from claiming Edmonds's PAC after recency excludes Powell.
+                (sf_last, _sf_first) = next(iter(filers))
+                cand_last_nc = cand_last.get(e.candidate_acct_num, "")
+                sole_filer = bool(sf_last and cand_last_nc and sf_last == cand_last_nc)
+            else:
+                sole_filer = False
+        else:
+            sole_filer = False
+
+        # Chair-specific: candidate is the registered chair of the matched committee
+        # AND has a solicitation filing for it. Handles the case where a running-mate
+        # (e.g. a Lt. Governor pick) also filed a solicitation, blocking sole_filer,
+        # but the committee chair clearly identifies the primary candidate.
+        chair_specific = False
+        if not name_in_pac and not sole_filer and e.pc_acct_num:
+            chair_last_com = com_chair_last.get(e.pc_acct_num, "")
+            cand_last_nc   = cand_last.get(e.candidate_acct_num, "")
+            if (chair_last_com and cand_last_nc
+                    and len(chair_last_com) >= 4
+                    and chair_last_com == cand_last_nc):
+                chair_specific = True
+
+        if name_in_pac or sole_filer or chair_specific:
+            key = (e.candidate_acct_num, e.pc_acct_num)
+            filing_date = _parse_edge_date(e.evidence_summary)
+            existing = _spec_candidates.get(key)
+            if existing is None:
+                _spec_candidates[key] = {"via_name": name_in_pac, "date": filing_date}
+            else:
+                # Keep the name_in_pac flag and the most recent date seen for this pair
+                _spec_candidates[key] = {
+                    "via_name": existing["via_name"] or name_in_pac,
+                    "date": max(existing["date"], filing_date),
+                }
+
+    # ── Tie-breaking pass: sole_filer collision resolution ───────────────────
+    # When multiple candidates are both specific for the same pc_acct_num purely
+    # via sole_filer (org name variants like "True Conservative" vs "True Conservatives"
+    # both fuzzy-matching to the same registered committee), keep only the candidate
+    # with the most recent filing. Candidates with name_in_pac are never removed.
+    from collections import defaultdict as _dd
+    pac_specific_cands: dict[str, list] = _dd(list)
+    for (cand_acct, pc_acct), meta in _spec_candidates.items():
+        pac_specific_cands[pc_acct].append((cand_acct, meta))
+
+    specific_sol_pairs: set[tuple] = set()
+    for pc_acct, entries in pac_specific_cands.items():
+        named_entries    = [(c, m) for c, m in entries if m["via_name"]]
+        sole_only_entries = [(c, m) for c, m in entries if not m["via_name"]]
+
+        # Always include name_in_pac entries
+        for cand_acct, _ in named_entries:
+            specific_sol_pairs.add((cand_acct, pc_acct))
+
+        if sole_only_entries:
+            # Group by person (last name) — same person across election cycles is not a collision
+            by_person: dict[str, list] = _dd(list)
+            for cand_acct, meta in sole_only_entries:
+                person_key = cand_last.get(cand_acct, cand_acct)
+                by_person[person_key].append((cand_acct, meta))
+
+            if len(by_person) == 1:
+                # Only one person (possibly multiple cycles) — keep all their entries
+                for cand_acct, _ in sole_only_entries:
+                    specific_sol_pairs.add((cand_acct, pc_acct))
+            else:
+                # Multiple different people via sole_filer → keep only the person
+                # whose most recent filing for this PAC is the latest overall.
+                # This resolves org-name variant collisions (e.g. "True Conservative"
+                # vs "True Conservatives") by deferring to the current controller.
+                winning_person = max(
+                    by_person.items(),
+                    key=lambda kv: max(m["date"] for _, m in kv[1])
+                )[0]
+                for cand_acct, _ in by_person[winning_person]:
+                    specific_sol_pairs.add((cand_acct, pc_acct))
 
     # ── Main pass: compute specificity for all edges ─────────────────────────
     from dataclasses import replace
@@ -1034,7 +967,7 @@ def compute_candidate_specific(
 def main() -> int:
     print("=== Script 71: Evidence-Based Candidate → Committee Linkage ===\n")
 
-    for p in (COMMITTEES, CANDIDATES, EXPENDITURES):
+    for p in (COMMITTEES, CANDIDATES):
         if not p.exists():
             print(f"ERROR: {p.name} not found at {p}", file=sys.stderr)
             return 1
@@ -1044,7 +977,6 @@ def main() -> int:
     com_df    = load_committees()
     sol_index = load_solicitations_index()
     sol_csv   = load_solicitations_csv()
-    exp_df    = pd.read_csv(EXPENDITURES, dtype=str).fillna("")
 
     cand_idx, person_idx, nameclean_idx = build_cand_index(cand_df)
     com_list = com_df.to_dict("records")
@@ -1056,32 +988,15 @@ def main() -> int:
     print(f"Committees:            {len(com_df):,}")
     print(f"Solicitations (index): {len(sol_index):,}")
     print(f"Solicitations (CSV):   {len(sol_csv):,}")
-    print(f"Expenditures:          {len(exp_df):,}")
     print(f"Prof treasurers:       {len(prof_treasurers):,}")
     print(f"Common surnames:       {len(common_surnames):,}")
     print()
 
-    # Run all passes
+    # Run passes
     all_edges: list[Edge] = []
 
     all_edges.extend(pass_1_solicitation_control(
         cand_idx, person_idx, nameclean_idx, com_list, sol_index, sol_csv
-    ))
-
-    all_edges.extend(pass_2_direct_contributions(
-        exp_df, cand_df, cand_idx, person_idx, nameclean_idx, com_df
-    ))
-
-    all_edges.extend(pass_3_other_distributions(exp_df, cand_idx, com_df))
-
-    all_edges.extend(pass_4_5_iec_ecc(
-        exp_df, cand_idx, com_df,
-        edge_type="IEC_FOR_OR_AGAINST", type_codes=["IEC", "IEI"]
-    ))
-
-    all_edges.extend(pass_4_5_iec_ecc(
-        exp_df, cand_idx, com_df,
-        edge_type="ECC_FOR_OR_AGAINST", type_codes=["ECC", "ECI"]
     ))
 
     all_edges.extend(pass_6_admin_overlap(
