@@ -338,9 +338,11 @@ export default function CandidatesList() {
           { href: '/committees',  label: 'Committees',         color: 'var(--teal)',   border: 'rgba(77,216,240,0.25)'  },
           { href: '/donors',      label: 'Donors',             color: 'var(--orange)', border: 'rgba(255,176,96,0.25)'  },
           { href: '/explorer',    label: 'All Transactions',   color: 'var(--text-dim)', border: 'var(--border)'        },
-          { href: '/cycles',      label: 'Election Cycles',    color: 'var(--green)',  border: 'rgba(128,255,160,0.25)' },
-          { href: '/industries',  label: 'Industries',         color: 'var(--blue)',   border: 'rgba(160,192,255,0.25)' },
-          { href: '/party-finance', label: 'Party Finance',   color: 'var(--text-dim)', border: 'var(--border)'        },
+          { href: '/cycles',        label: 'Election Cycles',  color: 'var(--green)',    border: 'rgba(128,255,160,0.25)' },
+          { href: '/industries',    label: 'Industries',       color: 'var(--blue)',     border: 'rgba(160,192,255,0.25)' },
+          { href: '/party-finance', label: 'Party Finance',    color: 'var(--text-dim)', border: 'var(--border)'          },
+          { href: '/network/graph', label: 'Network Graph',    color: 'var(--teal)',     border: 'rgba(77,216,240,0.25)'  },
+          { href: '/flow',          label: 'Money Flow',       color: 'var(--teal)',     border: 'rgba(77,216,240,0.25)'  },
         ].map(({ href, label, color, border }) => (
           <a key={href} href={href} style={{ fontSize: '0.72rem', color, textDecoration: 'none', border: `1px solid ${border}`, borderRadius: '3px', padding: '0.2rem 0.55rem' }}>
             {label}

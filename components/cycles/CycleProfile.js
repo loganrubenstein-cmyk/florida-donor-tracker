@@ -138,7 +138,7 @@ export default function CycleProfile({ year, candidates, topDonors = [], electio
               return (
                 <div key={party}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.2rem' }}>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '0.72rem', color }}>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '0.82rem', color }}>
                       {PARTY_LABEL[party] || party}
                       <span style={{ fontWeight: 400, color: 'var(--text-dim)', marginLeft: '0.4rem', fontSize: '0.62rem' }}>
                         {pdata.count}
@@ -167,7 +167,7 @@ export default function CycleProfile({ year, candidates, topDonors = [], electio
               return (
                 <div key={chamber}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.2rem' }}>
-                    <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '0.72rem', color }}>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontWeight: 700, fontSize: '0.82rem', color }}>
                       {chamber}
                       <span style={{ fontWeight: 400, color: 'var(--text-dim)', marginLeft: '0.4rem', fontSize: '0.62rem' }}>
                         {cdata.count}
@@ -197,7 +197,7 @@ export default function CycleProfile({ year, candidates, topDonors = [], electio
                 <td style={{ padding: '0.35rem 0.5rem', color: 'var(--text-dim)', fontSize: '0.68rem', maxWidth: '160px', wordBreak: 'break-word' }}>
                   {office}
                 </td>
-                <td style={{ padding: '0.35rem 0.5rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.65rem' }}>
+                <td style={{ padding: '0.35rem 0.5rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.72rem' }}>
                   {data.count}
                 </td>
                 <td style={{ padding: '0.35rem 0.5rem', textAlign: 'right', color: 'var(--orange)', fontFamily: 'var(--font-mono)', fontSize: '0.68rem', whiteSpace: 'nowrap' }}>
@@ -262,18 +262,18 @@ export default function CycleProfile({ year, candidates, topDonors = [], electio
                     {PARTY_LABEL[c.party_code] || c.party_code || '—'}
                   </span>
                 </td>
-                <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.65rem', maxWidth: '140px', wordBreak: 'break-word' }}>
+                <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.72rem', maxWidth: '140px', wordBreak: 'break-word' }}>
                   {c.office_desc || '—'}
                 </td>
-                <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--blue)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', whiteSpace: 'nowrap' }}>
+                <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--blue)', fontFamily: 'var(--font-mono)', fontSize: '0.78rem', whiteSpace: 'nowrap' }}>
                   {fmt(c.hard_money_total)}
                 </td>
                 {hasSoft && (
-                  <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--teal)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', whiteSpace: 'nowrap' }}>
+                  <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--teal)', fontFamily: 'var(--font-mono)', fontSize: '0.78rem', whiteSpace: 'nowrap' }}>
                     {c.soft_money_total > 0 ? fmt(c.soft_money_total) : <span style={{ opacity: 0.3 }}>—</span>}
                   </td>
                 )}
-                <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--orange)', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '0.7rem', whiteSpace: 'nowrap' }}>
+                <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--orange)', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '0.78rem', whiteSpace: 'nowrap' }}>
                   {fmt(c.total_combined)}
                 </td>
               </tr>
@@ -325,10 +325,10 @@ export default function CycleProfile({ year, candidates, topDonors = [], electio
                     {d.is_corporate ? 'CORP' : 'IND'}
                   </span>
                 </td>
-                <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>
+                <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.78rem' }}>
                   {d.num_contributions.toLocaleString()}
                 </td>
-                <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--orange)', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '0.7rem', whiteSpace: 'nowrap' }}>
+                <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--orange)', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '0.78rem', whiteSpace: 'nowrap' }}>
                   {fmt(d.total)}
                 </td>
               </tr>
@@ -358,14 +358,14 @@ export default function CycleProfile({ year, candidates, topDonors = [], electio
             .replace('ATTORNEY GENERAL', 'Attorney General');
           return (
             <div key={race.contest_name} style={{ border: '1px solid var(--border)', borderRadius: '4px', padding: '0.85rem 1rem', background: 'var(--surface)' }}>
-              <div style={{ fontSize: '0.65rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text)', marginBottom: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                 {contestLabel}
               </div>
               {sorted.map(c => (
                 <div key={c.candidate_name} style={{ marginBottom: '0.45rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.18rem' }}>
                     <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: PARTY_COLOR[c.party] || 'var(--text-dim)', display: 'inline-block', flexShrink: 0 }} />
-                    <span style={{ fontSize: '0.7rem', color: c.winner ? 'var(--text)' : 'var(--text-dim)', fontWeight: c.winner ? 600 : 400, flex: 1 }}>
+                    <span style={{ fontSize: '0.78rem', color: c.winner ? 'var(--text)' : 'var(--text-dim)', fontWeight: c.winner ? 600 : 400, flex: 1 }}>
                       {c.winner && <span style={{ color: 'var(--green)', marginRight: '3px', fontSize: '0.58rem' }}>✓</span>}
                       <a href={`/candidate/${c.finance_acct_num}`} style={{ color: 'inherit', textDecoration: 'none' }}>
                         {c.candidate_name}

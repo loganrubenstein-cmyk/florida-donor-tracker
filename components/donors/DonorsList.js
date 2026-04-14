@@ -350,8 +350,10 @@ export default function DonorsList() {
           { href: '/candidates',  label: 'Candidates',         color: 'var(--blue)',   border: 'rgba(160,192,255,0.25)' },
           { href: '/committees',  label: 'Committees',         color: 'var(--teal)',   border: 'rgba(77,216,240,0.25)'  },
           { href: '/explorer',    label: 'All Transactions',   color: 'var(--text-dim)', border: 'var(--border)'        },
-          { href: '/industries',  label: 'Industries',         color: 'var(--orange)', border: 'rgba(255,176,96,0.25)'  },
-          { href: '/influence',   label: 'Influence Index',    color: 'var(--orange)', border: 'rgba(255,176,96,0.25)'  },
+          { href: '/industries',    label: 'Industries',        color: 'var(--orange)', border: 'rgba(255,176,96,0.25)'  },
+          { href: '/influence',    label: 'Influence Index',   color: 'var(--orange)', border: 'rgba(255,176,96,0.25)'  },
+          { href: '/network/graph', label: 'Network Graph',   color: 'var(--teal)',   border: 'rgba(77,216,240,0.25)'  },
+          { href: '/flow',          label: 'Money Flow',      color: 'var(--teal)',   border: 'rgba(77,216,240,0.25)'  },
         ].map(({ href, label, color, border }) => (
           <a key={href} href={href} style={{ fontSize: '0.72rem', color, textDecoration: 'none', border: `1px solid ${border}`, borderRadius: '3px', padding: '0.2rem 0.55rem' }}>
             {label}

@@ -183,7 +183,7 @@ export default function IndustryProfile({ data, totalAmount, trendData, topDonor
                         width: `${Math.min(Math.round(pct * 2), 80)}px`, height: '6px',
                         background: colorRaw, borderRadius: '1px', opacity: 0.7,
                       }} />
-                      <span style={{ color: 'var(--orange)', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '0.72rem' }}>
+                      <span style={{ color: 'var(--orange)', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '0.82rem' }}>
                         {fmtFull(c.total)}
                       </span>
                     </div>
@@ -247,10 +247,10 @@ export default function IndustryProfile({ data, totalAmount, trendData, topDonor
                     {d.is_corporate ? 'CORP' : 'IND'}
                   </span>
                 </td>
-                <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>
+                <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.78rem' }}>
                   {d.num_committees}
                 </td>
-                <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--orange)', fontWeight: 700, whiteSpace: 'nowrap', fontFamily: 'var(--font-mono)', fontSize: '0.72rem' }}>
+                <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--orange)', fontWeight: 700, whiteSpace: 'nowrap', fontFamily: 'var(--font-mono)', fontSize: '0.82rem' }}>
                   {fmt(d.total_combined)}
                 </td>
               </tr>
@@ -263,7 +263,7 @@ export default function IndustryProfile({ data, totalAmount, trendData, topDonor
                     {d.name}
                   </a>
                 </td>
-                <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--orange)', fontWeight: 700, whiteSpace: 'nowrap', fontFamily: 'var(--font-mono)', fontSize: '0.72rem' }}>
+                <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--orange)', fontWeight: 700, whiteSpace: 'nowrap', fontFamily: 'var(--font-mono)', fontSize: '0.82rem' }}>
                   {fmtFull(d.total)}
                 </td>
               </tr>
@@ -309,14 +309,14 @@ export default function IndustryProfile({ data, totalAmount, trendData, topDonor
                   )}
                 </td>
                 <td style={{ padding: '0.45rem 0.6rem' }}>
-                  <span style={{ fontSize: '0.65rem', padding: '0.1rem 0.35rem', border: '1px solid var(--border)', borderRadius: '3px', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+                  <span style={{ fontSize: '0.72rem', padding: '0.1rem 0.35rem', border: '1px solid var(--border)', borderRadius: '3px', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
                     {leg.chamber === 'House' ? 'H' : 'S'}
                   </span>
                 </td>
                 <td style={{ padding: '0.45rem 0.6rem' }}>
-                  <span style={{ color: PARTY_COLOR[leg.party] || 'var(--text-dim)', fontWeight: 600, fontSize: '0.7rem' }}>{leg.party}</span>
+                  <span style={{ color: PARTY_COLOR[leg.party] || 'var(--text-dim)', fontWeight: 600, fontSize: '0.78rem' }}>{leg.party}</span>
                 </td>
-                <td style={{ padding: '0.45rem 0.6rem', color: 'var(--teal)', fontFamily: 'var(--font-mono)', fontSize: '0.72rem' }}>
+                <td style={{ padding: '0.45rem 0.6rem', color: 'var(--teal)', fontFamily: 'var(--font-mono)', fontSize: '0.82rem' }}>
                   {leg.district}
                 </td>
                 <td style={{ padding: '0.45rem 0.6rem', color: colorRaw, fontFamily: 'var(--font-mono)', fontSize: '0.75rem', fontWeight: 600 }}>
@@ -342,7 +342,7 @@ export default function IndustryProfile({ data, totalAmount, trendData, topDonor
           <a key={label} href={href}
             style={{
               padding: '0.35rem 0.75rem', border: '1px solid var(--border)',
-              color: 'var(--teal)', fontSize: '0.72rem', borderRadius: '3px',
+              color: 'var(--teal)', fontSize: '0.82rem', borderRadius: '3px',
               textDecoration: 'none', fontFamily: 'var(--font-mono)',
             }}>
             {label}
