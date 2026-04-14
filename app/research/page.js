@@ -101,6 +101,17 @@ export default async function ResearchHub() {
           <div className="hub-card-stat">12 elections · 2012–2024</div>
         </Link>
 
+        <Link href="/influence" className="hub-card">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="var(--orange)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: '0.25rem', opacity: 0.8 }}>
+            <circle cx="10" cy="10" r="7" />
+            <line x1="10" y1="6" x2="10" y2="10" />
+            <line x1="10" y1="10" x2="13" y2="13" />
+          </svg>
+          <div className="hub-card-title">Influence Index</div>
+          <div className="hub-card-desc">Organizations ranked by total political spending — lobbying compensation plus campaign donations combined into one influence score.</div>
+          <div className="hub-card-stat">$20.9B tracked · 3,900+ orgs</div>
+        </Link>
+
         <Link href="/legislature" className="hub-card">
           <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="var(--orange)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: '0.25rem', opacity: 0.8 }}>
             <polyline points="2,7 10,2 18,7" />
@@ -119,7 +130,7 @@ export default async function ResearchHub() {
       <DataTrustBlock
         source="Florida Division of Elections · FL House Lobbyist Disclosure Portal · LegiScan"
         sourceUrl="https://dos.elections.myflorida.com/campaign-finance/"
-        lastUpdated="April 2026"
+        
         direct={['contribution amounts', 'filing dates', 'lobbyist registrations', 'bill disclosures']}
         normalized={['donor names deduplicated across committees', 'industry classifications']}
         inferred={['industry bucket from occupation keywords', 'party-linked PAC totals']}
