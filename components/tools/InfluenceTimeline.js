@@ -16,11 +16,13 @@ export default function InfluenceTimeline() {
   const [showDropdown, setShowDropdown] = useState(false);
   const timerRef = useRef(null);
 
-  // Auto-load if ?acct= is in URL
+  // Auto-load if ?acct= is in URL; pre-fill if ?q= is in URL
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const acct = params.get('acct');
+    const q    = params.get('q');
     if (acct) loadTimeline(acct, '');
+    else if (q) handleSearch(q);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function handleSearch(val) {

@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
 
-const PAGE_SIZE = 50;
+const PAGE_SIZE    = 50;
+const EXPORT_LIMIT = 500;
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
@@ -11,6 +12,7 @@ export async function GET(request) {
   const sort     = searchParams.get('sort')     || 'total_combined';
   const sortDir  = searchParams.get('sort_dir') || '';
   const page     = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
+  const isExport = searchParams.get('export') === '1';
 
   const db = getDb();
   let query = db
@@ -31,8 +33,9 @@ export async function GET(request) {
   const ascending  = sortDir === 'asc' ? true : sortDir === 'desc' ? false : defaultAsc;
   query = query.order(sort, { ascending });
 
-  const offset = (page - 1) * PAGE_SIZE;
-  query = query.range(offset, offset + PAGE_SIZE - 1);
+  const offset = isExport ? 0 : (page - 1) * PAGE_SIZE;
+  const limit  = isExport ? EXPORT_LIMIT : PAGE_SIZE;
+  query = query.range(offset, offset + limit - 1);
 
   const { data, count, error } = await query;
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });

@@ -3,6 +3,7 @@ import BackLinks from '@/components/BackLinks';
 import SourceLink from '@/components/shared/SourceLink';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import { slugify } from '@/lib/slugify';
+import { fmtMoney, fmtMoneyCompact, fmtCount } from '@/lib/fmt';
 
 const INDUSTRY_SLUG = {
   'Healthcare':                 'healthcare',
@@ -59,25 +60,17 @@ export default function PrincipalProfile({ data, compData = null }) {
   const inactiveLobbyists = lobbyists.filter(l => !l.is_active);
   const donationMatches   = data.donation_matches || [];
   const topCommittees     = data.top_committees || [];
+  const stateContracts    = data.state_contracts || [];
 
   const location    = [data.city, data.state].filter(Boolean).join(', ');
   const industry    = data.industry && data.industry !== 'Other' ? data.industry : null;
   const industrySlug = industry ? INDUSTRY_SLUG[industry] : null;
 
   const researchLinks = [
-    {
-      label: 'Find Donor Overlap →',
-      href: '/compare',
-      internal: true,
-    },
-    {
-      label: 'FL Lobbyist Registry →',
-      href: `https://www.leg.state.fl.us/Lobbyist/index.cfm?Tab=principalsearch`,
-    },
-    {
-      label: 'Google →',
-      href: `https://www.google.com/search?q=${encodeURIComponent((data.name || '') + ' Florida lobbying')}`,
-    },
+    { label: 'Find Donor Overlap →', href: '/compare', internal: true },
+    { label: 'State Contracts →', href: '/contracts', internal: true },
+    { label: 'FL Lobbyist Registry →', href: `https://www.leg.state.fl.us/Lobbyist/index.cfm?Tab=principalsearch` },
+    { label: 'Google →', href: `https://www.google.com/search?q=${encodeURIComponent((data.name || '') + ' Florida lobbying')}` },
   ];
 
   return (
@@ -116,6 +109,15 @@ export default function PrincipalProfile({ data, compData = null }) {
               DONATION MATCH
             </span>
           )}
+          {stateContracts.length > 0 && (
+            <span style={{
+              fontSize: '0.65rem', padding: '0.15rem 0.5rem',
+              border: '1px solid var(--gold)', color: 'var(--gold)',
+              borderRadius: '2px', fontFamily: 'var(--font-mono)', fontWeight: 'bold',
+            }}>
+              STATE CONTRACTOR
+            </span>
+          )}
         </div>
         <h1 style={{
           fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.5rem, 4vw, 2.4rem)',
@@ -150,6 +152,14 @@ export default function PrincipalProfile({ data, compData = null }) {
         ) : (
           <StatBox label="Past Lobbyists" value={(inactiveLobbyists.length).toLocaleString()}
             color="var(--text-dim)" />
+        )}
+        {stateContracts.length > 0 && (
+          <StatBox
+            label="State Contracts"
+            value={fmt(stateContracts.reduce((s, c) => s + c.total_contract_amount, 0))}
+            sub={`${stateContracts.length} vendor match${stateContracts.length > 1 ? 'es' : ''}`}
+            color="var(--gold)"
+          />
         )}
       </div>
 
@@ -401,6 +411,68 @@ export default function PrincipalProfile({ data, compData = null }) {
         </div>
       )}
 
+      {/* State contracts */}
+      {stateContracts.length > 0 && (
+        <div style={{ marginBottom: '2rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+            <SectionLabel>State Contracts ({stateContracts.length} vendor match{stateContracts.length > 1 ? 'es' : ''})</SectionLabel>
+            <a href="/contracts" style={{ fontSize: '0.65rem', color: 'var(--teal)', textDecoration: 'none' }}>
+              Browse all contracts →
+            </a>
+          </div>
+          <div style={{
+            padding: '0.6rem 0.9rem', border: '1px solid rgba(255,208,96,0.15)',
+            borderRadius: '3px', background: 'rgba(255,208,96,0.04)',
+            fontSize: '0.7rem', color: 'var(--text-dim)', marginBottom: '0.75rem',
+          }}>
+            This principal&apos;s name closely matches one or more vendors in the FL Accountability
+            Contract Tracking System (FACTS). They may both lobby the legislature and receive state contracts.
+          </div>
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                  {['#', 'Vendor', 'Top Agency', 'Contracts', 'Years', 'Total Received'].map((h, j) => (
+                    <th key={h} style={{
+                      padding: '0.35rem 0.6rem', fontSize: '0.6rem', color: 'var(--text-dim)',
+                      textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 400,
+                      textAlign: j === 0 || j === 3 ? 'center' : j === 5 ? 'right' : 'left',
+                    }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {stateContracts.map((c, i) => (
+                  <tr key={c.vendor_slug} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
+                    <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2rem' }}>{i + 1}</td>
+                    <td style={{ padding: '0.4rem 0.6rem', maxWidth: '260px', wordBreak: 'break-word' }}>
+                      <a href="/contracts" style={{ color: 'var(--gold)', textDecoration: 'none' }}>
+                        {c.vendor_name}
+                      </a>
+                      <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', marginTop: '0.15rem' }}>
+                        {c.match_score >= 99 ? 'exact match' : `${Math.round(c.match_score)}% name match`}
+                      </div>
+                    </td>
+                    <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.7rem', maxWidth: '180px' }}>
+                      {c.top_agency || '—'}
+                    </td>
+                    <td style={{ padding: '0.4rem 0.6rem', textAlign: 'center', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>
+                      {fmtCount(c.num_contracts)}
+                    </td>
+                    <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>
+                      {c.year_range || '—'}
+                    </td>
+                    <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--gold)', fontWeight: 700, whiteSpace: 'nowrap' }}>
+                      {fmtMoney(c.total_contract_amount)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
       {/* Research links */}
       <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.25rem', marginBottom: '2rem' }}>
         <SectionLabel>Research</SectionLabel>
@@ -429,6 +501,7 @@ export default function PrincipalProfile({ data, compData = null }) {
           'Compensation below $50,000 is reported in ranges — we use midpoints for aggregation.',
           'Amounts of $50,000+ are exact figures reported by the principal.',
           'Donation matches are name-based and may include false positives for common names.',
+          ...(stateContracts.length > 0 ? ['State contract matches are based on vendor name similarity to this principal — not a confirmed legal entity match.'] : []),
         ]}
       />
     </main>

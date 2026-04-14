@@ -3,6 +3,8 @@ import dynamic from 'next/dynamic';
 import BackLinks from '@/components/BackLinks';
 import TabbedProfile from '@/components/shared/TabbedProfile';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import EntityHeader from '@/components/shared/EntityHeader';
+import RelationshipsBlock from '@/components/shared/RelationshipsBlock';
 import NewsBlock from '@/components/shared/NewsBlock';
 import SourceLink from '@/components/shared/SourceLink';
 import { slugify } from '@/lib/slugify';
@@ -139,6 +141,7 @@ export default function DonorProfile({ data, annotations = {} }) {
   const candidates = data.candidates || [];
   const byYear     = data.by_year    || [];
   const lobbyists  = data.lobbyist_principals || [];
+  const contracts  = data.state_contracts || [];
 
   const norm = s => String(s).toUpperCase().replace(/[^A-Z0-9]/g, '');
   const normName = norm(data.name || '');
@@ -170,6 +173,14 @@ export default function DonorProfile({ data, annotations = {} }) {
         <StatBox label="Lobbyist Principals" value={lobbyists.length > 0 ? lobbyists.length : '—'}
           sub={lobbyists.length > 0 ? 'Employer(s) lobby FL legislature' : 'No lobbyist match'}
           color="var(--orange)" />
+        {contracts.length > 0 && (
+          <StatBox
+            label="State Contracts"
+            value={fmtMoneyCompact(contracts.reduce((s, c) => s + c.total_contract_amount, 0))}
+            sub={`${contracts.length} vendor match${contracts.length > 1 ? 'es' : ''}`}
+            color="var(--gold)"
+          />
+        )}
       </div>
 
       {/* Year-by-year chart */}
@@ -226,40 +237,89 @@ export default function DonorProfile({ data, annotations = {} }) {
 
   const lobbyingContent = (
     <div>
-      {lobbyists.length > 0 ? (
+      <RelationshipsBlock
+        label="Lobbyist Principal Connections"
+        description="This donor's name closely matches one or more registered FL lobbyist principals. Their employer actively lobbies the Florida legislature."
+        items={lobbyists.map(l => ({
+          href: `/principal/${l.principal_slug || slugify(l.principal_name)}`,
+          name: l.principal_name,
+          badge: `${l.match_score}% match`,
+          accentColor: 'var(--blue)',
+        }))}
+        emptyText="No lobbyist principal connections found. Name-based matching did not link this donor to any registered principal in the Florida Lobbyist Registration Office database."
+      />
+    </div>
+  );
+
+  const contractsContent = (
+    <div>
+      {contracts.length > 0 ? (
         <div>
-          <SectionLabel>Lobbyist Principal Connections</SectionLabel>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+            <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+              FL State Contract Matches — {contracts.length} vendor{contracts.length > 1 ? 's' : ''}
+            </div>
+            <a href="/contracts" style={{ fontSize: '0.65rem', color: 'var(--teal)', textDecoration: 'none' }}>
+              Browse all contracts →
+            </a>
+          </div>
           <div style={{
-            background: 'rgba(160,192,255,0.04)', border: '1px solid rgba(160,192,255,0.15)',
-            borderRadius: '4px', padding: '0.75rem 1rem',
+            background: 'rgba(255,208,96,0.04)', border: '1px solid rgba(255,208,96,0.15)',
+            borderRadius: '4px', padding: '0.75rem 1rem', marginBottom: '1rem',
           }}>
             <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginBottom: '0.75rem' }}>
-              This donor&apos;s name closely matches one or more registered FL lobbyist principals.
-              Their employer actively lobbies the Florida legislature.
+              This donor&apos;s name closely matches one or more vendors that received FL state contracts
+              via the FACTS procurement system. This may indicate the same company both donates to
+              campaigns and receives state business.
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              {lobbyists.map((l, i) => (
-                <div key={i} style={{
-                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                  padding: '0.4rem 0.6rem', background: 'rgba(160,192,255,0.06)',
-                  borderRadius: '3px',
-                }}>
-                  <a href={`/principal/${l.principal_slug || slugify(l.principal_name)}`}
-                    style={{ color: 'var(--blue)', fontSize: '0.78rem', textDecoration: 'none' }}>
-                    {l.principal_name}
-                  </a>
-                  <span style={{ fontSize: '0.65rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
-                    {l.match_score}% match
-                  </span>
-                </div>
-              ))}
-            </div>
+          </div>
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                  {['#', 'Vendor', 'Top Agency', 'Contracts', 'Years', 'Total Received'].map((h, j) => (
+                    <th key={h} style={{
+                      padding: '0.35rem 0.6rem', fontSize: '0.6rem', color: 'var(--text-dim)',
+                      textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 400,
+                      textAlign: j === 0 || j === 3 ? 'center' : j === 5 ? 'right' : 'left',
+                    }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {contracts.map((c, i) => (
+                  <tr key={c.vendor_slug} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
+                    <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2rem' }}>{i + 1}</td>
+                    <td style={{ padding: '0.4rem 0.6rem', maxWidth: '260px', wordBreak: 'break-word' }}>
+                      <a href="/contracts" style={{ color: 'var(--gold)', textDecoration: 'none' }}>
+                        {c.vendor_name}
+                      </a>
+                      <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', marginTop: '0.15rem' }}>
+                        {c.match_score >= 99 ? 'exact match' : `${Math.round(c.match_score)}% name match`}
+                      </div>
+                    </td>
+                    <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.7rem', maxWidth: '180px' }}>
+                      {c.top_agency || '—'}
+                    </td>
+                    <td style={{ padding: '0.4rem 0.6rem', textAlign: 'center', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>
+                      {fmtCount(c.num_contracts)}
+                    </td>
+                    <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>
+                      {c.year_range || '—'}
+                    </td>
+                    <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--gold)', fontWeight: 700, whiteSpace: 'nowrap' }}>
+                      {fmtMoney(c.total_contract_amount)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       ) : (
         <p style={{ color: 'var(--text-dim)', fontSize: '0.82rem' }}>
-          No lobbyist principal connections found. Name-based matching did not link this donor
-          to any registered principal in the Florida Lobbyist Registration Office database.
+          No state contract matches found. This donor&apos;s name was not matched to any vendor in
+          the FL Accountability Contract Tracking System (FACTS).
         </p>
       )}
     </div>
@@ -321,6 +381,7 @@ export default function DonorProfile({ data, annotations = {} }) {
     { id: 'candidates',   label: 'Candidates',   content: candidatesContent },
     { id: 'transactions', label: 'Transactions', content: transactionsContent },
     { id: 'lobbying',     label: 'Lobbying',     content: lobbyingContent },
+    ...(contracts.length > 0 ? [{ id: 'contracts', label: 'Contracts', content: contractsContent }] : []),
     { id: 'sources',      label: 'Sources',      content: sourcesContent },
   ];
 
@@ -329,55 +390,23 @@ export default function DonorProfile({ data, annotations = {} }) {
       <BackLinks links={[{ href: '/', label: 'home' }, { href: '/donors', label: 'donors' }]} />
 
       {/* Header */}
-      <div style={{ marginBottom: '1.75rem' }}>
-        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
-          <span style={{
-            fontSize: '0.65rem', padding: '0.15rem 0.5rem',
-            border: `1px solid ${typeColor}`, color: typeColor,
-            borderRadius: '2px', fontFamily: 'var(--font-mono)', fontWeight: 'bold',
-          }}>
-            {typeLabel}
-          </span>
-          {lobbyists.length > 0 && (
-            <span style={{
-              fontSize: '0.65rem', padding: '0.15rem 0.5rem',
-              border: '1px solid var(--blue)', color: 'var(--blue)',
-              borderRadius: '2px', fontFamily: 'var(--font-mono)', fontWeight: 'bold',
-            }}>
-              LOBBYIST PRINCIPAL
-            </span>
-          )}
-          {data.industry && data.industry !== 'Not Employed' && data.industry !== 'Other' && (
-            <a href={`/industry/${slugify(data.industry)}`} style={{
-              fontSize: '0.65rem', padding: '0.15rem 0.5rem',
-              border: '1px solid rgba(100,140,220,0.3)', color: 'var(--text-dim)',
-              borderRadius: '2px', fontFamily: 'var(--font-mono)', textDecoration: 'none',
-            }}>
-              {data.industry}
-            </a>
-          )}
-          {annotation && (
-            <a href="/investigations" style={{
-              fontSize: '0.65rem', padding: '0.15rem 0.5rem',
-              border: '1px solid var(--orange)', color: 'var(--orange)',
-              borderRadius: '2px', fontFamily: 'var(--font-mono)', fontWeight: 'bold',
-              textDecoration: 'none',
-            }}>
-              INVESTIGATION
-            </a>
-          )}
-        </div>
-        <h1 style={{
-          fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.5rem, 4vw, 2.4rem)',
-          fontWeight: 400, color: '#fff', marginBottom: '0.4rem', lineHeight: 1.1,
-        }}>
-          {data.name}
-        </h1>
-        <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-          {location && <span>{location}</span>}
-          {data.top_occupation && <span>{data.top_occupation}</span>}
-          <span>{fmtCount(data.num_contributions)} contributions recorded</span>
-        </div>
+      <EntityHeader
+        name={data.name}
+        typeBadge={{ label: typeLabel, color: typeColor }}
+        badges={[
+          ...(lobbyists.length > 0 ? [{ label: 'LOBBYIST PRINCIPAL', color: 'var(--blue)' }] : []),
+          ...(contracts.length > 0 ? [{ label: 'STATE CONTRACTOR', color: 'var(--gold)' }] : []),
+          ...(data.industry && data.industry !== 'Not Employed' && data.industry !== 'Other'
+            ? [{ label: data.industry, color: 'rgba(100,140,220,0.5)', href: `/industry/${slugify(data.industry)}` }]
+            : []),
+          ...(annotation ? [{ label: 'INVESTIGATION', color: 'var(--orange)', href: '/investigations' }] : []),
+        ]}
+        meta={[
+          location || null,
+          data.top_occupation || null,
+          `${fmtCount(data.num_contributions)} contributions recorded`,
+        ]}
+      >
         <SourceLink type="donor" />
         {data.name && /state\s+of\s+florida/i.test(data.name) && (
           <div style={{
@@ -397,7 +426,7 @@ export default function DonorProfile({ data, annotations = {} }) {
             candidates. These are public funds, not discretionary donations.
           </div>
         )}
-      </div>
+      </EntityHeader>
 
       <TabbedProfile tabs={tabs} defaultTab="overview" />
     </main>

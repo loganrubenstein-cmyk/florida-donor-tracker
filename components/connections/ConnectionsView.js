@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import BackLinks from '@/components/BackLinks';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
@@ -148,15 +148,18 @@ function ConnectionRow({ row }) {
 }
 
 export default function ConnectionsView() {
+  const router       = useRouter();
+  const pathname     = usePathname();
   const searchParams = useSearchParams();
   const committeeParam = searchParams?.get('committee') || '';
 
   const [results,      setResults]      = useState({ data: [], total: 0, pages: 0 });
   const [loading,      setLoading]      = useState(true);
+  const [exporting,    setExporting]    = useState(false);
   const [search,       setSearch]       = useState('');
   const [debouncedQ,   setDebouncedQ]   = useState('');
-  const [filter,       setFilter]       = useState('all');
-  const [sort,         setSort]         = useState('connection_score');
+  const [filter,       setFilter]       = useState(searchParams?.get('filter') || 'all');
+  const [sort,         setSort]         = useState(searchParams?.get('sort') || 'connection_score');
   const [page,         setPage]         = useState(1);
   const abortRef = useRef(null);
 
@@ -187,6 +190,54 @@ export default function ConnectionsView() {
   useEffect(() => {
     load(debouncedQ, filter, sort, page, committeeParam);
   }, [debouncedQ, filter, sort, page, committeeParam, load]);
+
+  // Sync filter/sort to URL so views can be shared/bookmarked
+  useEffect(() => {
+    if (committeeParam) return; // ?committee= takes over the URL
+    const params = new URLSearchParams();
+    if (filter !== 'all')              params.set('filter', filter);
+    if (sort !== 'connection_score')   params.set('sort', sort);
+    if (debouncedQ)                    params.set('q', debouncedQ);
+    const qs = params.toString();
+    router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+  }, [filter, sort, debouncedQ, committeeParam]);
+
+  async function handleExportCSV() {
+    setExporting(true);
+    try {
+      const params = new URLSearchParams({ q: debouncedQ, type: filter, sort, page: 1, export: '1' });
+      if (committeeParam) params.set('committee', committeeParam);
+      const res = await fetch(`/api/connections?${params}`);
+      const json = await res.json();
+      const rows = json.data || [];
+      const headers = ['entity_a', 'entity_a_acct', 'entity_a_type', 'entity_b', 'entity_b_acct', 'entity_b_type', 'score', 'shared_treasurer', 'shared_chair', 'shared_address', 'donor_overlap_pct'];
+      const lines = [
+        headers.join(','),
+        ...rows.map(r => [
+          `"${(r.entity_a || '').replace(/"/g, '""')}"`,
+          r.entity_a_acct || '',
+          r.entity_a_type || '',
+          `"${(r.entity_b || '').replace(/"/g, '""')}"`,
+          r.entity_b_acct || '',
+          r.entity_b_type || '',
+          r.connection_score ?? '',
+          r.shared_treasurer ? 1 : 0,
+          r.shared_chair ? 1 : 0,
+          r.shared_address ? 1 : 0,
+          r.donor_overlap_pct ?? '',
+        ].join(','))
+      ];
+      const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `fl-connections-${filter}-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } finally {
+      setExporting(false);
+    }
+  }
 
   const inputStyle = {
     background: '#0d0d22', border: '1px solid var(--border)',
@@ -274,6 +325,19 @@ export default function ConnectionsView() {
             {label}
           </button>
         ))}
+        <button
+          onClick={handleExportCSV}
+          disabled={exporting || loading}
+          style={{
+            marginLeft: 'auto', padding: '0.22rem 0.65rem',
+            fontSize: '0.65rem', background: 'transparent',
+            color: 'var(--text-dim)', border: '1px solid rgba(100,140,220,0.25)',
+            borderRadius: '2px', cursor: exporting ? 'wait' : 'pointer',
+            fontFamily: 'var(--font-mono)', opacity: exporting ? 0.5 : 1,
+          }}
+        >
+          {exporting ? 'Exporting…' : '↓ Export CSV'}
+        </button>
       </div>
 
       <div style={{

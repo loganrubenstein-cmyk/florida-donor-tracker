@@ -236,6 +236,17 @@ export default function CycleProfile({ year, candidates, topDonors = [], electio
       {/* Top 20 candidates */}
       <div style={{ marginBottom: '2rem' }}>
         <SectionLabel>Top Fundraisers — {year}</SectionLabel>
+        {hasSoft && (
+          <div style={{
+            fontSize: '0.68rem', color: 'var(--text-dim)', marginBottom: '0.75rem',
+            paddingLeft: '0.75rem', borderLeft: '2px solid rgba(100,140,220,0.15)',
+            lineHeight: 1.5,
+          }}>
+            Soft money totals reflect committees currently linked to each candidate via FL DOE Statement of Solicitation.
+            Dissolved or unfiled PACs may not appear.{' '}
+            <a href="/methodology" style={{ color: 'var(--teal)', textDecoration: 'none' }}>See methodology →</a>
+          </div>
+        )}
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
             <thead>

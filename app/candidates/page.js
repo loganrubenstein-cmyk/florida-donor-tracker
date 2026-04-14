@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import CandidatesList from '@/components/candidate/CandidatesList';
 
 export const dynamic = 'force-static';
@@ -7,5 +8,9 @@ export const metadata = {
 };
 
 export default function CandidatesPage() {
-  return <CandidatesList />;
+  return (
+    <Suspense>
+      <CandidatesList />
+    </Suspense>
+  );
 }

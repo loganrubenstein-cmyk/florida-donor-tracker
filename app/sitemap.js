@@ -26,6 +26,7 @@ const STATIC_PAGES = [
   { path: '/ie', priority: 0.5 },
   { path: '/party-finance', priority: 0.5 },
   { path: '/solicitations', priority: 0.5 },
+  { path: '/contracts', priority: 0.6 },
   { path: '/research', priority: 0.5 },
   { path: '/investigations', priority: 0.5 },
   { path: '/search', priority: 0.4 },

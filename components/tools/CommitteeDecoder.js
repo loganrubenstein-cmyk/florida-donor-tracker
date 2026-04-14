@@ -37,11 +37,13 @@ export default function CommitteeDecoder() {
   const [showResults, setShowResults] = useState(false);
   const debounceRef = useRef(null);
 
-  // Auto-decode if ?acct= is in URL
+  // Auto-decode if ?acct= is in URL; pre-fill if ?q= is in URL
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const acct = params.get('acct');
+    const q    = params.get('q');
     if (acct) handleDecode(acct);
+    else if (q) setQuery(q);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Debounced search

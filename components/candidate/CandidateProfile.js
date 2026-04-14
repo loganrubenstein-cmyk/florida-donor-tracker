@@ -152,7 +152,8 @@ function ElectionContextCard({ results }) {
 export default function CandidateProfile({ data, cycles = [], electionResults = [] }) {
   const hm     = data.hard_money || {};
   const donors = hm.top_donors  || [];
-  const pcs         = data.linked_pcs || [];
+  const pcs         = data.linked_pcs  || [];
+  const shadowOrgs  = data.shadow_orgs || [];
   const pcsStubOnly  = pcs.filter(pc => !pc.pc_acct || pc.link_type === 'solicitation_stub' || pc.link_type === 'historical_stub');
   const pcsWithData  = pcs.filter(pc => pc.pc_acct && pc.link_type !== 'solicitation_stub' && pc.link_type !== 'historical_stub');
   const pcsSpecific  = pcsWithData.filter(pc => pc.is_candidate_specific);
@@ -377,6 +378,73 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
           )}
 
         </>
+      )}
+
+      {/* ── Shadow PACs / Outside Orgs (IRS-registered, not in FL DoE registry) ── */}
+      {shadowOrgs.length > 0 && (
+        <div style={{ marginTop: pcs.length > 0 ? '2.5rem' : 0 }}>
+          <SectionLabel>Organizations Outside FL Registry</SectionLabel>
+          <p style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.5, marginBottom: '1rem', maxWidth: '560px' }}>
+            These 527 or 501(c)(4) organizations are listed in public solicitation filings
+            associated with this candidate but are <em>not</em> registered with the Florida
+            Division of Elections. They file with the IRS instead.
+          </p>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                {['Organization', 'Type', 'IRS Revenue', 'Filing Year', 'EIN'].map((h, j) => (
+                  <th key={h} style={{
+                    padding: '0.4rem 0.6rem', textAlign: j >= 2 ? 'right' : 'left',
+                    fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase',
+                    letterSpacing: '0.08em', fontWeight: 400,
+                  }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {shadowOrgs.map((org, i) => (
+                <tr key={i} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
+                  <td style={{ padding: '0.45rem 0.6rem', wordBreak: 'break-word', maxWidth: '220px' }}>
+                    {org.pp_url ? (
+                      <a href={org.pp_url} target="_blank" rel="noopener noreferrer"
+                        style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+                        {org.org_name}
+                      </a>
+                    ) : (
+                      <span style={{ color: 'var(--text)' }}>{org.org_name}</span>
+                    )}
+                  </td>
+                  <td style={{ padding: '0.45rem 0.6rem' }}>
+                    <span style={{
+                      fontSize: '0.58rem', padding: '0.1rem 0.35rem', borderRadius: '2px',
+                      background: org.stub_type === '527' ? 'rgba(255,176,96,0.15)' : 'rgba(77,216,240,0.12)',
+                      color: org.stub_type === '527' ? 'var(--orange)' : 'var(--teal)',
+                      fontFamily: 'var(--font-mono)',
+                    }}>
+                      {org.stub_type === '527' ? '527 political org' : org.stub_type === '501c4' ? '501(c)(4)' : 'unknown type'}
+                    </span>
+                  </td>
+                  <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: org.pp_total_revenue ? 'var(--blue)' : 'var(--text-dim)', whiteSpace: 'nowrap' }}>
+                    {org.pp_total_revenue ? fmtMoneyCompact(org.pp_total_revenue) : '—'}
+                  </td>
+                  <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>
+                    {org.pp_filing_year || '—'}
+                  </td>
+                  <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.65rem' }}>
+                    {org.irs_ein || '—'}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p style={{ fontSize: '0.6rem', color: 'var(--text-dim)', marginTop: '0.75rem' }}>
+            Revenue figures from IRS Form 990 via{' '}
+            <a href="https://projects.propublica.org/nonprofits/" target="_blank" rel="noopener noreferrer"
+              style={{ color: 'var(--text-dim)', textDecoration: 'underline' }}>
+              ProPublica Nonprofit Explorer
+            </a>.
+          </p>
+        </div>
       )}
     </div>
   );
