@@ -124,7 +124,7 @@ export default function CandidatesList() {
   const inputStyle = {
     background: 'var(--surface)', border: '1px solid var(--border)',
     color: 'var(--text)', padding: '0.4rem 0.6rem',
-    fontSize: '0.72rem', borderRadius: '3px',
+    fontSize: '0.82rem', borderRadius: '3px',
     fontFamily: 'var(--font-mono)', outline: 'none',
   };
 
@@ -136,7 +136,7 @@ export default function CandidatesList() {
       <BackLinks links={[{ href: '/', label: 'home' }]} />
 
       <SectionHeader title="Candidates" eyebrow="FL Candidates · 1996–2026" patch="candidates" />
-      <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', marginTop: '-0.75rem', marginBottom: '1.25rem' }}>
+      <div style={{ fontSize: '0.82rem', color: 'var(--text-dim)', marginTop: '-0.75rem', marginBottom: '1.25rem' }}>
         {loading ? 'Loading…' : `${total.toLocaleString()} people with Florida campaign finance data`} · Florida Division of Elections
       </div>
 
@@ -235,7 +235,7 @@ export default function CandidatesList() {
           <tbody>
             {!loading && pageItems.length === 0 && (
               <tr>
-                <td colSpan={8} style={{ padding: '2.5rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.72rem', textAlign: 'center', fontFamily: 'var(--font-mono)' }}>
+                <td colSpan={8} style={{ padding: '2.5rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.82rem', textAlign: 'center', fontFamily: 'var(--font-mono)' }}>
                   No candidates match the current filters
                 </td>
               </tr>
@@ -258,7 +258,7 @@ export default function CandidatesList() {
 
               return (
                 <tr key={`${p.display_name}-${p.latest_acct_num}`} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2rem', fontFamily: 'var(--font-mono)', fontSize: '0.65rem' }}>
+                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2rem', fontFamily: 'var(--font-mono)', fontSize: '0.72rem' }}>
                     {(page - 1) * PAGE_SIZE + i + 1}
                   </td>
                   <td style={{ padding: '0.45rem 0.6rem', wordBreak: 'break-word' }}>
@@ -271,7 +271,7 @@ export default function CandidatesList() {
                       </span>
                     )}
                   </td>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.7rem' }}>
+                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.78rem' }}>
                     {p.latest_office || '—'}
                     {p.latest_district ? ` · ${p.latest_district}` : ''}
                   </td>
@@ -284,7 +284,7 @@ export default function CandidatesList() {
                       {p.party || '—'}
                     </span>
                   </td>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>
+                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '0.78rem' }}>
                     {cycleRange}
                   </td>
                   <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text)', textAlign: 'right', whiteSpace: 'nowrap' }}>
@@ -309,20 +309,20 @@ export default function CandidatesList() {
             onClick={() => setPage(p => Math.max(1, p - 1))}
             disabled={page === 1}
             style={{
-              padding: '0.25rem 0.65rem', fontSize: '0.65rem',
+              padding: '0.25rem 0.65rem', fontSize: '0.72rem',
               background: 'transparent', border: '1px solid rgba(100,140,220,0.25)',
               color: page === 1 ? 'var(--text-dim)' : 'var(--text)', cursor: page === 1 ? 'default' : 'pointer',
               borderRadius: '2px', fontFamily: 'var(--font-mono)', opacity: page === 1 ? 0.4 : 1,
             }}
           >← prev</button>
-          <span style={{ fontSize: '0.65rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+          <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
             page {page} / {totalPages}
           </span>
           <button
             onClick={() => setPage(p => Math.min(totalPages, p + 1))}
             disabled={page === totalPages}
             style={{
-              padding: '0.25rem 0.65rem', fontSize: '0.65rem',
+              padding: '0.25rem 0.65rem', fontSize: '0.72rem',
               background: 'transparent', border: '1px solid rgba(100,140,220,0.25)',
               color: page === totalPages ? 'var(--text-dim)' : 'var(--text)', cursor: page === totalPages ? 'default' : 'pointer',
               borderRadius: '2px', fontFamily: 'var(--font-mono)', opacity: page === totalPages ? 0.4 : 1,

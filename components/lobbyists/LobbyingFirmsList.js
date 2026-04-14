@@ -29,7 +29,7 @@ const inputStyle = {
   border: '1px solid var(--border)',
   color: 'var(--text)',
   padding: '0.4rem 0.6rem',
-  fontSize: '0.72rem',
+  fontSize: '0.82rem',
   borderRadius: '3px',
   fontFamily: 'var(--font-mono)',
   outline: 'none',
@@ -74,7 +74,7 @@ export default function LobbyingFirmsList() {
       <BackLinks links={[{ href: '/', label: 'home' }, { href: '/lobbying', label: 'lobbying' }]} />
 
       <SectionHeader title="Lobbying Firms" eyebrow="FL Lobbying · 2007–present" />
-      <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', marginTop: '-0.75rem', marginBottom: '1.25rem' }}>
+      <div style={{ fontSize: '0.82rem', color: 'var(--text-dim)', marginTop: '-0.75rem', marginBottom: '1.25rem' }}>
         Registered Florida lobbying firms ranked by estimated compensation · 2007–2025
       </div>
 
@@ -142,7 +142,7 @@ export default function LobbyingFirmsList() {
             <option key={o.value} value={o.value}>{o.label}</option>
           ))}
         </select>
-        <span style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginLeft: 'auto' }}>
+        <span style={{ fontSize: '0.78rem', color: 'var(--text-dim)', marginLeft: 'auto' }}>
           {loading ? 'Loading…' : `${total.toLocaleString()} firms`}
         </span>
       </div>
@@ -187,7 +187,7 @@ export default function LobbyingFirmsList() {
 
               return (
                 <tr key={f.slug} style={{ borderBottom: '1px solid rgba(100,140,220,0.07)' }}>
-                  <td style={{ padding: '0.5rem 0.75rem', textAlign: 'center', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.65rem' }}>
+                  <td style={{ padding: '0.5rem 0.75rem', textAlign: 'center', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.72rem' }}>
                     {rank}
                   </td>
                   <td style={{ padding: '0.5rem 0.75rem' }}>
@@ -195,13 +195,13 @@ export default function LobbyingFirmsList() {
                       {f.firm_name}
                     </Link>
                   </td>
-                  <td style={{ padding: '0.5rem 0.75rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', whiteSpace: 'nowrap' }}>
+                  <td style={{ padding: '0.5rem 0.75rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.78rem', whiteSpace: 'nowrap' }}>
                     {yearsLabel}
                   </td>
-                  <td style={{ padding: '0.5rem 0.75rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.72rem' }}>
+                  <td style={{ padding: '0.5rem 0.75rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.82rem' }}>
                     {(f.num_principals || 0).toLocaleString()}
                   </td>
-                  <td style={{ padding: '0.5rem 0.75rem', textAlign: 'right', color: 'var(--blue)', fontFamily: 'var(--font-mono)', fontSize: '0.72rem', fontWeight: 700, whiteSpace: 'nowrap' }}>
+                  <td style={{ padding: '0.5rem 0.75rem', textAlign: 'right', color: 'var(--blue)', fontFamily: 'var(--font-mono)', fontSize: '0.82rem', fontWeight: 700, whiteSpace: 'nowrap' }}>
                     {fmtCompact(f.total_comp)}
                   </td>
                 </tr>
@@ -219,7 +219,7 @@ export default function LobbyingFirmsList() {
             disabled={page === 1}
             style={{ ...inputStyle, cursor: page === 1 ? 'default' : 'pointer', opacity: page === 1 ? 0.4 : 1 }}
           >← Prev</button>
-          <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+          <span style={{ fontSize: '0.82rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
             {page} / {totalPages}
           </span>
           <button
@@ -230,7 +230,22 @@ export default function LobbyingFirmsList() {
         </div>
       )}
 
-      <div style={{ marginTop: '3rem' }}>
+      {/* Sibling pages */}
+      <div style={{ marginTop: '2.5rem', paddingTop: '1.25rem', borderTop: '1px solid var(--border)', display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+        <span style={{ fontSize: '0.68rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginRight: '0.25rem' }}>Also in Lobbying:</span>
+        {[
+          { href: '/lobbyists',      label: 'Lobbyists' },
+          { href: '/principals',     label: 'Principals' },
+          { href: '/lobbying/bills', label: 'Most Lobbied Bills' },
+          { href: '/influence',      label: 'Influence Index' },
+        ].map(({ href, label }) => (
+          <a key={href} href={href} style={{ fontSize: '0.72rem', color: 'var(--teal)', textDecoration: 'none', border: '1px solid rgba(77,216,240,0.2)', borderRadius: '3px', padding: '0.2rem 0.55rem' }}>
+            {label}
+          </a>
+        ))}
+      </div>
+
+      <div style={{ marginTop: '2rem' }}>
         <DataTrustBlock
           source="Florida Lobbyist Registration Office — Quarterly Compensation Reports"
           sourceUrl="https://www.floridalobbyist.gov"

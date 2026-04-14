@@ -135,7 +135,7 @@ export default function DonorsList() {
   const inputStyle = {
     background: 'var(--surface)', border: '1px solid var(--border)',
     color: 'var(--text)', padding: '0.4rem 0.6rem',
-    fontSize: '0.72rem', borderRadius: '3px',
+    fontSize: '0.82rem', borderRadius: '3px',
     fontFamily: 'var(--font-mono)', outline: 'none',
   };
 
@@ -147,7 +147,7 @@ export default function DonorsList() {
       <BackLinks links={[{ href: '/', label: 'home' }]} />
 
       <SectionHeader title="Donors" eyebrow="FL Donors · 1996–2026" patch="donors" />
-      <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', marginTop: '-0.75rem', marginBottom: '1.25rem' }}>
+      <div style={{ fontSize: '0.82rem', color: 'var(--text-dim)', marginTop: '-0.75rem', marginBottom: '1.25rem' }}>
         Filtered view: donors with $1K+ in aggregate contributions. Full underlying index covers every reported contributor. Source: Florida Division of Elections.
       </div>
 
@@ -243,7 +243,7 @@ export default function DonorsList() {
               <tr>
                 <td colSpan={8} style={{
                   padding: '2.5rem 0.6rem', color: 'var(--text-dim)',
-                  fontSize: '0.72rem', textAlign: 'center', fontFamily: 'var(--font-mono)',
+                  fontSize: '0.82rem', textAlign: 'center', fontFamily: 'var(--font-mono)',
                 }}>
                   No donors match the current filters
                 </td>
@@ -257,7 +257,7 @@ export default function DonorsList() {
                 : '—';
               return (
                 <tr key={d.slug} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '0.65rem' }}>
+                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '0.72rem' }}>
                     {(page - 1) * PAGE_SIZE + i + 1}
                   </td>
                   <td style={{ padding: '0.45rem 0.6rem', wordBreak: 'break-word', maxWidth: '260px' }}>
@@ -296,7 +296,7 @@ export default function DonorsList() {
                   <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.68rem' }}>
                     {loc}
                   </td>
-                  <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>
+                  <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.78rem' }}>
                     {d.num_committees}
                   </td>
                   <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--text)', whiteSpace: 'nowrap' }}>
@@ -321,20 +321,20 @@ export default function DonorsList() {
             onClick={() => setPage(p => Math.max(1, p - 1))}
             disabled={page === 1}
             style={{
-              padding: '0.25rem 0.65rem', fontSize: '0.65rem',
+              padding: '0.25rem 0.65rem', fontSize: '0.72rem',
               background: 'transparent', border: '1px solid rgba(100,140,220,0.25)',
               color: page === 1 ? 'var(--text-dim)' : 'var(--text)', cursor: page === 1 ? 'default' : 'pointer',
               borderRadius: '2px', fontFamily: 'var(--font-mono)', opacity: page === 1 ? 0.4 : 1,
             }}
           >← prev</button>
-          <span style={{ fontSize: '0.65rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+          <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
             page {page} / {totalPages}
           </span>
           <button
             onClick={() => setPage(p => Math.min(totalPages, p + 1))}
             disabled={page === totalPages}
             style={{
-              padding: '0.25rem 0.65rem', fontSize: '0.65rem',
+              padding: '0.25rem 0.65rem', fontSize: '0.72rem',
               background: 'transparent', border: '1px solid rgba(100,140,220,0.25)',
               color: page === totalPages ? 'var(--text-dim)' : 'var(--text)', cursor: page === totalPages ? 'default' : 'pointer',
               borderRadius: '2px', fontFamily: 'var(--font-mono)', opacity: page === totalPages ? 0.4 : 1,

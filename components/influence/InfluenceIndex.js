@@ -25,7 +25,7 @@ const inputStyle = {
   border: '1px solid var(--border)',
   color: 'var(--text)',
   padding: '0.4rem 0.6rem',
-  fontSize: '0.72rem',
+  fontSize: '0.82rem',
   borderRadius: '3px',
   fontFamily: 'var(--font-mono)',
   outline: 'none',
@@ -33,7 +33,7 @@ const inputStyle = {
 
 const chipStyle = (active) => ({
   padding: '0.25rem 0.65rem',
-  fontSize: '0.65rem',
+  fontSize: '0.72rem',
   borderRadius: '3px',
   border: `1px solid ${active ? 'var(--orange)' : 'var(--border)'}`,
   background: active ? 'rgba(255,176,96,0.08)' : 'transparent',
@@ -146,7 +146,7 @@ export default function InfluenceIndex() {
       )}
 
       {/* Legend */}
-      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.25rem', fontSize: '0.65rem', color: 'var(--text-dim)' }}>
+      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.25rem', fontSize: '0.72rem', color: 'var(--text-dim)' }}>
         <span style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
           <span style={{ width: '10px', height: '8px', background: 'var(--orange)', opacity: 0.75, borderRadius: '1px', display: 'inline-block' }} />
           Campaign donations
@@ -187,7 +187,7 @@ export default function InfluenceIndex() {
           ))}
         </div>
 
-        <span style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginLeft: 'auto' }}>
+        <span style={{ fontSize: '0.78rem', color: 'var(--text-dim)', marginLeft: 'auto' }}>
           {loading ? 'Loading…' : `${total.toLocaleString()} organizations`}
         </span>
       </div>
@@ -232,7 +232,7 @@ export default function InfluenceIndex() {
 
               return (
                 <tr key={org.slug} style={{ borderBottom: '1px solid rgba(100,140,220,0.07)' }}>
-                  <td style={{ padding: '0.5rem 0.75rem', textAlign: 'center', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.65rem' }}>
+                  <td style={{ padding: '0.5rem 0.75rem', textAlign: 'center', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.72rem' }}>
                     {rank}
                   </td>
                   <td style={{ padding: '0.5rem 0.75rem' }}>
@@ -241,18 +241,18 @@ export default function InfluenceIndex() {
                     </Link>
                   </td>
                   <td style={{ padding: '0.5rem 0.75rem' }}>
-                    <span style={{ fontSize: '0.65rem', color: 'var(--text-dim)' }}>{org.industry || '—'}</span>
+                    <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>{org.industry || '—'}</span>
                   </td>
                   <td style={{ padding: '0.5rem 0.75rem', textAlign: 'center' }}>
                     <SplitBar donate={donate} lobby={lobby} />
                   </td>
-                  <td style={{ padding: '0.5rem 0.75rem', textAlign: 'right', color: 'var(--blue)', fontFamily: 'var(--font-mono)', fontSize: '0.72rem', whiteSpace: 'nowrap' }}>
+                  <td style={{ padding: '0.5rem 0.75rem', textAlign: 'right', color: 'var(--blue)', fontFamily: 'var(--font-mono)', fontSize: '0.82rem', whiteSpace: 'nowrap' }}>
                     {lobby > 0 ? fmtCompact(lobby) : <span style={{ opacity: 0.3 }}>—</span>}
                   </td>
-                  <td style={{ padding: '0.5rem 0.75rem', textAlign: 'right', color: 'var(--orange)', fontFamily: 'var(--font-mono)', fontSize: '0.72rem', whiteSpace: 'nowrap' }}>
+                  <td style={{ padding: '0.5rem 0.75rem', textAlign: 'right', color: 'var(--orange)', fontFamily: 'var(--font-mono)', fontSize: '0.82rem', whiteSpace: 'nowrap' }}>
                     {donate > 0 ? fmtCompact(donate) : <span style={{ opacity: 0.3 }}>—</span>}
                   </td>
-                  <td style={{ padding: '0.5rem 0.75rem', textAlign: 'right', color: 'var(--text)', fontFamily: 'var(--font-mono)', fontSize: '0.72rem', fontWeight: 700, whiteSpace: 'nowrap' }}>
+                  <td style={{ padding: '0.5rem 0.75rem', textAlign: 'right', color: 'var(--text)', fontFamily: 'var(--font-mono)', fontSize: '0.82rem', fontWeight: 700, whiteSpace: 'nowrap' }}>
                     {fmtCompact(total)}
                   </td>
                 </tr>
@@ -270,7 +270,7 @@ export default function InfluenceIndex() {
             disabled={page === 1}
             style={{ ...inputStyle, cursor: page === 1 ? 'default' : 'pointer', opacity: page === 1 ? 0.4 : 1 }}
           >← Prev</button>
-          <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+          <span style={{ fontSize: '0.82rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
             {page} / {totalPages}
           </span>
           <button

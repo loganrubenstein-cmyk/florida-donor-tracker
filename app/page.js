@@ -283,6 +283,7 @@ export default async function Home() {
               <CardLink href="/lobbyists" color="var(--blue)" accent="rgba(160,192,255,0.15)" title="→ lobbyists" desc="2,480 registered FL lobbyists cross-referenced with donation records." />
               <CardLink href="/principals" color="var(--green)" accent="rgba(128,255,160,0.2)" title="→ principals" desc="Lobbying clients matched to their campaign contributions." />
               <CardLink href="/lobbying/bills" color="var(--blue)" accent="rgba(160,192,255,0.1)" title="→ lobbied bills" desc="14K FL House bills by lobbying activity 2016–2026. Top issues and most active lobbyists." />
+              <CardLink href="/influence" color="var(--orange)" accent="rgba(255,176,96,0.2)" title="→ influence index" desc="Organizations ranked by combined lobbying + donations — the most comprehensive political spending index in FL." highlight />
             </div>
           </div>
 
@@ -346,7 +347,7 @@ function CardLink({ href, color, accent, title, desc, highlight }) {
         <div style={{ fontSize: '0.7rem', color, fontWeight: 700, marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
           {title}
         </div>
-        <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
+        <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
           {desc}
         </div>
       </div>

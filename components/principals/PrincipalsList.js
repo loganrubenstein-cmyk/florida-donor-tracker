@@ -75,7 +75,7 @@ export default function PrincipalsList() {
   const inputStyle = {
     background: 'var(--surface)', border: '1px solid var(--border)',
     color: 'var(--text)', padding: '0.4rem 0.6rem',
-    fontSize: '0.72rem', borderRadius: '3px',
+    fontSize: '0.82rem', borderRadius: '3px',
     fontFamily: 'var(--font-mono)', outline: 'none',
   };
 
@@ -94,7 +94,7 @@ export default function PrincipalsList() {
         }}>
           Lobbying Principals
         </h1>
-        <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+        <div style={{ fontSize: '0.82rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
           <span>{loading ? '…' : total.toLocaleString()} registered principals</span>
           <span>FL Legislature · 2014–present</span>
         </div>
@@ -177,7 +177,7 @@ export default function PrincipalsList() {
               <tr>
                 <td colSpan={7} style={{
                   padding: '2.5rem 0.6rem', color: 'var(--text-dim)',
-                  fontSize: '0.72rem', textAlign: 'center', fontFamily: 'var(--font-mono)',
+                  fontSize: '0.82rem', textAlign: 'center', fontFamily: 'var(--font-mono)',
                 }}>
                   No principals match the current filters
                 </td>
@@ -185,7 +185,7 @@ export default function PrincipalsList() {
             )}
             {pageItems.map((p, i) => (
               <tr key={p.slug} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
-                <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '0.65rem' }}>
+                <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '0.72rem' }}>
                   {(page - 1) * PAGE_SIZE + i + 1}
                 </td>
                 <td style={{ padding: '0.45rem 0.6rem', wordBreak: 'break-word', maxWidth: '260px' }}>
@@ -205,10 +205,10 @@ export default function PrincipalsList() {
                     </div>
                   )}
                 </td>
-                <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--text)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>
+                <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--text)', fontFamily: 'var(--font-mono)', fontSize: '0.78rem' }}>
                   {(p.total_lobbyists || 0).toLocaleString()}
                 </td>
-                <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--teal)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>
+                <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--teal)', fontFamily: 'var(--font-mono)', fontSize: '0.78rem' }}>
                   {(p.num_active || 0).toLocaleString()}
                 </td>
                 <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: p.total_comp > 0 ? 'var(--blue)' : 'var(--text-dim)', fontWeight: p.total_comp > 0 ? 700 : 400, whiteSpace: 'nowrap' }}>
@@ -229,20 +229,20 @@ export default function PrincipalsList() {
             onClick={() => setPage(p => Math.max(1, p - 1))}
             disabled={page === 1}
             style={{
-              padding: '0.25rem 0.65rem', fontSize: '0.65rem',
+              padding: '0.25rem 0.65rem', fontSize: '0.72rem',
               background: 'transparent', border: '1px solid rgba(100,140,220,0.25)',
               color: page === 1 ? 'var(--text-dim)' : 'var(--text)', cursor: page === 1 ? 'default' : 'pointer',
               borderRadius: '2px', fontFamily: 'var(--font-mono)', opacity: page === 1 ? 0.4 : 1,
             }}
           >← prev</button>
-          <span style={{ fontSize: '0.65rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+          <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
             page {page} / {totalPages}
           </span>
           <button
             onClick={() => setPage(p => Math.min(totalPages, p + 1))}
             disabled={page === totalPages}
             style={{
-              padding: '0.25rem 0.65rem', fontSize: '0.65rem',
+              padding: '0.25rem 0.65rem', fontSize: '0.72rem',
               background: 'transparent', border: '1px solid rgba(100,140,220,0.25)',
               color: page === totalPages ? 'var(--text-dim)' : 'var(--text)', cursor: page === totalPages ? 'default' : 'pointer',
               borderRadius: '2px', fontFamily: 'var(--font-mono)', opacity: page === totalPages ? 0.4 : 1,
@@ -251,11 +251,26 @@ export default function PrincipalsList() {
         </div>
       )}
 
-      <div style={{ marginTop: '3rem' }}>
+      {/* Sibling pages */}
+      <div style={{ marginTop: '2.5rem', paddingTop: '1.25rem', borderTop: '1px solid var(--border)', display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+        <span style={{ fontSize: '0.68rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginRight: '0.25rem' }}>Also in Lobbying:</span>
+        {[
+          { href: '/lobbyists',      label: 'Lobbyists' },
+          { href: '/lobbying-firms', label: 'Lobbying Firms' },
+          { href: '/lobbying/bills', label: 'Most Lobbied Bills' },
+          { href: '/influence',      label: 'Influence Index' },
+        ].map(({ href, label }) => (
+          <a key={href} href={href} style={{ fontSize: '0.72rem', color: 'var(--teal)', textDecoration: 'none', border: '1px solid rgba(77,216,240,0.2)', borderRadius: '3px', padding: '0.2rem 0.55rem' }}>
+            {label}
+          </a>
+        ))}
+      </div>
+
+      <div style={{ marginTop: '2rem' }}>
         <DataTrustBlock
           source="Florida Lobbyist Registration Office — Registration & Compensation Reports"
           sourceUrl="https://www.floridalobbyist.gov"
-          
+
           direct={['principal (client) name', 'lobbyists retained', 'quarterly compensation reports (2007–present)']}
           normalized={[
             'compensation totals (midpoints below $50K; exact amounts above $50K)',

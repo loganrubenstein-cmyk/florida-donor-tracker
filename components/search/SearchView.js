@@ -105,7 +105,7 @@ export default function SearchView() {
   const inputStyle = {
     background: 'var(--surface)', border: '1px solid var(--border)',
     color: 'var(--text)', padding: '0.4rem 0.6rem',
-    fontSize: '0.72rem', borderRadius: '3px',
+    fontSize: '0.82rem', borderRadius: '3px',
     fontFamily: 'var(--font-mono)', outline: 'none',
   };
 
@@ -132,7 +132,7 @@ export default function SearchView() {
         }}>
           Search
         </h1>
-        <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
+        <div style={{ fontSize: '0.82rem', color: 'var(--text-dim)', display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center' }}>
           {loading
             ? 'Loading index…'
             : <><span>{totalEntities.toLocaleString()} entities — donors, committees, candidates, lobbyists, principals, legislators</span>
@@ -253,7 +253,7 @@ export default function SearchView() {
       {query.trim() && !loading && results.length === 0 && (
         <div style={{
           padding: '2.5rem 0', textAlign: 'center',
-          fontSize: '0.72rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)',
+          fontSize: '0.82rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)',
         }}>
           No results for "{query}"
         </div>

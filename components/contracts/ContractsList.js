@@ -57,7 +57,7 @@ export default function ContractsList() {
   const inputStyle = {
     background: 'var(--surface)', border: '1px solid var(--border)',
     color: 'var(--text)', padding: '0.4rem 0.6rem',
-    fontSize: '0.72rem', borderRadius: '3px',
+    fontSize: '0.82rem', borderRadius: '3px',
     fontFamily: 'var(--font-mono)', outline: 'none',
   };
 
@@ -76,12 +76,12 @@ export default function ContractsList() {
         }}>
           Florida State Contracts
         </h1>
-        <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+        <div style={{ fontSize: '0.82rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
           <span>{loading ? '…' : total.toLocaleString()} vendors</span>
           <span>FL Dept of Financial Services · FACTS system</span>
         </div>
         <p style={{
-          marginTop: '0.75rem', fontSize: '0.72rem', color: 'var(--text-dim)',
+          marginTop: '0.75rem', fontSize: '0.82rem', color: 'var(--text-dim)',
           maxWidth: '620px', lineHeight: 1.5,
         }}>
           Companies and organizations that received Florida state contracts or purchase orders.{' '}
@@ -157,7 +157,7 @@ export default function ContractsList() {
               <tr>
                 <td colSpan={6} style={{
                   padding: '2.5rem 0.6rem', color: 'var(--text-dim)',
-                  fontSize: '0.72rem', textAlign: 'center',
+                  fontSize: '0.82rem', textAlign: 'center',
                 }}>
                   No vendors match the current filters
                 </td>
@@ -167,7 +167,7 @@ export default function ContractsList() {
               <tr key={v.vendor_slug} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
                 <td style={{
                   padding: '0.45rem 0.6rem', color: 'var(--text-dim)',
-                  textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '0.65rem',
+                  textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '0.72rem',
                 }}>
                   {(page - 1) * PAGE_SIZE + i + 1}
                 </td>
@@ -205,13 +205,13 @@ export default function ContractsList() {
                 </td>
                 <td style={{
                   padding: '0.45rem 0.6rem', textAlign: 'right',
-                  color: 'var(--text)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem',
+                  color: 'var(--text)', fontFamily: 'var(--font-mono)', fontSize: '0.78rem',
                 }}>
                   {(v.num_contracts || 0).toLocaleString()}
                 </td>
                 <td style={{
                   padding: '0.45rem 0.6rem', textAlign: 'center',
-                  color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.65rem',
+                  color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.72rem',
                 }}>
                   {v.year_range || '—'}
                 </td>
