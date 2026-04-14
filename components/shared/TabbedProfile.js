@@ -8,7 +8,8 @@ import Link from 'next/link';
  * Tab state is stored in the URL ?tab= param so deep links work.
  *
  * Props:
- *   tabs: Array<{ id: string, label: string, content: ReactNode }>
+ *   tabs: Array<{ id: string, label: string, content: ReactNode, description?: string }>
+ *         description is shown as a browser tooltip on hover.
  *   defaultTab: string — id of the default tab (first tab if omitted)
  *
  * Usage:
@@ -41,6 +42,7 @@ export default function TabbedProfile({ tabs, defaultTab }) {
             href={tabHref(tab.id)}
             className={`tab${tab.id === activeTab?.id ? ' tab-active' : ''}`}
             scroll={false}
+            title={tab.description || undefined}
           >
             {tab.label}
           </Link>

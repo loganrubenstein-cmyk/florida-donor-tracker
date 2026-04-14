@@ -434,13 +434,13 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
   );
 
   const tabs = [
-    { id: 'overview',      label: 'Overview',      content: overviewContent },
-    { id: 'donors',        label: 'Donors',        content: donorsContent },
-    { id: 'candidates',    label: 'Candidates',    content: candidatesContent },
-    { id: 'payees',        label: 'Payees',        content: payeesContent },
-    { id: 'transactions',  label: 'Transactions',  content: transactionsContent },
-    { id: 'connections',   label: 'Connections',   content: connectionsContent },
-    { id: 'sources',       label: 'Sources',       content: sourcesContent },
+    { id: 'overview',      label: 'Overview',      description: 'Top-line receipts, expenditures, and cash flow',          content: overviewContent },
+    { id: 'donors',        label: 'Donors',        description: 'Top contributors to this committee',                       content: donorsContent },
+    { id: 'candidates',    label: 'Candidates',    description: 'Candidates linked to this committee via FL DOE filings',   content: candidatesContent },
+    { id: 'payees',        label: 'Payees',        description: 'Vendors and consultants paid by this committee',           content: payeesContent },
+    { id: 'transactions',  label: 'Transactions',  description: 'Search individual contribution records',                    content: transactionsContent },
+    { id: 'connections',   label: 'Connections',   description: 'Committees sharing treasurer, address, or officers',       content: connectionsContent },
+    { id: 'sources',       label: 'Sources',       description: 'Research links, data sources, and methodology',            content: sourcesContent },
   ];
 
   return (

@@ -546,13 +546,13 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
   );
 
   const tabs = [
-    { id: 'overview',      label: 'Overview',      content: overviewContent },
-    { id: 'donors',        label: 'Donors',        content: donorsContent },
-    { id: 'committees',    label: 'Committees',    content: committeesContent },
-    { id: 'industries',    label: 'Industries',    content: industriesContent },
-    { id: 'expenditures',  label: 'Expenditures',  content: expendituresContent },
-    { id: 'transactions',  label: 'Transactions',  content: transactionsContent },
-    { id: 'sources',       label: 'Sources',       content: sourcesContent },
+    { id: 'overview',      label: 'Overview',      description: 'Top-line fundraising totals and election results',       content: overviewContent },
+    { id: 'donors',        label: 'Donors',        description: 'Who funded this candidate — top donors by amount',        content: donorsContent },
+    { id: 'committees',    label: 'Committees',    description: 'Linked PACs and soft-money committees',                   content: committeesContent },
+    { id: 'industries',    label: 'Industries',    description: 'Donor industry breakdown — corporate vs. individual',     content: industriesContent },
+    { id: 'expenditures',  label: 'Expenditures',  description: 'Top vendors and consultants paid by this campaign',      content: expendituresContent },
+    { id: 'transactions',  label: 'Transactions',  description: 'Search individual contribution records',                  content: transactionsContent },
+    { id: 'sources',       label: 'Sources',       description: 'Research links, data sources, and methodology',          content: sourcesContent },
   ];
 
   return (

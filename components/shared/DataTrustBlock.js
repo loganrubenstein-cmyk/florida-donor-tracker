@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { DATA_LAST_UPDATED } from '@/lib/dataLastUpdated';
 
 /**
  * DataTrustBlock — compact metadata block shown at the bottom of profile pages.
@@ -15,7 +16,7 @@ import Link from 'next/link';
  */
 export default function DataTrustBlock({
   source,
-  lastUpdated,
+  lastUpdated = DATA_LAST_UPDATED,
   direct = [],
   normalized = [],
   inferred = [],
