@@ -68,7 +68,7 @@ export default function RootLayout({ children }) {
             <span>
               <Link href="/methodology">Methodology</Link>
               {' · '}
-              <Link href="/data">Data dictionary</Link>
+              <Link href="/data">Sources</Link>
               {' · '}
               <Link href="/coverage">Coverage &amp; limits</Link>
             </span>

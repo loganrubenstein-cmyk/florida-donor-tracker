@@ -90,7 +90,7 @@ export default function CommitteesList() {
           style={{
             padding: '0.4rem 0.6rem', background: 'var(--surface)',
             border: '1px solid rgba(100,140,220,0.2)', color: 'var(--text)',
-            fontSize: '0.72rem', borderRadius: '3px', fontFamily: 'var(--font-mono)',
+            fontSize: '0.82rem', borderRadius: '3px', fontFamily: 'var(--font-mono)',
           }}
         >
           <option value="all">All Parties</option>
@@ -103,14 +103,14 @@ export default function CommitteesList() {
           style={{
             padding: '0.4rem 0.6rem', background: 'var(--surface)',
             border: '1px solid rgba(100,140,220,0.2)', color: 'var(--text)',
-            fontSize: '0.72rem', borderRadius: '3px', fontFamily: 'var(--font-mono)',
+            fontSize: '0.82rem', borderRadius: '3px', fontFamily: 'var(--font-mono)',
           }}
         >
           <option value="total">Sort: Total Received</option>
           <option value="contributions">Sort: Contributions</option>
           <option value="name">Sort: Name A–Z</option>
         </select>
-        <span style={{ fontSize: '0.65rem', color: 'var(--text-dim)', whiteSpace: 'nowrap' }}>
+        <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)', whiteSpace: 'nowrap' }}>
           {loading ? '…' : `${pageItems.length.toLocaleString()} committees`}
         </span>
       </div>
@@ -157,7 +157,7 @@ export default function CommitteesList() {
           <tbody>
             {pageItems.map((c, i) => (
               <tr key={c.acct_num} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
-                <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '3rem', fontFamily: 'var(--font-mono)', fontSize: '0.65rem' }}>
+                <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '3rem', fontFamily: 'var(--font-mono)', fontSize: '0.72rem' }}>
                   {(page - 1) * PAGE_SIZE + i + 1}
                 </td>
                 <td style={{ padding: '0.4rem 0.6rem', wordBreak: 'break-word', maxWidth: '340px' }}>
@@ -180,10 +180,10 @@ export default function CommitteesList() {
                     }}>{p}</span>
                   ) : null; })()}
                 </td>
-                <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>
+                <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.78rem' }}>
                   {fmtCount(c.num_contributions)}
                 </td>
-                <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--orange)', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '0.7rem', whiteSpace: 'nowrap' }}>
+                <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--orange)', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '0.78rem', whiteSpace: 'nowrap' }}>
                   {fmt(c.total_received)}
                 </td>
               </tr>
@@ -199,20 +199,20 @@ export default function CommitteesList() {
             onClick={() => setPage(p => Math.max(1, p - 1))}
             disabled={page === 1}
             style={{
-              padding: '0.25rem 0.65rem', fontSize: '0.65rem',
+              padding: '0.25rem 0.65rem', fontSize: '0.72rem',
               background: 'transparent', border: '1px solid rgba(100,140,220,0.25)',
               color: page === 1 ? 'var(--text-dim)' : 'var(--text)', cursor: page === 1 ? 'default' : 'pointer',
               borderRadius: '2px', fontFamily: 'var(--font-mono)', opacity: page === 1 ? 0.4 : 1,
             }}
           >← prev</button>
-          <span style={{ fontSize: '0.65rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+          <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
             page {page} / {totalPages}
           </span>
           <button
             onClick={() => setPage(p => Math.min(totalPages, p + 1))}
             disabled={page === totalPages}
             style={{
-              padding: '0.25rem 0.65rem', fontSize: '0.65rem',
+              padding: '0.25rem 0.65rem', fontSize: '0.72rem',
               background: 'transparent', border: '1px solid rgba(100,140,220,0.25)',
               color: page === totalPages ? 'var(--text-dim)' : 'var(--text)', cursor: page === totalPages ? 'default' : 'pointer',
               borderRadius: '2px', fontFamily: 'var(--font-mono)', opacity: page === totalPages ? 0.4 : 1,

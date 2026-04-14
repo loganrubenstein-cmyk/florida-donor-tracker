@@ -27,7 +27,8 @@ export default async function ResearchHub() {
 
       <SectionHeader title="Research" eyebrow="Florida Campaign Finance · Analysis" />
       <p style={{ color: 'var(--text-dim)', fontSize: '0.88rem', lineHeight: 1.6, marginBottom: '0.25rem' }}>
-        Analysis tools, investigations, and reference material for understanding Florida campaign finance patterns.
+        Analytical pages — broad data views you browse rather than tools you operate. Election cycles,
+        industry giving, party finance, and investigative deep-dives across the full dataset.
       </p>
 
       <div className="hub-grid">

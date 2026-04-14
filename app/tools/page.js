@@ -49,8 +49,8 @@ export default function ToolsPage() {
     <div className="container" style={{ paddingTop: '2rem', paddingBottom: '3rem' }}>
       <SectionHeader title="Investigative Tools" eyebrow="Florida · Follow the Money" />
       <p style={{ color: 'var(--text-dim)', fontSize: '0.78rem', marginBottom: '2rem', maxWidth: '600px' }}>
-        Five tools for following the money in Florida politics. Decode opaque committee names, compare
-        donor networks, visualize fundraising timelines, and surface dark money.
+        Interactive tools — give them an input, get an answer. Decode a specific committee, compare two
+        candidates&apos; donors, look up your district, or rank all committees by transparency.
       </p>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1rem' }}>

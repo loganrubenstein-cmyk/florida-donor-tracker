@@ -106,7 +106,7 @@ export default async function Home() {
             fontFamily: 'var(--font-serif)',
             fontSize: 'clamp(2rem, 5vw, 3.2rem)',
             lineHeight: 1.05,
-            color: '#fff',
+            color: 'var(--text)',
             fontWeight: 400,
             flex: 1,
           }}>
