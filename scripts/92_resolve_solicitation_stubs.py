@@ -33,13 +33,11 @@ Usage
   python scripts/92_resolve_solicitation_stubs.py --force   # re-download IRS data
 """
 
-import csv
 import json
 import re
 import sys
 import time
 from pathlib import Path
-from collections import defaultdict
 
 import pandas as pd
 import requests

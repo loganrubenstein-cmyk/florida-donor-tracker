@@ -26,7 +26,6 @@ import os
 import re
 import sys
 from pathlib import Path
-from collections import defaultdict
 
 import pandas as pd
 import psycopg2

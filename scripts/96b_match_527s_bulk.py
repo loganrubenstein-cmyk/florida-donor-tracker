@@ -24,7 +24,6 @@ Usage:
   python scripts/96b_match_527s_bulk.py --force   # re-download all zip files
 """
 
-import io
 import os
 import re
 import sys

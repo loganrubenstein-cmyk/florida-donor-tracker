@@ -17,10 +17,8 @@ Usage:
     .venv/bin/python scripts/72_scrape_committees.py
 """
 
-import json
 import os
 import re
-import sys
 import time
 from pathlib import Path
 

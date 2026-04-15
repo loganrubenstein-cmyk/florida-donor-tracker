@@ -18,7 +18,6 @@ Usage (from project root, with .venv activated):
 
 import sys
 import time
-from datetime import datetime
 from pathlib import Path
 
 import requests

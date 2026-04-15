@@ -12,7 +12,7 @@ Reads from:
   public/data/ie/by_committee/*.json
 """
 
-import os, json, io, time
+import os, json, io
 from pathlib import Path
 import psycopg2
 

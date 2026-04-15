@@ -41,7 +41,7 @@ from bs4 import BeautifulSoup
 from rapidfuzz import fuzz
 
 sys.path.insert(0, str(Path(__file__).parent))
-from config import PROCESSED_DIR, RAW_DIR, PROJECT_ROOT
+from config import PROCESSED_DIR, RAW_DIR
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
 CONTRACTS_DIR    = RAW_DIR / "contracts"

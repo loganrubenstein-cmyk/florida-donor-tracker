@@ -23,7 +23,6 @@ Runtime: ~3 minutes (same as script 27).
 
 import json
 import sys
-import os
 from datetime import datetime
 from pathlib import Path
 

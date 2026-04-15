@@ -1,0 +1,4 @@
+/Users/loganrubenstein/Claude Projects/florida-donor-tracker/scripts/40_load_supabase.py:8: SyntaxWarning: "\ " is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\ "? A raw string is also an option.
+  cd ~/Claude\ Projects/florida-donor-tracker
+/Users/loganrubenstein/Claude Projects/florida-donor-tracker/scripts/53_backfill_top_donor_details.py:17: SyntaxWarning: "\ " is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\ "? A raw string is also an option.
+  cd ~/Claude\ Projects/florida-donor-tracker
