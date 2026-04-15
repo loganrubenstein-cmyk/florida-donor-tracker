@@ -40,7 +40,7 @@ export async function GET(request) {
       .select('candidate_name, office_desc, election_year, party_code, hard_money_total, total_combined')
       .eq('acct_num', acct)
       .maybeSingle(),
-    db.from('candidate_pc_links')
+    db.from('candidate_pc_links_v')
       .select('pc_acct_num, link_type, committees(committee_name, total_received, date_start)')
       .eq('candidate_acct_num', acct),
   ]);

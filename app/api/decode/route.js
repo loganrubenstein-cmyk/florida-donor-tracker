@@ -48,7 +48,7 @@ export async function GET(request) {
       .select('treasurer_name, chair_name, address_line, type_desc')
       .eq('acct_num', acct)
       .maybeSingle(),
-    db.from('candidate_pc_links')
+    db.from('candidate_pc_links_v')
       .select('candidate_acct_num, link_type, candidates(candidate_name, office_desc, election_year)')
       .eq('pc_acct_num', String(acct)),
     db.from('committee_expenditure_summary')

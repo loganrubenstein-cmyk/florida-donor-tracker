@@ -109,40 +109,6 @@ def main() -> int:
         else:
             print("\nNo lineage records — skipping committee_lineage load")
 
-        # ── Backfill legacy candidate_pc_links ───────────────────────────────
-        # Keep the old table in sync until loadCandidate.js is updated to use
-        # the view candidate_pc_links_v.
-        print("\nBackfilling legacy candidate_pc_links from edges...")
-        cur.execute("TRUNCATE TABLE candidate_pc_links RESTART IDENTITY")
-        cur.execute("""
-            INSERT INTO candidate_pc_links
-              (candidate_acct_num, pc_acct_num, pc_name, pc_type,
-               link_type, confidence, confidence_tier, signal_evidence)
-            SELECT
-              candidate_acct_num,
-              NULLIF(pc_acct_num, ''),
-              pc_name,
-              pc_type,
-              -- Map edge_type to legacy link_type labels
-              CASE edge_type
-                WHEN 'SOLICITATION_CONTROL'             THEN 'solicitation'
-                WHEN 'STATEMENT_OF_ORG_SUPPORT'         THEN 'statement_of_org'
-                WHEN 'DIRECT_CONTRIBUTION_TO_CANDIDATE' THEN 'direct_contribution'
-                WHEN 'OTHER_DISTRIBUTION_TO_CANDIDATE'  THEN 'distribution'
-                WHEN 'IEC_FOR_OR_AGAINST'               THEN 'iec'
-                WHEN 'ECC_FOR_OR_AGAINST'               THEN 'ecc'
-                ELSE edge_type
-              END,
-              CASE WHEN is_publishable THEN 1.0 ELSE 0.7 END,
-              CASE WHEN is_publishable THEN 'strong' ELSE 'possible' END,
-              evidence_summary
-            FROM candidate_pc_edges
-            WHERE is_publishable = true
-               OR edge_type = 'ADMIN_OVERLAP_ONLY'
-        """)
-        legacy_count = cur.rowcount
-        print(f"Loaded {legacy_count:,} rows into candidate_pc_links (legacy)")
-
         # ── Verification counts ──────────────────────────────────────────────
         cur.execute("SELECT COUNT(*) FROM candidate_pc_edges WHERE is_publishable = true")
         pub_count = cur.fetchone()[0]

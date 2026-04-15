@@ -12,13 +12,8 @@ function formatDollars(n) {
 }
 
 function normalizeDonor(d) {
-  // Accepts either the legacy static-JSON shape {total_amount, type} or the
-  // Supabase shape {total_combined, total_hard, total_soft, is_corporate}.
-  const total =
-    d.total_amount ??
-    d.total_combined ??
-    ((Number(d.total_hard) || 0) + (Number(d.total_soft) || 0))
-  const type = d.type || (d.is_corporate ? 'corporate' : 'individual')
+  const total = d.total_combined ?? ((Number(d.total_hard) || 0) + (Number(d.total_soft) || 0))
+  const type = d.is_corporate ? 'corporate' : 'individual'
   return { ...d, total_amount: total, type, num_contributions: d.num_contributions ?? 0 }
 }
 

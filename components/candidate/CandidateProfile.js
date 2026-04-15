@@ -25,18 +25,8 @@ const LINK_TYPE_LABEL = {
   IEC_FOR_OR_AGAINST:                'Independent Expenditure',
   ECC_FOR_OR_AGAINST:                'Electioneering Comm.',
   ADMIN_OVERLAP_ONLY:                'Administrative',
-  // Legacy labels (candidate_pc_links table fallback)
-  chair:              'Chair',
-  treasurer:          'Treasurer',
-  solicitation:       'Solicitation',
-  solicitation_stub:  'Solicitation',
-  historical:         'Historical',
-  historical_stub:    'Historical',
-  direct_contribution: 'Direct Contribution',
-  iec:                'Independent Expenditure',
-  ecc:                'Electioneering Comm.',
-  statement_of_org:   'Statement of Org',
-  distribution:       'Distribution',
+  solicitation_stub:                 'Solicitation',
+  historical_stub:                   'Historical',
 };
 
 function fmt(n) {
