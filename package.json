@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "node --experimental-vm-modules node_modules/.bin/jest"
+    "test": "node --experimental-vm-modules node_modules/.bin/jest",
+    "knip": "knip",
+    "madge:circular": "madge --circular app components lib",
+    "depcheck": "depcheck"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.102.1",
@@ -19,9 +22,12 @@
     "sigma": "^3.0.0"
   },
   "devDependencies": {
+    "depcheck": "^1.4.7",
     "eslint": "^8",
     "eslint-config-next": "14.2.29",
     "jest": "^29.7.0",
-    "jest-environment-node": "^29.7.0"
+    "jest-environment-node": "^29.7.0",
+    "knip": "^6.4.1",
+    "madge": "^8.0.0"
   }
 }
