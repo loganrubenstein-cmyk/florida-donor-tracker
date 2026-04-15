@@ -154,8 +154,14 @@ def prepare_chunk(df: pd.DataFrame, slug_map: dict) -> tuple[str, int, dict]:
     df["contributor_name"] = df["contributor_name"].fillna("").astype(str)
     df["contributor_name_normalized"] = df["contributor_name"].map(normalize_name)
 
-    # Match to donor slug via the pre-built map
+    # Match to donor slug: exact first, then punctuation-stripped fallback
     df["donor_slug"] = df["contributor_name_normalized"].map(slug_map)
+    unmatched = df["donor_slug"].isna()
+    if unmatched.any():
+        df.loc[unmatched, "donor_slug"] = (
+            df.loc[unmatched, "contributor_name_normalized"]
+            .map(lambda n: slug_map.get(_strip_punct(n)))
+        )
 
     # Dates: pandas auto-detects ISO and US formats
     df["contribution_date"] = pd.to_datetime(
