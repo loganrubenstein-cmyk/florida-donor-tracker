@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.102.1",
+    "@vercel/analytics": "^2.0.1",
     "graphology": "^0.25.4",
     "graphology-layout-forceatlas2": "^0.10.1",
     "next": "14.2.29",
