@@ -168,41 +168,32 @@ def main():
         n, total = name_totals.get(name, (0, 0))
         print(f"    {name[:50]:<50}  → {slug[:40]:<40}  ${total or 0:>14,.0f}")
 
-    # ── Step 4: UPDATE in batches ─────────────────────────────────────────────
-    print(f"\nUpdating contributions in batches of {BATCH_SIZE} names...")
+    # ── Step 4: Single UPDATE with all resolved names ─────────────────────────
+    # No index on contributor_name_normalized — batching means N full seq scans.
+    # One large VALUES list = one scan of the 13.6M NULL-slug rows. Much faster.
+    print(f"\nApplying {len(resolved):,} name→slug mappings in a single UPDATE...")
     conn.autocommit = False
     wcur = conn.cursor()
 
-    updated_rows = 0
-    batch_num = 0
     t0 = time.time()
+    wcur.execute("SET statement_timeout = '30min'")
 
-    for i in range(0, len(resolved), BATCH_SIZE):
-        batch = resolved[i:i + BATCH_SIZE]
-        batch_num += 1
+    psycopg2.extras.execute_values(
+        wcur,
+        """
+        UPDATE contributions c
+        SET donor_slug = v.slug
+        FROM (VALUES %s) AS v(norm_name, slug)
+        WHERE c.donor_slug IS NULL
+          AND c.contributor_name_normalized = v.norm_name
+        """,
+        resolved,
+        page_size=len(resolved),  # send all at once — one table scan
+    )
+    updated_rows = wcur.rowcount
+    conn.commit()
 
-        # Build a VALUES list: (name, slug) pairs
-        # UPDATE using a join against the VALUES table
-        psycopg2.extras.execute_values(
-            wcur,
-            """
-            UPDATE contributions c
-            SET donor_slug = v.slug
-            FROM (VALUES %s) AS v(norm_name, slug)
-            WHERE c.donor_slug IS NULL
-              AND c.contributor_name_normalized = v.norm_name
-            """,
-            batch,
-            page_size=len(batch),
-        )
-        row_count = wcur.rowcount
-        conn.commit()
-        updated_rows += row_count
-
-        elapsed = time.time() - t0
-        done = min(i + BATCH_SIZE, len(resolved))
-        print(f"  batch {batch_num}: {done:,}/{len(resolved):,} names processed "
-              f"({updated_rows:,} rows updated, {fmt_secs(elapsed)})")
+    print(f"  {updated_rows:,} rows updated ({fmt_secs(time.time()-t0)})")
 
     wcur.close()
     cur.close()
