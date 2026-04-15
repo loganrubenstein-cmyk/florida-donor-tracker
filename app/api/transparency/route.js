@@ -3,8 +3,8 @@ import { getDb } from '@/lib/db';
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
-  const sort = searchParams.get('sort') || 'least';
-  const limit = Math.min(parseInt(searchParams.get('limit') || '50', 10), 100);
+  const sort = searchParams.get('sort') === 'most' ? 'most' : 'least';
+  const limit = Math.max(1, Math.min(parseInt(searchParams.get('limit') || '50', 10) || 50, 100));
 
   const db = getDb();
 

@@ -42,14 +42,14 @@ def slugify(name):
     return s[:120]
 
 
-def flush(cur, sql, rows):
+def flush(cur, sql: str, rows: list) -> int:
     if not rows:
         return 0
     execute_values(cur, sql, rows, page_size=BATCH_SIZE)
     return len(rows)
 
 
-def load_json(path):
+def load_json(path: Path):
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
 

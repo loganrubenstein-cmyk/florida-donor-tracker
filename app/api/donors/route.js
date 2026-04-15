@@ -3,15 +3,17 @@ import { getDb } from '@/lib/db';
 
 const PAGE_SIZE    = 50;
 const EXPORT_LIMIT = 500;
+const VALID_SORTS  = ['name', 'total_combined', 'total_soft', 'total_hard', 'num_contributions'];
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const q        = searchParams.get('q') || '';
   const type     = searchParams.get('type') || 'all';
   const industry = searchParams.get('industry') || 'all';
-  const sort     = searchParams.get('sort')     || 'total_combined';
+  const sortRaw  = searchParams.get('sort');
+  const sort     = VALID_SORTS.includes(sortRaw) ? sortRaw : 'total_combined';
   const sortDir  = searchParams.get('sort_dir') || '';
-  const page     = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
+  const page     = Math.max(1, parseInt(searchParams.get('page') || '1', 10) || 1);
   const isExport = searchParams.get('export') === '1';
 
   const db = getDb();

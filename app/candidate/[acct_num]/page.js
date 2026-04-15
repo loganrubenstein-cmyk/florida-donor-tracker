@@ -49,6 +49,7 @@ export async function generateMetadata({ params }) {
 
 export default async function CandidatePage({ params }) {
   const { acct_num } = await params;
+  if (!acct_num || !/^\d{1,10}$/.test(String(acct_num))) notFound();
   let data;
   try {
     data = await loadCandidate(acct_num);

@@ -20,6 +20,7 @@ export async function generateMetadata({ params }) {
 
 export default async function PrincipalPage({ params }) {
   const { slug } = await params;
+  if (!slug || typeof slug !== 'string' || slug.length > 200) notFound();
   let data;
   try {
     data = await loadPrincipal(slug);

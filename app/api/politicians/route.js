@@ -3,6 +3,7 @@ import { getDb } from '@/lib/db';
 
 const PAGE_SIZE    = 50;
 const EXPORT_LIMIT = 500;
+const VALID_SORTS  = ['display_name', 'total_combined_all', 'hard_money_all', 'soft_money_all', 'latest_cycle', 'earliest_cycle', 'num_cycles'];
 
 // Must match slugify() in lib/slugify.js
 function slugify(name) {
@@ -23,9 +24,10 @@ export async function GET(request) {
   const party   = searchParams.get('party')  || 'all';
   const office  = searchParams.get('office') || 'all';
   const year    = searchParams.get('year')   || 'all';
-  const sort     = searchParams.get('sort')     || 'total_combined_all';
+  const sortRaw  = searchParams.get('sort');
+  const sort     = VALID_SORTS.includes(sortRaw) ? sortRaw : 'total_combined_all';
   const sortDir  = searchParams.get('sort_dir') || '';
-  const page     = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
+  const page     = Math.max(1, parseInt(searchParams.get('page') || '1', 10) || 1);
   const isExport = searchParams.get('export') === '1';
 
   const db = getDb();
