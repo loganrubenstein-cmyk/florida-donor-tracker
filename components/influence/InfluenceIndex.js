@@ -4,14 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import BackLinks from '@/components/BackLinks';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
-
-function fmtCompact(n) {
-  if (!n || n === 0) return '$0';
-  if (n >= 1_000_000_000) return `$${(n / 1_000_000_000).toFixed(1).replace(/\.0$/, '')}B`;
-  if (n >= 1_000_000)     return `$${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000)         return `$${(n / 1_000).toFixed(0)}K`;
-  return `$${Math.round(n).toLocaleString()}`;
-}
+import { fmtMoneyCompact as fmtCompact } from '@/lib/fmt';
 
 const SORT_OPTIONS = [
   { value: 'total',  label: 'Total Influence' },

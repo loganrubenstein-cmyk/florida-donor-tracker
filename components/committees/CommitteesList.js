@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { fmtMoneyCompact as fmt, fmtCountCompact as fmtCount } from '@/lib/fmt';
 
 const R_KW = ['REPUBLICAN', 'GOP', 'CONSERVATIVES FOR', 'AMERICANS FOR PROSPERITY'];
 const D_KW = ['DEMOCRAT', 'SEIU', 'AFSCME', 'AFL-CIO', 'LABOR ', 'UNION ', 'PROGRESSIVE'];
@@ -12,20 +13,6 @@ function partyOf(name, acct) {
   if (R_KW.some(k => u.includes(k))) return 'R';
   if (D_KW.some(k => u.includes(k))) return 'D';
   return null;
-}
-
-function fmt(n) {
-  if (!n) return '—';
-  if (n >= 1_000_000_000) return `$${(n / 1_000_000_000).toFixed(2)}B`;
-  if (n >= 1_000_000)     return `$${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000)         return `$${(n / 1_000).toFixed(0)}K`;
-  return `$${n.toFixed(0)}`;
-}
-
-function fmtCount(n) {
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000)     return `${(n / 1_000).toFixed(0)}K`;
-  return String(n);
 }
 
 const PAGE_SIZE = 50;

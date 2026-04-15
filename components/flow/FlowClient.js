@@ -5,14 +5,7 @@ import { Sankey, Tooltip, ResponsiveContainer } from 'recharts';
 import BackLinks from '@/components/BackLinks';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import { slugify } from '@/lib/slugify';
-
-function fmt(n) {
-  if (!n || n === 0) return '—';
-  if (n >= 1_000_000_000) return `$${(n / 1_000_000_000).toFixed(2)}B`;
-  if (n >= 1_000_000)     return `$${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000)         return `$${(n / 1_000).toFixed(0)}K`;
-  return `$${n.toFixed(0)}`;
-}
+import { fmtMoneyCompact as fmt } from '@/lib/fmt';
 
 const TOP_OPTIONS   = [20, 30, 50, 100];
 const MIN_AMOUNTS   = [

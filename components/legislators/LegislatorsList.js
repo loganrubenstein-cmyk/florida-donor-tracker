@@ -5,17 +5,10 @@ import Link from 'next/link';
 import BackLinks from '@/components/BackLinks';
 import SectionHeader from '@/components/shared/SectionHeader';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import { fmtMoneyCompact as fmtMoney } from '@/lib/fmt';
 
 const PARTY_COLOR = { R: 'var(--republican)', D: 'var(--democrat)' };
 const PARTY_LABEL = { R: 'Republican', D: 'Democrat', NPA: 'NPA' };
-
-function fmtMoney(n) {
-  if (!n || n === 0) return null;
-  if (n >= 1_000_000_000) return `$${(n / 1_000_000_000).toFixed(1).replace(/\.0$/, '')}B`;
-  if (n >= 1_000_000)     return `$${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000)         return `$${(n / 1_000).toFixed(0)}K`;
-  return `$${Math.round(n).toLocaleString()}`;
-}
 
 const SORT_OPTIONS = [
   { value: 'display_name',       label: 'Name A–Z' },
@@ -48,12 +41,7 @@ const chipStyle = (active) => ({
   transition: 'border-color 0.12s',
 });
 
-function fmtCompact(n) {
-  if (n >= 1_000_000_000) return `$${(n / 1_000_000_000).toFixed(1)}B`;
-  if (n >= 1_000_000)     return `$${(n / 1_000_000).toFixed(0)}M`;
-  if (n >= 1_000)         return `$${(n / 1_000).toFixed(0)}K`;
-  return `$${Math.round(n)}`;
-}
+const fmtCompact = fmtMoney;
 
 export default function LegislatorsList() {
   const [results, setResults] = useState({ data: [], total: 0, pages: 0 });

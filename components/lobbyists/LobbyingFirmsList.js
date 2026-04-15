@@ -6,16 +6,9 @@ import dynamic from 'next/dynamic';
 import BackLinks from '@/components/BackLinks';
 import SectionHeader from '@/components/shared/SectionHeader';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import { fmtMoneyCompact as fmtCompact } from '@/lib/fmt';
 
 const QuarterlyChart = dynamic(() => import('@/components/candidate/QuarterlyChart'), { ssr: false });
-
-function fmtCompact(n) {
-  if (!n || n === 0) return '$0';
-  if (n >= 1_000_000_000) return `$${(n / 1_000_000_000).toFixed(1).replace(/\.0$/, '')}B`;
-  if (n >= 1_000_000)     return `$${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000)         return `$${(n / 1_000).toFixed(0)}K`;
-  return `$${Math.round(n).toLocaleString()}`;
-}
 
 const SORT_OPTIONS = [
   { value: 'comp',    label: 'Most Paid' },

@@ -26,14 +26,6 @@ function toTitle(s) {
   );
 }
 
-function fmt(n) {
-  if (!n || n === 0) return null;
-  if (n >= 1_000_000_000) return `$${(n / 1_000_000_000).toFixed(1).replace(/\.0$/, '')}B`;
-  if (n >= 1_000_000)     return `$${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000)         return `$${(n / 1_000).toFixed(0)}K`;
-  return `$${n.toFixed(0)}`;
-}
-
 function ScoreBadge({ score }) {
   const color = score >= 80 ? 'var(--orange)' : score >= 60 ? 'var(--teal)' : 'var(--text-dim)';
   return (
