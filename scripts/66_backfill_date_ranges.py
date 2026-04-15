@@ -10,7 +10,7 @@ recipient_type = 'candidate' → candidates.acct_num via recipient_acct
 Safe to re-run (ALTER TABLE IF NOT EXISTS, UPDATE sets overwrite).
 """
 
-import os, sys, time
+import os, time
 from pathlib import Path
 import psycopg2
 

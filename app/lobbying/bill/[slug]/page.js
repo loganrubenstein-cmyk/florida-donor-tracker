@@ -214,7 +214,7 @@ export default async function BillLobbyingPage({ params }) {
         <DataTrustBlock
           source="FL House Lobbyist Disclosure Portal"
           sourceUrl="https://www.flhouse.gov/Sections/Lobbyist/lobbyist.aspx"
-          lastUpdated="April 2026"
+          
           direct={['bill number', 'lobbyist name', 'principal name', 'firm', 'filing year']}
           normalized={['issue tags extracted from free-text issue fields']}
           inferred={[]}

@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import DonorsList from '@/components/donors/DonorsList';
 
 export const dynamic = 'force-static';
@@ -8,5 +9,9 @@ export const metadata = {
 };
 
 export default function DonorsPage() {
-  return <DonorsList />;
+  return (
+    <Suspense>
+      <DonorsList />
+    </Suspense>
+  );
 }

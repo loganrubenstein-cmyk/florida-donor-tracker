@@ -1,0 +1,120 @@
+scripts/40_load_supabase.py:8: SyntaxWarning: "\ " is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\ "? A raw string is also an option.
+  cd ~/Claude\ Projects/florida-donor-tracker
+scripts/53_backfill_top_donor_details.py:17: SyntaxWarning: "\ " is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\ "? A raw string is also an option.
+  cd ~/Claude\ Projects/florida-donor-tracker
+scripts/22_export_candidate_json.py:422:15: f-string is missing placeholders
+scripts/78_build_linkage_edges.py:279:5: local variable 'counts' is assigned to but never used
+scripts/78_build_linkage_edges.py:1222:11: f-string is missing placeholders
+scripts/78_build_linkage_edges.py:1235:15: f-string is missing placeholders
+scripts/78_build_linkage_edges.py:1242:15: f-string is missing placeholders
+scripts/96b_match_527s_bulk.py:27:1: 'io' imported but unused
+scripts/96b_match_527s_bulk.py:465:11: f-string is missing placeholders
+scripts/96b_match_527s_bulk.py:620:15: f-string is missing placeholders
+scripts/73_load_legislator_votes.py:164:11: f-string is missing placeholders
+scripts/73_load_legislator_votes.py:167:11: f-string is missing placeholders
+scripts/02b_discover_closed_committees.py:32:1: 'io.StringIO' imported but unused
+scripts/02b_discover_closed_committees.py:223:5: local variable 'treasurer' is assigned to but never used
+scripts/02b_discover_closed_committees.py:431:11: f-string is missing placeholders
+scripts/06_orchestrate.py:72:11: f-string is missing placeholders
+scripts/06_orchestrate.py:91:19: f-string is missing placeholders
+scripts/06_orchestrate.py:92:19: f-string is missing placeholders
+scripts/06_orchestrate.py:93:19: f-string is missing placeholders
+scripts/06_orchestrate.py:100:11: f-string is missing placeholders
+scripts/64_load_committee_expenditures_supabase.py:146:11: f-string is missing placeholders
+scripts/80_load_linkage_edges_supabase.py:153:15: f-string is missing placeholders
+scripts/42_load_candidate_contributions.py:275:17: local variable 'e' is assigned to but never used
+scripts/94_import_fl_contracts.py:44:1: 'config.PROJECT_ROOT' imported but unused
+scripts/94_import_fl_contracts.py:722:11: f-string is missing placeholders
+scripts/94_import_fl_contracts.py:756:15: f-string is missing placeholders
+scripts/21_import_candidate_contributions.py:270:11: f-string is missing placeholders
+scripts/21_import_candidate_contributions.py:279:11: f-string is missing placeholders
+scripts/50_fetch_voting_records.py:323:11: f-string is missing placeholders
+scripts/50_fetch_voting_records.py:388:11: f-string is missing placeholders
+scripts/35_scrape_candidate_expenditures.py:114:29: f-string is missing placeholders
+scripts/55_fetch_election_results.py:249:5: local variable 'http' is assigned to but never used
+scripts/55_fetch_election_results.py:318:11: f-string is missing placeholders
+scripts/44_export_ie_summary.py:124:11: f-string is missing placeholders
+scripts/44_export_ie_summary.py:129:11: f-string is missing placeholders
+scripts/97_import_sunbiz_corporations.py:353:9: local variable 'downloaded' is assigned to but never used
+scripts/48_export_lobbyist_compensation.py:193:11: f-string is missing placeholders
+scripts/48_export_lobbyist_compensation.py:234:11: f-string is missing placeholders
+scripts/81_update_soft_money_totals.py:171:15: f-string is missing placeholders
+scripts/49_fetch_fec_data.py:291:11: f-string is missing placeholders
+scripts/49_fetch_fec_data.py:325:11: f-string is missing placeholders
+scripts/49_fetch_fec_data.py:337:11: f-string is missing placeholders
+scripts/92_resolve_solicitation_stubs.py:36:1: 'csv' imported but unused
+scripts/92_resolve_solicitation_stubs.py:42:1: 'collections.defaultdict' imported but unused
+scripts/92_resolve_solicitation_stubs.py:262:11: f-string is missing placeholders
+scripts/92_resolve_solicitation_stubs.py:523:11: f-string is missing placeholders
+scripts/14_download_lobbyists.py:21:1: 'datetime.datetime' imported but unused
+scripts/51_enrich_principals_with_comp.py:213:9: local variable 'e' is assigned to but never used
+scripts/86b_apply_ghost_remaps.py:87:7: f-string is missing placeholders
+scripts/86b_apply_ghost_remaps.py:90:7: f-string is missing placeholders
+scripts/71_import_legislators.py:21:1: 'sys' imported but unused
+scripts/71_import_legislators.py:463:11: f-string is missing placeholders
+scripts/74_fetch_bill_sponsors.py:200:11: f-string is missing placeholders
+scripts/54_export_party_finance.py:115:5: local variable 'donor_party_totals' is assigned to but never used
+scripts/54_export_party_finance.py:188:11: f-string is missing placeholders
+scripts/56_scrape_fl_house_ld.py:171:15: f-string is missing placeholders
+scripts/56_scrape_fl_house_ld.py:235:9: local variable 'canonical_set' is assigned to but never used
+scripts/56_scrape_fl_house_ld.py:402:11: f-string is missing placeholders
+scripts/37_add_industry_to_principal_profiles.py:14:7: f-string is missing placeholders
+scripts/17_export_lobbyists.py:287:11: f-string is missing placeholders
+scripts/17_export_lobbyists.py:294:15: f-string is missing placeholders
+scripts/20_scrape_candidate_contributions.py:112:29: f-string is missing placeholders
+scripts/85_reconcile_donor_aggregates.py:162:7: f-string is missing placeholders
+scripts/59_load_pc_links_supabase.py:53:11: f-string is missing placeholders
+scripts/59_load_pc_links_supabase.py:57:15: f-string is missing placeholders
+scripts/11_scrape_transfers.py:381:29: f-string is missing placeholders
+scripts/35_export_search_index.py:72:5: redefinition of unused 'os' from line 9
+scripts/07_import_expenditures.py:129:15: f-string is missing placeholders
+scripts/28_export_industry_trends.py:26:1: 'os' imported but unused
+scripts/62_load_lobbying_firms_supabase.py:178:11: f-string is missing placeholders
+scripts/67_load_ie_supabase.py:15:1: 'time' imported but unused
+scripts/67_load_ie_supabase.py:60:7: f-string is missing placeholders
+scripts/39_parse_solicitations.py:16:1: 'os' imported but unused
+scripts/39_parse_solicitations.py:18:1: 'collections.defaultdict' imported but unused
+scripts/66_backfill_date_ranges.py:13:1: 'sys' imported but unused
+scripts/75_update_legislator_stats.py:79:15: f-string is missing placeholders
+scripts/75_update_legislator_stats.py:89:15: f-string is missing placeholders
+scripts/87_download_lobbyist_comp.py:42:11: f-string is missing placeholders
+scripts/98_scrape_ethics_disclosures.py:222:15: f-string is missing placeholders
+scripts/98_scrape_ethics_disclosures.py:257:23: f-string is missing placeholders
+scripts/98_scrape_ethics_disclosures.py:987:5: local variable 'e' is assigned to but never used
+scripts/98_scrape_ethics_disclosures.py:1083:11: f-string is missing placeholders
+scripts/98_scrape_ethics_disclosures.py:1085:11: f-string is missing placeholders
+scripts/98_scrape_ethics_disclosures.py:1086:11: f-string is missing placeholders
+scripts/98_scrape_ethics_disclosures.py:1087:11: f-string is missing placeholders
+scripts/98_scrape_ethics_disclosures.py:1089:11: f-string is missing placeholders
+scripts/29_export_cycle_donors.py:20:1: 'datetime.datetime' imported but unused
+scripts/53_backfill_top_donor_details.py:29:1: 'collections.defaultdict' imported but unused
+scripts/58_rebuild_pc_links.py:249:20: f-string is missing placeholders
+scripts/32_add_industry_to_donor_index.py:7:1: 'os' imported but unused
+scripts/88_import_lobbyist_comp.py:205:11: f-string is missing placeholders
+scripts/88_import_lobbyist_comp.py:221:11: f-string is missing placeholders
+scripts/60_load_candidate_expenditures_supabase.py:152:11: f-string is missing placeholders
+scripts/03_scrape_contributions.py:132:29: f-string is missing placeholders
+scripts/04_scrape_expenditures.py:123:29: f-string is missing placeholders
+scripts/53_build_lobbying_firm_hub.py:189:11: f-string is missing placeholders
+scripts/01_import_finance.py:92:15: f-string is missing placeholders
+scripts/37_export_candidate_expenditures.py:24:1: 'collections.defaultdict' imported but unused
+scripts/26_export_lobbyist_profiles.py:340:11: f-string is missing placeholders
+scripts/26_export_lobbyist_profiles.py:344:11: f-string is missing placeholders
+scripts/27_export_industry_summary.py:171:11: f-string is missing placeholders
+scripts/86_ghost_slug_report.py:180:7: f-string is missing placeholders
+scripts/86_ghost_slug_report.py:182:7: f-string is missing placeholders
+scripts/16_match_principals.py:218:11: f-string is missing placeholders
+scripts/16_match_principals.py:225:15: f-string is missing placeholders
+scripts/15_import_lobbyists.py:29:1: 'datetime.datetime' imported but unused
+scripts/15_import_lobbyists.py:215:19: f-string is missing placeholders
+scripts/15_import_lobbyists.py:255:11: f-string is missing placeholders
+scripts/72_scrape_committees.py:20:1: 'json' imported but unused
+scripts/72_scrape_committees.py:23:1: 'sys' imported but unused
+scripts/72_scrape_committees.py:443:11: f-string is missing placeholders
+scripts/96_fetch_fec_527_financials.py:298:15: f-string is missing placeholders
+scripts/96_fetch_fec_527_financials.py:412:11: f-string is missing placeholders
+scripts/96_fetch_fec_527_financials.py:438:15: f-string is missing placeholders
+scripts/84_audit_data_integrity.py:168:11: f-string is missing placeholders
+scripts/02_download_registry.py:156:23: f-string is missing placeholders
+scripts/47_scrape_lobbyist_compensation.py:198:11: f-string is missing placeholders
+scripts/47_scrape_lobbyist_compensation.py:203:11: f-string is missing placeholders

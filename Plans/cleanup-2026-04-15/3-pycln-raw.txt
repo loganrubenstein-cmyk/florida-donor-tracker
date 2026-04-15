@@ -1,0 +1,38 @@
+  scripts/66_backfill_date_ranges.py:13:0 'import sys' would be removed! 🔮
+  scripts/66_backfill_date_ranges.py 1 import would be removed! 🚀
+  scripts/29_export_cycle_donors.py:20:0 'from datetime import datetime' would be removed! 🔮
+  scripts/29_export_cycle_donors.py 1 import would be removed! 🚀
+  scripts/39_parse_solicitations.py:16:0 'import os' would be removed! 🔮
+  scripts/39_parse_solicitations.py:18:0 'from collections import defaultdict' would be removed! 🔮
+  scripts/39_parse_solicitations.py 2 imports would be removed! 🚀
+  scripts/92_resolve_solicitation_stubs.py:36:0 'import csv' would be removed! 🔮
+  scripts/92_resolve_solicitation_stubs.py:42:0 'from collections import defaultdict' would be removed! 🔮
+  scripts/92_resolve_solicitation_stubs.py 2 imports would be removed! 🚀
+  scripts/72_scrape_committees.py:20:0 'import json' would be removed! 🔮
+  scripts/72_scrape_committees.py:23:0 'import sys' would be removed! 🔮
+  scripts/72_scrape_committees.py 2 imports would be removed! 🚀
+  scripts/67_load_ie_supabase.py:15:0 'import time' would be removed! 🔮
+  scripts/67_load_ie_supabase.py 1 import would be removed! 🚀
+  scripts/71_import_legislators.py:21:0 'import sys' would be removed! 🔮
+  scripts/71_import_legislators.py 1 import would be removed! 🚀
+  scripts/02b_discover_closed_committees.py:32:0 'from io import StringIO' would be removed! 🔮
+  scripts/02b_discover_closed_committees.py 1 import would be removed! 🚀
+  scripts/37_export_candidate_expenditures.py:24:0 'from collections import defaultdict' would be removed! 🔮
+  scripts/37_export_candidate_expenditures.py 1 import would be removed! 🚀
+  scripts/15_import_lobbyists.py:29:0 'from datetime import datetime' would be removed! 🔮
+  scripts/15_import_lobbyists.py 1 import would be removed! 🚀
+  scripts/14_download_lobbyists.py:21:0 'from datetime import datetime' would be removed! 🔮
+  scripts/14_download_lobbyists.py 1 import would be removed! 🚀
+  scripts/28_export_industry_trends.py:26:0 'import os' would be removed! 🔮
+  scripts/28_export_industry_trends.py 1 import would be removed! 🚀
+  scripts/53_backfill_top_donor_details.py:29:0 'from collections import defaultdict' would be removed! 🔮
+  scripts/53_backfill_top_donor_details.py 1 import would be removed! 🚀
+  scripts/96b_match_527s_bulk.py:27:0 'import io' would be removed! 🔮
+  scripts/96b_match_527s_bulk.py 1 import would be removed! 🚀
+  scripts/32_add_industry_to_donor_index.py:7:0 'import os' would be removed! 🔮
+  scripts/32_add_industry_to_donor_index.py 1 import would be removed! 🚀
+
+All done! 💪 😎
+18 imports would be removed, 15 files would be changed, 101 files would be left unchanged.
+<unknown>:8: SyntaxWarning: "\ " is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\ "? A raw string is also an option.
+<unknown>:17: SyntaxWarning: "\ " is an invalid escape sequence. Such sequences will not work in the future. Did you mean "\\ "? A raw string is also an option.

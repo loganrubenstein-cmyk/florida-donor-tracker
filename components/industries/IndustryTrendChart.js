@@ -15,11 +15,11 @@ function CustomTooltip({ active, payload, label }) {
   const val = payload[0].value;
   return (
     <div style={{
-      background: '#0d0d22', border: '1px solid #2a3050',
+      background: 'var(--surface)', border: '1px solid var(--border)',
       padding: '0.5rem 0.75rem', fontSize: '0.72rem',
       fontFamily: 'Courier New, monospace',
     }}>
-      <div style={{ color: '#5a6a88', marginBottom: '0.25rem' }}>{label} cycle</div>
+      <div style={{ color: 'var(--text-dim)', marginBottom: '0.25rem' }}>{label} cycle</div>
       <div style={{ color: payload[0].color, fontWeight: 700 }}>{fmt(val)}</div>
     </div>
   );

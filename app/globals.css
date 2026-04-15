@@ -5,7 +5,7 @@
   --surface:   #080818;
   --border:    rgba(100, 140, 220, 0.18);
   --text:      #c8d8f0;
-  --text-dim:  #5a6a88;
+  --text-dim:  #7a8eaa;
   --orange:      #ffb060;
   --teal:        #4dd8f0;
   --republican:  #f87171;
@@ -13,6 +13,11 @@
   --blue:      #a0c0ff;
   --green:     #80ffa0;
   --gold:      #ffd060;
+  --purple:    #c084fc;
+  /* Citrus-grade vocabulary — additive, no existing values changed */
+  --cobalt:    #4a7fdf;
+  --sea-green: #3db89f;
+  --cinnabar:  #e06b4a;
   --font-mono: "Courier New", "Courier", monospace;
   --font-serif: 'Instrument Serif', serif;
   --font-sans:  'Instrument Sans', sans-serif;

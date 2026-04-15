@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getDb } from '@/lib/db';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import SectionHeader from '@/components/shared/SectionHeader';
 
 export const dynamic = 'force-dynamic';
 
@@ -30,9 +31,7 @@ export default async function LobbyingHub() {
         <span>Lobbying</span>
       </div>
 
-      <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', color: 'var(--text)', marginBottom: '0.5rem' }}>
-        Lobbying
-      </h1>
+      <SectionHeader title="Lobbying" eyebrow="FL Lobbying · 2007–present" />
       <p style={{ color: 'var(--text-dim)', fontSize: '0.88rem', lineHeight: 1.6, marginBottom: '0.25rem' }}>
         Florida state-registered lobbyists, their principals (clients), and compensation reports going back to 2007.
         Data sourced from the <a href="https://www.floridalobbyist.gov/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)', textDecoration: 'none' }}>Florida Lobbyist Registration Office</a>.
@@ -76,12 +75,18 @@ export default async function LobbyingHub() {
           <div className="hub-card-desc">Bills with the most lobbyist disclosure filings. Which legislation drew the most registered lobbying activity 2016–2026.</div>
           <div className="hub-card-stat">14,045 bills · 68,785 filings</div>
         </Link>
+
+        <Link href="/influence" className="hub-card">
+          <div className="hub-card-title">Influence Index</div>
+          <div className="hub-card-desc">Organizations ranked by combined political spending — lobbying compensation plus campaign donations. The broadest view of who spends to shape Florida policy.</div>
+          <div className="hub-card-stat">$20.9B tracked · 3,900+ orgs</div>
+        </Link>
       </div>
 
       <DataTrustBlock
         source="Florida Lobbyist Registration Office — Registration & Compensation Reports"
         sourceUrl="https://www.floridalobbyist.gov/"
-        lastUpdated="April 2026"
+        
         direct={['lobbyist name', 'principal name', 'registration records', 'quarterly compensation reports (2007–present)']}
         normalized={['firm grouping aggregated from individual lobbyist records', 'compensation totals (midpoints below $50K; exact amounts above)']}
         inferred={['donor cross-references matched by fuzzy name — not confirmed by election authorities']}

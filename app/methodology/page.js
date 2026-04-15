@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import SectionHeader from '@/components/shared/SectionHeader';
 
 export const metadata = {
   title: 'Methodology',
@@ -27,9 +28,7 @@ export default function MethodologyPage() {
         <span>Methodology</span>
       </div>
 
-      <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', color: 'var(--text)', marginBottom: '0.5rem' }}>
-        Methodology
-      </h1>
+      <SectionHeader title="Methodology" eyebrow="Florida Donor Tracker · Data Methods" />
       <p style={{ color: 'var(--text-dim)', fontSize: '0.85rem', lineHeight: 1.6, marginBottom: '2.5rem' }}>
         Florida Donor Tracker ingests public records from the Florida Division of Elections and Lobbyist Registration Office,
         normalizes them, and builds a unified index of donors, candidates, committees, and lobbyist relationships.
@@ -76,6 +75,15 @@ export default function MethodologyPage() {
           not address, occupation, or any other corroborating field. This approach errs toward undercounting (misses real matches)
           rather than overcounting (avoids false merges).
         </p>
+        <div style={{ marginTop: '1rem', padding: '0.75rem 1rem', background: 'rgba(100,140,220,0.05)', border: '1px solid rgba(100,140,220,0.15)', borderRadius: '3px' }}>
+          <strong style={{ color: 'var(--text)', fontSize: '0.78rem' }}>Why do different pages show different donor counts?</strong>
+          <ul style={{ marginTop: '0.5rem', paddingLeft: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+            <li><strong>~10M+ contribution records</strong> — every filed contribution line, including duplicates across amendments.</li>
+            <li><strong>~880K+ contributor names</strong> — unique normalized names across all records (before deduplication).</li>
+            <li><strong>~336K donor profiles</strong> — unique names that received a deduplication slot; browseable at <Link href="/donors" style={{ color: 'var(--teal)', textDecoration: 'none' }}>/donors</Link>.</li>
+            <li><strong>~85K donors in the default directory view</strong> — a filtered subset of donors with ≥$1K in total contributions, to keep the directory usable. Smaller donors exist in the index; search for them directly.</li>
+          </ul>
+        </div>
       </Section>
 
       <Section title="Entity Type Classification">

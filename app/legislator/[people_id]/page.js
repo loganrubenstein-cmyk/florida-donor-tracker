@@ -439,7 +439,7 @@ export default async function LegislatorPage({ params }) {
       <div style={{ marginTop: '3rem' }}>
         <DataTrustBlock
           source="LobbyTools (contact + district) · LegiScan API (votes + bills) · FL Division of Elections (finance)"
-          lastUpdated="April 2026"
+          
           direct={['name', 'party', 'district', 'chamber', 'leadership title', 'contact info', 'committee assignments', 'individual vote records']}
           normalized={['finance totals matched from FL DoE candidate records by name + district']}
           caveats={[

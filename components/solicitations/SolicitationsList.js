@@ -84,9 +84,9 @@ export default function SolicitationsList() {
   }, [records]);
 
   const inputStyle = {
-    background: '#0d0d22', border: '1px solid var(--border)',
+    background: 'var(--surface)', border: '1px solid var(--border)',
     color: 'var(--text)', padding: '0.4rem 0.6rem',
-    fontSize: '0.72rem', borderRadius: '3px',
+    fontSize: '0.82rem', borderRadius: '3px',
     fontFamily: 'var(--font-mono)', outline: 'none',
   };
 
@@ -109,7 +109,7 @@ export default function SolicitationsList() {
       <div style={{ marginBottom: '1.5rem' }}>
         <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.5rem' }}>
           <span style={{
-            fontSize: '0.65rem', padding: '0.15rem 0.5rem',
+            fontSize: '0.72rem', padding: '0.15rem 0.5rem',
             border: '1px solid var(--teal)', color: 'var(--teal)',
             borderRadius: '3px', textTransform: 'uppercase', letterSpacing: '0.06em',
             fontFamily: 'var(--font-mono)',
@@ -119,12 +119,12 @@ export default function SolicitationsList() {
         </div>
         <h1 style={{
           fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.4rem, 3vw, 2rem)',
-          fontWeight: 400, color: '#fff', marginBottom: '0.4rem',
+          fontWeight: 400, color: 'var(--text)', marginBottom: '0.4rem',
         }}>
           Public Solicitations
         </h1>
         {totals && (
-          <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+          <div style={{ fontSize: '0.82rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
             <span>{totals.total.toLocaleString()} registered organizations</span>
             <span style={{ color: 'var(--teal)' }}>{totals.active.toLocaleString()} active</span>
             <span style={{ color: 'var(--text-dim)' }}>{totals.withdrawn.toLocaleString()} withdrawn</span>
@@ -148,7 +148,7 @@ export default function SolicitationsList() {
         <select value={sortBy} onChange={e => setSortBy(e.target.value)} style={inputStyle}>
           {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
         </select>
-        <span style={{ fontSize: '0.65rem', color: 'var(--text-dim)', whiteSpace: 'nowrap' }}>
+        <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)', whiteSpace: 'nowrap' }}>
           {filtered.length.toLocaleString()} results
         </span>
       </div>
@@ -181,7 +181,7 @@ export default function SolicitationsList() {
           <tbody>
             {pageItems.length === 0 && (
               <tr>
-                <td colSpan={8} style={{ padding: '2.5rem', color: 'var(--text-dim)', textAlign: 'center', fontSize: '0.72rem', fontFamily: 'var(--font-mono)' }}>
+                <td colSpan={8} style={{ padding: '2.5rem', color: 'var(--text-dim)', textAlign: 'center', fontSize: '0.82rem', fontFamily: 'var(--font-mono)' }}>
                   No solicitations match the current filters
                 </td>
               </tr>
@@ -190,10 +190,10 @@ export default function SolicitationsList() {
               const url = normalizeUrl(r.website);
               return (
                 <tr key={r.id} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '0.65rem' }}>
+                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '0.72rem' }}>
                     {(page - 1) * PAGE_SIZE + i + 1}
                   </td>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '0.65rem' }}>
+                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '0.72rem' }}>
                     {r.id}
                   </td>
                   <td style={{ padding: '0.45rem 0.6rem', wordBreak: 'break-word', maxWidth: '260px' }}>
@@ -206,15 +206,15 @@ export default function SolicitationsList() {
                       </div>
                     )}
                   </td>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.65rem', maxWidth: '160px', wordBreak: 'break-word' }}>
+                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.72rem', maxWidth: '160px', wordBreak: 'break-word' }}>
                     {r.type || '—'}
                   </td>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.65rem', maxWidth: '160px', wordBreak: 'break-word' }}>
+                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.72rem', maxWidth: '160px', wordBreak: 'break-word' }}>
                     {(r.solicitors || []).length > 0
                       ? r.solicitors.join(', ')
                       : '—'}
                   </td>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '0.65rem', whiteSpace: 'nowrap' }}>
+                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '0.72rem', whiteSpace: 'nowrap' }}>
                     {r.file_date || '—'}
                   </td>
                   <td style={{ padding: '0.45rem 0.6rem', textAlign: 'center' }}>
@@ -234,7 +234,7 @@ export default function SolicitationsList() {
                         {displayUrl(r.website)}
                       </a>
                     ) : (
-                      <span style={{ color: 'var(--text-dim)', fontSize: '0.65rem' }}>—</span>
+                      <span style={{ color: 'var(--text-dim)', fontSize: '0.72rem' }}>—</span>
                     )}
                   </td>
                 </tr>
@@ -251,20 +251,20 @@ export default function SolicitationsList() {
             onClick={() => setPage(p => Math.max(1, p - 1))}
             disabled={page === 1}
             style={{
-              padding: '0.25rem 0.65rem', fontSize: '0.65rem',
+              padding: '0.25rem 0.65rem', fontSize: '0.72rem',
               background: 'transparent', border: '1px solid rgba(100,140,220,0.25)',
               color: page === 1 ? 'var(--text-dim)' : 'var(--text)', cursor: page === 1 ? 'default' : 'pointer',
               borderRadius: '2px', fontFamily: 'var(--font-mono)', opacity: page === 1 ? 0.4 : 1,
             }}
           >← prev</button>
-          <span style={{ fontSize: '0.65rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+          <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
             page {page} / {totalPages}
           </span>
           <button
             onClick={() => setPage(p => Math.min(totalPages, p + 1))}
             disabled={page === totalPages}
             style={{
-              padding: '0.25rem 0.65rem', fontSize: '0.65rem',
+              padding: '0.25rem 0.65rem', fontSize: '0.72rem',
               background: 'transparent', border: '1px solid rgba(100,140,220,0.25)',
               color: page === totalPages ? 'var(--text-dim)' : 'var(--text)', cursor: page === totalPages ? 'default' : 'pointer',
               borderRadius: '2px', fontFamily: 'var(--font-mono)', opacity: page === totalPages ? 0.4 : 1,
@@ -277,7 +277,7 @@ export default function SolicitationsList() {
         <DataTrustBlock
           source="Florida Division of Elections — Public Solicitations Registry"
           sourceUrl="https://dos.elections.myflorida.com/solicitations/"
-          lastUpdated="April 2026"
+          
           direct={['organization name', 'website', 'solicitor names', 'registration / expiration dates', 'status']}
           caveats={[
             'Includes organizations registered to solicit political contributions in Florida — not a list of donors.',

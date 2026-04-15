@@ -1,5 +1,7 @@
 import './globals.css';
 import Link from 'next/link';
+import FloridaOutline from '@/components/shared/FloridaOutline';
+import NavLinks from '@/components/shared/NavLinks';
 
 export const metadata = {
   metadataBase: new URL('https://florida-donor-tracker.vercel.app'),
@@ -18,20 +20,6 @@ export const metadata = {
   },
 };
 
-const NAV_LINKS = [
-  { href: '/candidates',    label: 'Candidates' },
-  { href: '/committees',    label: 'Committees' },
-  { href: '/donors',        label: 'Donors' },
-  { href: '/explorer',      label: 'Explorer' },
-  { href: '/lobbying',      label: 'Lobbying' },
-  { href: '/legislature',   label: 'Legislature' },
-  { href: '/elections',     label: 'Elections' },
-  { href: '/network',       label: 'Network' },
-  { href: '/tools',         label: 'Tools' },
-  { href: '/research',      label: 'Research' },
-  { href: '/data',          label: 'Data' },
-];
-
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
@@ -45,21 +33,15 @@ export default function RootLayout({ children }) {
           flexWrap: 'wrap',
         }}>
           <Link href="/" style={{
+            display: 'flex', alignItems: 'center', gap: '0.45rem',
             color: 'var(--orange)', textDecoration: 'none',
             fontWeight: 'bold', letterSpacing: '0.05em',
             marginRight: '0.75rem', whiteSpace: 'nowrap',
           }}>
+            <FloridaOutline size="wordmark" />
             FL DONOR TRACKER
           </Link>
-          {NAV_LINKS.map(({ href, label }) => (
-            <Link key={href} href={href} style={{
-              color: 'var(--text-dim)', textDecoration: 'none',
-              fontSize: '0.82rem', whiteSpace: 'nowrap',
-              padding: '0.25rem 0',
-            }}>
-              {label}
-            </Link>
-          ))}
+          <NavLinks />
           <form action="/search" method="get" style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>
             <input
               name="q"
@@ -73,7 +55,7 @@ export default function RootLayout({ children }) {
                 fontSize: '0.75rem',
                 borderRadius: '3px',
                 fontFamily: 'var(--font-mono)',
-                width: '180px',
+                width: '240px',
                 outline: 'none',
               }}
             />
@@ -86,7 +68,7 @@ export default function RootLayout({ children }) {
             <span>
               <Link href="/methodology">Methodology</Link>
               {' · '}
-              <Link href="/data">Data dictionary</Link>
+              <Link href="/data">Sources</Link>
               {' · '}
               <Link href="/coverage">Coverage &amp; limits</Link>
             </span>

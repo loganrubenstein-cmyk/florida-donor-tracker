@@ -3,6 +3,7 @@ import { loadCommitteesDirectory } from '@/lib/loadLegislativeCommittee';
 import { fmtMoneyCompact } from '@/lib/fmt';
 import BackLinks from '@/components/BackLinks';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import SectionHeader from '@/components/shared/SectionHeader';
 
 export const dynamic = 'force-dynamic';
 
@@ -86,12 +87,10 @@ export default async function CommitteesPage() {
     <main style={{ maxWidth: '1040px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
       <BackLinks links={[{ href: '/', label: 'home' }, { href: '/legislators', label: 'legislators' }]} />
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', color: 'var(--text)', margin: '0 0 0.3rem' }}>
-          Florida Legislative Committees
-        </h1>
+      <SectionHeader title="Legislative Committees" eyebrow="FL Legislature · 2024–2026 Term" />
+      <div style={{ marginBottom: '1.5rem', marginTop: '-0.75rem' }}>
         <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
-          2024–2026 term · {house.length} House + {senate.length} Senate committees
+          {house.length} House + {senate.length} Senate committees
           {totalRaised > 0 && (
             <span style={{ marginLeft: '0.75rem', color: 'var(--orange)' }}>
               {fmtMoneyCompact(totalRaised)} combined fundraising by members
@@ -106,7 +105,7 @@ export default async function CommitteesPage() {
       <div style={{ marginTop: '3rem' }}>
         <DataTrustBlock
           source="FL House + FL Senate websites · LobbyTools member export"
-          lastUpdated="April 2026"
+          
           direct={['committee name', 'membership roster', 'leadership roles']}
           normalized={['campaign finance totals matched from FL DoE candidate records']}
           caveats={[

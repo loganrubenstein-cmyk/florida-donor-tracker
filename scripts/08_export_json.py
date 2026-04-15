@@ -50,20 +50,15 @@ def is_corporate(name) -> bool:
     return any(kw in upper for kw in _CORP_KEYWORDS)
 
 
-def build_donor_type(name: str, committees_df: pd.DataFrame) -> str:
+def build_donor_type(name: str, committee_names_upper: set) -> str:
     """
     Return 'committee', 'corporate', or 'individual' for a donor name.
 
-    Checks against the normalized committee name list first (case-insensitive,
-    strip whitespace). Falls back to is_corporate(), then 'individual'.
+    committee_names_upper: pre-built set of normalized committee names (pass once, reuse).
     """
     if not isinstance(name, str):
         return "individual"
-    name_upper = name.strip().upper()
-    committee_names = set(
-        committees_df["committee_name"].str.strip().str.upper()
-    )
-    if name_upper in committee_names:
+    if name.strip().upper() in committee_names_upper:
         return "committee"
     if is_corporate(name):
         return "corporate"
@@ -88,12 +83,15 @@ def derive_committee_acct(source_file: str):
     return None
 
 
-def build_top_donors(df: pd.DataFrame, committees_df: pd.DataFrame, n: int = 100) -> list:
+def build_top_donors(df: pd.DataFrame, committees_df: pd.DataFrame, n: int = 100,
+                     _committee_names: set | None = None) -> list:
     """
     Aggregate contributions by canonical_name, return top n by total $.
 
     Each item: {name, total_amount, num_contributions, is_corporate, type}
     """
+    if _committee_names is None:
+        _committee_names = set(committees_df["committee_name"].str.strip().str.upper())
     grouped = (
         df.groupby("canonical_name")["amount"]
         .agg(total_amount="sum", num_contributions="count")
@@ -109,15 +107,16 @@ def build_top_donors(df: pd.DataFrame, committees_df: pd.DataFrame, n: int = 100
             "total_amount": round(float(row["total_amount"]), 2),
             "num_contributions": int(row["num_contributions"]),
             "is_corporate": is_corporate(row["name"]),
-            "type": build_donor_type(row["name"], committees_df),
+            "type": build_donor_type(row["name"], _committee_names),
         })
     return result
 
 
-def build_top_corporate_donors(df: pd.DataFrame, committees_df: pd.DataFrame, n: int = 100) -> list:
+def build_top_corporate_donors(df: pd.DataFrame, committees_df: pd.DataFrame, n: int = 100,
+                               _committee_names: set | None = None) -> list:
     """Filter to corporate donors, then return top n by total $."""
     corp_df = df[df["canonical_name"].apply(is_corporate)]
-    return build_top_donors(corp_df, committees_df, n=n)
+    return build_top_donors(corp_df, committees_df, n=n, _committee_names=_committee_names)
 
 
 def build_donor_flows(
@@ -176,6 +175,7 @@ def build_per_committee_files(
     work = work[work["committee_acct"].notna()]
 
     acct_to_name = committees_df.set_index("acct_num")["committee_name"].to_dict()
+    committee_names_upper = set(committees_df["committee_name"].str.strip().str.upper())
 
     results = {}
     for acct, group in work.groupby("committee_acct"):
@@ -192,7 +192,7 @@ def build_per_committee_files(
                 "name": row["name"],
                 "total_amount": round(float(row["total_amount"]), 2),
                 "num_contributions": int(row["num_contributions"]),
-                "type": build_donor_type(row["name"], committees_df),
+                "type": build_donor_type(row["name"], committee_names_upper),
             }
             for _, row in top_donors_grouped.iterrows()
         ]
@@ -264,15 +264,18 @@ def main(force: bool = False) -> int:
     PUBLIC_DIR.mkdir(parents=True, exist_ok=True)
     COMMITTEES_DIR.mkdir(parents=True, exist_ok=True)
 
+    # Build committee name set once for all donor-type lookups
+    committee_names_upper = set(committees_df["committee_name"].str.strip().str.upper())
+
     # Top donors
     print("Building top_donors.json ...", flush=True)
-    top_donors = build_top_donors(df, committees_df)
+    top_donors = build_top_donors(df, committees_df, _committee_names=committee_names_upper)
     write_json(top_donors, PUBLIC_DIR / "top_donors.json")
     print(f"  {len(top_donors)} donors")
 
     # Top corporate donors
     print("Building top_corporate_donors.json ...", flush=True)
-    top_corp = build_top_corporate_donors(df, committees_df)
+    top_corp = build_top_corporate_donors(df, committees_df, _committee_names=committee_names_upper)
     write_json(top_corp, PUBLIC_DIR / "top_corporate_donors.json")
     print(f"  {len(top_corp)} corporate donors")
 

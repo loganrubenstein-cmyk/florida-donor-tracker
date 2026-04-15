@@ -10,6 +10,8 @@ import TabbedProfile from '@/components/shared/TabbedProfile';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import NewsBlock from '@/components/shared/NewsBlock';
 import SourceLink from '@/components/shared/SourceLink';
+import EntityHeader from '@/components/shared/EntityHeader';
+import RelationshipsBlock from '@/components/shared/RelationshipsBlock';
 import dynamic from 'next/dynamic';
 import { fmtMoneyCompact, fmtMoney } from '@/lib/fmt';
 
@@ -252,45 +254,21 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
   );
 
   const candidatesContent = (
-    <div>
-      {linkedCandidates.length > 0 ? (
-        <>
-          <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
-            Linked Candidates ({linkedCandidates.length})
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', background: 'var(--border)', border: '1px solid var(--border)', borderRadius: '3px', overflow: 'hidden' }}>
-            {linkedCandidates.map((c, i) => {
-              const polSlug = c.acct_num ? getPoliticianSlugByAcctNum(c.acct_num) : null;
-              return (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.5rem 0.75rem', background: 'var(--bg)' }}>
-                <a href={polSlug ? `/politician/${polSlug}` : `/candidate/${c.acct_num}`} style={{
-                  color: 'var(--teal)', textDecoration: 'none', fontSize: '0.72rem', flex: 1,
-                  minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
-                }}>
-                  {c.name || `Candidate #${c.acct_num}`}
-                </a>
-                {c.office && (
-                  <span style={{ fontSize: '0.6rem', color: 'var(--text-dim)', whiteSpace: 'nowrap', flexShrink: 0 }}>
-                    {c.office}{c.year ? ` · ${c.year}` : ''}
-                  </span>
-                )}
-                <span style={{
-                  fontSize: '0.55rem', padding: '0.05rem 0.3rem',
-                  background: 'rgba(77,216,240,0.08)', color: 'var(--teal)',
-                  border: '1px solid rgba(77,216,240,0.2)', borderRadius: '2px',
-                  fontFamily: 'var(--font-mono)', flexShrink: 0,
-                }}>
-                  {c.link_type}
-                </span>
-              </div>
-              );
-            })}
-          </div>
-        </>
-      ) : (
-        <p style={{ color: 'var(--text-dim)', fontSize: '0.82rem' }}>No linked candidates found.</p>
-      )}
-    </div>
+    <RelationshipsBlock
+      label={`Linked Candidates (${linkedCandidates.length})`}
+      description="Candidates connected to this committee via solicitation filings, direct contributions, or administrative records."
+      emptyText="No linked candidates found."
+      items={linkedCandidates.map(c => {
+        const polSlug = c.acct_num ? getPoliticianSlugByAcctNum(c.acct_num) : null;
+        return {
+          name: c.name || `Candidate #${c.acct_num}`,
+          href: polSlug ? `/politician/${polSlug}` : `/candidate/${c.acct_num}`,
+          sub: [c.office, c.year].filter(Boolean).join(' · ') || null,
+          badge: c.link_type,
+          badgeColor: 'var(--teal)',
+        };
+      })}
+    />
   );
 
   const payeesContent = expenditures ? (
@@ -456,13 +434,13 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
   );
 
   const tabs = [
-    { id: 'overview',      label: 'Overview',      content: overviewContent },
-    { id: 'donors',        label: 'Donors',        content: donorsContent },
-    { id: 'candidates',    label: 'Candidates',    content: candidatesContent },
-    { id: 'payees',        label: 'Payees',        content: payeesContent },
-    { id: 'transactions',  label: 'Transactions',  content: transactionsContent },
-    { id: 'connections',   label: 'Connections',   content: connectionsContent },
-    { id: 'sources',       label: 'Sources',       content: sourcesContent },
+    { id: 'overview',      label: 'Overview',      description: 'Top-line receipts, expenditures, and cash flow',          content: overviewContent },
+    { id: 'donors',        label: 'Donors',        description: 'Top contributors to this committee',                       content: donorsContent },
+    { id: 'candidates',    label: 'Candidates',    description: 'Candidates linked to this committee via FL DOE filings',   content: candidatesContent },
+    { id: 'payees',        label: 'Payees',        description: 'Vendors and consultants paid by this committee',           content: payeesContent },
+    { id: 'transactions',  label: 'Transactions',  description: 'Search individual contribution records',                    content: transactionsContent },
+    { id: 'connections',   label: 'Connections',   description: 'Committees sharing treasurer, address, or officers',       content: connectionsContent },
+    { id: 'sources',       label: 'Sources',       description: 'Research links, data sources, and methodology',            content: sourcesContent },
   ];
 
   return (
@@ -470,47 +448,17 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
 
       <BackLinks links={[{ href: '/', label: 'home' }, { href: '/network', label: 'network' }]} />
 
-      {/* Header */}
-      <div style={{ marginBottom: '1.75rem' }}>
-        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.6rem', flexWrap: 'wrap' }}>
-          <span style={{
-            fontSize: '0.65rem', padding: '0.15rem 0.5rem',
-            border: '1px solid var(--teal)', color: 'var(--teal)',
-            borderRadius: '3px', textTransform: 'uppercase', letterSpacing: '0.06em',
-          }}>
-            committee
-          </span>
-          {party && (
-            <span style={{
-              fontSize: '0.65rem', padding: '0.15rem 0.45rem',
-              border: `1px solid ${partyColor}`, color: partyColor,
-              borderRadius: '3px', letterSpacing: '0.06em', fontWeight: 'bold',
-            }}>
-              {party}
-            </span>
-          )}
-          {annotation && (
-            <a href="/investigations" style={{
-              fontSize: '0.65rem', padding: '0.15rem 0.5rem',
-              border: '1px solid var(--orange)', color: 'var(--orange)',
-              borderRadius: '3px', textTransform: 'uppercase', letterSpacing: '0.06em',
-              fontWeight: 'bold', textDecoration: 'none',
-            }}>
-              Investigation
-            </a>
-          )}
-        </div>
-        <h1 style={{
-          fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.4rem, 3vw, 2rem)',
-          fontWeight: 400, color: '#fff', lineHeight: 1.2, marginBottom: '0.4rem',
-        }}>
-          {data.committee_name}
-        </h1>
-        <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)' }}>
-          Acct #{data.acct_num}
-        </div>
+      <EntityHeader
+        name={data.committee_name}
+        typeBadge={{ label: 'COMMITTEE', color: 'var(--teal)' }}
+        badges={[
+          ...(party ? [{ label: party, color: partyColor }] : []),
+          ...(annotation ? [{ label: 'INVESTIGATION', color: 'var(--orange)', href: '/investigations' }] : []),
+        ]}
+        meta={[`Acct #${data.acct_num}`]}
+      >
         <SourceLink type="committee" id={data.acct_num} />
-      </div>
+      </EntityHeader>
 
       <TabbedProfile tabs={tabs} defaultTab="overview" />
     </main>

@@ -3,9 +3,8 @@
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { fmtMoney, fmtMoneyCompact } from '@/lib/fmt';
+import { PARTY_COLOR } from '@/lib/partyUtils';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
-
-const PARTY_COLOR = { REP: 'var(--republican)', DEM: 'var(--democrat)' };
 
 export default function InfluenceTimeline() {
   const [query, setQuery] = useState('');
@@ -16,11 +15,13 @@ export default function InfluenceTimeline() {
   const [showDropdown, setShowDropdown] = useState(false);
   const timerRef = useRef(null);
 
-  // Auto-load if ?acct= is in URL
+  // Auto-load if ?acct= is in URL; pre-fill if ?q= is in URL
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const acct = params.get('acct');
+    const q    = params.get('q');
     if (acct) loadTimeline(acct, '');
+    else if (q) handleSearch(q);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function handleSearch(val) {
@@ -123,7 +124,7 @@ export default function InfluenceTimeline() {
 
       {loading && <div style={{ color: 'var(--text-dim)', fontSize: '0.78rem' }}>Loading timeline…</div>}
       {error && (
-        <div style={{ padding: '0.75rem 1rem', background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.3)', borderRadius: '3px', color: '#f87171', fontSize: '0.78rem' }}>
+        <div style={{ padding: '0.75rem 1rem', background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.3)', borderRadius: '3px', color: 'var(--republican)', fontSize: '0.78rem' }}>
           {error}
         </div>
       )}
@@ -134,7 +135,7 @@ export default function InfluenceTimeline() {
         <DataTrustBlock
           source="Florida Division of Elections — Campaign Finance Database"
           sourceUrl="https://dos.elections.myflorida.com/campaign-finance/contributions/"
-          lastUpdated="April 2026"
+          
           direct={['quarterly contribution totals', 'candidate name and office', 'election year']}
           normalized={['connected PAC linkages (Statement of Organization filings)']}
           inferred={['donation spikes (quarters exceeding 2.5x the median)', 'PAC formation dates']}
@@ -221,7 +222,7 @@ function TimelineView({ data }) {
                 )}
                 {/* Tooltip on hover via title */}
                 <div
-                  title={`${q.quarter}: ${fmtMoney(q.amount)}${q.annotation ? ` (${q.annotation})` : ''}${q.is_spike ? ' ⚡ SPIKE' : ''}`}
+                  title={`${q.quarter}: ${fmtMoneyCompact(q.amount)}${q.annotation ? ` (${q.annotation})` : ''}${q.is_spike ? ' ⚡ SPIKE' : ''}`}
                   style={{
                     width: '18px', height: `${height}px`, background: barColor,
                     opacity: 0.75, borderRadius: '2px 2px 0 0', cursor: 'default',

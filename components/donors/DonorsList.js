@@ -1,7 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import BackLinks from '@/components/BackLinks';
+import SectionHeader from '@/components/shared/SectionHeader';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import GlossaryTerm from '@/components/shared/GlossaryTerm';
 
@@ -49,15 +51,21 @@ const INDUSTRY_OPTIONS = [
 const PAGE_SIZE = 50;
 
 export default function DonorsList() {
+  const router       = useRouter();
+  const pathname     = usePathname();
+  const searchParams = useSearchParams();
+  const didMount     = useRef(false);
+
   const [results, setResults]       = useState({ data: [], total: 0, pages: 0 });
   const [loading, setLoading]       = useState(true);
-  const [search, setSearch]         = useState('');
-  const [debouncedQ, setDebouncedQ] = useState('');
-  const [type, setType]             = useState('all');
-  const [industry, setIndustry]     = useState('all');
-  const [sortBy, setSortBy]         = useState('total_combined');
+  const [search, setSearch]         = useState(() => searchParams?.get('q') || '');
+  const [debouncedQ, setDebouncedQ] = useState(() => searchParams?.get('q') || '');
+  const [type, setType]             = useState(() => searchParams?.get('type') || 'all');
+  const [industry, setIndustry]     = useState(() => searchParams?.get('industry') || 'all');
+  const [sortBy, setSortBy]         = useState(() => searchParams?.get('sort') || 'total_combined');
   const [sortDir, setSortDir]       = useState('desc');
   const [page, setPage]             = useState(1);
+  const [exporting, setExporting]   = useState(false);
 
   // Debounce search input by 300ms
   useEffect(() => {
@@ -67,6 +75,18 @@ export default function DonorsList() {
 
   // Reset to page 1 when filters change
   useEffect(() => { setPage(1); }, [debouncedQ, type, industry, sortBy, sortDir]);
+
+  // Sync filter state to URL (skip on first mount to avoid replacing initial params)
+  useEffect(() => {
+    if (!didMount.current) { didMount.current = true; return; }
+    const params = new URLSearchParams();
+    if (debouncedQ)     params.set('q', debouncedQ);
+    if (type !== 'all') params.set('type', type);
+    if (industry !== 'all') params.set('industry', industry);
+    if (sortBy !== 'total_combined') params.set('sort', sortBy);
+    const qs = params.toString();
+    router.replace(`${pathname}${qs ? '?' + qs : ''}`, { scroll: false });
+  }, [debouncedQ, type, industry, sortBy]);
 
   // Fetch from API
   useEffect(() => {
@@ -78,10 +98,44 @@ export default function DonorsList() {
       .catch(() => setLoading(false));
   }, [debouncedQ, type, industry, sortBy, sortDir, page]);
 
+  async function handleExportCSV() {
+    setExporting(true);
+    try {
+      const params = new URLSearchParams({ q: debouncedQ, type, industry, sort: sortBy, sort_dir: sortDir, export: '1' });
+      const res = await fetch(`/api/donors?${params}`);
+      const json = await res.json();
+      const rows = json.data || [];
+      const headers = ['Name', 'Type', 'Location', 'Industry', 'Soft Money', 'Hard Money', 'Combined', 'Committees', 'Contributions'];
+      const lines = [
+        headers.join(','),
+        ...rows.map(d => [
+          `"${(d.name || '').replace(/"/g, '""')}"`,
+          d.is_corporate ? 'Corporate/Org' : 'Individual',
+          `"${(d.top_location || '').replace(/"/g, '""')}"`,
+          `"${(d.industry || '').replace(/"/g, '""')}"`,
+          d.total_soft || 0,
+          d.total_hard || 0,
+          d.total_combined || 0,
+          d.num_committees || 0,
+          d.num_contributions || 0,
+        ].join(','))
+      ];
+      const blob = new Blob([lines.join('\n')], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `fl-donors-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } finally {
+      setExporting(false);
+    }
+  }
+
   const inputStyle = {
-    background: '#0d0d22', border: '1px solid var(--border)',
+    background: 'var(--surface)', border: '1px solid var(--border)',
     color: 'var(--text)', padding: '0.4rem 0.6rem',
-    fontSize: '0.72rem', borderRadius: '3px',
+    fontSize: '0.82rem', borderRadius: '3px',
     fontFamily: 'var(--font-mono)', outline: 'none',
   };
 
@@ -92,17 +146,9 @@ export default function DonorsList() {
 
       <BackLinks links={[{ href: '/', label: 'home' }]} />
 
-      {/* Header */}
-      <div style={{ marginBottom: '1.5rem' }}>
-        <h1 style={{
-          fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.4rem, 3vw, 2rem)',
-          fontWeight: 400, color: '#fff', marginBottom: '0.4rem',
-        }}>
-          Donors
-        </h1>
-        <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
-          <span>Filtered view: donors with $1K+ in aggregate contributions. Full underlying index covers every reported contributor. Source: Florida Division of Elections.</span>
-        </div>
+      <SectionHeader title="Donors" eyebrow="FL Donors · 1996–2026" patch="donors" />
+      <div style={{ fontSize: '0.82rem', color: 'var(--text-dim)', marginTop: '-0.75rem', marginBottom: '1.25rem' }}>
+        Filtered view: donors with $1K+ in aggregate contributions. Full underlying index covers every reported contributor. Source: Florida Division of Elections.
       </div>
 
       {/* Filters */}
@@ -126,6 +172,19 @@ export default function DonorsList() {
         <select value={sortBy} onChange={e => setSortBy(e.target.value)} style={inputStyle}>
           {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
         </select>
+        <button
+          onClick={handleExportCSV}
+          disabled={exporting || loading || results.total === 0}
+          style={{
+            ...inputStyle,
+            border: '1px solid rgba(77,216,240,0.3)',
+            color: exporting ? 'var(--text-dim)' : 'var(--teal)',
+            cursor: exporting || loading || results.total === 0 ? 'default' : 'pointer',
+            background: 'transparent', whiteSpace: 'nowrap',
+          }}
+        >
+          {exporting ? 'Exporting…' : '↓ CSV'}
+        </button>
       </div>
 
       {/* Result count */}
@@ -184,7 +243,7 @@ export default function DonorsList() {
               <tr>
                 <td colSpan={8} style={{
                   padding: '2.5rem 0.6rem', color: 'var(--text-dim)',
-                  fontSize: '0.72rem', textAlign: 'center', fontFamily: 'var(--font-mono)',
+                  fontSize: '0.82rem', textAlign: 'center', fontFamily: 'var(--font-mono)',
                 }}>
                   No donors match the current filters
                 </td>
@@ -198,7 +257,7 @@ export default function DonorsList() {
                 : '—';
               return (
                 <tr key={d.slug} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '0.65rem' }}>
+                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '0.72rem' }}>
                     {(page - 1) * PAGE_SIZE + i + 1}
                   </td>
                   <td style={{ padding: '0.45rem 0.6rem', wordBreak: 'break-word', maxWidth: '260px' }}>
@@ -237,7 +296,7 @@ export default function DonorsList() {
                   <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.68rem' }}>
                     {loc}
                   </td>
-                  <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>
+                  <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.78rem' }}>
                     {d.num_committees}
                   </td>
                   <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--text)', whiteSpace: 'nowrap' }}>
@@ -262,20 +321,20 @@ export default function DonorsList() {
             onClick={() => setPage(p => Math.max(1, p - 1))}
             disabled={page === 1}
             style={{
-              padding: '0.25rem 0.65rem', fontSize: '0.65rem',
+              padding: '0.25rem 0.65rem', fontSize: '0.72rem',
               background: 'transparent', border: '1px solid rgba(100,140,220,0.25)',
               color: page === 1 ? 'var(--text-dim)' : 'var(--text)', cursor: page === 1 ? 'default' : 'pointer',
               borderRadius: '2px', fontFamily: 'var(--font-mono)', opacity: page === 1 ? 0.4 : 1,
             }}
           >← prev</button>
-          <span style={{ fontSize: '0.65rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+          <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
             page {page} / {totalPages}
           </span>
           <button
             onClick={() => setPage(p => Math.min(totalPages, p + 1))}
             disabled={page === totalPages}
             style={{
-              padding: '0.25rem 0.65rem', fontSize: '0.65rem',
+              padding: '0.25rem 0.65rem', fontSize: '0.72rem',
               background: 'transparent', border: '1px solid rgba(100,140,220,0.25)',
               color: page === totalPages ? 'var(--text-dim)' : 'var(--text)', cursor: page === totalPages ? 'default' : 'pointer',
               borderRadius: '2px', fontFamily: 'var(--font-mono)', opacity: page === totalPages ? 0.4 : 1,
@@ -284,11 +343,29 @@ export default function DonorsList() {
         </div>
       )}
 
-      <div style={{ marginTop: '3rem' }}>
+      {/* Sibling pages */}
+      <div style={{ marginTop: '2.5rem', paddingTop: '1.25rem', borderTop: '1px solid var(--border)', display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+        <span style={{ fontSize: '0.68rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginRight: '0.25rem' }}>Also see:</span>
+        {[
+          { href: '/candidates',  label: 'Candidates',         color: 'var(--blue)',   border: 'rgba(160,192,255,0.25)' },
+          { href: '/committees',  label: 'Committees',         color: 'var(--teal)',   border: 'rgba(77,216,240,0.25)'  },
+          { href: '/explorer',    label: 'All Transactions',   color: 'var(--text-dim)', border: 'var(--border)'        },
+          { href: '/industries',    label: 'Industries',        color: 'var(--orange)', border: 'rgba(255,176,96,0.25)'  },
+          { href: '/influence',    label: 'Influence Index',   color: 'var(--orange)', border: 'rgba(255,176,96,0.25)'  },
+          { href: '/network/graph', label: 'Network Graph',   color: 'var(--teal)',   border: 'rgba(77,216,240,0.25)'  },
+          { href: '/flow',          label: 'Money Flow',      color: 'var(--teal)',   border: 'rgba(77,216,240,0.25)'  },
+        ].map(({ href, label, color, border }) => (
+          <a key={href} href={href} style={{ fontSize: '0.72rem', color, textDecoration: 'none', border: `1px solid ${border}`, borderRadius: '3px', padding: '0.2rem 0.55rem' }}>
+            {label}
+          </a>
+        ))}
+      </div>
+
+      <div style={{ marginTop: '2rem' }}>
         <DataTrustBlock
           source="Florida Division of Elections — Campaign Finance Filings"
           sourceUrl="https://dos.elections.myflorida.com/campaign-finance/"
-          lastUpdated="April 2026"
+          
           direct={['donor name', 'contribution amounts', 'employer / occupation']}
           normalized={['donors deduplicated by normalized name across committees', 'corporate flag derived from entity-type keywords']}
           inferred={['total combined = hard money + soft money from linked committees']}

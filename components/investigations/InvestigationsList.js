@@ -150,7 +150,7 @@ function EntityCard({ entity }) {
 
         {/* Name */}
         <a href={entity.page_url} style={{
-          color: '#fff', textDecoration: 'none',
+          color: 'var(--text)', textDecoration: 'none',
           fontFamily: 'var(--font-serif)', fontSize: '1.45rem',
           fontWeight: 400, lineHeight: 1.15,
           display: 'block', marginBottom: '0.5rem',
@@ -244,7 +244,7 @@ export default function InvestigationsList({ entities }) {
         </div>
         <h1 style={{
           fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.6rem, 4vw, 2.8rem)',
-          fontWeight: 400, color: '#fff', marginBottom: '0.6rem', lineHeight: 1.1,
+          fontWeight: 400, color: 'var(--text)', marginBottom: '0.6rem', lineHeight: 1.1,
         }}>
           Follow the Story
         </h1>
@@ -292,7 +292,7 @@ export default function InvestigationsList({ entities }) {
       <div style={{ marginTop: '3rem' }}>
         <DataTrustBlock
           source="FL Division of Elections (finance) · RSS news feeds (journalism)"
-          lastUpdated="April 2026"
+          
           direct={['entity names', 'finance totals', 'article headlines and links']}
           normalized={['entity-to-profile matching (by name/acct_num)']}
           inferred={['political influence signals (editorial judgment, not automated)']}

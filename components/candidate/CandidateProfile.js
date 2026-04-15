@@ -5,15 +5,15 @@ import TabbedProfile from '@/components/shared/TabbedProfile';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import NewsBlock from '@/components/shared/NewsBlock';
 import SourceLink from '@/components/shared/SourceLink';
+import EntityHeader from '@/components/shared/EntityHeader';
 import GlossaryTerm from '@/components/shared/GlossaryTerm';
 import { slugify } from '@/lib/slugify';
 import { fmtMoneyCompact, fmtMoney } from '@/lib/fmt';
+import { PARTY_COLOR } from '@/lib/partyUtils';
 
 const QuarterlyChart      = dynamic(() => import('./QuarterlyChart'), { ssr: false });
 const IndustryBreakdown   = dynamic(() => import('./IndustryBreakdown'), { ssr: false });
 const TransactionExplorer = dynamic(() => import('@/components/explorer/TransactionExplorer'), { ssr: false });
-
-const PARTY_COLOR = { REP: 'var(--republican)', DEM: 'var(--democrat)' };
 const TYPE_COLOR  = { corporate: '#94a3b8', individual: 'var(--blue)' };
 
 const LINK_TYPE_LABEL = {
@@ -24,18 +24,8 @@ const LINK_TYPE_LABEL = {
   IEC_FOR_OR_AGAINST:                'Independent Expenditure',
   ECC_FOR_OR_AGAINST:                'Electioneering Comm.',
   ADMIN_OVERLAP_ONLY:                'Administrative',
-  // Legacy labels (candidate_pc_links table fallback)
-  chair:              'Chair',
-  treasurer:          'Treasurer',
-  solicitation:       'Solicitation',
-  solicitation_stub:  'Solicitation',
-  historical:         'Historical',
-  historical_stub:    'Historical',
-  direct_contribution: 'Direct Contribution',
-  iec:                'Independent Expenditure',
-  ecc:                'Electioneering Comm.',
-  statement_of_org:   'Statement of Org',
-  distribution:       'Distribution',
+  solicitation_stub:                 'Solicitation',
+  historical_stub:                   'Historical',
 };
 
 function fmt(n) {
@@ -152,7 +142,8 @@ function ElectionContextCard({ results }) {
 export default function CandidateProfile({ data, cycles = [], electionResults = [] }) {
   const hm     = data.hard_money || {};
   const donors = hm.top_donors  || [];
-  const pcs         = data.linked_pcs || [];
+  const pcs         = data.linked_pcs  || [];
+  const shadowOrgs  = data.shadow_orgs || [];
   const pcsStubOnly  = pcs.filter(pc => !pc.pc_acct || pc.link_type === 'solicitation_stub' || pc.link_type === 'historical_stub');
   const pcsWithData  = pcs.filter(pc => pc.pc_acct && pc.link_type !== 'solicitation_stub' && pc.link_type !== 'historical_stub');
   const pcsSpecific  = pcsWithData.filter(pc => pc.is_candidate_specific);
@@ -378,6 +369,73 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
 
         </>
       )}
+
+      {/* ── Shadow PACs / Outside Orgs (IRS-registered, not in FL DoE registry) ── */}
+      {shadowOrgs.length > 0 && (
+        <div style={{ marginTop: pcs.length > 0 ? '2.5rem' : 0 }}>
+          <SectionLabel>Organizations Outside FL Registry</SectionLabel>
+          <p style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.5, marginBottom: '1rem', maxWidth: '560px' }}>
+            These 527 or 501(c)(4) organizations are listed in public solicitation filings
+            associated with this candidate but are <em>not</em> registered with the Florida
+            Division of Elections. They file with the IRS instead.
+          </p>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                {['Organization', 'Type', 'IRS Revenue', 'Filing Year', 'EIN'].map((h, j) => (
+                  <th key={h} style={{
+                    padding: '0.4rem 0.6rem', textAlign: j >= 2 ? 'right' : 'left',
+                    fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase',
+                    letterSpacing: '0.08em', fontWeight: 400,
+                  }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {shadowOrgs.map((org, i) => (
+                <tr key={i} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
+                  <td style={{ padding: '0.45rem 0.6rem', wordBreak: 'break-word', maxWidth: '220px' }}>
+                    {org.pp_url ? (
+                      <a href={org.pp_url} target="_blank" rel="noopener noreferrer"
+                        style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+                        {org.org_name}
+                      </a>
+                    ) : (
+                      <span style={{ color: 'var(--text)' }}>{org.org_name}</span>
+                    )}
+                  </td>
+                  <td style={{ padding: '0.45rem 0.6rem' }}>
+                    <span style={{
+                      fontSize: '0.58rem', padding: '0.1rem 0.35rem', borderRadius: '2px',
+                      background: org.stub_type === '527' ? 'rgba(255,176,96,0.15)' : 'rgba(77,216,240,0.12)',
+                      color: org.stub_type === '527' ? 'var(--orange)' : 'var(--teal)',
+                      fontFamily: 'var(--font-mono)',
+                    }}>
+                      {org.stub_type === '527' ? '527 political org' : org.stub_type === '501c4' ? '501(c)(4)' : 'unknown type'}
+                    </span>
+                  </td>
+                  <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: org.pp_total_revenue ? 'var(--blue)' : 'var(--text-dim)', whiteSpace: 'nowrap' }}>
+                    {org.pp_total_revenue ? fmtMoneyCompact(org.pp_total_revenue) : '—'}
+                  </td>
+                  <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>
+                    {org.pp_filing_year || '—'}
+                  </td>
+                  <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.65rem' }}>
+                    {org.irs_ein || '—'}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p style={{ fontSize: '0.6rem', color: 'var(--text-dim)', marginTop: '0.75rem' }}>
+            Revenue figures from IRS Form 990 via{' '}
+            <a href="https://projects.propublica.org/nonprofits/" target="_blank" rel="noopener noreferrer"
+              style={{ color: 'var(--text-dim)', textDecoration: 'underline' }}>
+              ProPublica Nonprofit Explorer
+            </a>.
+          </p>
+        </div>
+      )}
     </div>
   );
 
@@ -477,13 +535,13 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
   );
 
   const tabs = [
-    { id: 'overview',      label: 'Overview',      content: overviewContent },
-    { id: 'donors',        label: 'Donors',        content: donorsContent },
-    { id: 'committees',    label: 'Committees',    content: committeesContent },
-    { id: 'industries',    label: 'Industries',    content: industriesContent },
-    { id: 'expenditures',  label: 'Expenditures',  content: expendituresContent },
-    { id: 'transactions',  label: 'Transactions',  content: transactionsContent },
-    { id: 'sources',       label: 'Sources',       content: sourcesContent },
+    { id: 'overview',      label: 'Overview',      description: 'Top-line fundraising totals and election results',       content: overviewContent },
+    { id: 'donors',        label: 'Donors',        description: 'Who funded this candidate — top donors by amount',        content: donorsContent },
+    { id: 'committees',    label: 'Committees',    description: 'Linked PACs and soft-money committees',                   content: committeesContent },
+    { id: 'industries',    label: 'Industries',    description: 'Donor industry breakdown — corporate vs. individual',     content: industriesContent },
+    { id: 'expenditures',  label: 'Expenditures',  description: 'Top vendors and consultants paid by this campaign',      content: expendituresContent },
+    { id: 'transactions',  label: 'Transactions',  description: 'Search individual contribution records',                  content: transactionsContent },
+    { id: 'sources',       label: 'Sources',       description: 'Research links, data sources, and methodology',          content: sourcesContent },
   ];
 
   return (
@@ -491,52 +549,20 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
 
       <BackLinks links={[{ href: '/', label: 'home' }, { href: '/candidates', label: 'candidates' }]} />
 
-      {/* Header */}
-      <div style={{ marginBottom: '1.75rem' }}>
-        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.6rem', flexWrap: 'wrap' }}>
-          <span style={{
-            fontSize: '0.65rem', padding: '0.15rem 0.5rem',
-            border: '1px solid var(--teal)', color: 'var(--teal)',
-            borderRadius: '3px', textTransform: 'uppercase', letterSpacing: '0.06em',
-          }}>
-            candidate
-          </span>
-          {party && (
-            <span style={{
-              fontSize: '0.65rem', padding: '0.15rem 0.45rem',
-              border: `1px solid ${partyColor}`, color: partyColor,
-              borderRadius: '3px', letterSpacing: '0.06em', fontWeight: 'bold',
-            }}>
-              {party}
-            </span>
-          )}
-          {data.election_year && (
-            <span style={{
-              fontSize: '0.65rem', padding: '0.15rem 0.45rem',
-              border: '1px solid var(--border)', color: 'var(--text-dim)',
-              borderRadius: '3px', fontFamily: 'var(--font-mono)',
-            }}>
-              {data.election_year}
-            </span>
-          )}
-        </div>
-        <h1 style={{
-          fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.4rem, 3vw, 2rem)',
-          fontWeight: 400, color: '#fff', lineHeight: 1.2, marginBottom: '0.4rem',
-        }}>
-          {data.candidate_name || `Account #${data.acct_num}`}
-        </h1>
-        {officeLabel && (
-          <div style={{ fontSize: '0.8rem', color: 'var(--text-dim)', marginBottom: '0.2rem' }}>
-            {officeLabel}
-          </div>
-        )}
-        <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)' }}>
-          Acct #{data.acct_num}
-          {data.status_desc ? ` · ${data.status_desc}` : ''}
-        </div>
+      <EntityHeader
+        name={data.candidate_name || `Account #${data.acct_num}`}
+        typeBadge={{ label: 'CANDIDATE', color: 'var(--teal)' }}
+        badges={[
+          ...(party ? [{ label: party, color: partyColor }] : []),
+          ...(data.election_year ? [{ label: String(data.election_year), color: 'var(--border)' }] : []),
+        ]}
+        meta={[
+          officeLabel || null,
+          `Acct #${data.acct_num}${data.status_desc ? ` · ${data.status_desc}` : ''}`,
+        ]}
+      >
         <SourceLink type="candidate" id={data.acct_num} />
-      </div>
+      </EntityHeader>
 
       {/* Cycle connector pill bar */}
       {cycles.length > 0 && (

@@ -4,7 +4,7 @@ Reads public/data/donors/index.json and adds an 'industry' field to each
 donor entry using the existing top_occupation field. Fast — no CSV reading.
 """
 
-import json, os, sys
+import json, sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))

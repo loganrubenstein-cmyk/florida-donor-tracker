@@ -2,8 +2,9 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
+import { fmtMoneyCompact as fmtMoney, fmtCountCompact as fmtNum } from '@/lib/fmt';
+import { PARTY_COLOR } from '@/lib/partyUtils';
 
-const PARTY_COLOR = { REP: 'var(--republican)', DEM: 'var(--democrat)', NPA: 'var(--text-dim)' };
 const PARTY_LABEL = { REP: 'R', DEM: 'D', NPA: 'I' };
 
 const STATEWIDE_CONTESTS = new Set([
@@ -18,20 +19,6 @@ const LEGISLATIVE_CONTESTS = new Set([
   'State Representative', 'STATE REPRESENTATIVE',
   'State Senator', 'STATE SENATOR',
 ]);
-
-function fmtMoney(n) {
-  if (!n) return '—';
-  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000) return `$${(n / 1_000).toFixed(0)}K`;
-  return `$${Math.round(n)}`;
-}
-
-function fmtNum(n) {
-  if (!n) return '—';
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000) return `${(n / 1_000).toFixed(0)}K`;
-  return n.toLocaleString();
-}
 
 function PartyDot({ party }) {
   return (

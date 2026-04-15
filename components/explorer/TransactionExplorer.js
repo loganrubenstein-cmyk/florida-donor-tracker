@@ -15,7 +15,7 @@ function buildUrl(base, params) {
   return qs ? `${base}?${qs}` : base;
 }
 
-function FilterInput({ label, value, onChange, placeholder, type = 'text' }) {
+function FilterInput({ label, value, onChange, placeholder, type = 'text', hint }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
       <label style={{ fontSize: '0.65rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
@@ -32,6 +32,11 @@ function FilterInput({ label, value, onChange, placeholder, type = 'text' }) {
           borderRadius: '3px', fontFamily: 'var(--font-mono)', width: '100%',
         }}
       />
+      {hint && (
+        <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', lineHeight: 1.4 }}>
+          {hint}
+        </div>
+      )}
     </div>
   );
 }
@@ -192,7 +197,8 @@ export default function TransactionExplorer({
         gap: '0.75rem', padding: '1rem', background: 'rgba(8,8,24,0.6)',
         border: '1px solid var(--border)', borderRadius: '4px', marginBottom: '1rem',
       }}>
-        <FilterInput label="Contributor name" value={q} onChange={v => { setQ(v); setPage(1); }} placeholder="First or last name…" />
+        <FilterInput label="Contributor name" value={q} onChange={v => { setQ(v); setPage(1); }} placeholder="First or last name…"
+          hint={q.trim().includes(' ') ? 'Each word must appear — results may include similar names' : 'Matches any name containing this text'} />
         {!initialRecipientAcct && (
           <FilterInput label="Recipient acct #" value={recipAcct} onChange={v => { setRecipAcct(v); setPage(1); }} placeholder="e.g. 4700" />
         )}

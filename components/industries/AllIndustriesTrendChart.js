@@ -35,19 +35,19 @@ function CustomTooltip({ active, payload, label }) {
   const sorted = [...payload].sort((a, b) => b.value - a.value);
   return (
     <div style={{
-      background: '#0d0d22', border: '1px solid #2a3050',
+      background: 'var(--surface)', border: '1px solid var(--border)',
       padding: '0.6rem 0.85rem', fontSize: '0.68rem',
       fontFamily: 'Courier New, monospace', minWidth: '180px',
     }}>
-      <div style={{ color: '#5a6a88', marginBottom: '0.4rem', fontWeight: 600 }}>{label} cycle — {fmtM(total)}</div>
+      <div style={{ color: 'var(--text-dim)', marginBottom: '0.4rem', fontWeight: 600 }}>{label} cycle — {fmtM(total)}</div>
       {sorted.filter(p => p.value > 0).slice(0, 6).map(p => (
         <div key={p.name} style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem', marginBottom: '0.15rem' }}>
           <span style={{ color: p.fill }}>{p.name}</span>
-          <span style={{ color: '#c8d8f0' }}>{fmtM(p.value)}</span>
+          <span style={{ color: 'var(--text)' }}>{fmtM(p.value)}</span>
         </div>
       ))}
       {sorted.filter(p => p.value > 0).length > 6 && (
-        <div style={{ color: '#5a6a88', marginTop: '0.2rem', fontSize: '0.62rem' }}>+ {sorted.filter(p => p.value > 0).length - 6} more</div>
+        <div style={{ color: 'var(--text-dim)', marginTop: '0.2rem', fontSize: '0.62rem' }}>+ {sorted.filter(p => p.value > 0).length - 6} more</div>
       )}
     </div>
   );

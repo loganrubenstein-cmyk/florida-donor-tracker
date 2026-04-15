@@ -109,7 +109,7 @@ export default function DarkMoneyScoreboard() {
         <DataTrustBlock
           source="Florida Division of Elections — Campaign Finance Database"
           sourceUrl="https://dos.elections.myflorida.com/campaign-finance/contributions/"
-          lastUpdated="April 2026"
+          
           direct={['committee name', 'total received', 'contribution counts']}
           classified={['donor type (individual, corporate, committee) from FL DOE type codes']}
           inferred={['transparency score (% of top-donor money from identifiable individuals)']}
@@ -130,9 +130,9 @@ function ScoreRow({ committee: c, rank, sortMode }) {
 
   const total = c.breakdown.individual + c.breakdown.corporate + c.breakdown.committee + c.breakdown.other;
   const segments = [
-    { key: 'individual', amount: c.breakdown.individual, color: '#80ffa0', label: 'Individual' },
-    { key: 'corporate', amount: c.breakdown.corporate, color: '#a0c0ff', label: 'Corporate' },
-    { key: 'committee', amount: c.breakdown.committee, color: '#ffb060', label: 'Committee' },
+    { key: 'individual', amount: c.breakdown.individual, color: 'var(--green)', label: 'Individual' },
+    { key: 'corporate', amount: c.breakdown.corporate, color: 'var(--blue)', label: 'Corporate' },
+    { key: 'committee', amount: c.breakdown.committee, color: 'var(--orange)', label: 'Committee' },
   ].filter(s => s.amount > 0);
 
   return (
@@ -165,7 +165,7 @@ function ScoreRow({ committee: c, rank, sortMode }) {
       <div style={{ display: 'flex', height: '10px', borderRadius: '2px', overflow: 'hidden' }}>
         {total > 0 && segments.map(s => (
           <div key={s.key}
-            title={`${s.label}: ${fmtMoney(s.amount)} (${Math.round((s.amount / total) * 100)}%)`}
+            title={`${s.label}: ${fmtMoneyCompact(s.amount)} (${Math.round((s.amount / total) * 100)}%)`}
             style={{
               width: `${(s.amount / total) * 100}%`, background: s.color,
               opacity: 0.6, minWidth: s.amount > 0 ? '2px' : 0,

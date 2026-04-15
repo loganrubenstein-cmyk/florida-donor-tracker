@@ -13,9 +13,8 @@ Each record:
   solicitors[], website, address, phone, source_url
 """
 
-import json, re, os
+import json, re
 from pathlib import Path
-from collections import defaultdict
 
 try:
     import xlrd

@@ -1,0 +1,253 @@
+
+> florida-donor-tracker@0.1.0 knip
+> knip
+
+Unused files (85)
+components/BackLinks.js                                              
+components/candidate/CandidateProfile.js                             
+components/candidate/CandidatesList.js                               
+components/candidate/IndustryBreakdown.js                            
+components/candidate/QuarterlyChart.js                               
+components/committee/CommitteeConnections.js                         
+components/committee/CommitteeProfile.js                             
+components/committee/ContributionChart.js                            
+components/committees/CommitteesList.js                              
+components/connections/ConnectionsView.js                            
+components/contracts/ContractsList.js                                
+components/cycles/CycleProfile.js                                    
+components/cycles/CyclesList.js                                      
+components/donors/DonorProfile.js                                    
+components/donors/DonorsList.js                                      
+components/donors/DonorTable.js                                      
+components/donors/DonorYearChart.js                                  
+components/elections/ElectionsView.js                                
+components/explorer/TransactionExplorer.js                           
+components/flow/FlowClient.js                                        
+components/home/HeroCounter.js                                       
+components/industries/AllIndustriesTrendChart.js                     
+components/industries/IndustriesList.js                              
+components/industries/IndustryProfile.js                             
+components/industries/IndustryTrendChart.js                          
+components/influence/InfluenceIndex.js                               
+components/investigations/InvestigationsList.js                      
+components/legislators/LegislatorsList.js                            
+components/lobbyists/LobbyingFirmsList.js                            
+components/lobbyists/LobbyistProfile.js                              
+components/lobbyists/LobbyistsList.js                                
+components/network/DetailPanel.js                                    
+components/network/ForceView.js                                      
+components/network/NetworkClient.js                                  
+components/principals/PrincipalProfile.js                            
+components/principals/PrincipalsList.js                              
+components/search/SearchView.js                                      
+components/shared/DataTrustBlock.js                                  
+components/shared/EntityHeader.js                                    
+components/shared/FloridaOutline.js                                  
+components/shared/GlossaryTerm.js                                    
+components/shared/MissionPatch.js                                    
+components/shared/NavLinks.js                                        
+components/shared/NewsBlock.js                                       
+components/shared/RelationshipsBlock.js                              
+components/shared/SectionHeader.js                                   
+components/shared/SourceLink.js                                      
+components/shared/TabbedProfile.js                                   
+components/solicitations/SolicitationsList.js                        
+components/tools/CommitteeDecoder.js                                 
+components/tools/DarkMoneyScoreboard.js                              
+components/tools/DistrictLookup.js                                   
+components/tools/DonorOverlap.js                                     
+components/tools/InfluenceTimeline.js                                
+florida-donor-tracker-review/app/committee/[acct_num]/page.js        
+florida-donor-tracker-review/app/layout.js                           
+florida-donor-tracker-review/app/network/page.js                     
+florida-donor-tracker-review/app/page.js                             
+florida-donor-tracker-review/components/committee/CommitteeProfile.js
+florida-donor-tracker-review/components/donors/DonorTable.js         
+florida-donor-tracker-review/components/home/HeroCounter.js          
+florida-donor-tracker-review/components/network/DetailPanel.js       
+florida-donor-tracker-review/components/network/ForceView.js         
+florida-donor-tracker-review/components/network/NetworkClient.js     
+florida-donor-tracker-review/components/network/RadialView.js        
+florida-donor-tracker-review/components/network/SankeyView.js        
+florida-donor-tracker-review/components/network/VizSwitcher.js       
+florida-donor-tracker-review/lib/loadCommittee.js                    
+florida-donor-tracker-review/lib/loadNetworkGraph.js                 
+lib/dataLastUpdated.js                                               
+lib/dateUtils.js                                                     
+lib/db.js                                                            
+lib/glossary.js                                                      
+lib/loadAnnotations.js                                               
+lib/loadCandidate.js                                                 
+lib/loadCommittee.js                                                 
+lib/loadDonor.js                                                     
+lib/loadLegislativeCommittee.js                                      
+lib/loadLegislator.js                                                
+lib/loadLobbyist.js                                                  
+lib/officeCodes.js                                                   
+lib/partyUtils.js                                                    
+lib/seo.js                                                           
+lib/slugify.js                                                       
+lib/supabase.js                                                      
+Unused dependencies (5)
+@supabase/supabase-js          package.json:15:6
+graphology                     package.json:16:6
+graphology-layout-forceatlas2  package.json:17:6
+recharts                       package.json:21:6
+sigma                          package.json:22:6
+Unused devDependencies (4)
+eslint                 package.json:26:6
+eslint-config-next     package.json:27:6
+jest                   package.json:28:6
+jest-environment-node  package.json:29:6
+Unresolved imports (145)
+@/components/shared/SectionHeader               app/about/page.js:2:27                               
+@/lib/db                                        app/api/candidates/route.js:2:23                     
+@/lib/officeCodes                               app/api/candidates/route.js:3:38                     
+@/lib/db                                        app/api/committees/route.js:2:23                     
+@/lib/db                                        app/api/connections/route.js:2:23                    
+@/lib/db                                        app/api/contracts/route.js:2:23                      
+@/lib/db                                        app/api/decode/route.js:2:23                         
+@/lib/db                                        app/api/district/route.js:2:23                       
+@/lib/db                                        app/api/donors/route.js:2:23                         
+@/lib/db                                        app/api/influence/route.js:2:23                      
+@/lib/db                                        app/api/influence/stats/route.js:2:23                
+@/lib/db                                        app/api/legislators/route.js:2:23                    
+@/lib/db                                        app/api/legislators/stats/route.js:2:23              
+@/lib/db                                        app/api/lobbying-firms/route.js:2:23                 
+@/lib/db                                        app/api/lobbying-firms/stats/route.js:2:23           
+@/lib/db                                        app/api/lobbyists/route.js:2:23                      
+@/lib/db                                        app/api/overlap/route.js:2:23                        
+@/lib/db                                        app/api/politicians/route.js:2:23                    
+@/lib/db                                        app/api/principals/route.js:2:23                     
+@/lib/db                                        app/api/search/donors/route.js:2:23                  
+@/lib/db                                        app/api/timeline/route.js:2:23                       
+@/lib/db                                        app/api/transactions/route.js:2:23                   
+@/lib/db                                        app/api/transparency/route.js:2:23                   
+@/lib/loadCandidate                             app/candidate/[acct_num]/page.js:3:73                
+@/lib/db                                        app/candidate/[acct_num]/page.js:4:23                
+@/lib/slugify                                   app/candidate/[acct_num]/page.js:5:25                
+@/components/candidate/CandidateProfile         app/candidate/[acct_num]/page.js:6:30                
+@/lib/seo                                       app/candidate/[acct_num]/page.js:8:27                
+@/components/candidate/CandidatesList           app/candidates/page.js:2:28                          
+@/lib/loadCommittee                             app/committee/[acct_num]/page.js:1:31                
+@/lib/loadAnnotations                           app/committee/[acct_num]/page.js:2:33                
+@/components/committee/CommitteeProfile         app/committee/[acct_num]/page.js:3:30                
+@/lib/db                                        app/committee/[acct_num]/page.js:5:23                
+@/lib/seo                                       app/committee/[acct_num]/page.js:6:27                
+@/components/committees/CommitteesList          app/committees/page.js:1:28                          
+@/components/shared/DataTrustBlock              app/committees/page.js:2:28                          
+@/components/shared/SectionHeader               app/committees/page.js:3:27                          
+@/components/tools/DonorOverlap                 app/compare/page.js:1:26                             
+@/components/connections/ConnectionsView        app/connections/page.js:2:29                         
+@/components/contracts/ContractsList            app/contracts/page.js:1:27                           
+@/components/shared/SectionHeader               app/coverage/page.js:2:27                            
+@/components/cycles/CycleProfile                app/cycle/[year]/page.js:3:26                        
+@/lib/seo                                       app/cycle/[year]/page.js:4:27                        
+@/components/cycles/CyclesList                  app/cycles/page.js:1:24                              
+@/components/shared/SectionHeader               app/data-dictionary/page.js:2:27                     
+@/components/shared/SectionHeader               app/data/page.js:2:27                                
+@/components/tools/CommitteeDecoder             app/decode/page.js:1:30                              
+@/components/tools/DistrictLookup               app/district/page.js:1:28                            
+@/lib/loadDonor                                 app/donor/[slug]/page.js:1:27                        
+@/lib/loadAnnotations                           app/donor/[slug]/page.js:2:33                        
+@/components/donors/DonorProfile                app/donor/[slug]/page.js:3:26                        
+@/lib/seo                                       app/donor/[slug]/page.js:5:27                        
+@/lib/fmt                                       app/donor/[slug]/page.js:6:33                        
+@/components/donors/DonorsList                  app/donors/page.js:2:24                              
+@/components/BackLinks                          app/elections/page.js:3:23                           
+@/components/elections/ElectionsView            app/elections/page.js:4:27                           
+@/components/shared/SectionHeader               app/elections/page.js:5:27                           
+@/components/shared/DataTrustBlock              app/explorer/page.js:4:28                            
+@/components/shared/SectionHeader               app/explorer/page.js:5:27                            
+@/lib/db                                        app/flow/page.js:4:23                                
+@/components/shared/SectionHeader               app/ie/page.js:2:27                                  
+@/lib/db                                        app/ie/page.js:3:23                                  
+@/components/shared/DataTrustBlock              app/ie/page.js:5:28                                  
+@/components/industries/IndustriesList          app/industries/page.js:1:28                          
+@/components/industries/IndustryProfile         app/industry/[slug]/page.js:3:29                     
+@/lib/slugify                                   app/industry/[slug]/page.js:4:25                     
+@/lib/db                                        app/industry/[slug]/page.js:5:23                     
+@/lib/seo                                       app/industry/[slug]/page.js:6:27                     
+@/components/influence/InfluenceIndex           app/influence/page.js:1:28                           
+@/components/investigations/InvestigationsList  app/investigations/page.js:3:32                      
+@/lib/slugify                                   app/investigations/page.js:4:25                      
+@/lib/db                                        app/investigations/page.js:5:23                      
+@/components/shared/FloridaOutline              app/layout.js:3:28                                   
+@/components/shared/NavLinks                    app/layout.js:4:22                                   
+@/lib/loadLegislator                            app/legislator/[people_id]/page.js:3:32              
+@/lib/loadCandidate                             app/legislator/[people_id]/page.js:4:44              
+@/lib/fmt                                       app/legislator/[people_id]/page.js:5:45              
+@/components/shared/DataTrustBlock              app/legislator/[people_id]/page.js:6:28              
+@/components/shared/SourceLink                  app/legislator/[people_id]/page.js:7:24              
+@/components/shared/TabbedProfile               app/legislator/[people_id]/page.js:8:27              
+@/lib/seo                                       app/legislator/[people_id]/page.js:9:27              
+@/components/legislators/LegislatorsList        app/legislators/page.js:1:29                         
+@/lib/loadLegislativeCommittee                  app/legislature/committee/[abbreviation]/page.js:3:42
+@/lib/fmt                                       app/legislature/committee/[abbreviation]/page.js:4:43
+@/components/BackLinks                          app/legislature/committee/[abbreviation]/page.js:5:23
+@/components/shared/DataTrustBlock              app/legislature/committee/[abbreviation]/page.js:6:28
+@/lib/seo                                       app/legislature/committee/[abbreviation]/page.js:7:27
+@/lib/loadLegislativeCommittee                  app/legislature/committees/page.js:2:41              
+@/lib/fmt                                       app/legislature/committees/page.js:3:33              
+@/components/BackLinks                          app/legislature/committees/page.js:4:23              
+@/components/shared/DataTrustBlock              app/legislature/committees/page.js:5:28              
+@/components/shared/SectionHeader               app/legislature/committees/page.js:6:27              
+@/components/BackLinks                          app/legislature/page.js:2:23                         
+@/lib/db                                        app/legislature/page.js:3:23                         
+@/components/shared/SectionHeader               app/legislature/page.js:4:27                         
+@/lib/db                                        app/lobbying-firm/[slug]/page.js:3:23                
+@/components/shared/SourceLink                  app/lobbying-firm/[slug]/page.js:5:24                
+@/components/shared/EntityHeader                app/lobbying-firm/[slug]/page.js:6:26                
+@/components/shared/DataTrustBlock              app/lobbying-firm/[slug]/page.js:7:28                
+@/lib/fmt                                       app/lobbying-firm/[slug]/page.js:8:33                
+@/lib/seo                                       app/lobbying-firm/[slug]/page.js:9:27                
+@/components/lobbyists/LobbyingFirmsList        app/lobbying-firms/page.js:1:31                      
+@/lib/db                                        app/lobbying/bill/[slug]/page.js:5:23                
+@/components/shared/DataTrustBlock              app/lobbying/bill/[slug]/page.js:7:28                
+@/lib/seo                                       app/lobbying/bill/[slug]/page.js:8:27                
+@/components/shared/SectionHeader               app/lobbying/bills/page.js:2:27                      
+@/components/shared/DataTrustBlock              app/lobbying/bills/page.js:6:28                      
+@/lib/db                                        app/lobbying/page.js:2:23                            
+@/components/shared/DataTrustBlock              app/lobbying/page.js:3:28                            
+@/components/shared/SectionHeader               app/lobbying/page.js:4:27                            
+@/lib/loadLobbyist                              app/lobbyist/[slug]/page.js:1:30                     
+@/components/lobbyists/LobbyistProfile          app/lobbyist/[slug]/page.js:2:29                     
+@/lib/seo                                       app/lobbyist/[slug]/page.js:4:27                     
+@/components/lobbyists/LobbyistsList            app/lobbyists/page.js:1:27                           
+@/components/shared/SectionHeader               app/methodology/page.js:2:27                         
+@/components/network/NetworkClient              app/network/graph/page.js:1:27                       
+@/components/shared/SectionHeader               app/network/page.js:2:27                             
+@/components/donors/DonorTable                  app/page.js:1:24                                     
+@/components/shared/FloridaOutline              app/page.js:2:28                                     
+@/components/home/HeroCounter                   app/page.js:3:25                                     
+@/lib/db                                        app/page.js:4:23                                     
+@/lib/officeCodes                               app/page.js:5:38                                     
+@/lib/dataLastUpdated                           app/page.js:6:35                                     
+@/components/shared/DataTrustBlock              app/party-finance/page.js:2:28                       
+@/components/shared/SectionHeader               app/party-finance/page.js:3:27                       
+@/lib/loadCandidate                             app/politician/[slug]/page.js:4:94                   
+@/lib/db                                        app/politician/[slug]/page.js:5:23                   
+@/components/candidate/CandidateProfile         app/politician/[slug]/page.js:6:30                   
+@/components/BackLinks                          app/politician/[slug]/page.js:7:23                   
+@/components/shared/EntityHeader                app/politician/[slug]/page.js:8:26                   
+@/lib/seo                                       app/politician/[slug]/page.js:9:27                   
+@/lib/fmt                                       app/politician/[slug]/page.js:10:33                  
+@/lib/loadLobbyist                              app/principal/[slug]/page.js:1:31                    
+@/components/principals/PrincipalProfile        app/principal/[slug]/page.js:2:30                    
+@/lib/seo                                       app/principal/[slug]/page.js:4:27                    
+@/components/principals/PrincipalsList          app/principals/page.js:1:28                          
+@/components/shared/DataTrustBlock              app/research/page.js:2:28                            
+@/components/shared/SectionHeader               app/research/page.js:3:27                            
+@/components/search/SearchView                  app/search/page.js:1:24                              
+@/lib/db                                        app/sitemap.js:1:23                                  
+@/lib/loadCandidate                             app/sitemap.js:2:37                                  
+@/components/solicitations/SolicitationsList    app/solicitations/page.js:2:31                       
+@/components/tools/InfluenceTimeline            app/timeline/page.js:1:31                            
+@/components/shared/SectionHeader               app/tools/page.js:2:27                               
+@/components/tools/DarkMoneyScoreboard          app/transparency/page.js:1:33                        
+Unused exports (3)
+fmtCountCompact  function  lib/fmt.js:52:17
+fmtDate          function  lib/fmt.js:66:17
+fmtYearRange     function  lib/fmt.js:76:17
+Configuration hints (1)
+. (root)    .  Create knip.json configuration file, and add entry and/or refine project files (85 unused files)

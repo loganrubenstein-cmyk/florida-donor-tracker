@@ -3,17 +3,12 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import BackLinks from '@/components/BackLinks';
+import SectionHeader from '@/components/shared/SectionHeader';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import { fmtMoneyCompact as fmtMoney } from '@/lib/fmt';
 
 const PARTY_COLOR = { R: 'var(--republican)', D: 'var(--democrat)' };
 const PARTY_LABEL = { R: 'Republican', D: 'Democrat', NPA: 'NPA' };
-
-function fmtMoney(n) {
-  if (!n || n === 0) return null;
-  if (n >= 1_000_000) return `$${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000) return `$${(n / 1_000).toFixed(0)}K`;
-  return `$${Math.round(n).toLocaleString()}`;
-}
 
 const SORT_OPTIONS = [
   { value: 'display_name',       label: 'Name A–Z' },
@@ -24,7 +19,7 @@ const SORT_OPTIONS = [
 ];
 
 const inputStyle = {
-  background: '#0d0d22',
+  background: 'var(--surface)',
   border: '1px solid var(--border)',
   color: 'var(--text)',
   padding: '0.4rem 0.6rem',
@@ -46,12 +41,7 @@ const chipStyle = (active) => ({
   transition: 'border-color 0.12s',
 });
 
-function fmtCompact(n) {
-  if (n >= 1_000_000_000) return `$${(n / 1_000_000_000).toFixed(1)}B`;
-  if (n >= 1_000_000)     return `$${(n / 1_000_000).toFixed(0)}M`;
-  if (n >= 1_000)         return `$${(n / 1_000).toFixed(0)}K`;
-  return `$${Math.round(n)}`;
-}
+const fmtCompact = fmtMoney;
 
 export default function LegislatorsList() {
   const [results, setResults] = useState({ data: [], total: 0, pages: 0 });
@@ -99,13 +89,9 @@ export default function LegislatorsList() {
     <main style={{ maxWidth: '1040px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
       <BackLinks links={[{ href: '/', label: 'home' }]} />
 
-      <div style={{ marginBottom: '1.25rem' }}>
-        <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', color: 'var(--text)', margin: '0 0 0.3rem' }}>
-          Florida Legislature
-        </h1>
-        <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
-          Current 2024–2026 term · House (120) + Senate (40)
-        </div>
+      <SectionHeader title="Florida Legislature" eyebrow="FL Legislature · 2024–2026 Term" />
+      <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', marginTop: '-0.75rem', marginBottom: '1.25rem' }}>
+        Current 2024–2026 term · House (120) + Senate (40)
       </div>
 
       {/* Stats strip */}
@@ -294,7 +280,7 @@ export default function LegislatorsList() {
       <div style={{ marginTop: '3rem' }}>
         <DataTrustBlock
           source="LobbyTools member export · LegiScan API · FL Division of Elections"
-          lastUpdated="April 2026"
+          
           direct={['name', 'party', 'district', 'chamber', 'leadership title', 'contact info']}
           normalized={['campaign finance totals matched from FL DoE candidate records by name + district']}
           caveats={[

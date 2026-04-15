@@ -1,11 +1,11 @@
 {
-  "generated_at": "2026-04-13T14:22:05.613659+00:00",
-  "total_contributions": 7716742,
-  "total_amount": 3140636551.38,
-  "total_committees_with_data": 1687,
-  "total_donors": 336908,
+  "generated_at": "2026-04-15T00:22:25.664884+00:00",
+  "total_contributions": 19300405,
+  "total_amount": 5646584856.72,
+  "total_committees_with_data": 5896,
+  "total_donors": 1653301,
   "date_range": {
-    "earliest": "1993-03-20",
+    "earliest": "1990-01-20",
     "latest": "2026-10-30"
   }
 }

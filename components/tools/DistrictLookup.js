@@ -7,7 +7,7 @@ import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 const PARTY_COLOR = { R: 'var(--republican)', D: 'var(--democrat)', I: 'var(--orange)', NPA: 'var(--text-dim)' };
 const PARTY_LABEL = { R: 'Republican', D: 'Democrat', I: 'Independent', NPA: 'No Party Affiliation' };
-const TYPE_COLOR = { individual: '#80ffa0', corporate: '#a0c0ff', committee: '#ffb060', unknown: '#888' };
+const TYPE_COLOR = { individual: 'var(--green)', corporate: 'var(--blue)', committee: 'var(--orange)', unknown: 'var(--text-dim)' };
 const TYPE_LABEL = { individual: 'Individual', corporate: 'Corporate', committee: 'Committee/PAC', unknown: 'Other' };
 
 export default function DistrictLookup() {
@@ -132,7 +132,7 @@ export default function DistrictLookup() {
       </div>
 
       {error && (
-        <div style={{ padding: '0.75rem 1rem', background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.3)', borderRadius: '3px', color: '#f87171', fontSize: '0.78rem' }}>
+        <div style={{ padding: '0.75rem 1rem', background: 'rgba(248,113,113,0.1)', border: '1px solid rgba(248,113,113,0.3)', borderRadius: '3px', color: 'var(--republican)', fontSize: '0.78rem' }}>
           {error}
         </div>
       )}
@@ -143,7 +143,7 @@ export default function DistrictLookup() {
         <DataTrustBlock
           source="Florida Division of Elections + LegiScan"
           sourceUrl="https://dos.elections.myflorida.com/campaign-finance/contributions/"
-          lastUpdated="April 2026"
+          
           direct={['legislator name', 'district', 'party', 'counties', 'total raised', 'voting record']}
           normalized={['donor names and types', 'chamber average/median fundraising']}
           caveats={[
@@ -253,7 +253,7 @@ function DistrictResult({ data }) {
                     <Link href={`/donor/${d.slug}`} style={{ color: 'var(--text)', textDecoration: 'none', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '65%' }}>
                       {d.name}
                     </Link>
-                    <span style={{ color: TYPE_COLOR[d.type] || '#888', fontFamily: 'var(--font-mono)', fontSize: '0.68rem' }}>
+                    <span style={{ color: TYPE_COLOR[d.type] || 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.68rem' }}>
                       {fmtMoney(d.amount)}
                     </span>
                   </div>
@@ -394,7 +394,7 @@ function VotingBar({ voting }) {
     { label: 'Yea', count: voting.yea, color: 'var(--green)' },
     { label: 'Nay', count: voting.nay, color: 'var(--republican)' },
     { label: 'NV', count: voting.nv, color: 'var(--text-dim)' },
-    { label: 'Absent', count: voting.absent, color: '#664' },
+    { label: 'Absent', count: voting.absent, color: 'var(--gold)' },
   ];
 
   return (

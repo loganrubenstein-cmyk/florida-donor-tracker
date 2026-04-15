@@ -60,6 +60,42 @@ def normalize_name(name) -> str:
     return re.sub(r"\s+", " ", name.strip().upper())
 
 
+_SUFFIX_VARIANTS = [
+    (re.compile(r"\bINC\.?\b"),         "INC"),
+    (re.compile(r"\bCORP\.?\b"),        "CORP"),
+    (re.compile(r"\bCORPORATION\b"),    "CORP"),
+    (re.compile(r"\bLTD\.?\b"),         "LTD"),
+    (re.compile(r"\bLLC\.?\b"),         "LLC"),
+    (re.compile(r"\bL\.L\.C\.?\b"),     "LLC"),
+    (re.compile(r"\bL\.P\.?\b"),        "LP"),
+    (re.compile(r"\bCO\.?\b"),          "CO"),
+    (re.compile(r"\bASSOC\.?\b"),       "ASSOC"),
+    (re.compile(r"\bCMMTE\b"),          "COMMITTEE"),
+    (re.compile(r"\bCMTE\b"),           "COMMITTEE"),
+    (re.compile(r"\bNATL\b"),           "NATIONAL"),
+    (re.compile(r"\bNATIONAL\b"),       "NATL"),
+    (re.compile(r"\bDEM\b"),            "DEMOCRATIC"),
+    (re.compile(r"\bREP\b"),            "REPUBLICAN"),
+    (re.compile(r"\bFLA\b"),            "FLORIDA"),
+    (re.compile(r"\bFL\b"),             "FLORIDA"),
+    (re.compile(r"\bASSOCIATION\b"),    "ASSOC"),
+]
+
+
+def _strip_punct(name: str) -> str:
+    s = re.sub(r"[.,'\u2019]", "", name)
+    return re.sub(r"\s+", " ", s).strip()
+
+
+def _name_variants(normalized: str):
+    stripped = _strip_punct(normalized)
+    yield stripped
+    for pattern, replacement in _SUFFIX_VARIANTS:
+        v = re.sub(pattern, replacement, stripped)
+        if v != stripped:
+            yield _strip_punct(v)
+
+
 def parse_acct_from_source(source_file) -> str | None:
     if not isinstance(source_file, str):
         return None
@@ -71,12 +107,20 @@ def load_donor_slug_map(cur) -> dict:
     print("  Loading donor slug map from donors table...", flush=True)
     cur.execute("select name, slug from donors")
     rows = cur.fetchall()
-    m = {}
+
+    exact = {}
     for name, slug in rows:
         if not name or not slug:
             continue
-        m[normalize_name(name)] = slug
-    print(f"  → {len(m):,} donor names indexed", flush=True)
+        exact[normalize_name(name)] = slug
+
+    m = dict(exact)
+    for canonical, slug in exact.items():
+        for variant in _name_variants(canonical):
+            if variant and variant not in m:
+                m[variant] = slug
+
+    print(f"  → {len(exact):,} exact + {len(m)-len(exact):,} variant entries indexed", flush=True)
     return m
 
 
@@ -154,6 +198,12 @@ def prepare_chunk(df: pd.DataFrame, slug_map: dict) -> tuple[str, int, dict]:
     df["contributor_name"] = df["contributor_name"].fillna("").astype(str)
     df["contributor_name_normalized"] = df["contributor_name"].map(normalize_name)
     df["donor_slug"] = df["contributor_name_normalized"].map(slug_map)
+    unmatched = df["donor_slug"].isna()
+    if unmatched.any():
+        df.loc[unmatched, "donor_slug"] = (
+            df.loc[unmatched, "contributor_name_normalized"]
+            .map(lambda n: slug_map.get(_strip_punct(n)))
+        )
 
     df["contribution_date"] = pd.to_datetime(
         df["contribution_date"], errors="coerce"

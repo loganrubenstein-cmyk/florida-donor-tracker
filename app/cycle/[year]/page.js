@@ -1,5 +1,6 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { notFound } from 'next/navigation';
 import CycleProfile from '@/components/cycles/CycleProfile';
 import { buildMeta } from '@/lib/seo';
 
@@ -48,6 +49,8 @@ export async function generateMetadata({ params }) {
 
 export default async function CyclePage({ params }) {
   const { year } = await params;
+  const yearNum = parseInt(year, 10);
+  if (!yearNum || yearNum < 2000 || yearNum > 2100) notFound();
   const stats = loadStats();
   const cycleDonors = loadCycleDonors();
   const electionSummary = loadElectionSummary();

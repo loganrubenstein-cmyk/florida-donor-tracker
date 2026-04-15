@@ -312,7 +312,7 @@ export default async function CommitteePage({ params }) {
       <div style={{ marginTop: '3rem' }}>
         <DataTrustBlock
           source="FL House + FL Senate websites · FL Division of Elections"
-          lastUpdated="April 2026"
+          
           direct={['committee name', 'membership roster', 'leadership roles']}
           normalized={['campaign finance totals matched from FL DoE candidate records by name + district']}
           caveats={[

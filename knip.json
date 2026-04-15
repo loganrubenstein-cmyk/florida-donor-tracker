@@ -1,0 +1,52 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "entry": [
+    "app/**/page.{js,jsx}",
+    "app/**/layout.{js,jsx}",
+    "app/**/loading.{js,jsx}",
+    "app/**/not-found.{js,jsx}",
+    "app/**/error.{js,jsx}",
+    "app/**/global-error.{js,jsx}",
+    "app/**/template.{js,jsx}",
+    "app/**/default.{js,jsx}",
+    "app/**/route.{js,jsx}",
+    "app/**/opengraph-image.{js,jsx}",
+    "app/**/twitter-image.{js,jsx}",
+    "app/**/sitemap.{js,jsx}",
+    "app/**/robots.{js,jsx}",
+    "app/**/icon.{js,jsx}",
+    "app/**/apple-icon.{js,jsx}",
+    "middleware.{js,jsx}",
+    "next.config.{js,mjs}",
+    "jest.config.{js,mjs}"
+  ],
+  "project": [
+    "app/**/*.{js,jsx}",
+    "components/**/*.{js,jsx}",
+    "lib/**/*.{js,jsx}"
+  ],
+  "ignore": [
+    "node_modules/**",
+    ".next/**",
+    "prototypes/**",
+    "visual_audit/**",
+    "florida-donor-tracker-review/**",
+    "research/**",
+    "docs/**",
+    "Plans/**",
+    "scripts/**",
+    "tests/**",
+    "__tests__/**",
+    "supabase/**",
+    ".cleanup-venv/**"
+  ],
+  "paths": {
+    "@/*": ["./*"]
+  },
+  "ignoreDependencies": [
+    "eslint",
+    "eslint-config-next",
+    "jest",
+    "jest-environment-node"
+  ]
+}

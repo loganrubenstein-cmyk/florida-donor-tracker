@@ -3,6 +3,7 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import BackLinks from '@/components/BackLinks';
+import SectionHeader from '@/components/shared/SectionHeader';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 function fmt(n) {
@@ -42,19 +43,11 @@ export default function CyclesList() {
 
       <BackLinks links={[{ href: '/', label: 'home' }]} />
 
-      {/* Header */}
-      <div style={{ marginBottom: '1.5rem' }}>
-        <h1 style={{
-          fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.4rem, 3vw, 2rem)',
-          fontWeight: 400, color: '#fff', marginBottom: '0.4rem',
-        }}>
-          Election Cycles
-        </h1>
-        <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
-          <span>{cycles.length} election cycles tracked</span>
-          <span style={{ color: 'var(--orange)', fontWeight: 700 }}>{fmt(grandTotal)} total</span>
-          <span>Florida candidates · 2008–present</span>
-        </div>
+      <SectionHeader title="Election Cycles" eyebrow="Florida · 2008–present" />
+      <div style={{ fontSize: '0.82rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap', marginTop: '-0.75rem', marginBottom: '1.25rem' }}>
+        <span>{cycles.length} election cycles tracked</span>
+        <span style={{ color: 'var(--orange)', fontWeight: 700 }}>{fmt(grandTotal)} total</span>
+        <span>Florida candidates · 2008–present</span>
       </div>
 
       {/* Timeline bar */}
@@ -107,16 +100,16 @@ export default function CyclesList() {
                     {c.year}
                   </a>
                 </td>
-                <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>
+                <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.78rem' }}>
                   {c.candidates.toLocaleString()}
                 </td>
-                <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--blue)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', whiteSpace: 'nowrap' }}>
+                <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--blue)', fontFamily: 'var(--font-mono)', fontSize: '0.78rem', whiteSpace: 'nowrap' }}>
                   {fmt(c.hard)}
                 </td>
-                <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--teal)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', whiteSpace: 'nowrap' }}>
+                <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--teal)', fontFamily: 'var(--font-mono)', fontSize: '0.78rem', whiteSpace: 'nowrap' }}>
                   {c.soft > 0 ? fmt(c.soft) : <span style={{ opacity: 0.4 }}>—</span>}
                 </td>
-                <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--orange)', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '0.7rem', whiteSpace: 'nowrap' }}>
+                <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--orange)', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '0.78rem', whiteSpace: 'nowrap' }}>
                   {fmt(c.combined)}
                 </td>
                 <td style={{ padding: '0.45rem 0.6rem', fontSize: '0.68rem', maxWidth: '200px' }}>
@@ -124,7 +117,7 @@ export default function CyclesList() {
                     <a href={`/candidate/${c.topCandidate.acct_num}`}
                       style={{ color: 'var(--teal)', textDecoration: 'none' }}>
                       {c.topCandidate.name}
-                      <span style={{ color: 'var(--text-dim)', marginLeft: '0.4rem', fontFamily: 'var(--font-mono)', fontSize: '0.65rem' }}>
+                      <span style={{ color: 'var(--text-dim)', marginLeft: '0.4rem', fontFamily: 'var(--font-mono)', fontSize: '0.72rem' }}>
                         {fmt(c.topCandidate.total)}
                       </span>
                     </a>
@@ -140,7 +133,7 @@ export default function CyclesList() {
         <DataTrustBlock
           source="Florida Division of Elections — Campaign Finance Filings"
           sourceUrl="https://dos.elections.myflorida.com/campaign-finance/"
-          lastUpdated="April 2026"
+          
           direct={['total raised per cycle', 'candidate and committee counts', 'party breakdown']}
           normalized={['soft money linked from committee contributions (2020 onward)', 'hard money direct from candidate filings (2008+)']}
           caveats={[

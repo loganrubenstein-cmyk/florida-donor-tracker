@@ -1,87 +1,157 @@
 [
   {
-    "name": "FLORIDA POWER & LIGHT COMPANY",
-    "total_amount": 330118129.69,
-    "num_contributions": 37460,
+    "name": "FLORIDA CRYSTALS CORPORATION",
+    "total_amount": 314026105.76,
+    "num_contributions": 25421,
     "is_corporate": true,
     "type": "corporate"
   },
   {
     "name": "TRULIEVE INC.",
-    "total_amount": 200952022.32,
-    "num_contributions": 235,
+    "total_amount": 210422255.97,
+    "num_contributions": 271,
     "is_corporate": true,
     "type": "corporate"
   },
   {
     "name": "FRIENDS OF RON DESANTIS",
-    "total_amount": 115681243.2,
-    "num_contributions": 111,
+    "total_amount": 115615993.2,
+    "num_contributions": 104,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "SEMINOLE TRIBE OF FLORIDA",
+    "total_amount": 81244042.74,
+    "num_contributions": 756,
     "is_corporate": false,
     "type": "individual"
   },
   {
     "name": "LAS VEGAS SANDS CO.",
-    "total_amount": 73589000.0,
-    "num_contributions": 8,
+    "total_amount": 73503714.6,
+    "num_contributions": 11,
     "is_corporate": true,
     "type": "corporate"
   },
   {
-    "name": "DEMOCRATIC NATIONAL COMMITTEE",
-    "total_amount": 44051575.45,
-    "num_contributions": 1066,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "REPUBLICAN NATIONAL COMMITTEE",
-    "total_amount": 33902823.57,
-    "num_contributions": 252,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "CHARLIE CRIST FOR FLORIDA",
-    "total_amount": 33038296.96,
-    "num_contributions": 38192,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "FORWARD FLORIDA",
-    "total_amount": 31533562.92,
-    "num_contributions": 14367,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "THE GEO GROUP, INC.",
-    "total_amount": 28089696.58,
-    "num_contributions": 5568,
+    "name": "FLORIDA POWER & LIGHT COMPANY",
+    "total_amount": 48203643.06,
+    "num_contributions": 1585,
     "is_corporate": true,
     "type": "corporate"
   },
   {
-    "name": "CONSERVATIVES FOR PRINCIPLED LEADERSHIP",
-    "total_amount": 25190779.21,
-    "num_contributions": 962,
+    "name": "DISNEY WORLDWIDE SERVICES, INC.",
+    "total_amount": 41368613.42,
+    "num_contributions": 884,
     "is_corporate": true,
     "type": "corporate"
   },
   {
     "name": "UNITED STATES SUGAR CORPORATION",
-    "total_amount": 24038594.88,
-    "num_contributions": 2031,
+    "total_amount": 39467128.77,
+    "num_contributions": 1165,
     "is_corporate": true,
     "type": "corporate"
   },
   {
+    "name": "MARSY'S LAW FOR ALL FOUNDATION",
+    "total_amount": 36825056.87,
+    "num_contributions": 11,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "DEMOCRATIC NATIONAL COMMITTEE",
+    "total_amount": 36159134.13,
+    "num_contributions": 466,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "FORWARD FLORIDA",
+    "total_amount": 31024645.0,
+    "num_contributions": 62,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
     "name": "REPUBLICAN PARTY OF FLORIDA",
-    "total_amount": 19980509.37,
-    "num_contributions": 227,
+    "total_amount": 29692021.37,
+    "num_contributions": 232,
     "is_corporate": false,
     "type": "committee"
+  },
+  {
+    "name": "REPUBLICAN GOVERNORS ASSOCIATION",
+    "total_amount": 28682672.74,
+    "num_contributions": 28,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "CHARLIE CRIST FOR FLORIDA",
+    "total_amount": 28609250.0,
+    "num_contributions": 32,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "LET'S GET TO WORK",
+    "total_amount": 27680367.97,
+    "num_contributions": 4,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "GRIFFIN KENNETH C.",
+    "total_amount": 26821658.17,
+    "num_contributions": 425,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "NEXTGEN CLIMATE ACTION COMMITTEE",
+    "total_amount": 26133166.67,
+    "num_contributions": 21,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "PUBLIX SUPER MARKETS, INC.",
+    "total_amount": 24116337.41,
+    "num_contributions": 721,
+    "is_corporate": true,
+    "type": "committee"
+  },
+  {
+    "name": "DEMOCRATIC GOVERNORS ASSOCIATION",
+    "total_amount": 22173060.74,
+    "num_contributions": 58,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "DRAFTKINGS, INC.",
+    "total_amount": 21607098.23,
+    "num_contributions": 39,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "DUKE ENERGY",
+    "total_amount": 21425272.3,
+    "num_contributions": 573,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "WEST FLAGLER ASSOCIATES, LTD",
+    "total_amount": 21157975.83,
+    "num_contributions": 268,
+    "is_corporate": false,
+    "type": "individual"
   },
   {
     "name": "LET'S GET TO WORK - POLITICAL COMMITTEE",
@@ -91,102 +161,109 @@
     "type": "individual"
   },
   {
-    "name": "AMERICANS FOR PROSPERITY ACTION",
-    "total_amount": 18443867.57,
-    "num_contributions": 2394,
+    "name": "FLORIDIANS PROTECTING FREEDOM",
+    "total_amount": 19437998.25,
+    "num_contributions": 22,
     "is_corporate": false,
     "type": "individual"
   },
   {
-    "name": "PUBLIX SUPER MARKETS, INC.",
-    "total_amount": 18027589.84,
-    "num_contributions": 547,
+    "name": "ASSOCIATED INDUSTRIES OF FLORIDA POLITICAL ACTION COMMITTEE",
+    "total_amount": 19284785.5,
+    "num_contributions": 1592,
     "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "SEMINOLE TRIBE OF FLORIDA",
-    "total_amount": 16333748.9,
-    "num_contributions": 624,
-    "is_corporate": false,
-    "type": "individual"
+    "type": "committee"
   },
   {
     "name": "TECO ENERGY, INC.",
-    "total_amount": 16229331.21,
-    "num_contributions": 1044,
+    "total_amount": 18898609.61,
+    "num_contributions": 1239,
     "is_corporate": true,
     "type": "corporate"
   },
   {
-    "name": "FLORIDA REPUBLICAN SENATORIAL CAMP. COMM",
-    "total_amount": 14857029.93,
-    "num_contributions": 37,
+    "name": "NATIONAL ASSOCIATION OF REALTORS",
+    "total_amount": 18102557.62,
+    "num_contributions": 492,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "REPUBLICAN STATE LEADERSHIP COMMITTEE REPUBLICAN STATE",
+    "total_amount": 17789554.0,
+    "num_contributions": 123,
     "is_corporate": false,
     "type": "individual"
-  },
-  {
-    "name": "MARK - PAC",
-    "total_amount": 14809815.59,
-    "num_contributions": 84434,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "SCOTT FRANCES A.",
-    "total_amount": 14209329.78,
-    "num_contributions": 11671,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "HCA WEST FLORIDA DIVISION AND GOOD GOVERNMENT PAC",
-    "total_amount": 14120577.96,
-    "num_contributions": 826,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "GRIFFIN KENNETH C.",
-    "total_amount": 14078326.84,
-    "num_contributions": 14979,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "DISNEY WORLDWIDE SERVICES, INC.",
-    "total_amount": 13802705.32,
-    "num_contributions": 579,
-    "is_corporate": true,
-    "type": "corporate"
   },
   {
     "name": "REALTORS POLITICAL ADVOCACY COMMITTEE",
-    "total_amount": 13750141.5,
-    "num_contributions": 866,
+    "total_amount": 17741594.13,
+    "num_contributions": 984,
     "is_corporate": false,
     "type": "committee"
   },
   {
-    "name": "U.S. SUGAR CORPORATION",
-    "total_amount": 13573264.79,
-    "num_contributions": 275,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "FRIENDS OF CHARLIE CRIST",
-    "total_amount": 13168875.96,
-    "num_contributions": 6258,
+    "name": "THE FAIRNESS PROJECT",
+    "total_amount": 17136513.9,
+    "num_contributions": 143,
     "is_corporate": false,
     "type": "individual"
   },
   {
-    "name": "ASSOCIATED INDUSTRIES OF FLORIDA PAC",
-    "total_amount": 12964909.0,
-    "num_contributions": 1186,
+    "name": "U.S. SUGAR CORPORATION",
+    "total_amount": 16722517.82,
+    "num_contributions": 331,
     "is_corporate": true,
     "type": "corporate"
+  },
+  {
+    "name": "SIXTEEN THIRTY FUND",
+    "total_amount": 15020723.0,
+    "num_contributions": 9,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "NEXTERA ENERGY, INC.",
+    "total_amount": 14749189.0,
+    "num_contributions": 729,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "LAUFER MARSHA",
+    "total_amount": 13365735.6,
+    "num_contributions": 66,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "FORWARD MAJORITY ACTION",
+    "total_amount": 13269304.28,
+    "num_contributions": 39,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "FLORIDA FOR EVERYONE",
+    "total_amount": 13183350.01,
+    "num_contributions": 163,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "JONES, PAULT T.",
+    "total_amount": 13051078.99,
+    "num_contributions": 560,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "ADELSON SHELDON",
+    "total_amount": 13006000.0,
+    "num_contributions": 20,
+    "is_corporate": false,
+    "type": "individual"
   },
   {
     "name": "KEEP FLORIDA CLEAN, INC.",
@@ -196,72 +273,240 @@
     "type": "corporate"
   },
   {
-    "name": "DUKE ENERGY",
-    "total_amount": 12656750.69,
-    "num_contributions": 2014,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "NEXTERA ENERGY, INC.",
-    "total_amount": 11990490.0,
-    "num_contributions": 649,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "SEMINOLE GAMING",
-    "total_amount": 11069732.83,
-    "num_contributions": 30,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "JOBS FOR FLORIDA",
-    "total_amount": 11044389.86,
-    "num_contributions": 135,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
     "name": "AMERICAN FEDERATION OF STATE COUNTY AND MUNICIPAL EMPLOYEES",
-    "total_amount": 10578108.22,
-    "num_contributions": 159,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "NATIONAL ASSOCIATION OF REALTORS",
-    "total_amount": 10246453.85,
-    "num_contributions": 376,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "BLUE CROSS AND BLUE SHIELD OF FLORIDA",
-    "total_amount": 9090855.32,
-    "num_contributions": 652,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "WALT DISNEY PARKS AND RESORTS, U.S.",
-    "total_amount": 9010763.51,
-    "num_contributions": 349,
+    "total_amount": 12720108.22,
+    "num_contributions": 173,
     "is_corporate": false,
     "type": "individual"
   },
   {
     "name": "FRIENDS OF ASHLEY MOODY",
-    "total_amount": 8860000.0,
-    "num_contributions": 42,
+    "total_amount": 12707532.54,
+    "num_contributions": 43,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "FANDUEL",
+    "total_amount": 12528140.18,
+    "num_contributions": 6,
     "is_corporate": false,
     "type": "individual"
   },
   {
     "name": "THE FLORIDA EDUCATION ASSOCIATION ADVOCACY FUND",
-    "total_amount": 8501174.37,
-    "num_contributions": 354,
+    "total_amount": 12161733.49,
+    "num_contributions": 476,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "MARK - PAC",
+    "total_amount": 11963619.99,
+    "num_contributions": 267,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "FLORIDA REPUBLICAN SENATORIAL CAMP. COMM",
+    "total_amount": 11764342.14,
+    "num_contributions": 27,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "JOBS FOR FLORIDA",
+    "total_amount": 11712270.57,
+    "num_contributions": 145,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "CONSERVATIVE PRINCIPLES FOR FLORIDA",
+    "total_amount": 11593071.42,
+    "num_contributions": 341,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "FERNANDEZ MIGUEL",
+    "total_amount": 11431889.2,
+    "num_contributions": 122,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "F. ANNETTE SCOTT REVOCABLE TRUST ACCOUNT",
+    "total_amount": 11300000.0,
+    "num_contributions": 5,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "SEMINOLE GAMING",
+    "total_amount": 11109732.83,
+    "num_contributions": 27,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "YASS JEFF",
+    "total_amount": 11000000.0,
+    "num_contributions": 4,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "BLUE CROSS AND BLUE SHIELD OF FLORIDA",
+    "total_amount": 10916746.63,
+    "num_contributions": 614,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "FLORIDA CONSERVATIVE MAJORITY",
+    "total_amount": 10899700.34,
+    "num_contributions": 405,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "THE MORGAN FIRM PA",
+    "total_amount": 10898088.04,
+    "num_contributions": 74,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "THE GEO GROUP, INC.",
+    "total_amount": 10755856.14,
+    "num_contributions": 752,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "CONSERVATIVES FOR PRINCIPLED LEADERSHIP",
+    "total_amount": 10271102.78,
+    "num_contributions": 124,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "NEW VENTURE FUND",
+    "total_amount": 10229971.09,
+    "num_contributions": 3,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "REPUBLICAN NATIONAL COMMITTEE",
+    "total_amount": 10167215.84,
+    "num_contributions": 62,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "VOTERS IN CONTROL, INC.",
+    "total_amount": 10000000.0,
+    "num_contributions": 2,
+    "is_corporate": true,
+    "type": "committee"
+  },
+  {
+    "name": "AMERICAN INTEGRITY MGA, LLC",
+    "total_amount": 9946190.9,
+    "num_contributions": 1710,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "SECURE FLORIDA'S FUTURE INC.",
+    "total_amount": 9713507.74,
+    "num_contributions": 44,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "FLORIDIANS FOR A STRONGER DEMOCRACY",
+    "total_amount": 9482840.91,
+    "num_contributions": 486,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "THE VOICE OF FLORIDA BUSINESS PAC, INC.",
+    "total_amount": 9268734.49,
+    "num_contributions": 345,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "KEEP OUR CONSTITUTION CLEAN, INC.",
+    "total_amount": 9010146.76,
+    "num_contributions": 39,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "FLORIDIAN'S UNITED FOR OUR CHILDREN'S FUTURE",
+    "total_amount": 9009401.95,
+    "num_contributions": 498,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "AMERICAN CIVIL LIBERTIES UNION, INC.",
+    "total_amount": 8944113.97,
+    "num_contributions": 182,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "AFSCME",
+    "total_amount": 8926391.0,
+    "num_contributions": 324,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "A STRONGER FLORIDA",
+    "total_amount": 8798245.36,
+    "num_contributions": 741,
+    "is_corporate": false,
+    "type": "committee"
+  },
+  {
+    "name": "CENTENE MANAGEMENT COMPANY LLC",
+    "total_amount": 8762926.82,
+    "num_contributions": 812,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "AMERICAN FEDERATION OF TEACHERS",
+    "total_amount": 8735252.53,
+    "num_contributions": 77,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "DAILY MEMBERSHIP DUES DEPOSIT",
+    "total_amount": 8362944.86,
+    "num_contributions": 4111,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "CITIZENS ALLIANCE FOR FLORIDA'S ECONOMY",
+    "total_amount": 8360527.64,
+    "num_contributions": 181,
+    "is_corporate": false,
+    "type": "committee"
+  },
+  {
+    "name": "CITIZEN VOTERS, INC.",
+    "total_amount": 8306943.55,
+    "num_contributions": 24,
     "is_corporate": true,
     "type": "corporate"
   },
@@ -273,430 +518,185 @@
     "type": "corporate"
   },
   {
-    "name": "NATIONAL REPUBLICAN SENATORIAL COMMITTEE",
-    "total_amount": 7981950.0,
-    "num_contributions": 19,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "BRODIE STEFAN",
-    "total_amount": 7860869.17,
-    "num_contributions": 60666,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "WALTON JIM",
-    "total_amount": 7660536.09,
-    "num_contributions": 34834,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "AFSCME",
-    "total_amount": 7533236.46,
-    "num_contributions": 330,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "SOUTH FLORIDA SOLUTIONS PC",
-    "total_amount": 7392558.75,
-    "num_contributions": 4017,
-    "is_corporate": false,
-    "type": "committee"
-  },
-  {
-    "name": "CHARTER COMMUNICATIONS",
-    "total_amount": 7343361.65,
-    "num_contributions": 585,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "TREASURE FLORIDA",
-    "total_amount": 7251000.0,
-    "num_contributions": 5,
-    "is_corporate": false,
-    "type": "committee"
-  },
-  {
-    "name": "A STRONGER FLORIDA",
-    "total_amount": 7215745.36,
-    "num_contributions": 645,
-    "is_corporate": false,
-    "type": "committee"
-  },
-  {
-    "name": "CENTENE MANAGEMENT COMPANY, LLC",
-    "total_amount": 7130411.11,
-    "num_contributions": 682,
+    "name": "HCA WEST FLORIDA DIVISION AND GOOD GOVERNMENT PAC",
+    "total_amount": 8231944.61,
+    "num_contributions": 424,
     "is_corporate": true,
     "type": "corporate"
   },
   {
-    "name": "SUNSHINE STATE FIRST",
-    "total_amount": 6567507.1,
-    "num_contributions": 1936,
-    "is_corporate": false,
-    "type": "committee"
-  },
-  {
-    "name": "PROPEL FLORIDA LLC",
-    "total_amount": 6563690.88,
-    "num_contributions": 213,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "COMMITTEE OF FLORIDA AGENTS",
-    "total_amount": 6516443.62,
-    "num_contributions": 842,
-    "is_corporate": false,
-    "type": "committee"
-  },
-  {
-    "name": "OD-EYEPAC",
-    "total_amount": 6171388.93,
-    "num_contributions": 330,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "YASS JEFF",
-    "total_amount": 6000000.0,
-    "num_contributions": 2,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "PALM BEACH KENNEL CLUB",
-    "total_amount": 5947570.85,
-    "num_contributions": 11407,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "JM FAMILY ENTERPRISES, INC.",
-    "total_amount": 5838366.08,
-    "num_contributions": 546,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "DOSAL TOBACCO CORPORATION",
-    "total_amount": 5785548.75,
-    "num_contributions": 514,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "AT&T",
-    "total_amount": 5769484.57,
-    "num_contributions": 427,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "DEMOCRATIC CONGRESSIONAL",
-    "total_amount": 5763710.0,
-    "num_contributions": 55,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "DEMOCRATIC CONGRESSIONAL CAMPAIGN COMMITTEE",
-    "total_amount": 5612056.55,
-    "num_contributions": 111,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "GUIDEWELL GROUP, INC",
-    "total_amount": 5557025.0,
-    "num_contributions": 231,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "CITIZENS FOR PRINCIPLED LEADERSHIP",
-    "total_amount": 5551296.61,
-    "num_contributions": 253,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "BUILDING FLORIDA'S FUTURE",
-    "total_amount": 5549994.75,
-    "num_contributions": 326,
-    "is_corporate": false,
-    "type": "committee"
-  },
-  {
-    "name": "NAR - NATIONAL ASSOCIATION OF REALTORS",
-    "total_amount": 5541518.89,
-    "num_contributions": 77,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "OBAMA FOR AMERICA",
-    "total_amount": 5520229.5,
-    "num_contributions": 12,
+    "name": "SUSSMAN DONALD",
+    "total_amount": 8210400.0,
+    "num_contributions": 42,
     "is_corporate": false,
     "type": "individual"
   },
   {
     "name": "SEARCY DENNEY SCAROLA BARNHART & SHIPLEY",
-    "total_amount": 5216427.0,
-    "num_contributions": 253,
+    "total_amount": 8123234.0,
+    "num_contributions": 362,
     "is_corporate": false,
     "type": "individual"
   },
   {
-    "name": "SOUTHERN GLAZER'S WINE AND SPIRITS, LLC",
-    "total_amount": 5199893.78,
-    "num_contributions": 613,
+    "name": "CHARTER COMMUNICATIONS",
+    "total_amount": 8118870.71,
+    "num_contributions": 619,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "NATIONAL REPUBLICAN SENATORIAL COMMITTEE",
+    "total_amount": 7958950.0,
+    "num_contributions": 19,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "WALT DISNEY PARKS AND RESORTS, U.S.",
+    "total_amount": 7883874.37,
+    "num_contributions": 187,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "OD-EYEPAC",
+    "total_amount": 7728638.93,
+    "num_contributions": 431,
     "is_corporate": true,
     "type": "corporate"
   },
   {
-    "name": "FRIENDS OF WILTON SIMPSON",
-    "total_amount": 5153906.0,
-    "num_contributions": 32,
-    "is_corporate": false,
-    "type": "committee"
+    "name": "HCA NORTH FLORIDA DIVISION AND GOOD GOVERNMENT PAC",
+    "total_amount": 7680640.11,
+    "num_contributions": 436,
+    "is_corporate": true,
+    "type": "corporate"
   },
   {
-    "name": "HONEST LEADERSHIP",
-    "total_amount": 5145448.37,
-    "num_contributions": 75,
-    "is_corporate": false,
-    "type": "committee"
-  },
-  {
-    "name": "STATE OF FLORIDA",
-    "total_amount": 5087440.37,
-    "num_contributions": 130,
+    "name": "AMERICANS FOR PROSPERITY ACTION",
+    "total_amount": 7671579.19,
+    "num_contributions": 245,
     "is_corporate": false,
     "type": "individual"
   },
   {
-    "name": "PHILLIPS AND JORDAN, INCORPORATED",
-    "total_amount": 4970365.93,
-    "num_contributions": 12352,
+    "name": "HCA EAST FLORIDA DIVISION AND GOOD GOVERNMENT PAC",
+    "total_amount": 7473350.6,
+    "num_contributions": 420,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "DOSAL TOBACCO CORPORATION",
+    "total_amount": 7421850.24,
+    "num_contributions": 668,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "FRIENDS OF CHARLIE CRIST",
+    "total_amount": 7279166.51,
+    "num_contributions": 34,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "TREASURE FLORIDA",
+    "total_amount": 7251500.0,
+    "num_contributions": 6,
+    "is_corporate": false,
+    "type": "committee"
+  },
+  {
+    "name": "GLOBAL IMPACT SOCIAL WELFARE FOUNDATION (CLAF)",
+    "total_amount": 7250000.0,
+    "num_contributions": 1,
     "is_corporate": true,
     "type": "corporate"
   },
   {
     "name": "RAI SERVICES COMPANY",
-    "total_amount": 4808500.0,
-    "num_contributions": 347,
+    "total_amount": 7193500.0,
+    "num_contributions": 538,
     "is_corporate": true,
     "type": "corporate"
   },
   {
-    "name": "SECURE FLORIDA'S FUTURE",
-    "total_amount": 4798507.74,
-    "num_contributions": 37,
-    "is_corporate": false,
-    "type": "individual"
+    "name": "JM FAMILY ENTERPRISES, INC.",
+    "total_amount": 7192716.08,
+    "num_contributions": 692,
+    "is_corporate": true,
+    "type": "corporate"
   },
   {
-    "name": "ADELSON SHELDON",
-    "total_amount": 4782391.49,
-    "num_contributions": 129,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "SCHMIDT ERIC",
-    "total_amount": 4696464.88,
-    "num_contributions": 49155,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "HOLLAND & KNIGHT LLP",
-    "total_amount": 4603835.39,
-    "num_contributions": 26187,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "HCA FLORIDA MERCY HOSPITAL",
-    "total_amount": 4553541.88,
-    "num_contributions": 282,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "FTBA TRANSPORTATION PAC",
-    "total_amount": 4500591.0,
-    "num_contributions": 600,
+    "name": "FLORIDA POLICE BENEVOLENT ASSOCIATION INC JUSTICE PAC",
+    "total_amount": 7191091.4,
+    "num_contributions": 1151,
     "is_corporate": true,
     "type": "committee"
   },
   {
-    "name": "CARPAC",
-    "total_amount": 4428069.34,
-    "num_contributions": 62600,
+    "name": "AT&T",
+    "total_amount": 7141434.15,
+    "num_contributions": 680,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "STIEFEL BARBARA",
+    "total_amount": 7113140.4,
+    "num_contributions": 131,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "US SUGAR",
+    "total_amount": 7030785.0,
+    "num_contributions": 56,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "SOUTHWEST FLORIDA ENTERPRISES, INC",
+    "total_amount": 6726633.52,
+    "num_contributions": 1729,
     "is_corporate": true,
     "type": "corporate"
   },
   {
-    "name": "COLLIER PARKER J.",
-    "total_amount": 4387340.73,
-    "num_contributions": 35759,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "COMCAST CORPORATION",
-    "total_amount": 4376460.98,
-    "num_contributions": 565,
+    "name": "SOUTHERN GLAZER'S WINE AND SPIRITS, LLC",
+    "total_amount": 6687665.21,
+    "num_contributions": 805,
     "is_corporate": true,
     "type": "corporate"
   },
   {
-    "name": "WILKES & MCHUGH - ATTORNEYS AT LAW",
-    "total_amount": 4288020.73,
-    "num_contributions": 88490,
+    "name": "FLORIDIANS FOR ACCOUNTABILITY FREEDOM",
+    "total_amount": 6540400.0,
+    "num_contributions": 15,
     "is_corporate": false,
     "type": "individual"
   },
   {
-    "name": "STERN PC",
-    "total_amount": 4268030.19,
-    "num_contributions": 35928,
+    "name": "SCOTT RICHARD L.",
+    "total_amount": 6508748.75,
+    "num_contributions": 137,
     "is_corporate": false,
     "type": "individual"
   },
   {
-    "name": "ANDERSON COLUMBIA CO., INC.",
-    "total_amount": 4242550.89,
-    "num_contributions": 28005,
+    "name": "SCOTT FRANCES A.",
+    "total_amount": 6400000.0,
+    "num_contributions": 2,
+    "is_corporate": false,
+    "type": "individual"
+  },
+  {
+    "name": "GUIDEWELL GROUP, INC",
+    "total_amount": 6321000.0,
+    "num_contributions": 268,
     "is_corporate": true,
     "type": "corporate"
-  },
-  {
-    "name": "VOICE OF FLORIDA BUSINESS POLITICAL ACTION COMMITTEE",
-    "total_amount": 4219071.25,
-    "num_contributions": 295,
-    "is_corporate": false,
-    "type": "committee"
-  },
-  {
-    "name": "FCCI SERVICES INC.",
-    "total_amount": 4030112.5,
-    "num_contributions": 493,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "NEAL PATRICK K",
-    "total_amount": 3987952.06,
-    "num_contributions": 2739,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "MORGAN & MORGAN",
-    "total_amount": 3885768.62,
-    "num_contributions": 49261,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "ANHEUSER BUSCH COMPANIES INC.",
-    "total_amount": 3853634.08,
-    "num_contributions": 440,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "FERNANDEZ MIGUEL",
-    "total_amount": 3775230.63,
-    "num_contributions": 40890,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "GOPAC ELECTION FUND",
-    "total_amount": 3751000.0,
-    "num_contributions": 30,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "FL CHAMBER OF COMM PAC",
-    "total_amount": 3744700.0,
-    "num_contributions": 156,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "HARRELL'S LLC",
-    "total_amount": 3709799.95,
-    "num_contributions": 59776,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "FLORIDA JUSTICE PAC SEPARATE INTEREST-BEARING CAMPAIGN ACCOUNT",
-    "total_amount": 3701173.05,
-    "num_contributions": 18,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "GREENBERG TRAURIG",
-    "total_amount": 3674358.1,
-    "num_contributions": 26831,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "JONES PAUL",
-    "total_amount": 3657205.33,
-    "num_contributions": 32152,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "VERANO HOLDINGS LLC",
-    "total_amount": 3626470.0,
-    "num_contributions": 16,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "FLORIDIANS FOR ECONOMIC ADVANCEMENT",
-    "total_amount": 3618051.04,
-    "num_contributions": 183,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "PETERFFY THOMAS",
-    "total_amount": 3523974.28,
-    "num_contributions": 15776,
-    "is_corporate": false,
-    "type": "individual"
-  },
-  {
-    "name": "ASSOCIATED INDUSTRIES OF FLORIDA POLITICAL ACTION COMMITTEE",
-    "total_amount": 3520334.04,
-    "num_contributions": 384,
-    "is_corporate": true,
-    "type": "committee"
-  },
-  {
-    "name": "CENTENNIAL BANK",
-    "total_amount": 3514907.05,
-    "num_contributions": 936,
-    "is_corporate": false,
-    "type": "individual"
   }
 ]

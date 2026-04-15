@@ -2,6 +2,7 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import BackLinks from '@/components/BackLinks';
 import ElectionsView from '@/components/elections/ElectionsView';
+import SectionHeader from '@/components/shared/SectionHeader';
 
 export const metadata = {
   title: 'Election Results',
@@ -48,13 +49,9 @@ export default function ElectionsPage() {
     <main style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
       <BackLinks links={[{ href: '/', label: 'home' }]} />
 
-      <div style={{ marginBottom: '1.75rem' }}>
-        <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', color: 'var(--text)', margin: '0 0 0.3rem' }}>
-          Election Results
-        </h1>
-        <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
-          {totalCycles} general elections · {totalFinanceRaces} races with finance data · {totalLegCandidates.toLocaleString()} FL legislative candidates matched · 2012–2024
-        </div>
+      <SectionHeader title="Election Results" eyebrow="Florida · 2012–2024" />
+      <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginTop: '-0.75rem', marginBottom: '1.75rem' }}>
+        {totalCycles} general elections · {totalFinanceRaces} races with finance data · {totalLegCandidates.toLocaleString()} FL legislative candidates matched
       </div>
 
       <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', lineHeight: 1.8, marginBottom: '2rem', maxWidth: '620px', padding: '0.85rem 1rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '4px' }}>

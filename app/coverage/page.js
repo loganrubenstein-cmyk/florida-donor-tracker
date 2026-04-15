@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import SectionHeader from '@/components/shared/SectionHeader';
 
 export const metadata = {
   title: 'Coverage & Limits',
@@ -41,9 +42,7 @@ export default function CoveragePage() {
         <span>Coverage</span>
       </div>
 
-      <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', color: 'var(--text)', marginBottom: '0.5rem' }}>
-        Coverage &amp; Limits
-      </h1>
+      <SectionHeader title="Coverage & Limits" eyebrow="Florida Donor Tracker · Scope & Caveats" />
       <p style={{ color: 'var(--text-dim)', fontSize: '0.85rem', lineHeight: 1.6, marginBottom: '2.5rem' }}>
         What this site covers, what years are included, and what is known to be missing or incomplete.
       </p>
@@ -52,8 +51,8 @@ export default function CoveragePage() {
         <h2 style={{ fontSize: '0.85rem', color: 'var(--teal)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem' }}>
           Data Categories
         </h2>
-        <Row label="Committee contributions (receipts)" status="complete" note="~7.7M rows, all committees on file with FL Division of Elections" />
-        <Row label="Candidate contributions (receipts)" status="complete" note="~3.2M rows" />
+        <Row label="Committee contributions (receipts)" status="complete" note="~19.3M rows — active and dissolved committees on file with FL Division of Elections" />
+        <Row label="Candidate contributions (receipts)" status="complete" note="~2.6M rows" />
         <Row label="Committee expenditures (disbursements)" status="complete" note="Summary totals + top vendors for 1,673 committees; $2.78B tracked" />
         <Row label="Candidate expenditures" status="complete" note="Summary totals + top vendors for all candidates" />
         <Row label="Independent expenditures (IEs)" status="complete" note="$70.9M total across 492 committees; committee-level totals (transaction detail not yet included)" />

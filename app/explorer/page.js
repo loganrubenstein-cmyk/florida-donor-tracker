@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import SectionHeader from '@/components/shared/SectionHeader';
 
 const TransactionExplorer = dynamic(
   () => import('@/components/explorer/TransactionExplorer'),
@@ -22,10 +23,8 @@ export default function ExplorerPage() {
         <span>Transaction Explorer</span>
       </div>
 
-      <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', color: 'var(--text)', marginBottom: '0.4rem' }}>
-        Transaction Explorer
-      </h1>
-      <p style={{ color: 'var(--text-dim)', fontSize: '0.85rem', lineHeight: 1.6, marginBottom: '1.5rem', maxWidth: '700px' }}>
+      <SectionHeader title="Transaction Explorer" eyebrow="Florida · 10.4M Contributions" />
+      <p style={{ color: 'var(--text-dim)', fontSize: '0.85rem', lineHeight: 1.6, marginBottom: '1.5rem', marginTop: '-0.75rem', maxWidth: '700px' }}>
         Browse every contribution to Florida committees and candidates. Filter by name, amount, date, year, or recipient.
         Click a contributor to see their full donor profile; click a recipient to see their committee or candidate page.
       </p>
@@ -45,7 +44,7 @@ export default function ExplorerPage() {
         normalized={['contributor_name_normalized']}
         inferred={['donor profile links (name-matched)']}
         caveats={[
-          '~10.4M contribution rows loaded (committee + candidate). URL params supported: ?q=, ?recipient=, ?donor_slug=, ?year=, ?amount_min=.',
+          '~10.4M contribution rows. Deep-link to filtered views: ?recipient_acct=<acct_num>, ?donor_slug=<slug>, ?q=<name>, ?year=<YYYY>, ?amount_min=<n>, ?amount_max=<n>, ?date_start=<YYYY-MM-DD>, ?tx_type=<code>.',
           'Donor profile links are inferred by exact normalized name match — the same real-world person may appear unlinked under different name spellings.',
           'Expenditures (who got paid) are not yet available in the explorer.',
         ]}

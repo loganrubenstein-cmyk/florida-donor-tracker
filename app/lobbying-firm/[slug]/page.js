@@ -1,19 +1,18 @@
 import Link from 'next/link';
+import lazyLoad from 'next/dynamic';
 import { getDb } from '@/lib/db';
 import { notFound } from 'next/navigation';
 import SourceLink from '@/components/shared/SourceLink';
+import EntityHeader from '@/components/shared/EntityHeader';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import { fmtMoneyCompact } from '@/lib/fmt';
 import { buildMeta } from '@/lib/seo';
+
+const QuarterlyChart = lazyLoad(() => import('@/components/candidate/QuarterlyChart'), { ssr: false });
 
 export const dynamic = 'force-dynamic';
 
-function fmt(n) {
-  if (!n) return '—';
-  if (n >= 1_000_000_000) return `$${(n / 1_000_000_000).toFixed(2).replace(/\.?0+$/, '')}B`;
-  if (n >= 1_000_000)     return `$${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000)         return `$${(n / 1_000).toFixed(0)}K`;
-  return `$${n}`;
-}
+function fmt(n) { return n ? fmtMoneyCompact(parseFloat(n)) : '—'; }
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
@@ -60,6 +59,28 @@ export default async function LobbyingFirmPage({ params }) {
     .order('num_active', { ascending: false })
     .limit(50);
 
+  // Build set of normalized lobbyist name tokens for partner-badge heuristic
+  const lobbyistTokens = new Set(
+    (lobbyists || []).flatMap(l =>
+      l.name.toLowerCase().split(/[\s,./]+/).filter(t => t.length > 3)
+    )
+  );
+
+  function isPartnerEntry(principalName) {
+    const norm = principalName.toLowerCase();
+    return [...lobbyistTokens].some(token => norm.includes(token));
+  }
+
+  // Annual compensation aggregates for trend chart
+  const annualComp = Object.values(
+    (quarters || []).reduce((acc, q) => {
+      const yr = String(q.year);
+      if (!acc[yr]) acc[yr] = { quarter: yr, amount: 0 };
+      acc[yr].amount += parseFloat(q.total_comp) || 0;
+      return acc;
+    }, {})
+  ).sort((a, b) => a.quarter.localeCompare(b.quarter));
+
   return (
     <main style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
       <div style={{ marginBottom: '0.5rem', fontSize: '0.75rem', color: 'var(--text-dim)' }}>
@@ -72,25 +93,16 @@ export default async function LobbyingFirmPage({ params }) {
         <span>{firm.firm_name}</span>
       </div>
 
-      {/* Header */}
-      <div style={{ marginBottom: '1.75rem' }}>
-        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.5rem' }}>
-          <span style={{
-            fontSize: '0.65rem', padding: '0.15rem 0.5rem',
-            border: '1px solid var(--blue)', color: 'var(--blue)',
-            borderRadius: '2px', fontFamily: 'var(--font-mono)',
-          }}>
-            LOBBYING FIRM
-          </span>
-        </div>
-        <h1 style={{
-          fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.4rem, 3vw, 2rem)',
-          fontWeight: 400, color: '#fff', lineHeight: 1.2, marginBottom: '0.4rem',
-        }}>
-          {firm.firm_name}
-        </h1>
+      <EntityHeader
+        name={firm.firm_name}
+        typeBadge={{ label: 'LOBBYING FIRM', color: 'var(--blue)' }}
+        meta={[
+          firm.first_year && firm.last_year ? `${firm.first_year}–${firm.last_year}` : null,
+          firm.num_principals ? `${firm.num_principals} clients` : null,
+        ]}
+      >
         <SourceLink type="firm" />
-      </div>
+      </EntityHeader>
 
       {/* Stats */}
       <div style={{
@@ -136,13 +148,22 @@ export default async function LobbyingFirmPage({ params }) {
               </tr>
             </thead>
             <tbody>
-              {clients.map((c, i) => (
+              {clients.map((c, i) => {
+                const isPartner = isPartnerEntry(c.principal_name);
+                return (
                 <tr key={i} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
                   <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2rem' }}>{i + 1}</td>
                   <td style={{ padding: '0.4rem 0.6rem', maxWidth: '400px', wordBreak: 'break-word' }}>
                     <Link href={`/principal/${c.principal_slug}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
                       {c.principal_name}
                     </Link>
+                    {isPartner && (
+                      <span title="This may be a partner or name-principal of the firm, not an external client." style={{
+                        marginLeft: '0.4rem', fontSize: '0.55rem', padding: '0.05rem 0.3rem',
+                        border: '1px solid rgba(100,140,220,0.35)', color: 'var(--text-dim)',
+                        borderRadius: '2px', fontFamily: 'var(--font-mono)', verticalAlign: 'middle',
+                      }}>internal</span>
+                    )}
                   </td>
                   <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.7rem', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap' }}>
                     {c.first_year && c.last_year ? `${c.first_year}–${c.last_year}` : '—'}
@@ -151,7 +172,8 @@ export default async function LobbyingFirmPage({ params }) {
                     {fmt(c.total_comp)}
                   </td>
                 </tr>
-              ))}
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -179,6 +201,18 @@ export default async function LobbyingFirmPage({ params }) {
                 )}
               </Link>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* Annual compensation trend chart */}
+      {annualComp.length > 1 && (
+        <div style={{ marginBottom: '2rem' }}>
+          <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
+            Annual Compensation Trend
+          </div>
+          <div style={{ height: '140px' }}>
+            <QuarterlyChart data={annualComp} />
           </div>
         </div>
       )}
@@ -246,7 +280,7 @@ export default async function LobbyingFirmPage({ params }) {
       <DataTrustBlock
         source="Florida Lobbyist Registration Office — Quarterly Compensation Reports"
         sourceUrl="https://www.floridalobbyist.gov"
-        lastUpdated="April 2026"
+        
         direct={['firm name', 'client list', 'quarterly compensation reports (2007–present)']}
         normalized={['compensation totals (summed from band midpoints for amounts under $50K; exact amounts above $50K)']}
         caveats={[
