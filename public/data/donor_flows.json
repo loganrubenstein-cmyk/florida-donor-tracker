@@ -3,64 +3,99 @@
     "donor": "TRULIEVE INC.",
     "committee": "Smart & Safe Florida",
     "committee_acct": "83475",
-    "total_amount": 197790466.13,
-    "num_contributions": 56
+    "total_amount": 206636699.78,
+    "num_contributions": 60
   },
   {
     "donor": "FRIENDS OF RON DESANTIS",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
-    "total_amount": 115142993.2,
-    "num_contributions": 100
-  },
-  {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 87364094.63,
-    "num_contributions": 5428
+    "total_amount": 115097993.2,
+    "num_contributions": 98
   },
   {
     "donor": "LAS VEGAS SANDS CO.",
     "committee": "Florida Voters in Charge",
     "committee_acct": "79446",
-    "total_amount": 73564000.0,
-    "num_contributions": 7
+    "total_amount": 73473714.6,
+    "num_contributions": 8
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 49123490.59,
-    "num_contributions": 4277
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 50456334.91,
+    "num_contributions": 3505
+  },
+  {
+    "donor": "MARSY'S LAW FOR ALL FOUNDATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "70057",
+    "total_amount": 36825056.87,
+    "num_contributions": 11
   },
   {
     "donor": "DEMOCRATIC NATIONAL COMMITTEE",
     "committee": "Florida Democratic Party",
     "committee_acct": "1539",
-    "total_amount": 43943991.98,
-    "num_contributions": 832
+    "total_amount": 36139134.13,
+    "num_contributions": 465
   },
   {
     "donor": "FORWARD FLORIDA",
     "committee": "Florida Democratic Party",
     "committee_acct": "1539",
-    "total_amount": 30930187.0,
-    "num_contributions": 179
+    "total_amount": 30882345.0,
+    "num_contributions": 41
+  },
+  {
+    "donor": "SEMINOLE TRIBE OF FLORIDA",
+    "committee": "Committee Tracking System",
+    "committee_acct": "79684",
+    "total_amount": 30005100.0,
+    "num_contributions": 4
   },
   {
     "donor": "CHARLIE CRIST FOR FLORIDA",
     "committee": "Florida Democratic Party",
     "committee_acct": "1539",
-    "total_amount": 30495474.06,
-    "num_contributions": 289
+    "total_amount": 28589000.0,
+    "num_contributions": 29
   },
   {
-    "donor": "REPUBLICAN NATIONAL COMMITTEE",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 21869869.57,
-    "num_contributions": 189
+    "donor": "LET'S GET TO WORK",
+    "committee": "Committee Tracking System",
+    "committee_acct": "61499",
+    "total_amount": 27395367.97,
+    "num_contributions": 1
+  },
+  {
+    "donor": "SEMINOLE TRIBE OF FLORIDA",
+    "committee": "Committee Tracking System",
+    "committee_acct": "64995",
+    "total_amount": 24648700.34,
+    "num_contributions": 14
+  },
+  {
+    "donor": "DRAFTKINGS, INC.",
+    "committee": "Committee Tracking System",
+    "committee_acct": "79479",
+    "total_amount": 20888564.41,
+    "num_contributions": 5
+  },
+  {
+    "donor": "DISNEY WORLDWIDE SERVICES, INC.",
+    "committee": "Committee Tracking System",
+    "committee_acct": "64995",
+    "total_amount": 20660000.0,
+    "num_contributions": 22
+  },
+  {
+    "donor": "NEXTGEN CLIMATE ACTION COMMITTEE",
+    "committee": "Committee Tracking System",
+    "committee_acct": "64183",
+    "total_amount": 20490000.0,
+    "num_contributions": 11
   },
   {
     "donor": "LET'S GET TO WORK - POLITICAL COMMITTEE",
@@ -70,32 +105,74 @@
     "num_contributions": 22
   },
   {
-    "donor": "FLORIDA REPUBLICAN SENATORIAL CAMP. COMM",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 14695251.03,
-    "num_contributions": 31
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Florida Democratic Party",
+    "committee_acct": "1539",
+    "total_amount": 16822402.93,
+    "num_contributions": 2177
   },
   {
-    "donor": "SCOTT FRANCES A.",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 13690499.0,
-    "num_contributions": 228
+    "donor": "THE FAIRNESS PROJECT",
+    "committee": "Committee Tracking System",
+    "committee_acct": "83927",
+    "total_amount": 16670423.0,
+    "num_contributions": 12
+  },
+  {
+    "donor": "REPUBLICAN GOVERNORS ASSOCIATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "61499",
+    "total_amount": 15800000.0,
+    "num_contributions": 10
+  },
+  {
+    "donor": "WEST FLAGLER ASSOCIATES, LTD",
+    "committee": "Committee Tracking System",
+    "committee_acct": "79504",
+    "total_amount": 15000206.02,
+    "num_contributions": 2
+  },
+  {
+    "donor": "SIXTEEN THIRTY FUND",
+    "committee": "Committee Tracking System",
+    "committee_acct": "83927",
+    "total_amount": 14483223.0,
+    "num_contributions": 6
   },
   {
     "donor": "GRIFFIN KENNETH C.",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
-    "total_amount": 13182206.6,
-    "num_contributions": 273
+    "total_amount": 13000036.5,
+    "num_contributions": 5
   },
   {
-    "donor": "THE GEO GROUP, INC.",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 12327536.45,
-    "num_contributions": 1052
+    "donor": "FANDUEL",
+    "committee": "Committee Tracking System",
+    "committee_acct": "79479",
+    "total_amount": 12503140.18,
+    "num_contributions": 5
+  },
+  {
+    "donor": "FLORIDIANS PROTECTING FREEDOM",
+    "committee": "Committee Tracking System",
+    "committee_acct": "78981",
+    "total_amount": 12375000.0,
+    "num_contributions": 12
+  },
+  {
+    "donor": "GRIFFIN KENNETH C.",
+    "committee": "Committee Tracking System",
+    "committee_acct": "88582",
+    "total_amount": 12000000.0,
+    "num_contributions": 1
+  },
+  {
+    "donor": "FLORIDA FOR EVERYONE",
+    "committee": "Florida Democratic Party",
+    "committee_acct": "1539",
+    "total_amount": 11691500.0,
+    "num_contributions": 33
   },
   {
     "donor": "KEEP FLORIDA CLEAN, INC.",
@@ -105,6 +182,48 @@
     "num_contributions": 6
   },
   {
+    "donor": "JONES, PAULT T.",
+    "committee": "Committee Tracking System",
+    "committee_acct": "15012",
+    "total_amount": 11446000.0,
+    "num_contributions": 19
+  },
+  {
+    "donor": "F. ANNETTE SCOTT REVOCABLE TRUST ACCOUNT",
+    "committee": "Committee Tracking System",
+    "committee_acct": "54518",
+    "total_amount": 11300000.0,
+    "num_contributions": 5
+  },
+  {
+    "donor": "FLORIDA REPUBLICAN SENATORIAL CAMP. COMM",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 11178260.0,
+    "num_contributions": 19
+  },
+  {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "69931",
+    "total_amount": 11033000.0,
+    "num_contributions": 28
+  },
+  {
+    "donor": "FORWARD MAJORITY ACTION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "75129",
+    "total_amount": 11014500.0,
+    "num_contributions": 14
+  },
+  {
+    "donor": "REPUBLICAN NATIONAL COMMITTEE",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 10162115.84,
+    "num_contributions": 60
+  },
+  {
     "donor": "AMERICAN FEDERATION OF STATE COUNTY AND MUNICIPAL EMPLOYEES",
     "committee": "AFSCME Florida",
     "committee_acct": "61265",
@@ -112,11 +231,18 @@
     "num_contributions": 127
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
+    "donor": "FLORIDA CRYSTALS CORPORATION",
     "committee": "Housing for Hometown Heroes",
     "committee_acct": "79347",
     "total_amount": 10001105.22,
     "num_contributions": 8
+  },
+  {
+    "donor": "VOTERS IN CONTROL, INC.",
+    "committee": "Committee Tracking System",
+    "committee_acct": "79684",
+    "total_amount": 10000000.0,
+    "num_contributions": 2
   },
   {
     "donor": "SEMINOLE GAMING",
@@ -126,11 +252,32 @@
     "num_contributions": 1
   },
   {
+    "donor": "LAUFER MARSHA",
+    "committee": "Committee Tracking System",
+    "committee_acct": "83927",
+    "total_amount": 9703340.6,
+    "num_contributions": 8
+  },
+  {
+    "donor": "NEW VENTURE FUND",
+    "committee": "Committee Tracking System",
+    "committee_acct": "83927",
+    "total_amount": 9489777.09,
+    "num_contributions": 1
+  },
+  {
     "donor": "MARK - PAC",
     "committee": "Florida Democratic Party",
     "committee_acct": "1539",
-    "total_amount": 9675788.31,
-    "num_contributions": 716
+    "total_amount": 9299450.0,
+    "num_contributions": 44
+  },
+  {
+    "donor": "KEEP OUR CONSTITUTION CLEAN, INC.",
+    "committee": "Committee Tracking System",
+    "committee_acct": "74114",
+    "total_amount": 9010146.76,
+    "num_contributions": 39
   },
   {
     "donor": "FRIENDS OF ASHLEY MOODY",
@@ -140,6 +287,27 @@
     "num_contributions": 40
   },
   {
+    "donor": "FLORIDA POWER & LIGHT COMPANY",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 8687124.56,
+    "num_contributions": 314
+  },
+  {
+    "donor": "DEMOCRATIC GOVERNORS ASSOCIATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "65255",
+    "total_amount": 8545000.0,
+    "num_contributions": 12
+  },
+  {
+    "donor": "DAILY MEMBERSHIP DUES DEPOSIT",
+    "committee": "Committee Tracking System",
+    "committee_acct": "2018",
+    "total_amount": 8356179.86,
+    "num_contributions": 4080
+  },
+  {
     "donor": "RGA FLORIDA PAC",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
@@ -147,11 +315,25 @@
     "num_contributions": 11
   },
   {
+    "donor": "CITIZEN VOTERS, INC.",
+    "committee": "Committee Tracking System",
+    "committee_acct": "73911",
+    "total_amount": 8296943.55,
+    "num_contributions": 23
+  },
+  {
+    "donor": "FLORIDA POWER & LIGHT COMPANY",
+    "committee": "Committee Tracking System",
+    "committee_acct": "64817",
+    "total_amount": 8055000.0,
+    "num_contributions": 16
+  },
+  {
     "donor": "NATIONAL REPUBLICAN SENATORIAL COMMITTEE",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
-    "total_amount": 7981950.0,
-    "num_contributions": 19
+    "total_amount": 7956950.0,
+    "num_contributions": 18
   },
   {
     "donor": "TECO ENERGY, INC.",
@@ -161,11 +343,11 @@
     "num_contributions": 469
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
+    "donor": "FLORIDA CRYSTALS CORPORATION",
     "committee": "Florida Education Association Advocacy Fund",
     "committee_acct": "60703",
-    "total_amount": 7782252.08,
-    "num_contributions": 40
+    "total_amount": 7774301.42,
+    "num_contributions": 39
   },
   {
     "donor": "SEMINOLE TRIBE OF FLORIDA",
@@ -175,6 +357,13 @@
     "num_contributions": 63
   },
   {
+    "donor": "REPUBLICAN GOVERNORS ASSOCIATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "73689",
+    "total_amount": 7568648.21,
+    "num_contributions": 9
+  },
+  {
     "donor": "DISNEY WORLDWIDE SERVICES, INC.",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
@@ -182,25 +371,32 @@
     "num_contributions": 266
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Voice of Florida Business Political Action Committee",
-    "committee_acct": "60591",
-    "total_amount": 7513604.93,
-    "num_contributions": 101
+    "donor": "YASS JEFF",
+    "committee": "Friends of Byron Donalds PAC",
+    "committee_acct": "89043",
+    "total_amount": 7500000.0,
+    "num_contributions": 2
+  },
+  {
+    "donor": "GLOBAL IMPACT SOCIAL WELFARE FOUNDATION (CLAF)",
+    "committee": "Committee Tracking System",
+    "committee_acct": "83927",
+    "total_amount": 7250000.0,
+    "num_contributions": 1
+  },
+  {
+    "donor": "ADELSON SHELDON",
+    "committee": "Committee Tracking System",
+    "committee_acct": "61509",
+    "total_amount": 7000000.0,
+    "num_contributions": 6
   },
   {
     "donor": "FRIENDS OF CHARLIE CRIST",
     "committee": "Florida Democratic Party",
     "committee_acct": "1539",
-    "total_amount": 7417861.24,
-    "num_contributions": 185
-  },
-  {
-    "donor": "UNITED STATES SUGAR CORPORATION",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 6966934.79,
-    "num_contributions": 510
+    "total_amount": 6927708.35,
+    "num_contributions": 32
   },
   {
     "donor": "U.S. SUGAR CORPORATION",
@@ -210,46 +406,102 @@
     "num_contributions": 211
   },
   {
-    "donor": "BLUE CROSS AND BLUE SHIELD OF FLORIDA",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 6758007.08,
-    "num_contributions": 474
+    "donor": "U.S. SUGAR CORPORATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "22985",
+    "total_amount": 6855580.74,
+    "num_contributions": 32
   },
   {
-    "donor": "REALTORS POLITICAL ADVOCACY COMMITTEE",
+    "donor": "DUKE ENERGY",
+    "committee": "Committee Tracking System",
+    "committee_acct": "64817",
+    "total_amount": 6736998.0,
+    "num_contributions": 16
+  },
+  {
+    "donor": "THE MORGAN FIRM PA",
+    "committee": "Committee Tracking System",
+    "committee_acct": "50438",
+    "total_amount": 6584691.76,
+    "num_contributions": 49
+  },
+  {
+    "donor": "FLORIDIANS FOR ACCOUNTABILITY FREEDOM",
+    "committee": "Committee Tracking System",
+    "committee_acct": "84802",
+    "total_amount": 6540400.0,
+    "num_contributions": 15
+  },
+  {
+    "donor": "SCOTT RICHARD L.",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
-    "total_amount": 6634850.0,
-    "num_contributions": 244
+    "total_amount": 6500080.0,
+    "num_contributions": 8
   },
   {
     "donor": "DUKE ENERGY",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
-    "total_amount": 6449453.16,
-    "num_contributions": 67
+    "total_amount": 6449091.66,
+    "num_contributions": 60
+  },
+  {
+    "donor": "SCOTT FRANCES A.",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 6400000.0,
+    "num_contributions": 2
+  },
+  {
+    "donor": "DEMOCRATIC GOVERNORS ASSOCIATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "42252",
+    "total_amount": 6303000.0,
+    "num_contributions": 11
   },
   {
     "donor": "THE FLORIDA EDUCATION ASSOCIATION ADVOCACY FUND",
     "committee": "Florida Democratic Party",
     "committee_acct": "1539",
-    "total_amount": 6162883.49,
-    "num_contributions": 146
+    "total_amount": 6144883.49,
+    "num_contributions": 141
   },
   {
-    "donor": "REPUBLICAN PARTY OF FLORIDA",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 6082387.43,
-    "num_contributions": 107
+    "donor": "UNITEMIZED MEMBER DUES",
+    "committee": "Committee Tracking System",
+    "committee_acct": "45018",
+    "total_amount": 6071740.56,
+    "num_contributions": 87
   },
   {
-    "donor": "CONSERVATIVES FOR PRINCIPLED LEADERSHIP",
+    "donor": "FLORIDA FREEDOM FUND",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
-    "total_amount": 6027091.2,
-    "num_contributions": 142
+    "total_amount": 6002500.0,
+    "num_contributions": 7
+  },
+  {
+    "donor": "DEMOCRATIC SENATORIAL CAM",
+    "committee": "Florida Democratic Party",
+    "committee_acct": "1539",
+    "total_amount": 5921223.0,
+    "num_contributions": 35
+  },
+  {
+    "donor": "COALITION FOR ENERGY CHOICE, INC.",
+    "committee": "Committee Tracking System",
+    "committee_acct": "73832",
+    "total_amount": 5782077.48,
+    "num_contributions": 58
+  },
+  {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "41877",
+    "total_amount": 5775000.0,
+    "num_contributions": 34
   },
   {
     "donor": "DEMOCRATIC CONGRESSIONAL",
@@ -259,18 +511,39 @@
     "num_contributions": 55
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Florida Chamber of Commerce PAC",
-    "committee_acct": "60769",
-    "total_amount": 5758847.96,
-    "num_contributions": 257
+    "donor": "SAVE OUR SOCIETY FROM DRUGS",
+    "committee": "Committee Tracking System",
+    "committee_acct": "88582",
+    "total_amount": 5752382.0,
+    "num_contributions": 5
   },
   {
-    "donor": "DEMOCRATIC CONGRESSIONAL CAMPAIGN COMMITTEE",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 5612056.55,
-    "num_contributions": 111
+    "donor": "AMERICAN CIVIL LIBERTIES UNION, INC.",
+    "committee": "Committee Tracking System",
+    "committee_acct": "64388",
+    "total_amount": 5655429.89,
+    "num_contributions": 79
+  },
+  {
+    "donor": "NEXTGEN CLIMATE ACTION COMMITTEE",
+    "committee": "Committee Tracking System",
+    "committee_acct": "73685",
+    "total_amount": 5600000.0,
+    "num_contributions": 7
+  },
+  {
+    "donor": "SEMINOLE TRIBE OF FLORIDA",
+    "committee": "Committee Tracking System",
+    "committee_acct": "41420",
+    "total_amount": 5600000.0,
+    "num_contributions": 4
+  },
+  {
+    "donor": "BLUE CROSS AND BLUE SHIELD OF FLORIDA",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 5548759.91,
+    "num_contributions": 297
   },
   {
     "donor": "NAR - NATIONAL ASSOCIATION OF REALTORS",
@@ -287,6 +560,62 @@
     "num_contributions": 12
   },
   {
+    "donor": "OPEN SOCIETY ACTION FUND",
+    "committee": "Committee Tracking System",
+    "committee_acct": "83927",
+    "total_amount": 5500000.0,
+    "num_contributions": 4
+  },
+  {
+    "donor": "SURTERRA HOLDINGS, INC.",
+    "committee": "Committee Tracking System",
+    "committee_acct": "74455",
+    "total_amount": 5312199.0,
+    "num_contributions": 10
+  },
+  {
+    "donor": "THE GEO GROUP, INC.",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 5304597.34,
+    "num_contributions": 136
+  },
+  {
+    "donor": "GREENE JEFFREY, B",
+    "committee": "Committee Tracking System",
+    "committee_acct": "73718",
+    "total_amount": 5241025.0,
+    "num_contributions": 4
+  },
+  {
+    "donor": "REPUBLICAN PARTY OF FLORIDA FEDERAL ACCOUNT",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 5103755.1,
+    "num_contributions": 12
+  },
+  {
+    "donor": "FERNANDEZ MIGUEL",
+    "committee": "Committee Tracking System",
+    "committee_acct": "70785",
+    "total_amount": 5000000.0,
+    "num_contributions": 1
+  },
+  {
+    "donor": "OUR AMERICAN FUTURE ACTION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "83927",
+    "total_amount": 5000000.0,
+    "num_contributions": 1
+  },
+  {
+    "donor": "SCHUSTERMAN LYNN J.",
+    "committee": "Committee Tracking System",
+    "committee_acct": "83927",
+    "total_amount": 5000000.0,
+    "num_contributions": 1
+  },
+  {
     "donor": "TREASURE FLORIDA",
     "committee": "Keep Florida Free PC",
     "committee_acct": "83591",
@@ -294,67 +623,144 @@
     "num_contributions": 1
   },
   {
-    "donor": "YASS JEFF",
-    "committee": "Friends of Byron Donalds PAC",
-    "committee_acct": "89043",
-    "total_amount": 5000000.0,
-    "num_contributions": 1
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "64586",
+    "total_amount": 4911631.63,
+    "num_contributions": 115
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Associated Industries of Florida Political Action Committee",
-    "committee_acct": "60768",
-    "total_amount": 4851629.9,
-    "num_contributions": 84
+    "donor": "SECURE FLORIDA'S FUTURE INC.",
+    "committee": "Committee Tracking System",
+    "committee_acct": "88582",
+    "total_amount": 4850000.0,
+    "num_contributions": 4
+  },
+  {
+    "donor": "FLORIDIANS PROTECTING FREEDOM",
+    "committee": "Committee Tracking System",
+    "committee_acct": "88708",
+    "total_amount": 4800000.0,
+    "num_contributions": 5
   },
   {
     "donor": "ADELSON SHELDON",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
-    "total_amount": 4756110.0,
-    "num_contributions": 16
+    "total_amount": 4756000.0,
+    "num_contributions": 10
   },
   {
-    "donor": "AFSCME",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 4716999.0,
-    "num_contributions": 137
+    "donor": "NEA BALLOT MEASURE/LEGISLATIVE CRISIS FUND",
+    "committee": "Committee Tracking System",
+    "committee_acct": "41910",
+    "total_amount": 4724000.0,
+    "num_contributions": 6
   },
   {
-    "donor": "U.S. SUGAR CORPORATION",
-    "committee": "Florida Chamber of Commerce PAC",
-    "committee_acct": "60769",
-    "total_amount": 4600000.0,
-    "num_contributions": 24
+    "donor": "UNITED STATES SUGAR CORPORATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "22248",
+    "total_amount": 4603865.65,
+    "num_contributions": 55
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Friends of Wilton Simpson",
-    "committee_acct": "79644",
-    "total_amount": 4534865.0,
-    "num_contributions": 95
-  },
-  {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Florida Jobs PAC",
-    "committee_acct": "60760",
-    "total_amount": 4531570.7,
-    "num_contributions": 69
+    "donor": "FLORIDA DEMOCRATIC PARTY",
+    "committee": "Committee Tracking System",
+    "committee_acct": "83927",
+    "total_amount": 4571453.0,
+    "num_contributions": 6
   },
   {
     "donor": "AMERICANS FOR PROSPERITY ACTION",
     "committee": "Americans for Prosperity Action, Inc.",
     "committee_acct": "80335",
-    "total_amount": 4510634.67,
-    "num_contributions": 160
+    "total_amount": 4537907.58,
+    "num_contributions": 163
   },
   {
-    "donor": "AMERICANS FOR PROSPERITY ACTION",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 4320094.09,
-    "num_contributions": 432
+    "donor": "CALDER RACE TRACK",
+    "committee": "Committee Tracking System",
+    "committee_acct": "30910",
+    "total_amount": 4515627.0,
+    "num_contributions": 10
+  },
+  {
+    "donor": "US SUGAR",
+    "committee": "Florida Chamber of Commerce PAC",
+    "committee_acct": "60769",
+    "total_amount": 4500000.0,
+    "num_contributions": 22
+  },
+  {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Voice of Florida Business Political Action Committee",
+    "committee_acct": "60591",
+    "total_amount": 4398833.49,
+    "num_contributions": 67
+  },
+  {
+    "donor": "AFSCME",
+    "committee": "Florida Democratic Party",
+    "committee_acct": "1539",
+    "total_amount": 4331909.0,
+    "num_contributions": 63
+  },
+  {
+    "donor": "FLA. ASSOCIATION OF REALTORS ADVOCACY FUND",
+    "committee": "Committee Tracking System",
+    "committee_acct": "51032",
+    "total_amount": 4250000.0,
+    "num_contributions": 5
+  },
+  {
+    "donor": "THE MORGAN FIRM PA",
+    "committee": "Committee Tracking System",
+    "committee_acct": "70115",
+    "total_amount": 4213396.28,
+    "num_contributions": 24
+  },
+  {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "55332",
+    "total_amount": 4176665.73,
+    "num_contributions": 17
+  },
+  {
+    "donor": "ESTATE OF JOHN WALTON",
+    "committee": "Committee Tracking System",
+    "committee_acct": "43100",
+    "total_amount": 4151750.0,
+    "num_contributions": 2
+  },
+  {
+    "donor": "FLO-SUN SUGAR COMPANY",
+    "committee": "Committee Tracking System",
+    "committee_acct": "22985",
+    "total_amount": 4116976.44,
+    "num_contributions": 26
+  },
+  {
+    "donor": "WIN JUSTICE - FEDERAL PAC",
+    "committee": "Committee Tracking System",
+    "committee_acct": "70488",
+    "total_amount": 4059726.55,
+    "num_contributions": 12
+  },
+  {
+    "donor": "PLANNED PARENTHOOD OF SOUTH, EAST AND NORTH FLORIDA",
+    "committee": "Committee Tracking System",
+    "committee_acct": "83927",
+    "total_amount": 4045360.15,
+    "num_contributions": 63
+  },
+  {
+    "donor": "MBF FAMILY INVESTMENTS LTD",
+    "committee": "Committee Tracking System",
+    "committee_acct": "64632",
+    "total_amount": 4027000.0,
+    "num_contributions": 5
   },
   {
     "donor": "NATIONAL ASSOCIATION OF REALTORS",
@@ -364,11 +770,32 @@
     "num_contributions": 41
   },
   {
-    "donor": "ASSOCIATED INDUSTRIES OF FLORIDA PAC",
+    "donor": "SOUTHWEST FLORIDA ENTERPRISES, INC",
+    "committee": "Committee Tracking System",
+    "committee_acct": "79479",
+    "total_amount": 4000000.0,
+    "num_contributions": 1
+  },
+  {
+    "donor": "REPUBLICAN PARTY OF FLORIDA",
+    "committee": "Unifying Leadership for Florida",
+    "committee_acct": "78972",
+    "total_amount": 3990000.0,
+    "num_contributions": 14
+  },
+  {
+    "donor": "ASSOCIATED INDUSTRIES OF FLORIDA POLITICAL ACTION COMMITTEE",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
-    "total_amount": 3936761.01,
-    "num_contributions": 295
+    "total_amount": 3920006.01,
+    "num_contributions": 270
+  },
+  {
+    "donor": "FLORIDIANS FOR ACCOUTABILITY FREEDOM AND OPPORTUNITY",
+    "committee": "Committee Tracking System",
+    "committee_acct": "88441",
+    "total_amount": 3912792.71,
+    "num_contributions": 12
   },
   {
     "donor": "STATE OF FLORIDA",
@@ -376,6 +803,34 @@
     "committee_acct": "4700",
     "total_amount": 3867585.11,
     "num_contributions": 94
+  },
+  {
+    "donor": "FRIENDS OF ASHLEY MOODY",
+    "committee": "Committee Tracking System",
+    "committee_acct": "84208",
+    "total_amount": 3847532.54,
+    "num_contributions": 1
+  },
+  {
+    "donor": "ALL CHILDREN MATTER",
+    "committee": "Committee Tracking System",
+    "committee_acct": "41344",
+    "total_amount": 3766000.0,
+    "num_contributions": 36
+  },
+  {
+    "donor": "CONSERVATIVE PRINCIPLES FOR FLORIDA",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 3763351.44,
+    "num_contributions": 30
+  },
+  {
+    "donor": "1630 FUND",
+    "committee": "Committee Tracking System",
+    "committee_acct": "64388",
+    "total_amount": 3750000.0,
+    "num_contributions": 4
   },
   {
     "donor": "JOBS FOR FLORIDA",
@@ -392,6 +847,13 @@
     "num_contributions": 17
   },
   {
+    "donor": "DEMOCRATIC GOVERNORS ASSOCIATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "61167",
+    "total_amount": 3700000.0,
+    "num_contributions": 7
+  },
+  {
     "donor": "AT&T",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
@@ -399,11 +861,39 @@
     "num_contributions": 178
   },
   {
-    "donor": "BRODIE STEFAN",
+    "donor": "CLUB FOR GROWTH ACTION FLORIDA",
+    "committee": "Friends of Byron Donalds PAC",
+    "committee_acct": "89043",
+    "total_amount": 3650000.0,
+    "num_contributions": 3
+  },
+  {
+    "donor": "DEMOCRATIC CONGRESSIONAL CAMPAIGN COMMITTEE",
+    "committee": "Florida Democratic Party",
+    "committee_acct": "1539",
+    "total_amount": 3648858.42,
+    "num_contributions": 65
+  },
+  {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "59950",
+    "total_amount": 3609779.78,
+    "num_contributions": 43
+  },
+  {
+    "donor": "EVERYTOWN FOR GUN SAFETY ACTION FUND",
+    "committee": "Committee Tracking System",
+    "committee_acct": "73821",
+    "total_amount": 3528958.52,
+    "num_contributions": 15
+  },
+  {
+    "donor": "FLORIDA HOUSE REPUBLICAN CAMPAIGN COMMITTEE",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
-    "total_amount": 3565042.13,
-    "num_contributions": 961
+    "total_amount": 3516991.03,
+    "num_contributions": 12
   },
   {
     "donor": "VERANO HOLDINGS LLC",
@@ -413,6 +903,41 @@
     "num_contributions": 5
   },
   {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "30910",
+    "total_amount": 3504500.0,
+    "num_contributions": 2
+  },
+  {
+    "donor": "YASS JEFF",
+    "committee": "CFG Action Florida",
+    "committee_acct": "80001",
+    "total_amount": 3500000.0,
+    "num_contributions": 2
+  },
+  {
+    "donor": "FLORIDIANS FOR ECONOMIC FREEDOM",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 3468000.0,
+    "num_contributions": 12
+  },
+  {
+    "donor": "TIDES FOUNDATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "83927",
+    "total_amount": 3467500.0,
+    "num_contributions": 4
+  },
+  {
+    "donor": "FLORIDA FOR ALL",
+    "committee": "Florida Democratic Party",
+    "committee_acct": "1539",
+    "total_amount": 3426000.0,
+    "num_contributions": 18
+  },
+  {
     "donor": "JM FAMILY ENTERPRISES, INC.",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
@@ -420,11 +945,74 @@
     "num_contributions": 219
   },
   {
-    "donor": "HCA WEST FLORIDA DIVISION AND GOOD GOVERNMENT PAC",
+    "donor": "REALTORS PAC FLORIDA",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
-    "total_amount": 3206916.61,
-    "num_contributions": 373
+    "total_amount": 3363550.0,
+    "num_contributions": 150
+  },
+  {
+    "donor": "DEFEND JUSTICE FROM POLITICS, INC",
+    "committee": "Committee Tracking System",
+    "committee_acct": "60029",
+    "total_amount": 3353895.27,
+    "num_contributions": 18
+  },
+  {
+    "donor": "FOR OUR FUTURE",
+    "committee": "Committee Tracking System",
+    "committee_acct": "70000",
+    "total_amount": 3233989.67,
+    "num_contributions": 22
+  },
+  {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "37767",
+    "total_amount": 3221694.97,
+    "num_contributions": 61
+  },
+  {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "60614",
+    "total_amount": 3221039.14,
+    "num_contributions": 194
+  },
+  {
+    "donor": "TAMPA ELECTRIC COMPANY",
+    "committee": "Committee Tracking System",
+    "committee_acct": "64817",
+    "total_amount": 3197347.0,
+    "num_contributions": 15
+  },
+  {
+    "donor": "FERNANDEZ MIGUEL",
+    "committee": "Committee Tracking System",
+    "committee_acct": "64632",
+    "total_amount": 3179154.0,
+    "num_contributions": 5
+  },
+  {
+    "donor": "REALTORS POLITICAL ADVOCACY COMMITTEE",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 3176300.0,
+    "num_contributions": 90
+  },
+  {
+    "donor": "FLORIDA POWER & LIGHT COMPANY",
+    "committee": "Florida Chamber of Commerce PAC",
+    "committee_acct": "60769",
+    "total_amount": 3137900.0,
+    "num_contributions": 37
+  },
+  {
+    "donor": "FLORIDA CONSERVATIVE MAJORITY",
+    "committee": "Committee Tracking System",
+    "committee_acct": "56781",
+    "total_amount": 3124400.0,
+    "num_contributions": 20
   },
   {
     "donor": "PROGRESS ENERGY SERVICE CO., LLC",
@@ -437,15 +1025,43 @@
     "donor": "DISNEY WORLDWIDE SERVICES, INC.",
     "committee": "Florida Democratic Party",
     "committee_acct": "1539",
-    "total_amount": 3081407.5,
-    "num_contributions": 138
+    "total_amount": 3076407.5,
+    "num_contributions": 137
   },
   {
-    "donor": "CURALEAF INC",
-    "committee": "Smart & Safe Florida",
-    "committee_acct": "83475",
-    "total_amount": 3000000.0,
-    "num_contributions": 3
+    "donor": "SUGAR CANE GROWERS COOPERATIVE OF FLORIDA",
+    "committee": "Committee Tracking System",
+    "committee_acct": "22985",
+    "total_amount": 3062995.95,
+    "num_contributions": 15
+  },
+  {
+    "donor": "IUPATHQ MEMBERS CONTRIBUTIONS",
+    "committee": "Committee Tracking System",
+    "committee_acct": "4503",
+    "total_amount": 3062577.2,
+    "num_contributions": 51
+  },
+  {
+    "donor": "MM ENTERPRISES USA, LLC",
+    "committee": "Committee Tracking System",
+    "committee_acct": "74455",
+    "total_amount": 3053500.0,
+    "num_contributions": 14
+  },
+  {
+    "donor": "NRA POLITICAL VICTORY FUND",
+    "committee": "Committee Tracking System",
+    "committee_acct": "4180",
+    "total_amount": 3043025.92,
+    "num_contributions": 12
+  },
+  {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "61160",
+    "total_amount": 3042500.0,
+    "num_contributions": 39
   },
   {
     "donor": "NATIONAL ASSOCIATION OF REALTORS",
@@ -455,11 +1071,60 @@
     "num_contributions": 1
   },
   {
-    "donor": "REPUBLICAN PARTY OF FLORIDA",
-    "committee": "Unifying Leadership for Florida",
-    "committee_acct": "78972",
-    "total_amount": 2990000.0,
-    "num_contributions": 12
+    "donor": "LEADING THE FUTURE",
+    "committee": "American Mission Florida",
+    "committee_acct": "89894",
+    "total_amount": 3000000.0,
+    "num_contributions": 1
+  },
+  {
+    "donor": "CURALEAF INC",
+    "committee": "Smart & Safe Florida",
+    "committee_acct": "83475",
+    "total_amount": 3000000.0,
+    "num_contributions": 3
+  },
+  {
+    "donor": "SEMINOLE TRIBE OF FLORIDA",
+    "committee": "Friends of Byron Donalds PAC",
+    "committee_acct": "89043",
+    "total_amount": 3000000.0,
+    "num_contributions": 3
+  },
+  {
+    "donor": "FLO SUN SUGAR COMPANY",
+    "committee": "Committee Tracking System",
+    "committee_acct": "22985",
+    "total_amount": 2982264.09,
+    "num_contributions": 16
+  },
+  {
+    "donor": "REPUBLICAN STATE LEADERSHIP COMMITTEE REPUBLICAN STATE",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 2958000.0,
+    "num_contributions": 30
+  },
+  {
+    "donor": "LEVINE PHILIP",
+    "committee": "Committee Tracking System",
+    "committee_acct": "69654",
+    "total_amount": 2903828.89,
+    "num_contributions": 13
+  },
+  {
+    "donor": "REPUBLICAN NATIONAL STATE ELECTIONS COMM",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 2902334.49,
+    "num_contributions": 30
+  },
+  {
+    "donor": "COMMON CAUSE",
+    "committee": "Committee Tracking System",
+    "committee_acct": "41643",
+    "total_amount": 2900439.65,
+    "num_contributions": 47
   },
   {
     "donor": "TECO ENERGY, INC.",
@@ -476,21 +1141,77 @@
     "num_contributions": 9
   },
   {
+    "donor": "DOCKERY C. C.",
+    "committee": "Committee Tracking System",
+    "committee_acct": "30427",
+    "total_amount": 2861917.05,
+    "num_contributions": 28
+  },
+  {
+    "donor": "REP. NATL. STATE ELECTIONS COMMITTEE",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 2861670.47,
+    "num_contributions": 43
+  },
+  {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Associated Industries of Florida Political Action Committee",
+    "committee_acct": "60768",
+    "total_amount": 2854358.48,
+    "num_contributions": 54
+  },
+  {
+    "donor": "FOR OUR FUTURE ACTION FUND",
+    "committee": "Committee Tracking System",
+    "committee_acct": "69469",
+    "total_amount": 2851500.0,
+    "num_contributions": 8
+  },
+  {
     "donor": "UNITED STATES SUGAR CORPORATION",
     "committee": "Florida Jobs PAC",
     "committee_acct": "60760",
-    "total_amount": 2850000.0,
+    "total_amount": 2825000.0,
+    "num_contributions": 26
+  },
+  {
+    "donor": "ISLE OF CAPRI CASINO",
+    "committee": "Committee Tracking System",
+    "committee_acct": "30910",
+    "total_amount": 2822582.5,
+    "num_contributions": 21
+  },
+  {
+    "donor": "CENTENE MANAGEMENT COMPANY LLC",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 2819636.08,
+    "num_contributions": 116
+  },
+  {
+    "donor": "FLORIDA POWER & LIGHT COMPANY",
+    "committee": "Florida Jobs PAC",
+    "committee_acct": "60760",
+    "total_amount": 2805400.0,
     "num_contributions": 27
   },
   {
-    "donor": "CENTENE MANAGEMENT COMPANY, LLC",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 2826047.45,
-    "num_contributions": 118
+    "donor": "FLORIDA POWER & LIGHT COMPANY",
+    "committee": "Voice of Florida Business Political Action Committee",
+    "committee_acct": "60591",
+    "total_amount": 2801000.0,
+    "num_contributions": 27
   },
   {
-    "donor": "MIAMI ASSOCIATION OF REALTORS  INC",
+    "donor": "NEXTGEN CLIMATE AMERICA INC.",
+    "committee": "Committee Tracking System",
+    "committee_acct": "65255",
+    "total_amount": 2800000.0,
+    "num_contributions": 4
+  },
+  {
+    "donor": "MIAMI ASSOCIATION OF REALTORS",
     "committee": "Realtors Political Advocacy Committee",
     "committee_acct": "60584",
     "total_amount": 2783699.76,
@@ -504,46 +1225,53 @@
     "num_contributions": 28
   },
   {
+    "donor": "AMERICAN CANCER SOCIETY - FLORIDA DIVISION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "34548",
+    "total_amount": 2771331.14,
+    "num_contributions": 15
+  },
+  {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "54518",
+    "total_amount": 2763488.05,
+    "num_contributions": 78
+  },
+  {
     "donor": "FRIENDS OF WILTON SIMPSON",
     "committee": "Future Florida",
     "committee_acct": "74437",
-    "total_amount": 2750126.0,
-    "num_contributions": 7
+    "total_amount": 2752126.0,
+    "num_contributions": 8
   },
   {
-    "donor": "FRIENDS OF CHARLIE CRIST",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 2734767.21,
-    "num_contributions": 125
+    "donor": "REPUBLICAN PARTY OF FLORIDA",
+    "committee": "Committee Tracking System",
+    "committee_acct": "51010",
+    "total_amount": 2750050.0,
+    "num_contributions": 5
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Florida Chamber of Commerce Alliance, Inc.",
-    "committee_acct": "61356",
-    "total_amount": 2718637.29,
-    "num_contributions": 41
-  },
-  {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
+    "donor": "FLORIDA CRYSTALS CORPORATION",
     "committee": "Realtors Issues Mobilization Committee",
     "committee_acct": "69553",
     "total_amount": 2703218.52,
     "num_contributions": 13
   },
   {
+    "donor": "FLORIDA ADVANCEMENT PROJECT INC",
+    "committee": "Committee Tracking System",
+    "committee_acct": "83927",
+    "total_amount": 2695000.0,
+    "num_contributions": 24
+  },
+  {
     "donor": "UNITED STATES SUGAR CORPORATION",
     "committee": "Associated Industries of Florida Political Action Committee",
     "committee_acct": "60768",
-    "total_amount": 2698000.0,
-    "num_contributions": 35
-  },
-  {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Citizens Alliance for Florida's Economy",
-    "committee_acct": "61503",
-    "total_amount": 2672731.64,
-    "num_contributions": 117
+    "total_amount": 2685000.0,
+    "num_contributions": 32
   },
   {
     "donor": "JOBS FOR FLORIDA",
@@ -553,6 +1281,13 @@
     "num_contributions": 23
   },
   {
+    "donor": "FLORIDA POWER & LIGHT COMPANY",
+    "committee": "Florida Democratic Party",
+    "committee_acct": "1539",
+    "total_amount": 2649232.21,
+    "num_contributions": 204
+  },
+  {
     "donor": "UNITE HERE TIP STATE AND LOCAL FUND",
     "committee": "Unite Here Florida PAC",
     "committee_acct": "71136",
@@ -560,53 +1295,60 @@
     "num_contributions": 22
   },
   {
-    "donor": "HCA WEST FLORIDA DIVISION AND GOOD GOVERNMENT PAC",
-    "committee": "A Stronger Florida",
-    "committee_acct": "71120",
-    "total_amount": 2575000.0,
-    "num_contributions": 24
+    "donor": "AMERICAN CIVIL LIBERTIES UNION, INC.",
+    "committee": "Committee Tracking System",
+    "committee_acct": "83927",
+    "total_amount": 2626702.68,
+    "num_contributions": 82
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Friends of Ben Albritton",
-    "committee_acct": "83464",
-    "total_amount": 2571205.11,
-    "num_contributions": 86
+    "donor": "REPUBLICAN PARTY OF FLORIDA",
+    "committee": "Committee Tracking System",
+    "committee_acct": "54703",
+    "total_amount": 2607500.0,
+    "num_contributions": 6
   },
   {
-    "donor": "WALTON JIM",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 2564002.37,
-    "num_contributions": 722
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Florida Chamber of Commerce PAC",
+    "committee_acct": "60769",
+    "total_amount": 2600334.5,
+    "num_contributions": 162
   },
   {
-    "donor": "HCA WEST FLORIDA DIVISION AND GOOD GOVERNMENT PAC",
-    "committee": "Voice of Florida Business Political Action Committee",
-    "committee_acct": "60591",
-    "total_amount": 2547625.0,
-    "num_contributions": 78
+    "donor": "SUSSMAN DONALD",
+    "committee": "Committee Tracking System",
+    "committee_acct": "83927",
+    "total_amount": 2600000.0,
+    "num_contributions": 4
+  },
+  {
+    "donor": "PLANNED PARENTHOOD ACTION FUND",
+    "committee": "Committee Tracking System",
+    "committee_acct": "83927",
+    "total_amount": 2569917.89,
+    "num_contributions": 40
+  },
+  {
+    "donor": "HOPEWELL FUND",
+    "committee": "Committee Tracking System",
+    "committee_acct": "83927",
+    "total_amount": 2541999.6,
+    "num_contributions": 3
   },
   {
     "donor": "DOSAL TOBACCO CORPORATION",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
-    "total_amount": 2534029.78,
-    "num_contributions": 130
+    "total_amount": 2524029.78,
+    "num_contributions": 129
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Conservative Leadership Fund",
-    "committee_acct": "69286",
-    "total_amount": 2505000.0,
-    "num_contributions": 46
-  },
-  {
-    "donor": "PALM BEACH KENNEL CLUB",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 2501950.22,
-    "num_contributions": 337
+    "donor": "REPUBLICAN GOVERNORS ASSOCIATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "54518",
+    "total_amount": 2523367.81,
+    "num_contributions": 3
   },
   {
     "donor": "ADELSON MIRIAM",
@@ -616,32 +1358,88 @@
     "num_contributions": 2
   },
   {
-    "donor": "THE GEO GROUP, INC.",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 2496181.73,
-    "num_contributions": 358
+    "donor": "GULFSTREAM PARK",
+    "committee": "Committee Tracking System",
+    "committee_acct": "30910",
+    "total_amount": 2500000.0,
+    "num_contributions": 2
+  },
+  {
+    "donor": "BRODIE STEFAN",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 2500000.0,
+    "num_contributions": 3
+  },
+  {
+    "donor": "TALISMAN SUGAR",
+    "committee": "Committee Tracking System",
+    "committee_acct": "22985",
+    "total_amount": 2500000.0,
+    "num_contributions": 1
+  },
+  {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "41910",
+    "total_amount": 2484237.07,
+    "num_contributions": 11
+  },
+  {
+    "donor": "MGM RESORTS INTERNATIONAL",
+    "committee": "Committee Tracking System",
+    "committee_acct": "73692",
+    "total_amount": 2477663.23,
+    "num_contributions": 4
   },
   {
     "donor": "FL CHAMBER OF COMM PAC",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
-    "total_amount": 2484200.0,
-    "num_contributions": 47
+    "total_amount": 2474200.0,
+    "num_contributions": 46
   },
   {
-    "donor": "SEARCY DENNEY SCAROLA BARNHART & SHIPLEY",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 2430037.0,
-    "num_contributions": 121
+    "donor": "UNITED STATES SUGAR CORPORATION",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 2457451.35,
+    "num_contributions": 173
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Better Florida Fund Corp.",
-    "committee_acct": "61466",
-    "total_amount": 2402500.0,
-    "num_contributions": 29
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "64993",
+    "total_amount": 2403500.0,
+    "num_contributions": 35
+  },
+  {
+    "donor": "U.S. CHAMBER OF COMMERCE AND RELATED ENTITIES/INSTITUTE FOR LEGAL REFORM",
+    "committee": "Committee Tracking System",
+    "committee_acct": "54739",
+    "total_amount": 2400000.0,
+    "num_contributions": 3
+  },
+  {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "61158",
+    "total_amount": 2396250.0,
+    "num_contributions": 39
+  },
+  {
+    "donor": "1,400,000 MEMBERS @ 38.95 CENTS",
+    "committee": "Committee Tracking System",
+    "committee_acct": "151",
+    "total_amount": 2396070.0,
+    "num_contributions": 24
+  },
+  {
+    "donor": "AMERICAN INTEGRITY MGA, LLC",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 2369996.31,
+    "num_contributions": 240
   },
   {
     "donor": "PUBLIX SUPER MARKETS, INC.",
@@ -651,18 +1449,25 @@
     "num_contributions": 40
   },
   {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Better Florida Fund Corp.",
+    "committee_acct": "61466",
+    "total_amount": 2357500.0,
+    "num_contributions": 28
+  },
+  {
+    "donor": "REPUBLICAN STATE ELECTIONS COMM.",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 2347000.0,
+    "num_contributions": 6
+  },
+  {
     "donor": "SACE-ACTION FUND",
     "committee": "Floridians for Solar Choice, Inc.",
     "committee_acct": "64491",
     "total_amount": 2340687.04,
     "num_contributions": 143
-  },
-  {
-    "donor": "STATE OF FLORIDA DEPARTMENT OF FINANCIAL SERVICES",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 2331743.09,
-    "num_contributions": 66
   },
   {
     "donor": "SEMINOLE TRIBE OF FLORIDA",
@@ -672,11 +1477,11 @@
     "num_contributions": 70
   },
   {
-    "donor": "BLUE CROSS AND BLUE SHIELD OF FLORIDA",
+    "donor": "STATE OF FLORIDA DEPARTMENT OF FINANCIAL SERVICES",
     "committee": "Florida Democratic Party",
     "committee_acct": "1539",
-    "total_amount": 2324848.24,
-    "num_contributions": 176
+    "total_amount": 2325571.95,
+    "num_contributions": 65
   },
   {
     "donor": "SOROS GEORGE",
@@ -686,6 +1491,13 @@
     "num_contributions": 4
   },
   {
+    "donor": "ACLU",
+    "committee": "Committee Tracking System",
+    "committee_acct": "72131",
+    "total_amount": 2309587.54,
+    "num_contributions": 39
+  },
+  {
     "donor": "PUBLIX SUPER MARKETS, INC.",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
@@ -693,11 +1505,39 @@
     "num_contributions": 106
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Florida Green PAC",
-    "committee_acct": "74435",
-    "total_amount": 2288000.0,
-    "num_contributions": 29
+    "donor": "AMERICAN FEDERATION FOR CHILDREN ACTION FUND",
+    "committee": "Committee Tracking System",
+    "committee_acct": "54437",
+    "total_amount": 2276764.48,
+    "num_contributions": 30
+  },
+  {
+    "donor": "AMERICAN CANCER SOCIETY",
+    "committee": "Committee Tracking System",
+    "committee_acct": "41791",
+    "total_amount": 2276016.0,
+    "num_contributions": 6
+  },
+  {
+    "donor": "BLUE CROSS AND BLUE SHIELD OF FLORIDA",
+    "committee": "Florida Democratic Party",
+    "committee_acct": "1539",
+    "total_amount": 2275908.13,
+    "num_contributions": 164
+  },
+  {
+    "donor": "FORWARD MAJORITY ACTION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "73741",
+    "total_amount": 2254804.28,
+    "num_contributions": 25
+  },
+  {
+    "donor": "UNITED STATES SUGAR CORPORATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "64993",
+    "total_amount": 2250000.0,
+    "num_contributions": 24
   },
   {
     "donor": "TREASURE FLORIDA",
@@ -714,25 +1554,46 @@
     "num_contributions": 80
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Florida Medical Association Political Action Committee",
-    "committee_acct": "60755",
-    "total_amount": 2234877.45,
-    "num_contributions": 201
+    "donor": "STIEFEL BARBARA",
+    "committee": "Committee Tracking System",
+    "committee_acct": "50438",
+    "total_amount": 2200000.0,
+    "num_contributions": 25
   },
   {
-    "donor": "DEMOCRATIC GOVERNORS' ASSOC.",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 2213396.07,
-    "num_contributions": 24
+    "donor": "GULF POWER COMPANY",
+    "committee": "Committee Tracking System",
+    "committee_acct": "64817",
+    "total_amount": 2199450.0,
+    "num_contributions": 15
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Mark PC",
-    "committee_acct": "60362",
-    "total_amount": 2173880.0,
-    "num_contributions": 41
+    "donor": "LOCAL UNION # 361",
+    "committee": "Committee Tracking System",
+    "committee_acct": "37859",
+    "total_amount": 2199185.36,
+    "num_contributions": 2358
+  },
+  {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Florida Dental Association Political Action Committee (FDAPAC)",
+    "committee_acct": "60701",
+    "total_amount": 2186559.38,
+    "num_contributions": 376
+  },
+  {
+    "donor": "831 FEDERAL HIGHWAY ACQUISITION, LLC",
+    "committee": "Committee Tracking System",
+    "committee_acct": "73692",
+    "total_amount": 2180343.64,
+    "num_contributions": 3
+  },
+  {
+    "donor": "THE VOICE OF FLORIDA BUSINESS PAC, INC.",
+    "committee": "Committee Tracking System",
+    "committee_acct": "64586",
+    "total_amount": 2165000.0,
+    "num_contributions": 20
   },
   {
     "donor": "FLORIDA CONSUMERS FIRST",
@@ -742,6 +1603,20 @@
     "num_contributions": 27
   },
   {
+    "donor": "DEMOCRATIC GOVERNORS ASSOCIATION",
+    "committee": "Florida Democratic Party",
+    "committee_acct": "1539",
+    "total_amount": 2157596.07,
+    "num_contributions": 22
+  },
+  {
+    "donor": "UNITED STATES SUGAR CORPORATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "61158",
+    "total_amount": 2145000.0,
+    "num_contributions": 25
+  },
+  {
     "donor": "FRIENDS OF MATT CALDWELL",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
@@ -749,14 +1624,21 @@
     "num_contributions": 10
   },
   {
-    "donor": "REALTORS POLITICAL ADVOCACY COMMITTEE",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 2125050.0,
-    "num_contributions": 187
+    "donor": "FLORIDA CUPAC",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 2133250.0,
+    "num_contributions": 105
   },
   {
-    "donor": "NEAL PATRICK K",
+    "donor": "WALTON ALICE",
+    "committee": "Committee Tracking System",
+    "committee_acct": "43100",
+    "total_amount": 2133000.0,
+    "num_contributions": 4
+  },
+  {
+    "donor": "NEAL PATRICK K.",
     "committee": "Conservatives",
     "committee_acct": "65559",
     "total_amount": 2125000.0,
@@ -770,25 +1652,46 @@
     "num_contributions": 24
   },
   {
-    "donor": "WALT DISNEY PARKS AND RESORTS, U.S.",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 2115339.81,
-    "num_contributions": 95
+    "donor": "FLORIDIANS PROTECTING FREEDOM",
+    "committee": "Committee Tracking System",
+    "committee_acct": "83999",
+    "total_amount": 2100000.0,
+    "num_contributions": 3
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Advancing Florida Agriculture",
-    "committee_acct": "64840",
-    "total_amount": 2096506.46,
-    "num_contributions": 159
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Friends of Ben Albritton",
+    "committee_acct": "83464",
+    "total_amount": 2097955.11,
+    "num_contributions": 68
   },
   {
-    "donor": "WALT DISNEY PARKS AND RESORTS, U.S.",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 2083032.1,
-    "num_contributions": 99
+    "donor": "FLORIDA ADVANCEMENT PROJECT INC",
+    "committee": "Committee Tracking System",
+    "committee_acct": "78981",
+    "total_amount": 2096000.0,
+    "num_contributions": 42
+  },
+  {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "83927",
+    "total_amount": 2093894.56,
+    "num_contributions": 118
+  },
+  {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Florida Hospital Association PC",
+    "committee_acct": "60817",
+    "total_amount": 2086538.87,
+    "num_contributions": 82
+  },
+  {
+    "donor": "FLORIDA TRUST",
+    "committee": "Friends of Wilton Simpson",
+    "committee_acct": "79644",
+    "total_amount": 2065000.0,
+    "num_contributions": 6
   },
   {
     "donor": "RAI SERVICES COMPANY",
@@ -798,25 +1701,25 @@
     "num_contributions": 63
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Conservatives",
-    "committee_acct": "65559",
-    "total_amount": 2051500.0,
-    "num_contributions": 19
-  },
-  {
     "donor": "THE VILLAGES",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
-    "total_amount": 2050860.56,
-    "num_contributions": 44
+    "total_amount": 2050840.56,
+    "num_contributions": 43
   },
   {
-    "donor": "UNITED STATES SUGAR CORPORATION",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 2041796.62,
-    "num_contributions": 243
+    "donor": "JACKSONVILLE GREYHOUND RACING, INC.",
+    "committee": "Committee Tracking System",
+    "committee_acct": "69412",
+    "total_amount": 2050000.0,
+    "num_contributions": 5
+  },
+  {
+    "donor": "SEIU FLORIDA STATE COUNCIL",
+    "committee": "Committee Tracking System",
+    "committee_acct": "60757",
+    "total_amount": 2038503.28,
+    "num_contributions": 48
   },
   {
     "donor": "UNITED STATES SUGAR CORPORATION",
@@ -829,15 +1732,29 @@
     "donor": "COMCAST CORPORATION",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
-    "total_amount": 2018500.0,
-    "num_contributions": 109
+    "total_amount": 2013500.0,
+    "num_contributions": 108
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Future Florida",
-    "committee_acct": "74437",
-    "total_amount": 2015000.0,
-    "num_contributions": 25
+    "donor": "JACKSONVILLE GREYHOUND RACING, INC.",
+    "committee": "Committee Tracking System",
+    "committee_acct": "73692",
+    "total_amount": 2013203.01,
+    "num_contributions": 5
+  },
+  {
+    "donor": "NATIONAL ASSOCIATION OF REALTORS",
+    "committee": "Committee Tracking System",
+    "committee_acct": "4636",
+    "total_amount": 2007731.83,
+    "num_contributions": 48
+  },
+  {
+    "donor": "SEARCY DENNEY SCAROLA BARNHART & SHIPLEY",
+    "committee": "Florida Democratic Party",
+    "committee_acct": "1539",
+    "total_amount": 2006992.0,
+    "num_contributions": 98
   },
   {
     "donor": "OUR DEMOCRACY PAC",
@@ -847,11 +1764,32 @@
     "num_contributions": 27
   },
   {
-    "donor": "SEMINOLE TRIBE OF FLORIDA",
-    "committee": "Friends of Byron Donalds PAC",
-    "committee_acct": "89043",
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Florida Chamber of Commerce Alliance, Inc.",
+    "committee_acct": "61356",
+    "total_amount": 2002237.29,
+    "num_contributions": 33
+  },
+  {
+    "donor": "FINDLATER CHRISTOPHER",
+    "committee": "Committee Tracking System",
+    "committee_acct": "54720",
+    "total_amount": 2000009.28,
+    "num_contributions": 1
+  },
+  {
+    "donor": "REPUBLICAN PARTY OF FLORIDA",
+    "committee": "Committee Tracking System",
+    "committee_acct": "88582",
     "total_amount": 2000000.0,
-    "num_contributions": 2
+    "num_contributions": 1
+  },
+  {
+    "donor": "SERVICE EMPLOYEES INTERNATIONAL UNION POLITICAL EDUCATION AND ACTION FUND",
+    "committee": "Committee Tracking System",
+    "committee_acct": "78981",
+    "total_amount": 2000000.0,
+    "num_contributions": 1
   },
   {
     "donor": "THE CONCORD FUND",
@@ -864,22 +1802,22 @@
     "donor": "POARCH CREEK BAND OF INDIANS",
     "committee": "Florida Voters in Charge",
     "committee_acct": "79446",
-    "total_amount": 2000000.0,
-    "num_contributions": 2
+    "total_amount": 1997270.66,
+    "num_contributions": 3
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Florida Hospital Association PC",
-    "committee_acct": "60817",
-    "total_amount": 1992980.16,
-    "num_contributions": 84
+    "donor": "PERRY BOB",
+    "committee": "Committee Tracking System",
+    "committee_acct": "50056",
+    "total_amount": 1995000.0,
+    "num_contributions": 1
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Florida Dental Association Political Action Committee (FDAPAC)",
-    "committee_acct": "60701",
-    "total_amount": 1983348.36,
-    "num_contributions": 338
+    "donor": "FLORIDA MANUFACTURED HOUSING ASSOC. PAC",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 1986017.84,
+    "num_contributions": 112
   },
   {
     "donor": "PUBLIX SUPER MARKETS, INC.",
@@ -896,18 +1834,18 @@
     "num_contributions": 2
   },
   {
-    "donor": "NATL. REPUBLICAN CONGRESSIONAL COMM.",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1960393.94,
-    "num_contributions": 15
+    "donor": "DEMOCRATIC CONGRESSIONAL CAMPA IGN COMMIT TEE",
+    "committee": "Florida Democratic Party",
+    "committee_acct": "1539",
+    "total_amount": 1963198.13,
+    "num_contributions": 46
   },
   {
-    "donor": "COMMITTEE OF FLORIDA AGENTS",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1960389.79,
-    "num_contributions": 165
+    "donor": "REALTORS POLITICAL ADVOCACY COMMITTEE",
+    "committee": "Florida Democratic Party",
+    "committee_acct": "1539",
+    "total_amount": 1959350.0,
+    "num_contributions": 147
   },
   {
     "donor": "BUILDING ON YOUR DREAMS POLITICAL COMMITTEE",
@@ -917,11 +1855,11 @@
     "num_contributions": 3
   },
   {
-    "donor": "FTBA TRANSPORTATION PAC",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1943948.87,
-    "num_contributions": 135
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Florida Medical Association Political Action Committee",
+    "committee_acct": "60755",
+    "total_amount": 1940876.97,
+    "num_contributions": 163
   },
   {
     "donor": "GOPAC ELECTION FUND",
@@ -931,25 +1869,18 @@
     "num_contributions": 9
   },
   {
-    "donor": "1199 SEIU",
-    "committee": "1199 SEIU Florida Political Committee",
-    "committee_acct": "61018",
-    "total_amount": 1929081.62,
-    "num_contributions": 17
+    "donor": "FLORIDA FIRST FOREVER",
+    "committee": "Conservative Leadership Fund",
+    "committee_acct": "69286",
+    "total_amount": 1928000.0,
+    "num_contributions": 33
   },
   {
-    "donor": "SAFETY NET HOSPITAL ALLIANCE OF FLORIDA",
-    "committee": "Committee of Safety Net Hospitals of Florida",
-    "committee_acct": "60511",
-    "total_amount": 1928095.35,
-    "num_contributions": 10
-  },
-  {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Treasure Florida",
-    "committee_acct": "70031",
-    "total_amount": 1925163.05,
-    "num_contributions": 149
+    "donor": "WEST FLAGLER ASSOCIATES, LTD",
+    "committee": "Committee Tracking System",
+    "committee_acct": "30910",
+    "total_amount": 1927524.25,
+    "num_contributions": 19
   },
   {
     "donor": "FLORIDA BLUE - BLUE CROSS BLUE SHIELD",
@@ -959,32 +1890,25 @@
     "num_contributions": 95
   },
   {
-    "donor": "ANDERSON COLUMBIA CO., INC.",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1912129.54,
-    "num_contributions": 522
+    "donor": "SAFETY NET HOSPITAL ALLIANCE OF FLORIDA",
+    "committee": "Committee of Safety Net Hospitals of Florida",
+    "committee_acct": "60511",
+    "total_amount": 1920000.0,
+    "num_contributions": 8
   },
   {
-    "donor": "OUR FLORIDA POLITICAL COMMITTEE",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 1904500.0,
-    "num_contributions": 27
+    "donor": "ACLU OF FLORIDA, INC.",
+    "committee": "Committee Tracking System",
+    "committee_acct": "72131",
+    "total_amount": 1904768.24,
+    "num_contributions": 81
   },
   {
-    "donor": "FCCI SERVICES INC.",
+    "donor": "FCCI SERVICES, INC.",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
     "total_amount": 1889000.0,
     "num_contributions": 140
-  },
-  {
-    "donor": "U.S. SUGAR CORPORATION",
-    "committee": "Florida Jobs PAC",
-    "committee_acct": "60760",
-    "total_amount": 1875000.0,
-    "num_contributions": 9
   },
   {
     "donor": "THE VOICE OF FLORIDA BUSINESS PAC, INC.",
@@ -994,46 +1918,46 @@
     "num_contributions": 23
   },
   {
-    "donor": "CHARTER COMMUNICATIONS",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1860000.0,
-    "num_contributions": 64
+    "donor": "EMILY'S LIST POLITICAL ACTION COMMITTEE",
+    "committee": "Committee Tracking System",
+    "committee_acct": "69630",
+    "total_amount": 1868893.29,
+    "num_contributions": 16
   },
   {
-    "donor": "SOUTH FLORIDA SOLUTIONS PC",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1841574.22,
-    "num_contributions": 275
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Mark PC",
+    "committee_acct": "60362",
+    "total_amount": 1861130.0,
+    "num_contributions": 21
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Florida Watch PC",
-    "committee_acct": "78855",
-    "total_amount": 1840102.48,
-    "num_contributions": 50
+    "donor": "REPUBLICAN PARTY OF FLORIDA",
+    "committee": "Committee Tracking System",
+    "committee_acct": "60867",
+    "total_amount": 1855000.0,
+    "num_contributions": 5
   },
   {
-    "donor": "AUTOMATED HEALTHCARE SOLUTIONS, LLC",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1828850.0,
-    "num_contributions": 59
+    "donor": "FHBA",
+    "committee": "Committee Tracking System",
+    "committee_acct": "1997",
+    "total_amount": 1837810.06,
+    "num_contributions": 48
   },
   {
-    "donor": "HOGAN WAYNE",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 1826895.5,
-    "num_contributions": 98
+    "donor": "US SUGAR",
+    "committee": "Florida Jobs PAC",
+    "committee_acct": "60760",
+    "total_amount": 1825000.0,
+    "num_contributions": 8
   },
   {
-    "donor": "COLLIER PARKER J.",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1818913.12,
-    "num_contributions": 470
+    "donor": "MICHAELS LAURIE",
+    "committee": "Committee Tracking System",
+    "committee_acct": "64388",
+    "total_amount": 1815000.0,
+    "num_contributions": 8
   },
   {
     "donor": "UNITED TEACHERS OF DADE",
@@ -1043,18 +1967,32 @@
     "num_contributions": 4
   },
   {
-    "donor": "BRODIE STEFAN",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 1795303.36,
-    "num_contributions": 782
-  },
-  {
-    "donor": "HOLLAND & KNIGHT LLP",
+    "donor": "ANDERSON COLUMBIA CO., INC.",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
-    "total_amount": 1788722.76,
-    "num_contributions": 464
+    "total_amount": 1792655.17,
+    "num_contributions": 307
+  },
+  {
+    "donor": "AUTOMATED HEALTHCARE SOLUTIONS, LLC",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 1787850.0,
+    "num_contributions": 50
+  },
+  {
+    "donor": "CHARTER COMMUNICATIONS",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 1785000.0,
+    "num_contributions": 62
+  },
+  {
+    "donor": "PALM BEACH KENNEL CLUB",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 1774676.59,
+    "num_contributions": 122
   },
   {
     "donor": "ALL ABOUT FLORIDA P.C.",
@@ -1064,25 +2002,25 @@
     "num_contributions": 11
   },
   {
+    "donor": "UNITED STATES SUGAR CORPORATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "42798",
+    "total_amount": 1760000.0,
+    "num_contributions": 8
+  },
+  {
     "donor": "JUSTICE FOR ALL",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
-    "total_amount": 1758534.8,
-    "num_contributions": 13
-  },
-  {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Conservatives for a Better Florida",
-    "committee_acct": "70025",
-    "total_amount": 1739429.82,
-    "num_contributions": 235
+    "total_amount": 1740000.0,
+    "num_contributions": 2
   },
   {
     "donor": "FRIENDS OF WILTON SIMPSON",
     "committee": "Florida Green PAC",
     "committee_acct": "74435",
-    "total_amount": 1735030.0,
-    "num_contributions": 9
+    "total_amount": 1736280.0,
+    "num_contributions": 10
   },
   {
     "donor": "SOUTHERN GARDENS CITRUS PROCES",
@@ -1092,49 +2030,63 @@
     "num_contributions": 107
   },
   {
-    "donor": "SCHMIDT ERIC",
+    "donor": "FLORIDA POWER & LIGHT COMPANY",
+    "committee": "Associated Industries of Florida Political Action Committee",
+    "committee_acct": "60768",
+    "total_amount": 1720500.0,
+    "num_contributions": 25
+  },
+  {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Friends of Wilton Simpson",
+    "committee_acct": "79644",
+    "total_amount": 1711365.0,
+    "num_contributions": 68
+  },
+  {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Florida Jobs PAC",
+    "committee_acct": "60760",
+    "total_amount": 1706670.7,
+    "num_contributions": 38
+  },
+  {
+    "donor": "HOGAN WAYNE",
     "committee": "Florida Democratic Party",
     "committee_acct": "1539",
-    "total_amount": 1720609.47,
-    "num_contributions": 701
+    "total_amount": 1701825.0,
+    "num_contributions": 72
   },
   {
     "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "The Committee for Justice, Transportation and Business",
-    "committee_acct": "60457",
-    "total_amount": 1713370.0,
-    "num_contributions": 93
+    "committee": "Committee Tracking System",
+    "committee_acct": "61158",
+    "total_amount": 1697000.0,
+    "num_contributions": 18
   },
   {
-    "donor": "HCA FLORIDA MERCY HOSPITAL",
-    "committee": "HCA West Florida Division Good Government PAC",
-    "committee_acct": "60905",
-    "total_amount": 1712500.0,
-    "num_contributions": 107
+    "donor": "FLORIDA POWER & LIGHT COMPANY",
+    "committee": "Committee Tracking System",
+    "committee_acct": "61160",
+    "total_amount": 1692000.0,
+    "num_contributions": 17
   },
   {
-    "donor": "DEVOS RICHARD",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1694651.0,
-    "num_contributions": 75
+    "donor": "OUR FLORIDA POLITICAL COMMITTEE",
+    "committee": "Florida Democratic Party",
+    "committee_acct": "1539",
+    "total_amount": 1690000.0,
+    "num_contributions": 20
   },
   {
-    "donor": "JONES PAUL",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1668745.86,
-    "num_contributions": 381
+    "donor": "60 PLUS ASSOCIATION, INC.",
+    "committee": "Committee Tracking System",
+    "committee_acct": "64817",
+    "total_amount": 1690000.0,
+    "num_contributions": 11
   },
   {
-    "donor": "PHILLIPS AND JORDAN, INCORPORATED",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1665889.42,
-    "num_contributions": 266
-  },
-  {
-    "donor": "ANHEUSER BUSCH COMPANIES INC.",
+    "donor": "ANHEUSER BUSCH COMPANIES",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
     "total_amount": 1660642.95,
@@ -1144,15 +2096,50 @@
     "donor": "ALTRIA CLIENT SERVICES, INC.",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
-    "total_amount": 1660575.78,
-    "num_contributions": 52
+    "total_amount": 1660475.78,
+    "num_contributions": 51
   },
   {
-    "donor": "REPUBLICAN GOVERNORS ASSOCIATI",
+    "donor": "REPUBLICAN GOVERNORS ASSOCIATION",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
-    "total_amount": 1650946.72,
+    "total_amount": 1650646.72,
+    "num_contributions": 5
+  },
+  {
+    "donor": "MIAMI-DADE COUNTY",
+    "committee": "Committee Tracking System",
+    "committee_acct": "37226",
+    "total_amount": 1650000.0,
+    "num_contributions": 3
+  },
+  {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "61499",
+    "total_amount": 1649616.71,
+    "num_contributions": 41
+  },
+  {
+    "donor": "DEMOCRACY PAC",
+    "committee": "Committee Tracking System",
+    "committee_acct": "69447",
+    "total_amount": 1648000.0,
     "num_contributions": 6
+  },
+  {
+    "donor": "FLORIDA POLICE BENEVOLENT ASSOCIATION INC JUSTICE PAC",
+    "committee": "Florida Democratic Party",
+    "committee_acct": "1539",
+    "total_amount": 1647114.79,
+    "num_contributions": 266
+  },
+  {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Florida Home Builders PAC",
+    "committee_acct": "60813",
+    "total_amount": 1640916.01,
+    "num_contributions": 100
   },
   {
     "donor": "DEGEORGE LAWRENCE",
@@ -1162,11 +2149,11 @@
     "num_contributions": 46
   },
   {
-    "donor": "FLORIDA DEMOCRATIC LEGISLATIVE CAMPAIGN COMMITTEE",
+    "donor": "CHARLIE CRIST FOR GOVERNOR CAMPAIGN",
     "committee": "Florida Democratic Party",
     "committee_acct": "1539",
-    "total_amount": 1624909.12,
-    "num_contributions": 42
+    "total_amount": 1625000.0,
+    "num_contributions": 3
   },
   {
     "donor": "JOBS FOR FLORIDA",
@@ -1176,6 +2163,20 @@
     "num_contributions": 12
   },
   {
+    "donor": "WEST FLAGLER ASSOCIATES, LTD",
+    "committee": "Committee Tracking System",
+    "committee_acct": "73676",
+    "total_amount": 1619245.56,
+    "num_contributions": 11
+  },
+  {
+    "donor": "FLO-SUN SUGAR COMPANY",
+    "committee": "Committee Tracking System",
+    "committee_acct": "22248",
+    "total_amount": 1619235.69,
+    "num_contributions": 23
+  },
+  {
     "donor": "OD-EYEPAC",
     "committee": "Building a Better Florida PC",
     "committee_acct": "61066",
@@ -1183,11 +2184,25 @@
     "num_contributions": 34
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Florida Home Builders PAC",
-    "committee_acct": "60813",
-    "total_amount": 1603883.87,
-    "num_contributions": 105
+    "donor": "DORIS DAY ANIMAL LEAGUE",
+    "committee": "Committee Tracking System",
+    "committee_acct": "70637",
+    "total_amount": 1600000.0,
+    "num_contributions": 2
+  },
+  {
+    "donor": "MICHIGAN CHAMBER OF COMMERCE",
+    "committee": "Committee Tracking System",
+    "committee_acct": "50056",
+    "total_amount": 1600000.0,
+    "num_contributions": 1
+  },
+  {
+    "donor": "FLORIDA POLICE BENEVOLENT ASSOCIATION INC JUSTICE PAC",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 1596200.0,
+    "num_contributions": 170
   },
   {
     "donor": "COUNCIL FOR SENIOR FLORIDIANS",
@@ -1197,46 +2212,39 @@
     "num_contributions": 93
   },
   {
-    "donor": "HCA WEST FLORIDA DIVISION AND GOOD GOVERNMENT PAC",
-    "committee": "Associated Industries of Florida for Free Enterprise",
-    "committee_acct": "83699",
-    "total_amount": 1590750.36,
-    "num_contributions": 23
+    "donor": "DEVOS RICHARD",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 1588040.0,
+    "num_contributions": 22
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Working Together For Florida PAC",
-    "committee_acct": "62432",
-    "total_amount": 1588364.42,
-    "num_contributions": 159
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Citizens Alliance for Florida's Economy",
+    "committee_acct": "61503",
+    "total_amount": 1584750.0,
+    "num_contributions": 59
   },
   {
-    "donor": "CAMPAIGN ACCOUNT OF FLORIDA CONCRETE &",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 1573531.05,
-    "num_contributions": 403
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Conservatives for a Better Florida",
+    "committee_acct": "70025",
+    "total_amount": 1577729.82,
+    "num_contributions": 161
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
+    "donor": "AMERICAN JUSTICE PARTNERSHIP",
+    "committee": "Committee Tracking System",
+    "committee_acct": "54739",
+    "total_amount": 1575000.0,
+    "num_contributions": 4
+  },
+  {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
     "committee": "The Committee",
     "committee_acct": "88960",
     "total_amount": 1572500.0,
     "num_contributions": 7
-  },
-  {
-    "donor": "BLOOMBERG MICHAEL R",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 1571754.5,
-    "num_contributions": 63
-  },
-  {
-    "donor": "SOUTHERN GLAZER'S WINE AND SPIRITS, LLC",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1567569.72,
-    "num_contributions": 82
   },
   {
     "donor": "PLANNED PARENTHOOD ACTION FUND",
@@ -1260,6 +2268,20 @@
     "num_contributions": 2
   },
   {
+    "donor": "WALT DISNEY PARKS AND RESORTS, U.S.",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 1552279.0,
+    "num_contributions": 43
+  },
+  {
+    "donor": "AMERICAN CANCER SOCIETY - FLORIDA DIVISION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "41791",
+    "total_amount": 1550000.0,
+    "num_contributions": 7
+  },
+  {
     "donor": "WALTON JIM",
     "committee": "Florida Federation for Children PAC",
     "committee_acct": "75974",
@@ -1267,18 +2289,11 @@
     "num_contributions": 3
   },
   {
-    "donor": "SUSSMAN S. DONALD",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 1533567.0,
-    "num_contributions": 21
-  },
-  {
-    "donor": "UNITED STATES SUGAR CORPORATION",
-    "committee": "Florida Chamber of Commerce PAC",
-    "committee_acct": "60769",
-    "total_amount": 1533000.0,
-    "num_contributions": 23
+    "donor": "SOUTHERN GLAZER'S WINE AND SPIRITS, LLC",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 1539376.18,
+    "num_contributions": 76
   },
   {
     "donor": "NEXTERA ENERGY, INC.",
@@ -1288,11 +2303,32 @@
     "num_contributions": 23
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Florida for All, Inc.",
-    "committee_acct": "60452",
-    "total_amount": 1527258.05,
-    "num_contributions": 16
+    "donor": "COLOROFCHANGE PAC",
+    "committee": "Committee Tracking System",
+    "committee_acct": "73714",
+    "total_amount": 1523030.0,
+    "num_contributions": 10
+  },
+  {
+    "donor": "UNITED STATES SUGAR CORPORATION",
+    "committee": "Florida Chamber of Commerce PAC",
+    "committee_acct": "60769",
+    "total_amount": 1521500.0,
+    "num_contributions": 20
+  },
+  {
+    "donor": "SUSSMAN DONALD",
+    "committee": "Florida Democratic Party",
+    "committee_acct": "1539",
+    "total_amount": 1515000.0,
+    "num_contributions": 11
+  },
+  {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "60855",
+    "total_amount": 1509388.51,
+    "num_contributions": 101
   },
   {
     "donor": "REALTORS POLITICAL ADVOCACY COMMITTEE",
@@ -1302,11 +2338,46 @@
     "num_contributions": 66
   },
   {
-    "donor": "STERN PC",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1490092.99,
-    "num_contributions": 698
+    "donor": "SUSSMAN DONALD",
+    "committee": "Committee Tracking System",
+    "committee_acct": "65255",
+    "total_amount": 1500000.0,
+    "num_contributions": 2
+  },
+  {
+    "donor": "AMERICAN FEDERATION OF STATE COUNTY AND MUNICIPAL EMPLOYEES",
+    "committee": "Committee Tracking System",
+    "committee_acct": "65255",
+    "total_amount": 1500000.0,
+    "num_contributions": 2
+  },
+  {
+    "donor": "AMERICAN FEDERATION OF TEACHERS",
+    "committee": "Committee Tracking System",
+    "committee_acct": "41910",
+    "total_amount": 1500000.0,
+    "num_contributions": 6
+  },
+  {
+    "donor": "BLOOMBERG MICHAEL R",
+    "committee": "Florida Democratic Party",
+    "committee_acct": "1539",
+    "total_amount": 1500000.0,
+    "num_contributions": 2
+  },
+  {
+    "donor": "F ANNETTE SCOTT TTEE",
+    "committee": "Committee Tracking System",
+    "committee_acct": "54518",
+    "total_amount": 1500000.0,
+    "num_contributions": 1
+  },
+  {
+    "donor": "FLORIDIANS FOR SUSTAINABLE AGRICULTURE, INC.",
+    "committee": "Florida Green PAC",
+    "committee_acct": "74435",
+    "total_amount": 1498000.0,
+    "num_contributions": 6
   },
   {
     "donor": "HONEST LEADERSHIP",
@@ -1316,18 +2387,18 @@
     "num_contributions": 15
   },
   {
+    "donor": "CONSERVATIVES FOR PRINCIPLED LEADERSHIP",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 1476975.0,
+    "num_contributions": 17
+  },
+  {
     "donor": "REALTORS POLITICAL ADVOCACY COMMITTEE",
     "committee": "Realtors Political Activity Committee",
     "committee_acct": "61237",
-    "total_amount": 1475000.0,
-    "num_contributions": 58
-  },
-  {
-    "donor": "PREFERRED CARE PARTNERS, INC.",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1462804.18,
-    "num_contributions": 126
+    "total_amount": 1460000.0,
+    "num_contributions": 57
   },
   {
     "donor": "BELLSOUTH EMPLOYEES' FLORIDA PAC",
@@ -1337,18 +2408,25 @@
     "num_contributions": 198
   },
   {
-    "donor": "PETERFFY THOMAS",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1455895.05,
-    "num_contributions": 353
-  },
-  {
     "donor": "INDEPENDENT LEADERSHIP FOR FLORIDA",
     "committee": "Florida Democratic Party",
     "committee_acct": "1539",
     "total_amount": 1448429.75,
     "num_contributions": 25
+  },
+  {
+    "donor": "PUBLIX SUPER MARKETS, INC.",
+    "committee": "Committee Tracking System",
+    "committee_acct": "38216",
+    "total_amount": 1445000.0,
+    "num_contributions": 9
+  },
+  {
+    "donor": "FLORIDA ASSOCIATION OF PROFESSIONAL EMPLOYER ORGANIZATIONS",
+    "committee": "Florida Professional Employer Organization PAC",
+    "committee_acct": "60754",
+    "total_amount": 1443063.73,
+    "num_contributions": 27
   },
   {
     "donor": "WALT DISNEY PARKS AND RESORTS, U.S.",
@@ -1358,67 +2436,39 @@
     "num_contributions": 20
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Floridians for Economic Freedom",
-    "committee_acct": "64573",
-    "total_amount": 1437941.88,
-    "num_contributions": 135
+    "donor": "AMERICAN COMEBACK COMMITTEE",
+    "committee": "Committee Tracking System",
+    "committee_acct": "73888",
+    "total_amount": 1433305.4,
+    "num_contributions": 5
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Friends of Byron Donalds PAC",
-    "committee_acct": "89043",
-    "total_amount": 1429100.0,
-    "num_contributions": 27
-  },
-  {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Florida Farmers and Ranchers United",
-    "committee_acct": "73841",
-    "total_amount": 1425370.76,
-    "num_contributions": 96
-  },
-  {
-    "donor": "HUMANA, INC.",
+    "donor": "NATL. REPUBLICAN CONGRESSIONAL COMM.",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
-    "total_amount": 1422364.57,
-    "num_contributions": 88
+    "total_amount": 1424048.82,
+    "num_contributions": 9
   },
   {
-    "donor": "HCA FLORIDA MERCY HOSPITAL",
-    "committee": "HCA North Florida Division Good Government PAC",
-    "committee_acct": "60907",
-    "total_amount": 1418500.0,
-    "num_contributions": 89
+    "donor": "PLANNED PARENTHOOD OF SOUTH, EAST AND NORTH FLORIDA",
+    "committee": "Committee Tracking System",
+    "committee_acct": "57015",
+    "total_amount": 1421078.97,
+    "num_contributions": 20
   },
   {
-    "donor": "CARPAC",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1417017.84,
-    "num_contributions": 880
+    "donor": "UNITED STATES SUGAR CORPORATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "61160",
+    "total_amount": 1407500.0,
+    "num_contributions": 16
   },
   {
-    "donor": "MORGAN & MORGAN",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1413002.39,
-    "num_contributions": 598
-  },
-  {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Florida Professional Employer Organization PAC",
-    "committee_acct": "60754",
-    "total_amount": 1393063.73,
-    "num_contributions": 26
-  },
-  {
-    "donor": "HCA FLORIDA MERCY HOSPITAL",
-    "committee": "HCA East Florida Division Good Government PAC",
-    "committee_acct": "60906",
-    "total_amount": 1392306.88,
-    "num_contributions": 80
+    "donor": "CITIZENS ALLIANCE FOR FLORIDA'S ECONOMY",
+    "committee": "Committee Tracking System",
+    "committee_acct": "64344",
+    "total_amount": 1401900.0,
+    "num_contributions": 22
   },
   {
     "donor": "CAPITOL CONSERVATIVE ALLIANCE",
@@ -1428,18 +2478,18 @@
     "num_contributions": 2
   },
   {
-    "donor": "UNITEDHEALTH GROUP, INC.",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1382278.04,
-    "num_contributions": 62
-  },
-  {
     "donor": "FAISON JAY W.",
     "committee": "American Flood Action PC",
     "committee_acct": "78840",
     "total_amount": 1380600.0,
     "num_contributions": 12
+  },
+  {
+    "donor": "SEIU UNITED LONG TERM CARE WORKERS LOCAL 6434",
+    "committee": "Committee Tracking System",
+    "committee_acct": "54913",
+    "total_amount": 1375230.1,
+    "num_contributions": 32
   },
   {
     "donor": "GARCIA DEVELOPMENT COMPANY",
@@ -1449,6 +2499,13 @@
     "num_contributions": 2
   },
   {
+    "donor": "SEIU FLORIDA STATE COUNCIL",
+    "committee": "Committee Tracking System",
+    "committee_acct": "70115",
+    "total_amount": 1369731.44,
+    "num_contributions": 23
+  },
+  {
     "donor": "TIDES FOUNDATION",
     "committee": "Florida Decides Healthcare, Inc.",
     "committee_acct": "73891",
@@ -1456,11 +2513,11 @@
     "num_contributions": 3
   },
   {
-    "donor": "GREENBERG TRAURIG",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1359490.18,
-    "num_contributions": 503
+    "donor": "AIF PAC",
+    "committee": "Committee Tracking System",
+    "committee_acct": "64586",
+    "total_amount": 1360000.0,
+    "num_contributions": 16
   },
   {
     "donor": "A BETTER MIAMI-DADE",
@@ -1477,13 +2534,6 @@
     "num_contributions": 3
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Friends of Matt Caldwell",
-    "committee_acct": "69372",
-    "total_amount": 1352999.35,
-    "num_contributions": 88
-  },
-  {
     "donor": "NATIONAL ASSOCIATION OF REALTORS",
     "committee": "Realtors Issues Mobilization Committee",
     "committee_acct": "69553",
@@ -1498,32 +2548,39 @@
     "num_contributions": 5
   },
   {
-    "donor": "BROWARD TEACHERS UNION BROWARD",
-    "committee": "Broward Teachers Union Committee on Political Education",
-    "committee_acct": "60994",
-    "total_amount": 1336920.77,
-    "num_contributions": 143
-  },
-  {
-    "donor": "SUNSHINE STATE FIRST",
+    "donor": "PETWAY THOMAS F.",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
-    "total_amount": 1335568.97,
-    "num_contributions": 361
+    "total_amount": 1345500.0,
+    "num_contributions": 61
+  },
+  {
+    "donor": "CAROL JENKINS BARNETT FAMILY TRUST",
+    "committee": "Committee Tracking System",
+    "committee_acct": "61509",
+    "total_amount": 1340000.0,
+    "num_contributions": 4
+  },
+  {
+    "donor": "SAULL JEFFREY",
+    "committee": "Committee Tracking System",
+    "committee_acct": "37953",
+    "total_amount": 1330000.0,
+    "num_contributions": 21
   },
   {
     "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Panhandle Prosperity",
-    "committee_acct": "64745",
-    "total_amount": 1331360.94,
-    "num_contributions": 164
+    "committee": "Committee Tracking System",
+    "committee_acct": "64993",
+    "total_amount": 1328000.0,
+    "num_contributions": 13
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Honest Leadership",
-    "committee_acct": "74347",
-    "total_amount": 1326877.93,
-    "num_contributions": 202
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Florida Restaurant and Lodging Association PAC, Inc.",
+    "committee_acct": "60630",
+    "total_amount": 1327054.39,
+    "num_contributions": 171
   },
   {
     "donor": "FEA SOLIDARITY FUND, INC",
@@ -1533,6 +2590,27 @@
     "num_contributions": 39
   },
   {
+    "donor": "HUMANA, INC.",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 1326364.57,
+    "num_contributions": 74
+  },
+  {
+    "donor": "REPUBLICAN ATTORNEY GENERAL'S ASSOCIATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "69909",
+    "total_amount": 1325000.0,
+    "num_contributions": 5
+  },
+  {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Treasure Florida",
+    "committee_acct": "70031",
+    "total_amount": 1321352.61,
+    "num_contributions": 105
+  },
+  {
     "donor": "OD-EYEPAC",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
@@ -1540,18 +2618,74 @@
     "num_contributions": 44
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Florida Restaurant and Lodging Association PAC, Inc.",
-    "committee_acct": "60630",
-    "total_amount": 1317129.39,
-    "num_contributions": 173
+    "donor": "SOROS GEORGE",
+    "committee": "Committee Tracking System",
+    "committee_acct": "69368",
+    "total_amount": 1318000.0,
+    "num_contributions": 4
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Florida Freedom Fund",
-    "committee_acct": "85993",
-    "total_amount": 1285026.03,
-    "num_contributions": 8
+    "donor": "THE ST. JOE COMPANY",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 1313352.41,
+    "num_contributions": 98
+  },
+  {
+    "donor": "JONES, PAULT T.",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 1305535.0,
+    "num_contributions": 27
+  },
+  {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "45565",
+    "total_amount": 1304246.43,
+    "num_contributions": 10
+  },
+  {
+    "donor": "FTBA TRANSPAC",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 1293848.87,
+    "num_contributions": 87
+  },
+  {
+    "donor": "FLORIDIANS FOR A BETTER AND BRIGHTER FUTURE",
+    "committee": "Committee Tracking System",
+    "committee_acct": "42749",
+    "total_amount": 1291902.36,
+    "num_contributions": 1
+  },
+  {
+    "donor": "UNITED AUTOMOBILE INSURANCE CO.",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 1290704.48,
+    "num_contributions": 138
+  },
+  {
+    "donor": "REALTORS POLITICAL ADVOCACY COMMITTEE",
+    "committee": "Committee Tracking System",
+    "committee_acct": "54530",
+    "total_amount": 1288000.0,
+    "num_contributions": 21
+  },
+  {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "69861",
+    "total_amount": 1280000.0,
+    "num_contributions": 37
+  },
+  {
+    "donor": "COUNT MY VOTE FLORIDA INC",
+    "committee": "Committee Tracking System",
+    "committee_acct": "73865",
+    "total_amount": 1280000.0,
+    "num_contributions": 6
   },
   {
     "donor": "INNOVATE FLORIDA",
@@ -1561,6 +2695,20 @@
     "num_contributions": 21
   },
   {
+    "donor": "FRIENDS OF JENNIFER CANADY",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 1277500.0,
+    "num_contributions": 13
+  },
+  {
+    "donor": "PORTMAN HOLDINGS, LLC",
+    "committee": "Committee Tracking System",
+    "committee_acct": "64879",
+    "total_amount": 1277383.73,
+    "num_contributions": 13
+  },
+  {
     "donor": "AT&T",
     "committee": "Florida Democratic Party",
     "committee_acct": "1539",
@@ -1568,32 +2716,39 @@
     "num_contributions": 119
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
+    "donor": "AMERICAN INTEGRITY MGA, LLC",
+    "committee": "Committee Tracking System",
+    "committee_acct": "41791",
+    "total_amount": 1275000.0,
+    "num_contributions": 7
+  },
+  {
+    "donor": "REPUBLICAN STATE LEADERSHIP COMMITTEE REPUBLICAN STATE",
+    "committee": "Freedom First Committee, Inc.",
+    "committee_acct": "66014",
+    "total_amount": 1275000.0,
+    "num_contributions": 8
+  },
+  {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
     "committee": "Florida Concrete & Products Association's Political Committee",
     "committee_acct": "60971",
     "total_amount": 1270948.0,
     "num_contributions": 52
   },
   {
-    "donor": "INTUITION SYSTEMS, INC.",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1264595.36,
-    "num_contributions": 150
-  },
-  {
-    "donor": "FAIAPAC",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1250329.92,
-    "num_contributions": 99
-  },
-  {
-    "donor": "LIVING LIFE WITH PURPOSE",
-    "committee": "Friends of Tom Leek",
-    "committee_acct": "84976",
-    "total_amount": 1250000.0,
+    "donor": "AIRBNB, INC.",
+    "committee": "Committee Tracking System",
+    "committee_acct": "69757",
+    "total_amount": 1252171.88,
     "num_contributions": 3
+  },
+  {
+    "donor": "ABRAHAM DANIEL",
+    "committee": "Committee Tracking System",
+    "committee_acct": "65255",
+    "total_amount": 1250001.0,
+    "num_contributions": 2
   },
   {
     "donor": "TECO ENERGY, INC.",
@@ -1603,11 +2758,46 @@
     "num_contributions": 17
   },
   {
-    "donor": "FONTAINEBLEAU HILTON RESORT",
+    "donor": "ISLE OF CAPRI CASINO",
+    "committee": "Committee Tracking System",
+    "committee_acct": "41533",
+    "total_amount": 1250000.0,
+    "num_contributions": 6
+  },
+  {
+    "donor": "LIVING LIFE WITH PURPOSE",
+    "committee": "Friends of Tom Leek",
+    "committee_acct": "84976",
+    "total_amount": 1250000.0,
+    "num_contributions": 3
+  },
+  {
+    "donor": "GRAHAM FOR CONGRESS",
+    "committee": "Committee Tracking System",
+    "committee_acct": "69630",
+    "total_amount": 1245500.0,
+    "num_contributions": 4
+  },
+  {
+    "donor": "AMERICAN FEDERATION OF TEACHERS",
+    "committee": "Committee Tracking System",
+    "committee_acct": "44935",
+    "total_amount": 1243292.53,
+    "num_contributions": 21
+  },
+  {
+    "donor": "UNIVERSAL ORLANDO RESORT",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
-    "total_amount": 1234730.27,
-    "num_contributions": 56
+    "total_amount": 1236900.91,
+    "num_contributions": 15
+  },
+  {
+    "donor": "WAL-MART",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 1233386.64,
+    "num_contributions": 88
   },
   {
     "donor": "KEEP FLORIDA CLEAN, INC.",
@@ -1617,46 +2807,32 @@
     "num_contributions": 2
   },
   {
-    "donor": "CONSERVATIVES FOR PRINCIPLED LEADERSHIP",
-    "committee": "Friends of Paul Renner",
-    "committee_acct": "89415",
-    "total_amount": 1230809.32,
-    "num_contributions": 4
+    "donor": "HCA WEST FLORIDA DIVISION AND GOOD GOVERNMENT PAC",
+    "committee": "Committee Tracking System",
+    "committee_acct": "64993",
+    "total_amount": 1228833.0,
+    "num_contributions": 23
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Florida Leadership Committee",
-    "committee_acct": "60982",
-    "total_amount": 1224432.08,
-    "num_contributions": 174
+    "donor": "NO CASINOS INC.",
+    "committee": "Committee Tracking System",
+    "committee_acct": "64995",
+    "total_amount": 1216767.21,
+    "num_contributions": 147
   },
   {
-    "donor": "PALM BEACH KENNEL CLUB",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 1222403.56,
-    "num_contributions": 229
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "41550",
+    "total_amount": 1209318.78,
+    "num_contributions": 223
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Florida Justice PAC",
-    "committee_acct": "60702",
-    "total_amount": 1201542.44,
-    "num_contributions": 32
-  },
-  {
-    "donor": "FERNANDEZ MIGUEL",
+    "donor": "FONTAINEBLEAU HILTON RESORT",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
-    "total_amount": 1200012.09,
-    "num_contributions": 249
-  },
-  {
-    "donor": "BYRON DONALDS FOR CONGRESS",
-    "committee": "Friends of Byron Donalds PAC",
-    "committee_acct": "89043",
-    "total_amount": 1200000.0,
-    "num_contributions": 2
+    "total_amount": 1208351.27,
+    "num_contributions": 42
   },
   {
     "donor": "PUBLIX SUPER MARKETS, INC.",
@@ -1666,25 +2842,32 @@
     "num_contributions": 25
   },
   {
-    "donor": "HCA WEST FLORIDA DIVISION AND GOOD GOVERNMENT PAC",
-    "committee": "Associated Industries of Florida for Economic Growth",
-    "committee_acct": "83698",
-    "total_amount": 1198916.66,
-    "num_contributions": 23
+    "donor": "PETERFFY THOMAS",
+    "committee": "Friends of Byron Donalds PAC",
+    "committee_acct": "89043",
+    "total_amount": 1200000.0,
+    "num_contributions": 2
   },
   {
-    "donor": "PROPEL FLORIDA LLC",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1196934.34,
-    "num_contributions": 81
+    "donor": "BYRON DONALDS FOR CONGRESS",
+    "committee": "Friends of Byron Donalds PAC",
+    "committee_acct": "89043",
+    "total_amount": 1200000.0,
+    "num_contributions": 2
   },
   {
-    "donor": "WILKES & MCHUGH - ATTORNEYS AT LAW",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1194458.01,
-    "num_contributions": 1216
+    "donor": "SOROS GEORGE",
+    "committee": "Committee Tracking System",
+    "committee_acct": "65255",
+    "total_amount": 1200000.0,
+    "num_contributions": 6
+  },
+  {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Friends of Byron Donalds PAC",
+    "committee_acct": "89043",
+    "total_amount": 1192060.0,
+    "num_contributions": 22
   },
   {
     "donor": "ARDA ROC-PAC",
@@ -1694,18 +2877,32 @@
     "num_contributions": 43
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Citizens for Integrity in Government",
-    "committee_acct": "60579",
-    "total_amount": 1182194.67,
-    "num_contributions": 53
+    "donor": "CONSERVATIVES FOR PRINCIPLED LEADERSHIP",
+    "committee": "Friends of Paul Renner",
+    "committee_acct": "89415",
+    "total_amount": 1190809.32,
+    "num_contributions": 3
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
+    "donor": "FLORIDA DEMOCRATIC LEGISLATIVE CAMPAIGN COMMITTEE",
+    "committee": "Florida Democratic Party",
+    "committee_acct": "1539",
+    "total_amount": 1180909.12,
+    "num_contributions": 31
+  },
+  {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "54524",
+    "total_amount": 1177500.0,
+    "num_contributions": 12
+  },
+  {
+    "donor": "FLORIDA LEAGUE OF CITIES, INC.",
     "committee": "Citizens for Home Rule",
     "committee_acct": "42810",
-    "total_amount": 1181473.4,
-    "num_contributions": 34
+    "total_amount": 1175473.4,
+    "num_contributions": 33
   },
   {
     "donor": "PUBLIX SUPER MARKETS, INC.",
@@ -1715,6 +2912,13 @@
     "num_contributions": 34
   },
   {
+    "donor": "HCA EAST FLORIDA DIVISION AND GOOD GOVERNMENT PAC",
+    "committee": "Committee Tracking System",
+    "committee_acct": "64993",
+    "total_amount": 1174895.0,
+    "num_contributions": 23
+  },
+  {
     "donor": "CSX TRANSPORTATION, INC.",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
@@ -1722,11 +2926,39 @@
     "num_contributions": 110
   },
   {
+    "donor": "NATIONAL ASSOCIATION OF REALTORS",
+    "committee": "Committee Tracking System",
+    "committee_acct": "45282",
+    "total_amount": 1174000.0,
+    "num_contributions": 7
+  },
+  {
+    "donor": "HARCONE 44, LLC",
+    "committee": "Committee Tracking System",
+    "committee_acct": "46338",
+    "total_amount": 1171700.0,
+    "num_contributions": 4
+  },
+  {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "54593",
+    "total_amount": 1170279.26,
+    "num_contributions": 27
+  },
+  {
     "donor": "STATE OF FLORIDA",
     "committee": "Florida Democratic Party",
     "committee_acct": "1539",
-    "total_amount": 1172572.64,
-    "num_contributions": 28
+    "total_amount": 1168901.7,
+    "num_contributions": 24
+  },
+  {
+    "donor": "BROWARD TEACHERS UNION",
+    "committee": "Broward Teachers Union Committee on Political Education",
+    "committee_acct": "60994",
+    "total_amount": 1168089.63,
+    "num_contributions": 51
   },
   {
     "donor": "PANHANDLE PROSPERITY",
@@ -1736,11 +2968,11 @@
     "num_contributions": 13
   },
   {
-    "donor": "JONES PAUL",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 1163682.68,
-    "num_contributions": 323
+    "donor": "NATIONAL ASSOCIATION OF REALTORS",
+    "committee": "Committee Tracking System",
+    "committee_acct": "43605",
+    "total_amount": 1164106.6,
+    "num_contributions": 18
   },
   {
     "donor": "JM FAMILY ENTERPRISES, INC.",
@@ -1750,11 +2982,11 @@
     "num_contributions": 161
   },
   {
-    "donor": "BUILDING FLORIDA'S FUTURE",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1158300.0,
-    "num_contributions": 17
+    "donor": "CONSERVATIVES FOR PRINCIPLED LEADERSHIP",
+    "committee": "Florida Opinion Leaders",
+    "committee_acct": "66911",
+    "total_amount": 1157500.0,
+    "num_contributions": 9
   },
   {
     "donor": "TECO ENERGY, INC.",
@@ -1764,18 +2996,11 @@
     "num_contributions": 16
   },
   {
-    "donor": "CONSERVATIVES FOR PRINCIPLED LEADERSHIP",
-    "committee": "Florida Opinion Leaders",
-    "committee_acct": "66911",
-    "total_amount": 1157500.0,
-    "num_contributions": 9
-  },
-  {
-    "donor": "AFSCME",
-    "committee": "Florida for All, Inc.",
-    "committee_acct": "60452",
-    "total_amount": 1156188.0,
-    "num_contributions": 5
+    "donor": "TD BANK",
+    "committee": "Realtors Political Advocacy Committee",
+    "committee_acct": "60584",
+    "total_amount": 1156890.8,
+    "num_contributions": 152
   },
   {
     "donor": "CONSERVATIVES FOR PRINCIPLED LEADERSHIP",
@@ -1785,11 +3010,25 @@
     "num_contributions": 7
   },
   {
+    "donor": "PUBLIC EDUCATION DEFENSE FUND",
+    "committee": "Committee Tracking System",
+    "committee_acct": "59965",
+    "total_amount": 1155000.0,
+    "num_contributions": 4
+  },
+  {
     "donor": "PARTNERSHIP FOR ECONOMIC FREED",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
     "total_amount": 1154254.4,
     "num_contributions": 3
+  },
+  {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Florida Justice PAC",
+    "committee_acct": "60702",
+    "total_amount": 1154109.12,
+    "num_contributions": 17
   },
   {
     "donor": "MATEER CRAIG",
@@ -1799,25 +3038,81 @@
     "num_contributions": 5
   },
   {
-    "donor": "REPUBLICAN NATIONAL COMMITTEE",
+    "donor": "AMERICAN CANCER SOCIETY - NATIONAL OFFICE",
+    "committee": "Committee Tracking System",
+    "committee_acct": "34548",
+    "total_amount": 1150000.0,
+    "num_contributions": 3
+  },
+  {
+    "donor": "REPUBLICAN STATE LEADERSHIP COMMITTEE REPUBLICAN STATE",
+    "committee": "Vote Differently",
+    "committee_acct": "78841",
+    "total_amount": 1150000.0,
+    "num_contributions": 5
+  },
+  {
+    "donor": "MAGNA ENTERTAINMENT",
+    "committee": "Committee Tracking System",
+    "committee_acct": "41533",
+    "total_amount": 1150000.0,
+    "num_contributions": 3
+  },
+  {
+    "donor": "CALDER RACE COURSE",
+    "committee": "Committee Tracking System",
+    "committee_acct": "41533",
+    "total_amount": 1150000.0,
+    "num_contributions": 3
+  },
+  {
+    "donor": "REPUBLICAN STATE LEADERSHIP COMMITTEE REPUBLICAN STATE",
     "committee": "Citizens Against Wasteful Spending PC",
     "committee_acct": "78915",
     "total_amount": 1150000.0,
     "num_contributions": 7
   },
   {
-    "donor": "CLUB FOR GROWTH ACTION FLORIDA",
-    "committee": "Friends of Byron Donalds PAC",
-    "committee_acct": "89043",
+    "donor": "AMERICANS FOR LIMITED GOVERNMENT",
+    "committee": "Committee Tracking System",
+    "committee_acct": "44777",
     "total_amount": 1150000.0,
-    "num_contributions": 2
+    "num_contributions": 5
   },
   {
-    "donor": "MARK - PAC",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1139911.14,
-    "num_contributions": 1030
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "2068",
+    "total_amount": 1148906.02,
+    "num_contributions": 59
+  },
+  {
+    "donor": "REPUBLICAN PARTY OF FLORIDA",
+    "committee": "Committee Tracking System",
+    "committee_acct": "46302",
+    "total_amount": 1144500.0,
+    "num_contributions": 10
+  },
+  {
+    "donor": "REALTORS POLITICAL ADVOCACY COMMITTEE",
+    "committee": "Committee Tracking System",
+    "committee_acct": "4638",
+    "total_amount": 1142899.23,
+    "num_contributions": 21
+  },
+  {
+    "donor": "MEMBER DUES CONTRIBUTIONS",
+    "committee": "Committee Tracking System",
+    "committee_acct": "15382",
+    "total_amount": 1140190.0,
+    "num_contributions": 550
+  },
+  {
+    "donor": "REPUBLICAN GOVERNORS ASSOCIATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "54623",
+    "total_amount": 1140010.0,
+    "num_contributions": 1
   },
   {
     "donor": "MIAMI-DADE SAFE & SECURE",
@@ -1827,25 +3122,39 @@
     "num_contributions": 12
   },
   {
-    "donor": "STIEFEL BARBARA",
-    "committee": "Florida Planned Parenthood PAC",
-    "committee_acct": "61513",
-    "total_amount": 1130000.0,
-    "num_contributions": 11
-  },
-  {
-    "donor": "AMERICANS FOR PROSPERITY ACTION",
+    "donor": "WALT DISNEY PARKS AND RESORTS, U.S.",
     "committee": "Florida Democratic Party",
     "committee_acct": "1539",
-    "total_amount": 1126033.87,
-    "num_contributions": 184
+    "total_amount": 1125247.99,
+    "num_contributions": 21
   },
   {
-    "donor": "STONE SHELDON M.",
+    "donor": "LOCAL 32BJ HOLDING ACCOUNT",
+    "committee": "Florida 32BJ United American Dream Fund",
+    "committee_acct": "64285",
+    "total_amount": 1114000.0,
+    "num_contributions": 23
+  },
+  {
+    "donor": "HCA NORTH FLORIDA DIVISION AND GOOD GOVERNMENT PAC",
+    "committee": "Committee Tracking System",
+    "committee_acct": "64993",
+    "total_amount": 1113897.0,
+    "num_contributions": 24
+  },
+  {
+    "donor": "FLORIDIANS FOR TRUTH & INTEGRI",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
-    "total_amount": 1123004.5,
-    "num_contributions": 325
+    "total_amount": 1111696.53,
+    "num_contributions": 1
+  },
+  {
+    "donor": "PHILIP MORRIS U.S.A.",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 1110750.0,
+    "num_contributions": 77
   },
   {
     "donor": "H.M.A. CORPORATE OFFICES",
@@ -1855,11 +3164,11 @@
     "num_contributions": 45
   },
   {
-    "donor": "BAYFRONT 2011 DEVELOPMENT, LLC",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1105000.0,
-    "num_contributions": 19
+    "donor": "JONES II PAUL",
+    "committee": "Committee Tracking System",
+    "committee_acct": "59894",
+    "total_amount": 1107480.0,
+    "num_contributions": 4
   },
   {
     "donor": "CONSERVATIVES FOR PRINCIPLED LEADERSHIP",
@@ -1869,18 +3178,11 @@
     "num_contributions": 6
   },
   {
-    "donor": "PETERFFY THOMAS",
-    "committee": "Friends of Byron Donalds PAC",
-    "committee_acct": "89043",
+    "donor": "SEMBLER MEL F.",
+    "committee": "Committee Tracking System",
+    "committee_acct": "61509",
     "total_amount": 1100000.0,
-    "num_contributions": 2
-  },
-  {
-    "donor": "PC MOSTYN LAW FIRM",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 1100000.0,
-    "num_contributions": 3
+    "num_contributions": 4
   },
   {
     "donor": "FLORIDA WOMEN'S FREEDOM COALITION",
@@ -1890,18 +3192,74 @@
     "num_contributions": 1
   },
   {
-    "donor": "LOCAL 32BJ HOLDING ACCOUNT",
-    "committee": "Florida 32BJ United American Dream Fund",
-    "committee_acct": "64285",
-    "total_amount": 1094000.0,
-    "num_contributions": 22
+    "donor": "BUSPATROL AMERICA, LLC",
+    "committee": "A Stronger Florida",
+    "committee_acct": "71120",
+    "total_amount": 1100000.0,
+    "num_contributions": 11
   },
   {
-    "donor": "TD BANK",
-    "committee": "Realtors Political Advocacy Committee",
-    "committee_acct": "60584",
-    "total_amount": 1088210.96,
-    "num_contributions": 156
+    "donor": "MOSTYN LAW FIRM PC",
+    "committee": "Committee Tracking System",
+    "committee_acct": "61167",
+    "total_amount": 1100000.0,
+    "num_contributions": 4
+  },
+  {
+    "donor": "REPUBLICAN STATE LEADERSHIP COMMITTEE REPUBLICAN STATE",
+    "committee": "Sunshine State First",
+    "committee_acct": "60963",
+    "total_amount": 1100000.0,
+    "num_contributions": 3
+  },
+  {
+    "donor": "PC MOSTYN LAW FIRM",
+    "committee": "Florida Democratic Party",
+    "committee_acct": "1539",
+    "total_amount": 1100000.0,
+    "num_contributions": 3
+  },
+  {
+    "donor": "SIMONS LIZ",
+    "committee": "Committee Tracking System",
+    "committee_acct": "64388",
+    "total_amount": 1100000.0,
+    "num_contributions": 4
+  },
+  {
+    "donor": "WEST FLAGLER ASSOCIATES, LTD",
+    "committee": "Committee Tracking System",
+    "committee_acct": "41533",
+    "total_amount": 1100000.0,
+    "num_contributions": 3
+  },
+  {
+    "donor": "FAIAPAC",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 1094329.92,
+    "num_contributions": 71
+  },
+  {
+    "donor": "IMMIGRANT VOTERS WIN PAC",
+    "committee": "Committee Tracking System",
+    "committee_acct": "69353",
+    "total_amount": 1092800.0,
+    "num_contributions": 8
+  },
+  {
+    "donor": "HCA WEST FLORIDA DIVISION AND GOOD GOVERNMENT PAC",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 1091501.66,
+    "num_contributions": 126
+  },
+  {
+    "donor": "ELEVATED LLC",
+    "committee": "Committee Tracking System",
+    "committee_acct": "73692",
+    "total_amount": 1090171.82,
+    "num_contributions": 4
   },
   {
     "donor": "AIF PAC",
@@ -1911,11 +3269,18 @@
     "num_contributions": 26
   },
   {
-    "donor": "SECURE FLORIDA'S FUTURE",
+    "donor": "SECURE FLORIDA'S FUTURE INC.",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
     "total_amount": 1080000.0,
     "num_contributions": 4
+  },
+  {
+    "donor": "HCA EAST FLORIDA DIVISION AND GOOD GOVERNMENT PAC",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 1078165.66,
+    "num_contributions": 122
   },
   {
     "donor": "IMPACT",
@@ -1939,13 +3304,6 @@
     "num_contributions": 3
   },
   {
-    "donor": "BUSPATROL AMERICA, LLC",
-    "committee": "A Stronger Florida",
-    "committee_acct": "71120",
-    "total_amount": 1075000.0,
-    "num_contributions": 10
-  },
-  {
     "donor": "PUBLIX SUPER MARKETS, INC.",
     "committee": "Florida Jobs PAC",
     "committee_acct": "60760",
@@ -1953,11 +3311,25 @@
     "num_contributions": 8
   },
   {
-    "donor": "ROSS STEPHEN",
+    "donor": "STERN PC",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
-    "total_amount": 1074610.5,
-    "num_contributions": 338
+    "total_amount": 1072000.0,
+    "num_contributions": 3
+  },
+  {
+    "donor": "REPUBLICAN PARTY OF FLORIDA",
+    "committee": "Friends of James Uthmeier",
+    "committee_acct": "89007",
+    "total_amount": 1071627.5,
+    "num_contributions": 11
+  },
+  {
+    "donor": "UNITED STATES SUGAR CORPORATION",
+    "committee": "Florida Democratic Party",
+    "committee_acct": "1539",
+    "total_amount": 1070208.91,
+    "num_contributions": 105
   },
   {
     "donor": "RISE AND LEAD FLORIDA",
@@ -1965,6 +3337,13 @@
     "committee_acct": "1539",
     "total_amount": 1067000.0,
     "num_contributions": 19
+  },
+  {
+    "donor": "SUNTRUST BANK",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 1065210.39,
+    "num_contributions": 290
   },
   {
     "donor": "SCHOOL DEVELOPMENT HC FINANCE LLC",
@@ -1977,8 +3356,15 @@
     "donor": "RONALD BOOK, P.A.",
     "committee": "Republican Party of Florida",
     "committee_acct": "4700",
-    "total_amount": 1056367.31,
-    "num_contributions": 164
+    "total_amount": 1055727.31,
+    "num_contributions": 161
+  },
+  {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "65022",
+    "total_amount": 1053311.16,
+    "num_contributions": 124
   },
   {
     "donor": "GMRI, INC.",
@@ -1988,9 +3374,16 @@
     "num_contributions": 96
   },
   {
-    "donor": "CONSERVATIVES FOR PRINCIPLED LEADERSHIP",
-    "committee": "South Florida Solutions PC",
-    "committee_acct": "79485",
+    "donor": "ASSOCIATED INDUSTRIES OF FLORIDA POLITICAL ACTION COMMITTEE",
+    "committee": "Friends of Byron Donalds PAC",
+    "committee_acct": "89043",
+    "total_amount": 1050000.0,
+    "num_contributions": 9
+  },
+  {
+    "donor": "GLK REAL ESTATE LLC",
+    "committee": "Florida PC",
+    "committee_acct": "88720",
     "total_amount": 1050000.0,
     "num_contributions": 2
   },
@@ -2002,25 +3395,18 @@
     "num_contributions": 1
   },
   {
-    "donor": "GLK REAL ESTATE LLC",
-    "committee": "Florida PC",
-    "committee_acct": "88720",
+    "donor": "CONSERVATIVES FOR PRINCIPLED LEADERSHIP",
+    "committee": "South Florida Solutions PC",
+    "committee_acct": "79485",
     "total_amount": 1050000.0,
     "num_contributions": 2
   },
   {
-    "donor": "REPUBLICAN NATIONAL COMMITTEE",
-    "committee": "Vote Differently",
-    "committee_acct": "78841",
-    "total_amount": 1050000.0,
-    "num_contributions": 4
-  },
-  {
-    "donor": "GROSSMAN ROTH YAFFA COHEN PA",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 1044134.5,
-    "num_contributions": 170
+    "donor": "FLORIDA CRYSTALS CORPORATION",
+    "committee": "Working Together For Florida PAC",
+    "committee_acct": "62432",
+    "total_amount": 1041724.96,
+    "num_contributions": 102
   },
   {
     "donor": "A. DUDA & SONS, INC.",
@@ -2030,18 +3416,32 @@
     "num_contributions": 88
   },
   {
-    "donor": "ARDA RESORT OWNERS COALITION",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
+    "donor": "UNITED STATES SUGAR CORPORATION",
+    "committee": "Committee Tracking System",
+    "committee_acct": "54554",
     "total_amount": 1040000.0,
-    "num_contributions": 36
+    "num_contributions": 8
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Living Life With Purpose",
-    "committee_acct": "69910",
-    "total_amount": 1037617.91,
-    "num_contributions": 215
+    "donor": "DUES",
+    "committee": "Committee Tracking System",
+    "committee_acct": "1997",
+    "total_amount": 1039335.01,
+    "num_contributions": 19
+  },
+  {
+    "donor": "SEIU COPE",
+    "committee": "Committee Tracking System",
+    "committee_acct": "60757",
+    "total_amount": 1038419.5,
+    "num_contributions": 12
+  },
+  {
+    "donor": "HCA NORTH FLORIDA DIVISION AND GOOD GOVERNMENT PAC",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 1037249.29,
+    "num_contributions": 125
   },
   {
     "donor": "GEROGIA DEMOCRATIC EXECUTIVE PARTY",
@@ -2051,1452 +3451,52 @@
     "num_contributions": 5
   },
   {
-    "donor": "SOUTH FLORIDA SOLUTIONS PC",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 1024712.73,
-    "num_contributions": 66
-  },
-  {
-    "donor": "AUTONATION",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1016462.23,
-    "num_contributions": 63
-  },
-  {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "All About Florida Committee, Inc.",
-    "committee_acct": "45995",
-    "total_amount": 1015716.25,
-    "num_contributions": 35
-  },
-  {
-    "donor": "TOGETHER FOR A GREATER JACKSONVILLE PAC",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1015000.0,
-    "num_contributions": 9
-  },
-  {
-    "donor": "REYES J. CHRISTOPHER",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1014162.25,
-    "num_contributions": 156
-  },
-  {
-    "donor": "ALLIANCE FOR A STRONG ECONOMY",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1009500.0,
-    "num_contributions": 12
-  },
-  {
-    "donor": "PEOPLE FOR ETHICAL GOVERNMENT",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1006495.0,
-    "num_contributions": 2
-  },
-  {
-    "donor": "HERITAGE INSURANCE HOLDINGS INC.",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1003950.0,
-    "num_contributions": 21
-  },
-  {
-    "donor": "SEMINOLE GAMING",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1002232.83,
-    "num_contributions": 9
-  },
-  {
-    "donor": "WALT DISNEY PARKS AND RESORTS, U.S.",
-    "committee": "Protect Our Constitution, Inc.",
-    "committee_acct": "61500",
-    "total_amount": 1000000.0,
-    "num_contributions": 1
-  },
-  {
-    "donor": "VAN ANDEL JAY",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 1000000.0,
-    "num_contributions": 10
-  },
-  {
-    "donor": "REPUBLICAN NATIONAL COMMITTEE",
-    "committee": "Sunshine State First",
-    "committee_acct": "60963",
-    "total_amount": 1000000.0,
-    "num_contributions": 2
-  },
-  {
-    "donor": "DUGGAN PATRICIA",
-    "committee": "Florida Freedom Fund",
-    "committee_acct": "85993",
-    "total_amount": 1000000.0,
-    "num_contributions": 1
-  },
-  {
-    "donor": "UIHLEIN RICHARD E",
-    "committee": "Friends of Byron Donalds PAC",
-    "committee_acct": "89043",
-    "total_amount": 1000000.0,
-    "num_contributions": 1
-  },
-  {
-    "donor": "FLORIDA WOMEN'S FREEDOM COALITION",
-    "committee": "Floridians for Economic Leadership",
-    "committee_acct": "61047",
-    "total_amount": 1000000.0,
-    "num_contributions": 4
-  },
-  {
-    "donor": "YASS JEFF",
-    "committee": "CFG Action Florida",
-    "committee_acct": "80001",
-    "total_amount": 1000000.0,
-    "num_contributions": 1
-  },
-  {
-    "donor": "SEMINOLE TRIBE OF FLORIDA",
-    "committee": "Citizens for Law Order and Ethics",
-    "committee_acct": "61046",
-    "total_amount": 1000000.0,
-    "num_contributions": 10
-  },
-  {
-    "donor": "REPUBLICAN NATIONAL COMMITTEE",
-    "committee": "American Values PAC",
-    "committee_acct": "79623",
-    "total_amount": 1000000.0,
-    "num_contributions": 2
-  },
-  {
-    "donor": "THE PEOPLE OVER PROFITS FLORIDA, INC.",
-    "committee": "Florida for All, Inc.",
-    "committee_acct": "60452",
-    "total_amount": 1000000.0,
-    "num_contributions": 4
-  },
-  {
-    "donor": "HONEST LEADERSHIP",
-    "committee": "Florida Opinion Leaders",
-    "committee_acct": "66911",
-    "total_amount": 1000000.0,
-    "num_contributions": 7
-  },
-  {
-    "donor": "FLORIDIANS FOR ECONOMIC ADVANCEMENT",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 996500.0,
-    "num_contributions": 12
-  },
-  {
-    "donor": "TL MANAGEMENT LLC",
-    "committee": "A Stronger Florida",
-    "committee_acct": "71120",
-    "total_amount": 983112.0,
-    "num_contributions": 1
-  },
-  {
-    "donor": "COMMITTEE FOR FAIR COMPETITION IN TELECOMMUNICATIONS",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 980000.0,
-    "num_contributions": 175
-  },
-  {
-    "donor": "JACKSONVILLE GREYHOUND RACING,",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 978863.08,
-    "num_contributions": 65
-  },
-  {
-    "donor": "HCA WEST FLORIDA DIVISION AND GOOD GOVERNMENT PAC",
-    "committee": "Associated Industries of Florida Political Action Committee",
-    "committee_acct": "60768",
-    "total_amount": 977625.0,
-    "num_contributions": 28
-  },
-  {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Citizens For Florida Prosperity PC",
-    "committee_acct": "69280",
-    "total_amount": 975350.0,
-    "num_contributions": 18
-  },
-  {
-    "donor": "REPUBLICAN NATIONAL COMMITTEE",
-    "committee": "Freedom First Committee, Inc.",
-    "committee_acct": "66014",
-    "total_amount": 975000.0,
-    "num_contributions": 6
-  },
-  {
-    "donor": "REPUBLICAN PARTY OF FLORIDA",
-    "committee": "Friends of James Uthmeier",
-    "committee_acct": "89007",
-    "total_amount": 970000.0,
-    "num_contributions": 4
-  },
-  {
-    "donor": "FLA. C OF C ALLIANCE, INC.",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 967000.0,
-    "num_contributions": 20
-  },
-  {
-    "donor": "PEA INTERNATIONAL",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 962200.0,
-    "num_contributions": 9
-  },
-  {
-    "donor": "LENNAR HOMES, LLC",
-    "committee": "CCC",
-    "committee_acct": "80504",
-    "total_amount": 960000.0,
-    "num_contributions": 6
-  },
-  {
-    "donor": "SEIU COPE",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 957533.34,
-    "num_contributions": 8
-  },
-  {
-    "donor": "ENGAGED FLORIDA",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 952250.0,
-    "num_contributions": 20
-  },
-  {
-    "donor": "REPUBLICAN PARTY OF FLORIDA",
-    "committee": "Conservatives Standing Proudly for Common Sense",
-    "committee_acct": "78974",
-    "total_amount": 950000.0,
-    "num_contributions": 4
-  },
-  {
-    "donor": "REPUBLICAN PARTY OF FLORIDA",
-    "committee": "Capitol Conservative Alliance",
-    "committee_acct": "79024",
-    "total_amount": 950000.0,
-    "num_contributions": 5
-  },
-  {
-    "donor": "REPUBLICAN NATIONAL COMMITTEE",
-    "committee": "Conservatives",
-    "committee_acct": "65559",
-    "total_amount": 950000.0,
+    "donor": "WEAVER DELORES B",
+    "committee": "Committee Tracking System",
+    "committee_acct": "83927",
+    "total_amount": 1030000.0,
     "num_contributions": 3
   },
   {
-    "donor": "I.B.E.W. EDUCATIONAL COMMITTEE",
+    "donor": "FLORIDA FIRE-PAC",
     "committee": "Florida Democratic Party",
     "committee_acct": "1539",
-    "total_amount": 944150.0,
-    "num_contributions": 82
+    "total_amount": 1028657.0,
+    "num_contributions": 94
   },
   {
-    "donor": "CHARTER SCHOOLS USA INC.",
-    "committee": "Florida Federation for Children PAC",
-    "committee_acct": "75974",
-    "total_amount": 940000.0,
+    "donor": "UNITEMIZED LUMP SUM 4/03",
+    "committee": "Committee Tracking System",
+    "committee_acct": "30498",
+    "total_amount": 1028096.64,
     "num_contributions": 7
   },
   {
-    "donor": "DNC SERVICES CORPORATION",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 933301.32,
-    "num_contributions": 33
+    "donor": "AMERICAN FEDERATION OF TEACHERS",
+    "committee": "Committee Tracking System",
+    "committee_acct": "42252",
+    "total_amount": 1025000.0,
+    "num_contributions": 3
   },
   {
-    "donor": "HCA WEST FLORIDA DIVISION AND GOOD GOVERNMENT PAC",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 933224.03,
-    "num_contributions": 195
+    "donor": "FTP-NEA",
+    "committee": "Committee Tracking System",
+    "committee_acct": "24185",
+    "total_amount": 1024667.6,
+    "num_contributions": 37
   },
   {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
+    "donor": "BUILDING BETTER CONSERVATISM",
+    "committee": "Republican Party of Florida",
+    "committee_acct": "4700",
+    "total_amount": 1019800.0,
+    "num_contributions": 1
+  },
+  {
+    "donor": "FLORIDA CRYSTALS CORPORATION",
     "committee": "Florida RV PAC",
     "committee_acct": "60841",
-    "total_amount": 932981.35,
-    "num_contributions": 350
-  },
-  {
-    "donor": "KIRTLEY JOHN",
-    "committee": "Florida Federation for Children PAC",
-    "committee_acct": "75974",
-    "total_amount": 930000.0,
-    "num_contributions": 9
-  },
-  {
-    "donor": "MOSAIC FERTILIZER LLC",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 926078.03,
-    "num_contributions": 74
-  },
-  {
-    "donor": "REPUBLICAN PARTY OF FLORIDA",
-    "committee": "Citizens Alliance for Florida's Economy",
-    "committee_acct": "61503",
-    "total_amount": 924700.0,
-    "num_contributions": 11
-  },
-  {
-    "donor": "AMSCOT CORPORATION",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 922700.0,
-    "num_contributions": 83
-  },
-  {
-    "donor": "TENET HEALTHCARE CORP.",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 916500.0,
-    "num_contributions": 48
-  },
-  {
-    "donor": "STIEFEL BARBARA",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 910036.5,
-    "num_contributions": 49
-  },
-  {
-    "donor": "CONSERVATIVES FOR PRINCIPLED LEADERSHIP",
-    "committee": "Citizens for Ethical & Effective Leadership PC",
-    "committee_acct": "74039",
-    "total_amount": 910000.0,
-    "num_contributions": 5
-  },
-  {
-    "donor": "GULFSTREAM PARK RACING ASSOCIATION",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 905734.32,
-    "num_contributions": 55
-  },
-  {
-    "donor": "WIN FLORIDA, INC.",
-    "committee": "Florida for All, Inc.",
-    "committee_acct": "60452",
-    "total_amount": 900000.0,
-    "num_contributions": 7
-  },
-  {
-    "donor": "REPUBLICAN PARTY OF FLORIDA",
-    "committee": "Protecting Florida's Progress",
-    "committee_acct": "78975",
-    "total_amount": 900000.0,
-    "num_contributions": 4
-  },
-  {
-    "donor": "SECURE FLORIDA'S FUTURE",
-    "committee": "Florida Chamber of Commerce PAC",
-    "committee_acct": "60769",
-    "total_amount": 900000.0,
-    "num_contributions": 5
-  },
-  {
-    "donor": "SUNSHINE STATE FIRST",
-    "committee": "Friends of Byron Donalds PAC",
-    "committee_acct": "89043",
-    "total_amount": 893975.0,
-    "num_contributions": 5
-  },
-  {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Friends of Ed Hooper",
-    "committee_acct": "69726",
-    "total_amount": 892163.8,
-    "num_contributions": 197
-  },
-  {
-    "donor": "FLORIDA CUPAC - CORPORATE ACCOUNT",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 887620.07,
-    "num_contributions": 71
-  },
-  {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Florida Phosphate Political Committee, Inc.",
-    "committee_acct": "61002",
-    "total_amount": 883354.06,
-    "num_contributions": 69
-  },
-  {
-    "donor": "JOHNSON & BLANTON, LLC",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 883113.54,
-    "num_contributions": 946
-  },
-  {
-    "donor": "AND JUSTICE FOR ALL",
-    "committee": "Justice for All",
-    "committee_acct": "60770",
-    "total_amount": 880898.67,
-    "num_contributions": 1
-  },
-  {
-    "donor": "WILKES & MCHUGH - ATTORNEYS AT LAW",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 877604.85,
-    "num_contributions": 766
-  },
-  {
-    "donor": "CONSERVATIVES FOR PRINCIPLED LEADERSHIP",
-    "committee": "Florida Forward",
-    "committee_acct": "83794",
-    "total_amount": 872000.0,
-    "num_contributions": 7
-  },
-  {
-    "donor": "CABLE TELEVISION PAC",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 868000.0,
-    "num_contributions": 142
-  },
-  {
-    "donor": "BRAMAN MOTORS, INC.",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 866375.0,
-    "num_contributions": 77
-  },
-  {
-    "donor": "PTJ OPERATIONS, LLC",
-    "committee": "Everglades Water Trust",
-    "committee_acct": "75015",
-    "total_amount": 865000.0,
-    "num_contributions": 5
-  },
-  {
-    "donor": "AKERMAN SENTERFITT",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 863824.85,
-    "num_contributions": 80
-  },
-  {
-    "donor": "SEIU FLORIDA HEALTHCARE UNION CCE",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 859383.99,
-    "num_contributions": 18
-  },
-  {
-    "donor": "BRAMAN NORMAN",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 857979.36,
-    "num_contributions": 437
-  },
-  {
-    "donor": "SHUMAKER ADVISORS FLORIDA LLC",
-    "committee": "Shumaker Florida Political Committee",
-    "committee_acct": "79466",
-    "total_amount": 853077.0,
-    "num_contributions": 27
-  },
-  {
-    "donor": "SPRINT-FLORIDA INC.",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 851657.08,
-    "num_contributions": 142
-  },
-  {
-    "donor": "CENTENNIAL BANK",
-    "committee": "Friends of Wilton Simpson",
-    "committee_acct": "79644",
-    "total_amount": 850674.39,
-    "num_contributions": 50
-  },
-  {
-    "donor": "AMERICAN FEDERATION OF TEACHERS/ COPE COMMITTEE ON POLITICAL EDUCATION",
-    "committee": "Florida Education Association Advocacy Fund",
-    "committee_acct": "60703",
-    "total_amount": 850000.0,
-    "num_contributions": 5
-  },
-  {
-    "donor": "GROW FLORIDA",
-    "committee": "Florida Courage",
-    "committee_acct": "83856",
-    "total_amount": 850000.0,
-    "num_contributions": 1
-  },
-  {
-    "donor": "PROTECT OUR LIBERTY",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 845000.0,
-    "num_contributions": 10
-  },
-  {
-    "donor": "SEMBLER BRENT",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 843012.75,
-    "num_contributions": 61
-  },
-  {
-    "donor": "SUNCOAST CREDIT UNION",
-    "committee": "Florida Credit Union Political Action Committee (Florida CUPAC)",
-    "committee_acct": "60440",
-    "total_amount": 840792.62,
-    "num_contributions": 134
-  },
-  {
-    "donor": "SOUTHERN GLAZER'S WINE AND SPIRITS, LLC",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 838521.37,
-    "num_contributions": 85
-  },
-  {
-    "donor": "BUSH-BROGAN 2002 CAMPAIGN",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 830710.38,
-    "num_contributions": 20
-  },
-  {
-    "donor": "PRESERVE THE AMERICAN DREAM",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 828000.0,
-    "num_contributions": 7
-  },
-  {
-    "donor": "GUIDEWELL GROUP, INC",
-    "committee": "Florida Jobs PAC",
-    "committee_acct": "60760",
-    "total_amount": 825000.0,
-    "num_contributions": 33
-  },
-  {
-    "donor": "BOCA RATON CITY CENTER LLC",
-    "committee": "A Better Boca Raton",
-    "committee_acct": "89664",
-    "total_amount": 825000.0,
-    "num_contributions": 3
-  },
-  {
-    "donor": "WALTON JIM",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 824152.15,
-    "num_contributions": 397
-  },
-  {
-    "donor": "SINGER MICHAEL A.",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 824020.04,
-    "num_contributions": 131
-  },
-  {
-    "donor": "PINELLAS COUNTY SOE",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 818890.85,
-    "num_contributions": 80
-  },
-  {
-    "donor": "DISNEY WORLDWIDE SERVICES, INC.",
-    "committee": "Voice of Florida Business Political Action Committee",
-    "committee_acct": "60591",
-    "total_amount": 815000.0,
-    "num_contributions": 13
-  },
-  {
-    "donor": "PFIZER INC.",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 815000.0,
-    "num_contributions": 90
-  },
-  {
-    "donor": "PAJCIC & PAJCIC, P.A.",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 814570.0,
-    "num_contributions": 60
-  },
-  {
-    "donor": "BARNES TRIAL GROUP",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 811748.22,
-    "num_contributions": 397
-  },
-  {
-    "donor": "ESTATE OF JOHN ERNEST O'BRIEN",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 809090.72,
-    "num_contributions": 3
-  },
-  {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Florida Forward",
-    "committee_acct": "83794",
-    "total_amount": 806300.0,
-    "num_contributions": 11
-  },
-  {
-    "donor": "SEARCY DENNEY SCAROLA BARNHART & SHIPLEY",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 805990.0,
-    "num_contributions": 34
-  },
-  {
-    "donor": "REPUBLICAN PARTY OF FLORIDA",
-    "committee": "Conservative for Florida",
-    "committee_acct": "78970",
-    "total_amount": 803000.0,
-    "num_contributions": 4
-  },
-  {
-    "donor": "ADVANCE AMERICA",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 799949.97,
-    "num_contributions": 103
-  },
-  {
-    "donor": "DUKE ENERGY",
-    "committee": "Associated Industries of Florida Political Action Committee",
-    "committee_acct": "60768",
-    "total_amount": 795000.0,
-    "num_contributions": 10
-  },
-  {
-    "donor": "CHARTER COMMUNICATIONS",
-    "committee": "Charter Communications, Inc. Florida Political Action Committee",
-    "committee_acct": "74191",
-    "total_amount": 795000.0,
-    "num_contributions": 19
-  },
-  {
-    "donor": "ORANGE LAKE RESORT COALITION",
-    "committee": "Orange Lake Resort Alliance",
-    "committee_acct": "60943",
-    "total_amount": 787989.07,
-    "num_contributions": 1
-  },
-  {
-    "donor": "DEPOSITS",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 783525.32,
-    "num_contributions": 40
-  },
-  {
-    "donor": "COMMITTEE FOR A CONSERVATIVE HOUSE",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 782726.42,
-    "num_contributions": 2
-  },
-  {
-    "donor": "KEEP FLORIDA WINNING",
-    "committee": "Florida Committee for Accountability",
-    "committee_acct": "84237",
-    "total_amount": 780000.0,
-    "num_contributions": 6
-  },
-  {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Florida Insurance Council (FIC) Political Committee",
-    "committee_acct": "60984",
-    "total_amount": 777783.37,
-    "num_contributions": 56
-  },
-  {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Florida Farmers",
-    "committee_acct": "89567",
-    "total_amount": 775000.0,
-    "num_contributions": 4
-  },
-  {
-    "donor": "VOTE YES ON AMENDMENT 2",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 775000.0,
-    "num_contributions": 3
-  },
-  {
-    "donor": "WORKING FOR FLORIDA'S FAMILIES",
-    "committee": "Strong Leadership",
-    "committee_acct": "79078",
-    "total_amount": 773317.87,
-    "num_contributions": 3
-  },
-  {
-    "donor": "VOICE OF FLORIDA BUSINESS POLITICAL ACTION COMMITTEE",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 770000.0,
-    "num_contributions": 15
-  },
-  {
-    "donor": "HOLLAND & KNIGHT LLP",
-    "committee": "Holland & Knight Florida Political Committee",
-    "committee_acct": "60578",
-    "total_amount": 766906.03,
-    "num_contributions": 29
-  },
-  {
-    "donor": "MARDI GRAS GAMING",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 765171.7,
-    "num_contributions": 41
-  },
-  {
-    "donor": "SERVICE EMPLOYEES INTERNATIONAL UNION",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 764525.0,
-    "num_contributions": 23
-  },
-  {
-    "donor": "NEXTERA ENERGY, INC.",
-    "committee": "Florida Jobs PAC",
-    "committee_acct": "60760",
-    "total_amount": 762739.0,
-    "num_contributions": 15
-  },
-  {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Florida Trust",
-    "committee_acct": "83455",
-    "total_amount": 760220.21,
-    "num_contributions": 12
-  },
-  {
-    "donor": "FERNANDEZ MIGUEL",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 759205.28,
-    "num_contributions": 150
-  },
-  {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Florida's Voice for Early Learning",
-    "committee_acct": "61422",
-    "total_amount": 758574.0,
-    "num_contributions": 25
-  },
-  {
-    "donor": "LEON ADVERTISING & PUBLIC RELATIONS",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 758275.13,
-    "num_contributions": 22
-  },
-  {
-    "donor": "EQUALITY FLORIDA ACTION, INC",
-    "committee": "Equality Florida Action PAC, Inc.",
-    "committee_acct": "45409",
-    "total_amount": 758000.0,
-    "num_contributions": 12
-  },
-  {
-    "donor": "RUBENSTEIN ROBERT",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 757523.8,
-    "num_contributions": 57
-  },
-  {
-    "donor": "BANKERS INSURANCE GROUP",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 756670.75,
-    "num_contributions": 158
-  },
-  {
-    "donor": "CDR ENTERPRISES, INC.",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 755000.0,
-    "num_contributions": 3
-  },
-  {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Suncoast Better Government Committee",
-    "committee_acct": "64950",
-    "total_amount": 754500.0,
-    "num_contributions": 40
-  },
-  {
-    "donor": "DGA - FLORIDA PAC",
-    "committee": "Florida for All, Inc.",
-    "committee_acct": "60452",
-    "total_amount": 753179.0,
-    "num_contributions": 2
-  },
-  {
-    "donor": "SECURE FLORIDA'S FUTURE",
-    "committee": "Florida Jobs PAC",
-    "committee_acct": "60760",
-    "total_amount": 750000.0,
-    "num_contributions": 5
-  },
-  {
-    "donor": "REPUBLICAN NATIONAL COMMITTEE",
-    "committee": "Florida Courage",
-    "committee_acct": "83856",
-    "total_amount": 750000.0,
-    "num_contributions": 3
-  },
-  {
-    "donor": "JOBS FOR FLORIDA",
-    "committee": "Conservatives",
-    "committee_acct": "65559",
-    "total_amount": 750000.0,
-    "num_contributions": 3
-  },
-  {
-    "donor": "AFSCME PEOPLE",
-    "committee": "AFSCME Florida",
-    "committee_acct": "61265",
-    "total_amount": 750000.0,
-    "num_contributions": 1
-  },
-  {
-    "donor": "JOBS FOR FLORIDA",
-    "committee": "Sunshine State First",
-    "committee_acct": "60963",
-    "total_amount": 750000.0,
-    "num_contributions": 3
-  },
-  {
-    "donor": "VERIZON",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 747631.22,
-    "num_contributions": 56
-  },
-  {
-    "donor": "HUIZENGA HOLDINGS,  INC",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 746833.78,
-    "num_contributions": 44
-  },
-  {
-    "donor": "PUGH JR. JAMES H.",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 745725.55,
-    "num_contributions": 59
-  },
-  {
-    "donor": "AMERICANS FOR PROSPERITY ACTION",
-    "committee": "Florida Insurance Council (FIC) Political Committee",
-    "committee_acct": "60984",
-    "total_amount": 743000.0,
-    "num_contributions": 30
-  },
-  {
-    "donor": "EVENTBRITE, INC.",
-    "committee": "RPPTL-PAC",
-    "committee_acct": "60809",
-    "total_amount": 739228.64,
-    "num_contributions": 6
-  },
-  {
-    "donor": "ABC FLORIDA EAST COAST CHAPTER, INC.",
-    "committee": "ABC PAC",
-    "committee_acct": "112",
-    "total_amount": 738220.75,
-    "num_contributions": 52
-  },
-  {
-    "donor": "HARRELL'S LLC",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 737618.36,
-    "num_contributions": 969
-  },
-  {
-    "donor": "CENTRAL FLORIDA JOBS WITH JUSTICE",
-    "committee": "Florida Decides Healthcare, Inc.",
-    "committee_acct": "73891",
-    "total_amount": 735769.26,
-    "num_contributions": 33
-  },
-  {
-    "donor": "DEMOCRATIC NATIONAL COMMITTEE SERVICES CORPORATION",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 733333.33,
-    "num_contributions": 2
-  },
-  {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Florida Conservative Action Fund",
-    "committee_acct": "69309",
-    "total_amount": 731500.0,
-    "num_contributions": 21
-  },
-  {
-    "donor": "MACDOUGALD JAMES",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 730082.74,
-    "num_contributions": 256
-  },
-  {
-    "donor": "TRUTH MATTERS PC",
-    "committee": "Florida Trust",
-    "committee_acct": "83455",
-    "total_amount": 730000.0,
-    "num_contributions": 1
-  },
-  {
-    "donor": "DOSAL TOBACCO CORPORATION",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 729879.43,
-    "num_contributions": 72
-  },
-  {
-    "donor": "HOLLAND & KNIGHT LLP",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 727707.19,
-    "num_contributions": 321
-  },
-  {
-    "donor": "JFK MEDICAL CENTER",
-    "committee": "HCA East Florida Division Good Government PAC",
-    "committee_acct": "60906",
-    "total_amount": 727500.0,
-    "num_contributions": 64
-  },
-  {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Florida Free Enterprise Fund",
-    "committee_acct": "79207",
-    "total_amount": 727000.0,
-    "num_contributions": 18
-  },
-  {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Friends of Colleen Burton",
-    "committee_acct": "70505",
-    "total_amount": 726491.78,
-    "num_contributions": 169
-  },
-  {
-    "donor": "FIRST COAST SUNLIGHT",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 725000.0,
-    "num_contributions": 3
-  },
-  {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Conservative Florida",
-    "committee_acct": "74340",
-    "total_amount": 721527.96,
-    "num_contributions": 122
-  },
-  {
-    "donor": "IMPACT",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 720521.04,
-    "num_contributions": 86
-  },
-  {
-    "donor": "OPTOMETRY PAC",
-    "committee": "Building a Better Florida PC",
-    "committee_acct": "61066",
-    "total_amount": 720000.0,
-    "num_contributions": 11
-  },
-  {
-    "donor": "COMPREHENSIVE HEALTH MANAGEMENT, INC.",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 719260.0,
-    "num_contributions": 49
-  },
-  {
-    "donor": "THE PEOPLE VERSUS THE POWERFUL PAC",
-    "committee": "The Southern Group of Florida Political Committee",
-    "committee_acct": "74540",
-    "total_amount": 719000.0,
-    "num_contributions": 7
-  },
-  {
-    "donor": "ABRAHAM S. DANIEL",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 718148.0,
-    "num_contributions": 85
-  },
-  {
-    "donor": "GROW FLORIDA",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 716421.2,
-    "num_contributions": 7
-  },
-  {
-    "donor": "GUIDEWELL GROUP, INC",
-    "committee": "Florida Insurance Council (FIC) Political Committee",
-    "committee_acct": "60984",
-    "total_amount": 715000.0,
-    "num_contributions": 29
-  },
-  {
-    "donor": "TRUIST BANK",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 713505.26,
-    "num_contributions": 51
-  },
-  {
-    "donor": "21ST CENTURY ONCOLOGY INC.",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 713500.0,
-    "num_contributions": 53
-  },
-  {
-    "donor": "CHARLIE CRIST FOR FLORIDA",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 713076.46,
-    "num_contributions": 466
-  },
-  {
-    "donor": "HUIZENGA WAYNE",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 708279.58,
-    "num_contributions": 18
-  },
-  {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Floridians for Ethics and Truth in Politics",
-    "committee_acct": "69287",
-    "total_amount": 707348.86,
-    "num_contributions": 29
-  },
-  {
-    "donor": "BUYING TIME MEDIA LLC",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 707204.09,
-    "num_contributions": 1
-  },
-  {
-    "donor": "LEVIN PAPANTONIO RAFFERTY",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 704500.0,
-    "num_contributions": 43
-  },
-  {
-    "donor": "STERN PC",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 701614.0,
-    "num_contributions": 495
-  },
-  {
-    "donor": "REPUBLICAN NATIONAL COMMITTEE",
-    "committee": "Growing Florida's Economy",
-    "committee_acct": "73749",
-    "total_amount": 700000.0,
-    "num_contributions": 3
-  },
-  {
-    "donor": "PROPEL FLORIDA LLC",
-    "committee": "Strong Communities of Southwest Florida PC",
-    "committee_acct": "60856",
-    "total_amount": 700000.0,
-    "num_contributions": 3
-  },
-  {
-    "donor": "SUSSMAN S. DONALD",
-    "committee": "Florida for All, Inc.",
-    "committee_acct": "60452",
-    "total_amount": 700000.0,
-    "num_contributions": 2
-  },
-  {
-    "donor": "RESTORE OUR NATION (RON PAC)",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 700000.0,
-    "num_contributions": 2
-  },
-  {
-    "donor": "SUNSHINE STATE FIRST",
-    "committee": "Liberty Leadership Fund",
-    "committee_acct": "79312",
-    "total_amount": 700000.0,
-    "num_contributions": 1
-  },
-  {
-    "donor": "CIVIC PARTICIPATION ACTION FUND",
-    "committee": "Florida for All, Inc.",
-    "committee_acct": "60452",
-    "total_amount": 700000.0,
-    "num_contributions": 2
-  },
-  {
-    "donor": "SERIOUS CONSERVATIVES PC",
-    "committee": "Florida Green PAC",
-    "committee_acct": "74435",
-    "total_amount": 695000.0,
-    "num_contributions": 1
-  },
-  {
-    "donor": "THE EVERGLADES TRUST, INC.",
-    "committee": "Everglades Water Trust",
-    "committee_acct": "75015",
-    "total_amount": 695000.0,
-    "num_contributions": 12
-  },
-  {
-    "donor": "ODOM JAY",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 694634.92,
-    "num_contributions": 49
-  },
-  {
-    "donor": "SILVERS LAURIE S.",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 693942.5,
-    "num_contributions": 119
-  },
-  {
-    "donor": "ROBERTSON JR. JULIAN JR.",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 688991.03,
-    "num_contributions": 583
-  },
-  {
-    "donor": "LAUFER MARSHA Z",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 687495.0,
-    "num_contributions": 16
-  },
-  {
-    "donor": "WATKINS EDWARD",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 687009.36,
-    "num_contributions": 248
-  },
-  {
-    "donor": "DEBARTOLO JR. EDWARD J.",
-    "committee": "Friends of Chad Chronister",
-    "committee_acct": "74217",
-    "total_amount": 687000.0,
-    "num_contributions": 9
-  },
-  {
-    "donor": "CHARTER COMMUNICATIONS",
-    "committee": "A Stronger Florida",
-    "committee_acct": "71120",
-    "total_amount": 685000.0,
-    "num_contributions": 33
-  },
-  {
-    "donor": "ASSOCIATED INDUSTRIES OF FLORIDA PAC",
-    "committee": "Building On Your Dreams Political Committee",
-    "committee_acct": "61056",
-    "total_amount": 680000.0,
-    "num_contributions": 23
-  },
-  {
-    "donor": "OUTBACK STEAKHOUSE INC. PAC",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 678175.5,
-    "num_contributions": 59
-  },
-  {
-    "donor": "PANHANDLE PROSPERITY",
-    "committee": "Florida First Forever, Inc.",
-    "committee_acct": "69288",
-    "total_amount": 678000.0,
-    "num_contributions": 7
-  },
-  {
-    "donor": "VITAS HEALTHCARE",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 675389.53,
-    "num_contributions": 30
-  },
-  {
-    "donor": "HONEST LEADERSHIP",
-    "committee": "Florida Right Direction",
-    "committee_acct": "66909",
-    "total_amount": 675000.0,
-    "num_contributions": 4
-  },
-  {
-    "donor": "NEW VENTURE FUND",
-    "committee": "Florida Decides Healthcare, Inc.",
-    "committee_acct": "73891",
-    "total_amount": 675000.0,
-    "num_contributions": 1
-  },
-  {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Citizens for Solutions",
-    "committee_acct": "79209",
-    "total_amount": 674758.88,
-    "num_contributions": 115
-  },
-  {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Conquistador PC",
-    "committee_acct": "73814",
-    "total_amount": 673581.92,
-    "num_contributions": 1
-  },
-  {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "SURPAC",
-    "committee_acct": "61154",
-    "total_amount": 672770.37,
-    "num_contributions": 67
-  },
-  {
-    "donor": "COMMUNICATIONS INT'L, INC.",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 669050.58,
-    "num_contributions": 55
-  },
-  {
-    "donor": "A STRONGER FLORIDA",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 667745.36,
-    "num_contributions": 21
-  },
-  {
-    "donor": "MORGAN & MORGAN",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 667242.55,
-    "num_contributions": 326
-  },
-  {
-    "donor": "SWISHER INTERNATIONAL INC.",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 665575.0,
-    "num_contributions": 47
-  },
-  {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Florida First Forever, Inc.",
-    "committee_acct": "69288",
-    "total_amount": 665435.29,
-    "num_contributions": 59
-  },
-  {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Florida PC",
-    "committee_acct": "88720",
-    "total_amount": 663577.0,
-    "num_contributions": 4
-  },
-  {
-    "donor": "HILLSBOROUGH COUNTY SOE",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 658659.37,
-    "num_contributions": 32
-  },
-  {
-    "donor": "GOODMAN MURRAY",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 657235.1,
-    "num_contributions": 126
-  },
-  {
-    "donor": "HARRELL'S LLC",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 651659.5,
-    "num_contributions": 554
-  },
-  {
-    "donor": "REPUBLICAN NATIONAL COMMITTEE",
-    "committee": "Disciplined Leadership",
-    "committee_acct": "78929",
-    "total_amount": 650000.0,
-    "num_contributions": 4
-  },
-  {
-    "donor": "REPUBLICAN NATIONAL COMMITTEE",
-    "committee": "For A Conservative Florida",
-    "committee_acct": "78788",
-    "total_amount": 650000.0,
-    "num_contributions": 3
-  },
-  {
-    "donor": "UNITED STATES SUGAR CORPORATION",
-    "committee": "Florida Freedom Fund",
-    "committee_acct": "85993",
-    "total_amount": 650000.0,
-    "num_contributions": 3
-  },
-  {
-    "donor": "REPUBLICAN PARTY OF FLORIDA",
-    "committee": "America First PC",
-    "committee_acct": "80035",
-    "total_amount": 650000.0,
-    "num_contributions": 3
-  },
-  {
-    "donor": "HONEST LEADERSHIP",
-    "committee": "First Coast Sunlight",
-    "committee_acct": "74997",
-    "total_amount": 650000.0,
-    "num_contributions": 3
-  },
-  {
-    "donor": "CONSERVATIVES FOR GOOD GOVERNMENT",
-    "committee": "Friends of Debbie Mayfield",
-    "committee_acct": "89037",
-    "total_amount": 650000.0,
-    "num_contributions": 1
-  },
-  {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Women Building the Future",
-    "committee_acct": "74643",
-    "total_amount": 649862.52,
-    "num_contributions": 128
-  },
-  {
-    "donor": "HUMANA, INC.",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 649022.61,
-    "num_contributions": 82
-  },
-  {
-    "donor": "ASSOCIATED INDUSTRIES OF FLORIDA PAC",
-    "committee": "Conservatives for a Better Florida",
-    "committee_acct": "70025",
-    "total_amount": 647500.0,
-    "num_contributions": 15
-  },
-  {
-    "donor": "PATE LUTHER",
-    "committee": "Republican Party of Florida",
-    "committee_acct": "4700",
-    "total_amount": 644377.0,
-    "num_contributions": 217
-  },
-  {
-    "donor": "CENTENNIAL BANK",
-    "committee": "Future Florida",
-    "committee_acct": "74437",
-    "total_amount": 644103.37,
-    "num_contributions": 74
-  },
-  {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "Friends of Jim Boyd",
-    "committee_acct": "83605",
-    "total_amount": 642243.12,
-    "num_contributions": 63
-  },
-  {
-    "donor": "CONSERVATIVES FOR PRINCIPLED LEADERSHIP",
-    "committee": "Friends of Wilton Simpson",
-    "committee_acct": "79644",
-    "total_amount": 638650.0,
-    "num_contributions": 9
-  },
-  {
-    "donor": "LAUFER HENRY BEN",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 637144.5,
-    "num_contributions": 29
-  },
-  {
-    "donor": "PUBLIX SUPER MARKETS, INC.",
-    "committee": "Conservatives for a Better Florida",
-    "committee_acct": "70025",
-    "total_amount": 635000.0,
-    "num_contributions": 12
-  },
-  {
-    "donor": "ASDC/DOLLARS FOR DEMOCRATS",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 634806.51,
-    "num_contributions": 49
-  },
-  {
-    "donor": "FLORIDA POWER & LIGHT COMPANY",
-    "committee": "First Coast Conservatives",
-    "committee_acct": "62350",
-    "total_amount": 634470.0,
-    "num_contributions": 108
-  },
-  {
-    "donor": "ORLANDO PAC",
-    "committee": "Florida Democratic Party",
-    "committee_acct": "1539",
-    "total_amount": 631480.53,
-    "num_contributions": 38
-  },
-  {
-    "donor": "TD BANK",
-    "committee": "Housing for Hometown Heroes",
-    "committee_acct": "79347",
-    "total_amount": 631115.77,
-    "num_contributions": 59
+    "total_amount": 1019630.5,
+    "num_contributions": 335
   }
 ]

@@ -120,23 +120,30 @@ for r in raw_rows:
 
 # ── Step 4: COPY into contributions ──────────────────────────────────────────
 
-print("Loading into contributions table via COPY...")
-cols = ["recipient_type","recipient_acct","contributor_name","contributor_name_normalized",
-        "donor_slug","amount","contribution_date","report_year","report_type",
-        "type_code","in_kind_description","contributor_address",
-        "contributor_city_state_zip","contributor_occupation","source_file"]
+cur.execute("SELECT COUNT(*) FROM contributions WHERE recipient_acct = %s", (ACCT_NUM,))
+already_loaded = cur.fetchone()[0]
 
-buf = io.StringIO()
-writer = csv.writer(buf)
-for row in contrib_rows:
-    writer.writerow([row[c] if row[c] is not None else "" for c in cols])
-buf.seek(0)
+if already_loaded > 0:
+    print(f"  Skipping COPY — {already_loaded:,} rows already loaded for {ACCT_NUM}")
+else:
+    print("Loading into contributions table via COPY...")
+    cols = ["recipient_type","recipient_acct","contributor_name","contributor_name_normalized",
+            "donor_slug","amount","contribution_date","report_year","report_type",
+            "type_code","in_kind_description","contributor_address",
+            "contributor_city_state_zip","contributor_occupation","source_file"]
 
-cur.copy_expert(
-    f"COPY contributions ({','.join(cols)}) FROM STDIN WITH (FORMAT csv, NULL '')",
-    buf
-)
-print(f"  Inserted {len(contrib_rows):,} rows")
+    buf = io.StringIO()
+    writer = csv.writer(buf)
+    for row in contrib_rows:
+        writer.writerow([row[c] if row[c] is not None else "" for c in cols])
+    buf.seek(0)
+
+    cur.copy_expert(
+        f"COPY contributions ({','.join(cols)}) FROM STDIN WITH (FORMAT csv, NULL '')",
+        buf
+    )
+    conn.commit()  # commit contributions immediately so rows are durable
+    print(f"  Inserted {len(contrib_rows):,} rows")
 
 # ── Step 5: Aggregate by donor_slug for downstream updates ───────────────────
 
@@ -160,65 +167,53 @@ existing_slugs = set(slug_by_norm.values())
 matched = {s: d for s, d in by_slug.items() if s in existing_slugs}
 print(f"  {len(matched):,} matched to existing donor profiles")
 
-# ── Step 6: Update donors table totals ───────────────────────────────────────
-
-print("Updating donors.total_soft + total_combined...")
+# ── Step 6: donor total aggregates ───────────────────────────────────────────
+# Skipped — script 85 (reconcile_donor_aggregates) recomputes all totals from
+# scratch from the contributions table after this script completes.
+from psycopg2.extras import execute_values
 updated = 0
-for slug, d in matched.items():
-    cur.execute("""
-        UPDATE donors
-        SET total_soft        = total_soft + %s,
-            total_combined    = total_combined + %s,
-            num_contributions = num_contributions + %s
-        WHERE slug = %s
-    """, (d["total"], d["total"], d["n"], slug))
-    updated += 1
-print(f"  Updated {updated:,} donor rows")
 
 # ── Step 7: Upsert donor_by_year ─────────────────────────────────────────────
 
 print("Upserting donor_by_year...")
-year_rows = 0
-for slug, d in matched.items():
-    for yr, amt in d["years"].items():
-        cur.execute("""
-            UPDATE donor_by_year
-            SET soft  = soft  + %s,
-                total = total + %s
-            WHERE donor_slug = %s AND year = %s
-        """, (amt, amt, slug, yr))
-        if cur.rowcount == 0:
-            cur.execute("""
-                INSERT INTO donor_by_year (donor_slug, year, soft, hard, total)
-                VALUES (%s, %s, %s, 0, %s)
-            """, (slug, yr, amt, amt))
-        year_rows += 1
+year_data = [
+    (slug, yr, amt, 0, amt)
+    for slug, d in matched.items()
+    for yr, amt in d["years"].items()
+]
+execute_values(cur, """
+    INSERT INTO donor_by_year (donor_slug, year, soft, hard, total)
+    VALUES %s
+    ON CONFLICT (donor_slug, year) DO UPDATE
+        SET soft  = donor_by_year.soft  + EXCLUDED.soft,
+            total = donor_by_year.total + EXCLUDED.total
+""", year_data)
+year_rows = len(year_data)
+conn.commit()
 print(f"  Upserted {year_rows:,} donor_by_year rows")
 
 # ── Step 8: Upsert donor_committees ──────────────────────────────────────────
 
 print("Upserting donor_committees (70275 links)...")
-dc_rows = 0
-for slug, d in matched.items():
-    cur.execute(
-        "UPDATE donor_committees SET total = total + %s, num_contributions = num_contributions + %s WHERE donor_slug = %s AND acct_num = %s",
-        (d["total"], d["n"], slug, ACCT_NUM)
-    )
-    if cur.rowcount == 0:
-        cur.execute(
-            "INSERT INTO donor_committees (donor_slug, acct_num, committee_name, total, num_contributions) VALUES (%s, %s, %s, %s, %s)",
-            (slug, ACCT_NUM, COMMITTEE_NAME, d["total"], d["n"])
-        )
-    dc_rows += 1
+dc_data = [
+    (slug, ACCT_NUM, COMMITTEE_NAME, d["total"], d["n"])
+    for slug, d in matched.items()
+]
+execute_values(cur, """
+    INSERT INTO donor_committees (donor_slug, acct_num, committee_name, total, num_contributions)
+    VALUES %s
+    ON CONFLICT (donor_slug, acct_num) DO UPDATE
+        SET total              = donor_committees.total + EXCLUDED.total,
+            num_contributions  = donor_committees.num_contributions + EXCLUDED.num_contributions
+""", dc_data)
+dc_rows = len(dc_data)
+conn.commit()
 print(f"  Upserted {dc_rows:,} donor_committees rows")
 
-# ── Commit ────────────────────────────────────────────────────────────────────
-
-conn.commit()
 cur.close()
 conn.close()
 print("\n✓ Script 83 complete.")
-print(f"  {len(contrib_rows):,} contributions loaded")
-print(f"  {updated:,} donor totals updated")
-print(f"  {year_rows:,} year-bucket rows updated")
-print(f"  {dc_rows:,} donor↔committee links added")
+print(f"  {len(contrib_rows):,} contributions loaded/verified")
+print(f"  {year_rows:,} year-bucket rows upserted")
+print(f"  {dc_rows:,} donor↔committee links upserted")
+print("  (run script 85 to reconcile donor aggregate totals)")

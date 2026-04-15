@@ -11,6 +11,7 @@ Usage (from project root, with .venv activated):
 """
 
 from pathlib import Path
+import csv
 import sys
 import pandas as pd
 
@@ -55,17 +56,42 @@ def parse_amount(value) -> float:
     return -n if negative else n
 
 
+# Raw column names in the correct order (for headerless files from closed-committee scrape)
+_RAW_COLS = ["Rpt Yr", "Rpt Type", "Date", "Amount", "Contributor Name",
+             "Address", "City State Zip", "Occupation", "Typ", "InKind Desc"]
+
+_KNOWN_HEADER_STARTS = {"rpt yr", "rpt type", "date", "report_year", "report_type"}
+
+
+def _has_header(path: Path) -> bool:
+    """Return True if the file's first row looks like a header (not a data row)."""
+    try:
+        with open(path, encoding="latin-1", errors="replace") as f:
+            first = f.readline().split("\t")[0].strip().lower()
+        return first in _KNOWN_HEADER_STARTS
+    except Exception:
+        return True  # assume header on error
+
+
 def load_one_file(path: Path) -> pd.DataFrame:
     """Read one FL DOE tab-delimited contributions file into a clean DataFrame."""
     print(f"  reading {path.name} ...", flush=True)
 
-    df = pd.read_csv(
-        path,
+    has_hdr = _has_header(path)
+    read_kwargs = dict(
         sep="\t",
         dtype=str,
-        encoding="latin-1",   # FL DOE files are not utf-8; latin-1 is safe
+        encoding="latin-1",
         on_bad_lines="warn",
+        quoting=csv.QUOTE_NONE,
     )
+    if not has_hdr:
+        # Headerless files (e.g. closed-committee contribution exports from script 02b)
+        read_kwargs["header"] = None
+        read_kwargs["names"] = _RAW_COLS
+        print(f"    (no header row detected — using fixed column names)", flush=True)
+
+    df = pd.read_csv(path, **read_kwargs)
 
     # Strip whitespace from column names
     df.columns = [c.strip() for c in df.columns]

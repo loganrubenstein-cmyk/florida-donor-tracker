@@ -1,92 +1,120 @@
 [
   {
-    "name": "FLORIDA POWER & LIGHT COMPANY",
-    "total_amount": 330118129.69,
-    "num_contributions": 37460,
+    "name": "FLORIDA CRYSTALS CORPORATION",
+    "total_amount": 314026105.76,
+    "num_contributions": 25421,
     "is_corporate": true,
     "type": "corporate"
   },
   {
     "name": "TRULIEVE INC.",
-    "total_amount": 200952022.32,
-    "num_contributions": 235,
+    "total_amount": 210422255.97,
+    "num_contributions": 271,
     "is_corporate": true,
     "type": "corporate"
   },
   {
     "name": "LAS VEGAS SANDS CO.",
-    "total_amount": 73589000.0,
-    "num_contributions": 8,
+    "total_amount": 73503714.6,
+    "num_contributions": 11,
     "is_corporate": true,
     "type": "corporate"
   },
   {
-    "name": "THE GEO GROUP, INC.",
-    "total_amount": 28089696.58,
-    "num_contributions": 5568,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "CONSERVATIVES FOR PRINCIPLED LEADERSHIP",
-    "total_amount": 25190779.21,
-    "num_contributions": 962,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "UNITED STATES SUGAR CORPORATION",
-    "total_amount": 24038594.88,
-    "num_contributions": 2031,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "PUBLIX SUPER MARKETS, INC.",
-    "total_amount": 18027589.84,
-    "num_contributions": 547,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "TECO ENERGY, INC.",
-    "total_amount": 16229331.21,
-    "num_contributions": 1044,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "MARK - PAC",
-    "total_amount": 14809815.59,
-    "num_contributions": 84434,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "HCA WEST FLORIDA DIVISION AND GOOD GOVERNMENT PAC",
-    "total_amount": 14120577.96,
-    "num_contributions": 826,
+    "name": "FLORIDA POWER & LIGHT COMPANY",
+    "total_amount": 48203643.06,
+    "num_contributions": 1585,
     "is_corporate": true,
     "type": "corporate"
   },
   {
     "name": "DISNEY WORLDWIDE SERVICES, INC.",
-    "total_amount": 13802705.32,
-    "num_contributions": 579,
+    "total_amount": 41368613.42,
+    "num_contributions": 884,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "UNITED STATES SUGAR CORPORATION",
+    "total_amount": 39467128.77,
+    "num_contributions": 1165,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "MARSY'S LAW FOR ALL FOUNDATION",
+    "total_amount": 36825056.87,
+    "num_contributions": 11,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "REPUBLICAN GOVERNORS ASSOCIATION",
+    "total_amount": 28682672.74,
+    "num_contributions": 28,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "PUBLIX SUPER MARKETS, INC.",
+    "total_amount": 24116337.41,
+    "num_contributions": 721,
+    "is_corporate": true,
+    "type": "committee"
+  },
+  {
+    "name": "DEMOCRATIC GOVERNORS ASSOCIATION",
+    "total_amount": 22173060.74,
+    "num_contributions": 58,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "DRAFTKINGS, INC.",
+    "total_amount": 21607098.23,
+    "num_contributions": 39,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "ASSOCIATED INDUSTRIES OF FLORIDA POLITICAL ACTION COMMITTEE",
+    "total_amount": 19284785.5,
+    "num_contributions": 1592,
+    "is_corporate": true,
+    "type": "committee"
+  },
+  {
+    "name": "TECO ENERGY, INC.",
+    "total_amount": 18898609.61,
+    "num_contributions": 1239,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "NATIONAL ASSOCIATION OF REALTORS",
+    "total_amount": 18102557.62,
+    "num_contributions": 492,
     "is_corporate": true,
     "type": "corporate"
   },
   {
     "name": "U.S. SUGAR CORPORATION",
-    "total_amount": 13573264.79,
-    "num_contributions": 275,
+    "total_amount": 16722517.82,
+    "num_contributions": 331,
     "is_corporate": true,
     "type": "corporate"
   },
   {
-    "name": "ASSOCIATED INDUSTRIES OF FLORIDA PAC",
-    "total_amount": 12964909.0,
-    "num_contributions": 1186,
+    "name": "SIXTEEN THIRTY FUND",
+    "total_amount": 15020723.0,
+    "num_contributions": 9,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "NEXTERA ENERGY, INC.",
+    "total_amount": 14749189.0,
+    "num_contributions": 729,
     "is_corporate": true,
     "type": "corporate"
   },
@@ -98,23 +126,107 @@
     "type": "corporate"
   },
   {
-    "name": "NEXTERA ENERGY, INC.",
-    "total_amount": 11990490.0,
-    "num_contributions": 649,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "NATIONAL ASSOCIATION OF REALTORS",
-    "total_amount": 10246453.85,
-    "num_contributions": 376,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
     "name": "THE FLORIDA EDUCATION ASSOCIATION ADVOCACY FUND",
-    "total_amount": 8501174.37,
-    "num_contributions": 354,
+    "total_amount": 12161733.49,
+    "num_contributions": 476,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "MARK - PAC",
+    "total_amount": 11963619.99,
+    "num_contributions": 267,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "CONSERVATIVE PRINCIPLES FOR FLORIDA",
+    "total_amount": 11593071.42,
+    "num_contributions": 341,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "F. ANNETTE SCOTT REVOCABLE TRUST ACCOUNT",
+    "total_amount": 11300000.0,
+    "num_contributions": 5,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "THE GEO GROUP, INC.",
+    "total_amount": 10755856.14,
+    "num_contributions": 752,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "CONSERVATIVES FOR PRINCIPLED LEADERSHIP",
+    "total_amount": 10271102.78,
+    "num_contributions": 124,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "NEW VENTURE FUND",
+    "total_amount": 10229971.09,
+    "num_contributions": 3,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "VOTERS IN CONTROL, INC.",
+    "total_amount": 10000000.0,
+    "num_contributions": 2,
+    "is_corporate": true,
+    "type": "committee"
+  },
+  {
+    "name": "AMERICAN INTEGRITY MGA, LLC",
+    "total_amount": 9946190.9,
+    "num_contributions": 1710,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "SECURE FLORIDA'S FUTURE INC.",
+    "total_amount": 9713507.74,
+    "num_contributions": 44,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "THE VOICE OF FLORIDA BUSINESS PAC, INC.",
+    "total_amount": 9268734.49,
+    "num_contributions": 345,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "KEEP OUR CONSTITUTION CLEAN, INC.",
+    "total_amount": 9010146.76,
+    "num_contributions": 39,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "AMERICAN CIVIL LIBERTIES UNION, INC.",
+    "total_amount": 8944113.97,
+    "num_contributions": 182,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "CENTENE MANAGEMENT COMPANY LLC",
+    "total_amount": 8762926.82,
+    "num_contributions": 812,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "CITIZEN VOTERS, INC.",
+    "total_amount": 8306943.55,
+    "num_contributions": 24,
     "is_corporate": true,
     "type": "corporate"
   },
@@ -126,51 +238,135 @@
     "type": "corporate"
   },
   {
-    "name": "CENTENE MANAGEMENT COMPANY, LLC",
-    "total_amount": 7130411.11,
-    "num_contributions": 682,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "PROPEL FLORIDA LLC",
-    "total_amount": 6563690.88,
-    "num_contributions": 213,
+    "name": "HCA WEST FLORIDA DIVISION AND GOOD GOVERNMENT PAC",
+    "total_amount": 8231944.61,
+    "num_contributions": 424,
     "is_corporate": true,
     "type": "corporate"
   },
   {
     "name": "OD-EYEPAC",
-    "total_amount": 6171388.93,
-    "num_contributions": 330,
+    "total_amount": 7728638.93,
+    "num_contributions": 431,
     "is_corporate": true,
     "type": "corporate"
   },
   {
-    "name": "JM FAMILY ENTERPRISES, INC.",
-    "total_amount": 5838366.08,
-    "num_contributions": 546,
+    "name": "HCA NORTH FLORIDA DIVISION AND GOOD GOVERNMENT PAC",
+    "total_amount": 7680640.11,
+    "num_contributions": 436,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "HCA EAST FLORIDA DIVISION AND GOOD GOVERNMENT PAC",
+    "total_amount": 7473350.6,
+    "num_contributions": 420,
     "is_corporate": true,
     "type": "corporate"
   },
   {
     "name": "DOSAL TOBACCO CORPORATION",
-    "total_amount": 5785548.75,
-    "num_contributions": 514,
+    "total_amount": 7421850.24,
+    "num_contributions": 668,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "GLOBAL IMPACT SOCIAL WELFARE FOUNDATION (CLAF)",
+    "total_amount": 7250000.0,
+    "num_contributions": 1,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "RAI SERVICES COMPANY",
+    "total_amount": 7193500.0,
+    "num_contributions": 538,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "JM FAMILY ENTERPRISES, INC.",
+    "total_amount": 7192716.08,
+    "num_contributions": 692,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "FLORIDA POLICE BENEVOLENT ASSOCIATION INC JUSTICE PAC",
+    "total_amount": 7191091.4,
+    "num_contributions": 1151,
+    "is_corporate": true,
+    "type": "committee"
+  },
+  {
+    "name": "SOUTHWEST FLORIDA ENTERPRISES, INC",
+    "total_amount": 6726633.52,
+    "num_contributions": 1729,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "SOUTHERN GLAZER'S WINE AND SPIRITS, LLC",
+    "total_amount": 6687665.21,
+    "num_contributions": 805,
     "is_corporate": true,
     "type": "corporate"
   },
   {
     "name": "GUIDEWELL GROUP, INC",
-    "total_amount": 5557025.0,
-    "num_contributions": 231,
+    "total_amount": 6321000.0,
+    "num_contributions": 268,
     "is_corporate": true,
     "type": "corporate"
   },
   {
-    "name": "CITIZENS FOR PRINCIPLED LEADERSHIP",
-    "total_amount": 5551296.61,
-    "num_contributions": 253,
+    "name": "FLORIDA FREEDOM FUND",
+    "total_amount": 6285281.21,
+    "num_contributions": 25,
+    "is_corporate": true,
+    "type": "committee"
+  },
+  {
+    "name": "GOPAC ELECTION FUND",
+    "total_amount": 6260485.44,
+    "num_contributions": 55,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "FLO-SUN SUGAR COMPANY",
+    "total_amount": 5987057.03,
+    "num_contributions": 71,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "FCCI SERVICES, INC.",
+    "total_amount": 5969500.0,
+    "num_contributions": 706,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "COALITION FOR ENERGY CHOICE, INC.",
+    "total_amount": 5782077.48,
+    "num_contributions": 58,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "SURTERRA HOLDINGS, INC.",
+    "total_amount": 5593282.11,
+    "num_contributions": 34,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "FLORIDA ADVANCEMENT PROJECT INC",
+    "total_amount": 5555500.0,
+    "num_contributions": 80,
     "is_corporate": true,
     "type": "corporate"
   },
@@ -182,86 +378,198 @@
     "type": "corporate"
   },
   {
-    "name": "SOUTHERN GLAZER'S WINE AND SPIRITS, LLC",
-    "total_amount": 5199893.78,
-    "num_contributions": 613,
+    "name": "OPEN SOCIETY ACTION FUND",
+    "total_amount": 5500000.0,
+    "num_contributions": 4,
     "is_corporate": true,
     "type": "corporate"
   },
   {
-    "name": "PHILLIPS AND JORDAN, INCORPORATED",
-    "total_amount": 4970365.93,
-    "num_contributions": 12352,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "RAI SERVICES COMPANY",
-    "total_amount": 4808500.0,
-    "num_contributions": 347,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "FTBA TRANSPORTATION PAC",
-    "total_amount": 4500591.0,
-    "num_contributions": 600,
-    "is_corporate": true,
-    "type": "committee"
-  },
-  {
-    "name": "CARPAC",
-    "total_amount": 4428069.34,
-    "num_contributions": 62600,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "COMCAST CORPORATION",
-    "total_amount": 4376460.98,
-    "num_contributions": 565,
+    "name": "JACKSONVILLE GREYHOUND RACING, INC.",
+    "total_amount": 5482826.07,
+    "num_contributions": 126,
     "is_corporate": true,
     "type": "corporate"
   },
   {
     "name": "ANDERSON COLUMBIA CO., INC.",
-    "total_amount": 4242550.89,
-    "num_contributions": 28005,
+    "total_amount": 5386442.56,
+    "num_contributions": 39445,
     "is_corporate": true,
     "type": "corporate"
   },
   {
-    "name": "FCCI SERVICES INC.",
-    "total_amount": 4030112.5,
-    "num_contributions": 493,
+    "name": "NEA BALLOT MEASURE/LEGISLATIVE CRISIS FUND",
+    "total_amount": 5290400.0,
+    "num_contributions": 8,
     "is_corporate": true,
     "type": "corporate"
   },
   {
-    "name": "ANHEUSER BUSCH COMPANIES INC.",
-    "total_amount": 3853634.08,
-    "num_contributions": 440,
+    "name": "COMCAST CORPORATION",
+    "total_amount": 5272545.22,
+    "num_contributions": 673,
     "is_corporate": true,
     "type": "corporate"
   },
   {
-    "name": "GOPAC ELECTION FUND",
-    "total_amount": 3751000.0,
-    "num_contributions": 30,
+    "name": "FREEDOM FIRST COMMITTEE, INC.",
+    "total_amount": 5166947.1,
+    "num_contributions": 116,
+    "is_corporate": true,
+    "type": "committee"
+  },
+  {
+    "name": "TIDES FOUNDATION",
+    "total_amount": 5000000.0,
+    "num_contributions": 12,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "EVERYTOWN FOR GUN SAFETY ACTION FUND",
+    "total_amount": 4868069.64,
+    "num_contributions": 47,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "FLA. ASSOCIATION OF REALTORS ADVOCACY FUND",
+    "total_amount": 4778000.0,
+    "num_contributions": 9,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "WILLIAM L EDWARDS TRUST",
+    "total_amount": 4765203.48,
+    "num_contributions": 99353,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "PROPEL FLORIDA LLC",
+    "total_amount": 4735000.0,
+    "num_contributions": 16,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "AUTOMATED HEALTHCARE SOLUTIONS, LLC",
+    "total_amount": 4707350.0,
+    "num_contributions": 321,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "FLORIDA ASSOCIATION OF PROFESSIONAL EMPLOYER ORGANIZATIONS",
+    "total_amount": 4648724.34,
+    "num_contributions": 380,
     "is_corporate": true,
     "type": "corporate"
   },
   {
     "name": "FL CHAMBER OF COMM PAC",
-    "total_amount": 3744700.0,
-    "num_contributions": 156,
+    "total_amount": 4429700.0,
+    "num_contributions": 203,
     "is_corporate": true,
     "type": "corporate"
   },
   {
-    "name": "HARRELL'S LLC",
-    "total_amount": 3709799.95,
-    "num_contributions": 59776,
+    "name": "CONSERVATIVE LEADERSHIP COMMITTEE, INC (DBA CONSERVATIVES)",
+    "total_amount": 4422491.0,
+    "num_contributions": 79,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "PLANNED PARENTHOOD ACTION FUND",
+    "total_amount": 4292400.31,
+    "num_contributions": 82,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "FLORIDA TRUST",
+    "total_amount": 4208505.21,
+    "num_contributions": 35,
+    "is_corporate": true,
+    "type": "committee"
+  },
+  {
+    "name": "PROGRESS ENERGY SERVICE CO., LLC",
+    "total_amount": 4207622.0,
+    "num_contributions": 149,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "GULF POWER COMPANY",
+    "total_amount": 4176027.29,
+    "num_contributions": 151,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "WIN JUSTICE - FEDERAL PAC",
+    "total_amount": 4059726.55,
+    "num_contributions": 12,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "FLORIDA MANUFACTURED HOUSING ASSOC. PAC",
+    "total_amount": 4034417.57,
+    "num_contributions": 448,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "FTBA TRANSPORTATION PAC",
+    "total_amount": 4016822.26,
+    "num_contributions": 645,
+    "is_corporate": true,
+    "type": "committee"
+  },
+  {
+    "name": "ALTRIA CLIENT SERVICES, INC.",
+    "total_amount": 3993482.18,
+    "num_contributions": 181,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "UNIVERSAL CITY DEVELOPMENT PARTNERS",
+    "total_amount": 3990521.46,
+    "num_contributions": 283,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "VOICE OF FLORIDA BUSINESS PAC",
+    "total_amount": 3908943.11,
+    "num_contributions": 202,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "REALTORS PAC FLORIDA",
+    "total_amount": 3774330.0,
+    "num_contributions": 230,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "AIF PAC",
+    "total_amount": 3752000.0,
+    "num_contributions": 132,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "1630 FUND",
+    "total_amount": 3750000.0,
+    "num_contributions": 4,
     "is_corporate": true,
     "type": "corporate"
   },
@@ -273,430 +581,122 @@
     "type": "corporate"
   },
   {
+    "name": "THE SOUTHERN GROUP OF FLORIDA POLITICAL COMMITTEE",
+    "total_amount": 3666292.21,
+    "num_contributions": 729,
+    "is_corporate": true,
+    "type": "committee"
+  },
+  {
     "name": "VERANO HOLDINGS LLC",
-    "total_amount": 3626470.0,
-    "num_contributions": 16,
+    "total_amount": 3629470.0,
+    "num_contributions": 17,
     "is_corporate": true,
     "type": "corporate"
   },
   {
-    "name": "ASSOCIATED INDUSTRIES OF FLORIDA POLITICAL ACTION COMMITTEE",
-    "total_amount": 3520334.04,
-    "num_contributions": 384,
-    "is_corporate": true,
-    "type": "committee"
-  },
-  {
-    "name": "PROGRESS ENERGY SERVICE CO., LLC",
-    "total_amount": 3497622.0,
-    "num_contributions": 118,
+    "name": "FOR OUR FUTURE ACTION FUND",
+    "total_amount": 3626748.7,
+    "num_contributions": 17,
     "is_corporate": true,
     "type": "corporate"
   },
   {
-    "name": "CDR ENTERPRISES, INC.",
-    "total_amount": 3336000.0,
-    "num_contributions": 55,
+    "name": "AMERICAN FEDERATION FOR CHILDREN ACTION FUND",
+    "total_amount": 3611830.51,
+    "num_contributions": 63,
     "is_corporate": true,
     "type": "corporate"
   },
   {
-    "name": "BARNES TRIAL GROUP",
-    "total_amount": 3274637.16,
-    "num_contributions": 54171,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "UNIVERSAL CITY DEVELOPMENT PARTNERS",
-    "total_amount": 3206547.87,
-    "num_contributions": 238,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "THE VOICE OF FLORIDA BUSINESS PAC, INC.",
-    "total_amount": 3159500.0,
-    "num_contributions": 111,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "CURALEAF INC",
-    "total_amount": 3042500.0,
-    "num_contributions": 13,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "JOHNSON & BLANTON, LLC",
-    "total_amount": 2977471.56,
-    "num_contributions": 53032,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "MIAMI ASSOCIATION OF REALTORS  INC",
-    "total_amount": 2796673.87,
-    "num_contributions": 162,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "UNITEDHEALTH GROUP, INC.",
-    "total_amount": 2750853.04,
-    "num_contributions": 290,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "UNITE HERE TIP STATE AND LOCAL FUND",
-    "total_amount": 2744000.0,
-    "num_contributions": 30,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "HUMANA, INC.",
-    "total_amount": 2729915.18,
-    "num_contributions": 314,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "FAIAPAC",
-    "total_amount": 2685558.85,
-    "num_contributions": 263,
-    "is_corporate": true,
-    "type": "committee"
-  },
-  {
-    "name": "INTUITION SYSTEMS, INC.",
-    "total_amount": 2645497.93,
-    "num_contributions": 673,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "AUTOMATED HEALTHCARE SOLUTIONS, LLC",
-    "total_amount": 2607850.0,
-    "num_contributions": 192,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "IMPACT",
-    "total_amount": 2607188.06,
-    "num_contributions": 315,
-    "is_corporate": true,
-    "type": "committee"
-  },
-  {
-    "name": "OUR DEMOCRACY PAC",
-    "total_amount": 2596000.0,
+    "name": "NRA POLITICAL VICTORY FUND",
+    "total_amount": 3471480.91,
     "num_contributions": 53,
     "is_corporate": true,
     "type": "corporate"
   },
   {
-    "name": "AMSCOT CORPORATION",
-    "total_amount": 2534700.0,
-    "num_contributions": 439,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "SACE-ACTION FUND",
-    "total_amount": 2340687.04,
-    "num_contributions": 143,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "STATE OF FLORIDA DEPARTMENT OF FINANCIAL SERVICES",
-    "total_amount": 2339534.17,
-    "num_contributions": 80,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "DAVID NELSON CONSTRUCTION CO.",
-    "total_amount": 2317628.52,
-    "num_contributions": 34409,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "ABC LIQUORS, INC.",
-    "total_amount": 2310927.43,
-    "num_contributions": 360,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "ALTRIA CLIENT SERVICES, INC.",
-    "total_amount": 2306582.18,
-    "num_contributions": 122,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "HERITAGE INSURANCE HOLDINGS INC.",
-    "total_amount": 2110625.0,
-    "num_contributions": 180,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "AIRBNB, INC.",
-    "total_amount": 2081605.24,
-    "num_contributions": 103,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "MOVEMENT VOTER PAC",
-    "total_amount": 2014050.01,
-    "num_contributions": 32,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "THE CONCORD FUND",
-    "total_amount": 2000000.0,
-    "num_contributions": 1,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "SCHOOL DEVELOPMENT HC FINANCE LLC",
-    "total_amount": 1975750.0,
-    "num_contributions": 196,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "TECO HOLDINGS, INC.",
-    "total_amount": 1940000.0,
+    "name": "CDR ENTERPRISES, INC.",
+    "total_amount": 3387000.0,
     "num_contributions": 59,
     "is_corporate": true,
     "type": "corporate"
   },
   {
-    "name": "BELLSOUTH EMPLOYEES' FLORIDA PAC",
-    "total_amount": 1865110.58,
-    "num_contributions": 261,
+    "name": "ACLU OF FLORIDA, INC.",
+    "total_amount": 3380666.66,
+    "num_contributions": 184,
     "is_corporate": true,
     "type": "corporate"
   },
   {
-    "name": "GULFSTREAM PARK RACING ASSOCIATION",
-    "total_amount": 1844234.32,
-    "num_contributions": 173,
+    "name": "PUBLIC EDUCATION DEFENSE FUND",
+    "total_amount": 3356275.17,
+    "num_contributions": 31,
     "is_corporate": true,
     "type": "corporate"
   },
   {
-    "name": "BRAMAN MOTORS, INC.",
-    "total_amount": 1815850.0,
-    "num_contributions": 268,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "KELLY TRACTOR CO.",
-    "total_amount": 1815821.53,
-    "num_contributions": 16191,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "FREEDOM FIRST COMMITTEE, INC.",
-    "total_amount": 1814928.57,
-    "num_contributions": 34,
-    "is_corporate": true,
-    "type": "committee"
-  },
-  {
-    "name": "ECONOMIC IMPROVEMENT FUND, INC.",
-    "total_amount": 1777831.05,
-    "num_contributions": 22,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "PREFERRED CARE PARTNERS, INC.",
-    "total_amount": 1748831.87,
-    "num_contributions": 361,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "ARDA ROC-PAC",
-    "total_amount": 1719287.94,
-    "num_contributions": 76,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "THE AMERICAN PROMISE, INC.",
-    "total_amount": 1675750.0,
-    "num_contributions": 7,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "A. DUDA & SONS, INC.",
-    "total_amount": 1650045.11,
-    "num_contributions": 211,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "MOSAIC FERTILIZER LLC",
-    "total_amount": 1637602.15,
-    "num_contributions": 142,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "GULF POWER COMPANY",
-    "total_amount": 1612719.41,
-    "num_contributions": 78,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "PLANNED PARENTHOOD ACTION FUND",
-    "total_amount": 1599576.69,
-    "num_contributions": 30,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "MOSAIC GLOBAL SALES LLC",
-    "total_amount": 1582000.0,
-    "num_contributions": 151,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "CHARTER SCHOOLS USA INC.",
-    "total_amount": 1569054.57,
-    "num_contributions": 94,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "BAYFRONT 2011 DEVELOPMENT, LLC",
-    "total_amount": 1529208.86,
-    "num_contributions": 42,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "THE PEOPLE OVER PROFITS FLORIDA, INC.",
-    "total_amount": 1503138.88,
-    "num_contributions": 20,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "HERITAGE MGA, LLC",
-    "total_amount": 1478360.0,
-    "num_contributions": 257,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "ATLANTIC PACIFIC COMMUNITIES, LLC",
-    "total_amount": 1473757.48,
-    "num_contributions": 508,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "AIF PAC",
-    "total_amount": 1473500.0,
-    "num_contributions": 65,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "CSX TRANSPORTATION, INC.",
-    "total_amount": 1468338.0,
-    "num_contributions": 169,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "TENET HEALTHCARE CORP.",
-    "total_amount": 1406919.04,
-    "num_contributions": 126,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "OPTOMETRY PAC",
-    "total_amount": 1393500.0,
-    "num_contributions": 26,
-    "is_corporate": true,
-    "type": "committee"
-  },
-  {
-    "name": "GARCIA DEVELOPMENT COMPANY",
-    "total_amount": 1375375.0,
-    "num_contributions": 3,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "TIDES FOUNDATION",
-    "total_amount": 1367500.0,
-    "num_contributions": 3,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "FEA SOLIDARITY FUND, INC",
-    "total_amount": 1351600.0,
-    "num_contributions": 41,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "DREAM FINDERS HOMES LLC",
-    "total_amount": 1319377.74,
-    "num_contributions": 68,
-    "is_corporate": true,
-    "type": "corporate"
-  },
-  {
-    "name": "ALICO, INC.",
-    "total_amount": 1318279.05,
+    "name": "UNITE HERE TIP STATE AND LOCAL FUND",
+    "total_amount": 3355051.78,
     "num_contributions": 62,
     "is_corporate": true,
     "type": "corporate"
   },
   {
-    "name": "SLIDE INSURANCE HOLDINGS, INC.",
-    "total_amount": 1302500.0,
-    "num_contributions": 121,
+    "name": "DEFEND JUSTICE FROM POLITICS, INC",
+    "total_amount": 3354145.27,
+    "num_contributions": 19,
     "is_corporate": true,
     "type": "corporate"
   },
   {
-    "name": "GMRI, INC.",
-    "total_amount": 1249950.0,
-    "num_contributions": 144,
+    "name": "HERITAGE P&C INSURANCE COMPANY",
+    "total_amount": 3311160.41,
+    "num_contributions": 246,
     "is_corporate": true,
     "type": "corporate"
   },
   {
-    "name": "AMERICAN VALUES PAC",
-    "total_amount": 1248175.0,
-    "num_contributions": 4,
+    "name": "TAMPA ELECTRIC COMPANY",
+    "total_amount": 3296502.7,
+    "num_contributions": 28,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "DEMOCRACY PAC",
+    "total_amount": 3261000.0,
+    "num_contributions": 8,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "PHILLIPS AND JORDAN, INCORPORATED",
+    "total_amount": 3216098.81,
+    "num_contributions": 11260,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "IMPACT",
+    "total_amount": 3189721.04,
+    "num_contributions": 420,
     "is_corporate": true,
     "type": "committee"
+  },
+  {
+    "name": "MIAMI ASSOCIATION OF REALTORS",
+    "total_amount": 3164570.87,
+    "num_contributions": 206,
+    "is_corporate": true,
+    "type": "corporate"
+  },
+  {
+    "name": "BAYFRONT 2011 DEVELOPMENT, LLC",
+    "total_amount": 3163708.86,
+    "num_contributions": 94,
+    "is_corporate": true,
+    "type": "corporate"
   }
 ]

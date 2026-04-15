@@ -36,7 +36,8 @@ if not db_url:
 conn = psycopg2.connect(db_url)
 conn.autocommit = False
 cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-cur.execute("SET statement_timeout = 0")
+cur.execute("SET statement_timeout = '15min'")
+cur.execute("SET idle_in_transaction_session_timeout = '5min'")
 
 # ── Step 1: Compute live sums from contributions ──────────────────────────────
 

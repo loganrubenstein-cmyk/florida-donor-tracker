@@ -41,6 +41,7 @@ SOL_INDEX    = ROOT / "public" / "data" / "solicitations" / "index.json"
 SOL_CSV      = PROCESSED_DIR.parent / "raw" / "solicitations" / "solicitations.csv"
 COMMITTEES   = PROCESSED_DIR / "committees.csv"
 CANDIDATES   = PROCESSED_DIR / "candidates.csv"
+EXPENDITURES = PROCESSED_DIR / "expenditures.csv"
 OUTPUT_CSV   = PROCESSED_DIR / "candidate_pc_edges.csv"
 
 # ── Thresholds ────────────────────────────────────────────────────────────────
@@ -441,6 +442,290 @@ def pass_1_solicitation_control(
 
     p1b_count = len(edges) - p1a_count
     print(f"Pass 1 (SOLICITATION_CONTROL): {len(edges)} edges ({p1a_count} from index, {p1b_count} from CSV)")
+    return edges
+
+
+# ── Pass 2 + 3: DIRECT_CONTRIBUTION / OTHER_DISTRIBUTION ────────────────────
+
+def _acct_from_expend_file(source_file: str) -> str:
+    """Extract acct_num from 'Expend_12345.txt' → '12345'."""
+    m = re.search(r"Expend_(\w+)\.txt", source_file, re.I)
+    return m.group(1) if m else ""
+
+
+# Regex to strip informal campaign name suffixes before candidate matching.
+# "DOROTHY HUKILL CAMPAIGN" → "DOROTHY HUKILL", "GIMENEZ FOR MAYOR" → "GIMENEZ"
+_CAMP_SUFFIX_RE = re.compile(
+    r"\s+(?:CAMPAIGN|CAMP|CMPN|FOR\s+\w[\w\s]{0,30})?$", re.I
+)
+_FOR_ROLE_RE = re.compile(r"\s+FOR\s+\w[\w\s]{0,30}$", re.I)
+
+
+def _strip_campaign_suffix(name: str) -> str:
+    """Strip 'CAMPAIGN', 'FOR MAYOR', 'FOR STATE SENATOR' etc. from vendor_name."""
+    n = _CAMP_SUFFIX_RE.sub("", name.strip()).strip()
+    n = _FOR_ROLE_RE.sub("", n).strip()
+    return n
+
+
+def pass_2_direct_contribution(
+    com_df: pd.DataFrame,
+    cand_df: pd.DataFrame,
+    expend_csv: Path,
+) -> list[Edge]:
+    """
+    Pass 2: PAC → candidate direct contributions (type_code CAN).
+
+    Source: data/processed/expenditures.csv
+    CAN rows: vendor_name is an INFORMAL candidate campaign name
+    (e.g. "DOROTHY HUKILL CAMPAIGN", "GIMENEZ FOR MAYOR"), NOT a registered
+    committee name. committees.csv only has PAC-type committees; candidate
+    campaign accounts are in candidates.csv.
+
+    Approach:
+    1. Strip campaign suffixes from vendor_name to get a personal name.
+    2. Fuzzy-match the stripped name against cand_df via match_candidate().
+    3. Emit edge: source_acct (spending PAC) → matched candidate.
+    """
+    if not expend_csv.exists():
+        print("Pass 2 (DIRECT_CONTRIBUTION_TO_CAND): expenditures.csv not found, skipping")
+        return []
+
+    df = pd.read_csv(expend_csv, dtype=str, low_memory=False)
+    can_rows = df[df["type_code"] == "CAN"].copy()
+    if can_rows.empty:
+        print("Pass 2 (DIRECT_CONTRIBUTION_TO_CAND): no CAN rows, skipping")
+        return []
+
+    # Build acct-number → committee map for source PAC name lookup
+    com_acct_map: dict[str, dict] = {
+        str(row["pc_acct"]): row.to_dict() for _, row in com_df.iterrows()
+    }
+
+    # Build candidate index for name matching
+    cand_idx, person_idx, nameclean_idx = build_cand_index(cand_df)
+
+    edges: list[Edge] = []
+    seen: set[tuple] = set()
+    matched = 0
+    skipped = 0
+
+    for _, row in can_rows.iterrows():
+        source_acct = _acct_from_expend_file(str(row.get("source_file", "")))
+        if not source_acct:
+            skipped += 1
+            continue
+
+        vendor = str(row.get("vendor_name", "")).strip()
+        if not vendor:
+            skipped += 1
+            continue
+
+        # Strip campaign suffixes to get a matchable personal name
+        stripped = _strip_campaign_suffix(vendor)
+        if len(stripped) < 4:
+            skipped += 1
+            continue
+
+        best_cand, score = match_candidate(stripped, cand_idx, threshold=88)
+        if not best_cand:
+            skipped += 1
+            continue
+
+        candidate_acct = str(best_cand["candidate_acct"])
+        key = (source_acct, candidate_acct)
+        if key in seen:
+            continue
+        seen.add(key)
+
+        source_com      = com_acct_map.get(source_acct, {})
+        source_pac_name = source_com.get("pc_name", f"Committee {source_acct}")
+        amount_str      = str(row.get("amount", "")).strip()
+
+        edges.append(Edge(
+            candidate_acct_num   = candidate_acct,
+            pc_acct_num          = source_acct,
+            pc_name              = source_pac_name,
+            pc_type              = source_com.get("pc_type", ""),
+            edge_type            = "DIRECT_CONTRIBUTION_TO_CAND",
+            direction            = "support",
+            evidence_summary     = f"{source_pac_name} paid ${amount_str} directly to {vendor} ({best_cand['candidate_name']}, score {score:.0f}%)",
+            source_type          = "EXPENDITURE_RECORD",
+            source_record_id     = str(row.get("source_file", "")),
+            match_method         = "vendor_name_candidate_match",
+            match_score          = f"{score:.1f}",
+            amount               = amount_str,
+            edge_date            = str(row.get("expenditure_date", "")),
+            is_publishable       = True,
+            is_candidate_specific= False,
+        ))
+        matched += 1
+
+    print(f"Pass 2 (DIRECT_CONTRIBUTION_TO_CAND): {len(can_rows):,} CAN rows → {matched:,} edges ({skipped:,} skipped)")
+    return edges
+
+
+# ── Pass 4+5: IEC_FOR_OR_AGAINST / ECC_FOR_OR_AGAINST ───────────────────────
+
+# Common patterns in IEC purpose fields that contain candidate names.
+_IEC_FOR_RE  = re.compile(r"IND\s+EXP\s+FOR\s+(.+?)(?:\s*[,;]|\s+SIGN|\s+CAMP|\s+MAILER|\s+AD|\s+RADIO|\s+TV|$)", re.I)
+_IEC_AGN_RE  = re.compile(r"IND\s+EXP\s+AGAINST\s+(.+?)(?:\s*[,;]|\s+SIGN|\s+CAMP|\s+MAILER|\s+AD|\s+RADIO|\s+TV|$)", re.I)
+_CAMP_RE     = re.compile(r"([A-Z][A-Z\s]+?)\s+(?:CAMPAIGN|CAMP|CMPN)(?:\s|$|,)", re.I)
+_NAME_SIGN_RE = re.compile(r"([A-Z][A-Z\s]{3,30}?)\s+SIGNS?(?:\s|,|$)", re.I)
+
+
+def _extract_cand_name_from_purpose(purpose: str) -> tuple[str, str]:
+    """
+    Try to extract a candidate name and direction from an IEC/ECC purpose field.
+    Returns (candidate_name, direction) where direction is 'support' | 'opposition' | 'support'.
+    Returns ('', '') if no reliable extraction possible.
+    """
+    p = purpose.strip()
+    # Pattern 1: "IND EXP FOR [NAME]..."
+    m = _IEC_FOR_RE.search(p)
+    if m:
+        return m.group(1).strip(), "support"
+    # Pattern 2: "IND EXP AGAINST [NAME]..."
+    m = _IEC_AGN_RE.search(p)
+    if m:
+        return m.group(1).strip(), "opposition"
+    # Pattern 3: "[NAME] CAMPAIGN" or "[NAME] CMPN"
+    m = _CAMP_RE.search(p)
+    if m:
+        return m.group(1).strip(), "support"
+    # Pattern 4: "[NAME] SIGNS"
+    m = _NAME_SIGN_RE.search(p)
+    if m:
+        return m.group(1).strip(), "support"
+    return "", ""
+
+
+def pass_4_5_iec_ecc(
+    com_df: pd.DataFrame,
+    cand_df: pd.DataFrame,
+    cand_idx: dict,
+    expend_csv: Path,
+) -> list[Edge]:
+    """
+    Pass 4: IEC_FOR_OR_AGAINST — independent expenditures (IEC/IEI type_codes).
+    Pass 5: ECC_FOR_OR_AGAINST — electioneering communications (ECC/ECI type_codes).
+
+    Strategy:
+    - ECC/ECI: vendor_name often IS a candidate committee name → same approach as pass 2.
+    - IEC/IEI: purpose field contains candidate name text → regex extract → fuzzy match.
+
+    Direction:
+    - IEC / ECC = "for" / support
+    - IEI / ECI = "against" / opposition
+    """
+    if not expend_csv.exists():
+        print("Pass 4/5 (IEC/ECC): expenditures.csv not found, skipping")
+        return []
+
+    df = pd.read_csv(expend_csv, dtype=str, low_memory=False)
+    ie_rows = df[df["type_code"].isin(["IEC", "IEI", "ECC", "ECI"])].copy()
+    if ie_rows.empty:
+        print("Pass 4/5 (IEC/ECC): no IEC/IEI/ECC/ECI rows, skipping")
+        return []
+
+    # Committee name map for vendor_name matching (ECC path)
+    com_name_map: dict[str, dict] = {
+        row["name_clean"]: row.to_dict() for _, row in com_df.iterrows()
+    }
+    com_acct_map: dict[str, dict] = {
+        str(row["pc_acct"]): row.to_dict() for _, row in com_df.iterrows()
+    }
+    cand_accts: set[str] = {str(r["candidate_acct"]) for _, r in cand_df.iterrows()}
+
+    direction_map = {"IEC": "support", "ECC": "support", "IEI": "opposition", "ECI": "opposition"}
+
+    edges: list[Edge] = []
+    seen: set[tuple] = set()
+    matched_ecc = matched_iec = skipped = 0
+
+    for _, row in ie_rows.iterrows():
+        source_acct = _acct_from_expend_file(str(row.get("source_file", "")))
+        if not source_acct:
+            skipped += 1
+            continue
+
+        type_code  = str(row.get("type_code", "")).strip()
+        direction  = direction_map.get(type_code, "support")
+        edge_label = "IEC_FOR_OR_AGAINST" if type_code in ("IEC", "IEI") else "ECC_FOR_OR_AGAINST"
+        amount_str = str(row.get("amount", "")).strip()
+
+        source_com      = com_acct_map.get(source_acct, {})
+        source_pac_name = source_com.get("pc_name", f"Committee {source_acct}")
+
+        vendor      = str(row.get("vendor_name", "")).strip()
+        purpose_raw = str(row.get("purpose", "")).strip()
+
+        candidate_acct = ""
+        matched_name   = ""
+
+        # ── ECC path: try vendor_name as committee name ──────────────────────
+        if type_code in ("ECC", "ECI") and vendor:
+            vendor_clean = clean(vendor)
+            recipient = None
+            if vendor_clean in com_name_map:
+                recipient = com_name_map[vendor_clean]
+            else:
+                first5 = vendor_clean[:5]
+                cands_here = [c for cn, c in com_name_map.items() if cn[:5] == first5]
+                best_com, score = match_committee(vendor, cands_here)
+                if best_com and score >= 90:
+                    recipient = best_com
+
+            if recipient:
+                r_acct = str(recipient.get("pc_acct", ""))
+                r_type = str(recipient.get("pc_type", ""))
+                if r_type in ("CCE", "CAO") and r_acct in cand_accts:
+                    candidate_acct = r_acct
+                    matched_name   = recipient.get("pc_name", vendor)
+                    matched_ecc   += 1
+
+        # ── IEC path: parse candidate name from purpose ───────────────────────
+        if not candidate_acct and type_code in ("IEC", "IEI") and purpose_raw:
+            parsed_name, parsed_dir = _extract_cand_name_from_purpose(purpose_raw)
+            if parsed_dir:
+                direction = parsed_dir
+            if parsed_name and len(parsed_name) >= 4:
+                best_cand, score = match_candidate(parsed_name, cand_idx, threshold=88)
+                if best_cand:
+                    candidate_acct = str(best_cand["candidate_acct"])
+                    matched_name   = best_cand["candidate_name"]
+                    matched_iec   += 1
+
+        if not candidate_acct:
+            skipped += 1
+            continue
+
+        key = (source_acct, candidate_acct)
+        if key in seen:
+            continue
+        seen.add(key)
+
+        edges.append(Edge(
+            candidate_acct_num   = candidate_acct,
+            pc_acct_num          = source_acct,
+            pc_name              = source_pac_name,
+            pc_type              = source_com.get("pc_type", ""),
+            edge_type            = edge_label,
+            direction            = direction,
+            evidence_summary     = f"{source_pac_name} filed {type_code} re: {matched_name} (${amount_str})",
+            source_type          = "EXPENDITURE_RECORD",
+            source_record_id     = str(row.get("source_file", "")),
+            match_method         = "vendor_name_match" if type_code in ("ECC", "ECI") else "purpose_text_parse",
+            match_score          = "",
+            amount               = amount_str,
+            edge_date            = str(row.get("expenditure_date", "")),
+            is_publishable       = True,
+            is_candidate_specific= False,
+        ))
+
+    total_ie = len(ie_rows)
+    print(f"Pass 4/5 (IEC/ECC): {total_ie:,} rows → {len(edges):,} edges "
+          f"(ECC vendor match: {matched_ecc:,}, IEC purpose parse: {matched_iec:,}, skipped: {skipped:,})")
     return edges
 
 
@@ -998,6 +1283,10 @@ def main() -> int:
     all_edges.extend(pass_1_solicitation_control(
         cand_idx, person_idx, nameclean_idx, com_list, sol_index, sol_csv
     ))
+
+    all_edges.extend(pass_2_direct_contribution(com_df, cand_df, EXPENDITURES))
+
+    all_edges.extend(pass_4_5_iec_ecc(com_df, cand_df, cand_idx, EXPENDITURES))
 
     all_edges.extend(pass_6_admin_overlap(
         cand_df, com_df, cand_idx, prof_treasurers, common_surnames
