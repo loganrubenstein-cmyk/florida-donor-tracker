@@ -9,12 +9,11 @@ import EntityHeader from '@/components/shared/EntityHeader';
 import GlossaryTerm from '@/components/shared/GlossaryTerm';
 import { slugify } from '@/lib/slugify';
 import { fmtMoneyCompact, fmtMoney } from '@/lib/fmt';
+import { PARTY_COLOR } from '@/lib/partyUtils';
 
 const QuarterlyChart      = dynamic(() => import('./QuarterlyChart'), { ssr: false });
 const IndustryBreakdown   = dynamic(() => import('./IndustryBreakdown'), { ssr: false });
 const TransactionExplorer = dynamic(() => import('@/components/explorer/TransactionExplorer'), { ssr: false });
-
-const PARTY_COLOR = { REP: 'var(--republican)', DEM: 'var(--democrat)' };
 const TYPE_COLOR  = { corporate: '#94a3b8', individual: 'var(--blue)' };
 
 const LINK_TYPE_LABEL = {

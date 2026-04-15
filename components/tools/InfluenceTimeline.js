@@ -3,9 +3,8 @@
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { fmtMoney, fmtMoneyCompact } from '@/lib/fmt';
+import { PARTY_COLOR } from '@/lib/partyUtils';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
-
-const PARTY_COLOR = { REP: 'var(--republican)', DEM: 'var(--democrat)' };
 
 export default function InfluenceTimeline() {
   const [query, setQuery] = useState('');

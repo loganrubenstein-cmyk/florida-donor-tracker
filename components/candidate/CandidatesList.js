@@ -6,8 +6,7 @@ import BackLinks from '@/components/BackLinks';
 import SectionHeader from '@/components/shared/SectionHeader';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import GlossaryTerm from '@/components/shared/GlossaryTerm';
-
-const PARTY_COLOR = { REP: 'var(--republican)', DEM: 'var(--democrat)' };
+import { PARTY_COLOR } from '@/lib/partyUtils';
 
 const MAJOR_OFFICES = [
   'Governor',

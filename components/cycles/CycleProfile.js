@@ -5,14 +5,8 @@ import { slugify } from '@/lib/slugify';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import TabbedProfile from '@/components/shared/TabbedProfile';
 import EntityHeader from '@/components/shared/EntityHeader';
-
-function fmt(n) {
-  if (!n || n === 0) return '—';
-  if (n >= 1_000_000_000) return `$${(n / 1_000_000_000).toFixed(2)}B`;
-  if (n >= 1_000_000)     return `$${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000)         return `$${(n / 1_000).toFixed(0)}K`;
-  return `$${n.toFixed(0)}`;
-}
+import { PARTY_COLOR } from '@/lib/partyUtils';
+import { fmtMoneyCompact as fmt } from '@/lib/fmt';
 
 function StatBox({ label, value, sub, color }) {
   return (
@@ -42,7 +36,6 @@ function SectionLabel({ children }) {
   );
 }
 
-const PARTY_COLOR  = { REP: 'var(--republican)', DEM: 'var(--democrat)' };
 const PARTY_LABEL  = { REP: 'R', DEM: 'D', NPA: 'I', OTH: 'O' };
 
 const STATEWIDE = new Set([

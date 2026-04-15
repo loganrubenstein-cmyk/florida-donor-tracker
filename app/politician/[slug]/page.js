@@ -8,6 +8,7 @@ import BackLinks from '@/components/BackLinks';
 import EntityHeader from '@/components/shared/EntityHeader';
 import { buildMeta } from '@/lib/seo';
 import { fmtMoneyCompact } from '@/lib/fmt';
+import { PARTY_COLOR } from '@/lib/partyUtils';
 
 let _electionLookup = null;
 function getElectionLookup() {
@@ -23,7 +24,6 @@ function getElectionLookup() {
 
 export const dynamic = 'force-dynamic';
 
-const PARTY_COLOR = { REP: 'var(--republican)', DEM: 'var(--democrat)' };
 const PARTY_LABEL = { REP: 'Republican', DEM: 'Democrat', NOP: 'No Party', IND: 'Independent' };
 
 const OFFICE_SHORT = {

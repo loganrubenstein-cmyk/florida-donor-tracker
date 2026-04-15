@@ -3,8 +3,8 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { fmtMoneyCompact as fmtMoney, fmtCountCompact as fmtNum } from '@/lib/fmt';
+import { PARTY_COLOR } from '@/lib/partyUtils';
 
-const PARTY_COLOR = { REP: 'var(--republican)', DEM: 'var(--democrat)', NPA: 'var(--text-dim)' };
 const PARTY_LABEL = { REP: 'R', DEM: 'D', NPA: 'I' };
 
 const STATEWIDE_CONTESTS = new Set([
