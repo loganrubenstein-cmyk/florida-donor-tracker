@@ -63,14 +63,11 @@ export default async function PoliticianPage({ params, searchParams }) {
 
   const { display_name, cycles } = politician;
 
-  // Sort cycles newest first
   const sortedCycles = [...cycles].sort((a, b) => Number(b.year) - Number(a.year));
 
-  // Determine active cycle from ?cycle= param, default to most recent
   const { cycle: requestedAcct } = await searchParams;
   const activeCycle = sortedCycles.find(c => c.acct_num === requestedAcct) ?? sortedCycles[0];
 
-  // Load full candidate data for active cycle
   let candidateData = null;
   try {
     candidateData = await loadCandidate(activeCycle.acct_num);
@@ -78,11 +75,9 @@ export default async function PoliticianPage({ params, searchParams }) {
     notFound();
   }
 
-  // loadCandidateCycles for the acct_num (used by CandidateProfile's own pill bar)
-  // We pass all cycles from the politician index instead, which is richer
+  // Pass all cycles from the politician index — it's richer than loadCandidateCycles.
   const allCyclesForAcct = loadCandidateCycles(activeCycle.acct_num);
 
-  // Check if any cycle acct_num matches a current FL legislator + fetch career financials
   const allAcctNums = sortedCycles.map(c => String(c.acct_num));
   const db = getDb();
   const [{ data: legRows }, { data: cycleFinRows }] = await Promise.all([
@@ -96,7 +91,6 @@ export default async function PoliticianPage({ params, searchParams }) {
   ]);
   const matchedLeg = legRows?.[0] || null;
 
-  // Build acct → financials map for career totals + comparison table
   const cycleFinMap = {};
   for (const row of cycleFinRows || []) {
     cycleFinMap[String(row.acct_num)] = {
@@ -109,7 +103,6 @@ export default async function PoliticianPage({ params, searchParams }) {
   const careerSoft     = Object.values(cycleFinMap).reduce((s, r) => s + r.soft, 0);
   const careerCombined = Object.values(cycleFinMap).reduce((s, r) => s + r.combined, 0);
 
-  // Election results for all accounts linked to this politician
   const lookup = getElectionLookup();
   const allElectionResults = sortedCycles
     .flatMap(c => lookup[String(c.acct_num)] || [])
@@ -119,7 +112,6 @@ export default async function PoliticianPage({ params, searchParams }) {
   const party = activeCycle.party_code;
   const partyColor = PARTY_COLOR[party] || null;
 
-  // Build pretty title: "Rick Scott — Governor (2014)"
   const officeLabel = OFFICE_SHORT[activeCycle.office_code] || activeCycle.office_desc;
   const districtStr = activeCycle.district ? ` · District ${activeCycle.district}` : '';
 

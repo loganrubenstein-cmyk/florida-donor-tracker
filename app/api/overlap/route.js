@@ -10,7 +10,6 @@ function normalizeType(t) {
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
 
-  // Search mode — find candidates or committees by name
   const q = searchParams.get('q') || '';
   if (q.trim()) {
     const db = getDb();
@@ -44,7 +43,6 @@ export async function GET(request) {
     });
   }
 
-  // Compare mode — find overlapping donors
   const acctA = searchParams.get('a');
   const acctB = searchParams.get('b');
   if (!acctA || !acctB) {
@@ -53,9 +51,7 @@ export async function GET(request) {
 
   const db = getDb();
 
-  // Determine which table each acct belongs to
   async function getDonors(acct) {
-    // Try candidate first, then committee
     let { data } = await db.from('candidate_top_donors')
       .select('donor_name, donor_slug, total_amount, num_contributions, type')
       .eq('acct_num', acct)
@@ -69,7 +65,6 @@ export async function GET(request) {
     return { donors: data || [], source: 'committee' };
   }
 
-  // Get entity names
   async function getEntityName(acct) {
     const { data: cand } = await db.from('candidates')
       .select('candidate_name')
@@ -92,7 +87,6 @@ export async function GET(request) {
     getEntityName(acctB),
   ]);
 
-  // Build donor maps by slug
   const mapA = new Map();
   for (const d of donorsA.donors) {
     if (d.donor_slug) mapA.set(d.donor_slug, d);
@@ -102,7 +96,6 @@ export async function GET(request) {
     if (d.donor_slug) mapB.set(d.donor_slug, d);
   }
 
-  // Find overlap
   const overlap = [];
   for (const [slug, dA] of mapA) {
     if (mapB.has(slug)) {
@@ -119,12 +112,10 @@ export async function GET(request) {
   }
   overlap.sort((a, b) => b.total - a.total);
 
-  // Compute summary stats
   const totalOverlap = overlap.reduce((s, d) => s + d.total, 0);
   const totalA = donorsA.donors.reduce((s, d) => s + (parseFloat(d.total_amount) || 0), 0);
   const totalB = donorsB.donors.reduce((s, d) => s + (parseFloat(d.total_amount) || 0), 0);
 
-  // Type breakdown of overlapping donors
   const typeBreakdown = {};
   for (const d of overlap) {
     const t = d.type;

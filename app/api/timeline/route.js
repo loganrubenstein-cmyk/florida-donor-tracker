@@ -8,7 +8,6 @@ export async function GET(request) {
 
   const db = getDb();
 
-  // Search mode
   if (!acct && q.trim()) {
     const { data } = await db.from('candidates')
       .select('acct_num, candidate_name, office_desc, election_year, party_code')
@@ -26,7 +25,6 @@ export async function GET(request) {
 
   if (!acct) return NextResponse.json({ error: 'Provide ?acct= or ?q=' }, { status: 400 });
 
-  // Fetch timeline data
   const [
     { data: quarterly },
     { data: candidate },
@@ -47,20 +45,18 @@ export async function GET(request) {
 
   if (!candidate) return NextResponse.json({ error: 'Candidate not found' }, { status: 404 });
 
-  // Build quarter array with annotations
   const quarters = (quarterly || []).map(q => ({
     quarter: q.quarter,
     amount: parseFloat(q.amount) || 0,
   }));
 
-  // Detect spikes (quarters where amount > 2x the median)
+  // Spike = amount > 2.5× the median of nonzero quarters.
   const amounts = quarters.map(q => q.amount).filter(a => a > 0).sort((a, b) => a - b);
   const median = amounts.length > 0 ? amounts[Math.floor(amounts.length / 2)] : 0;
   for (const q of quarters) {
     q.is_spike = median > 0 && q.amount > median * 2.5;
   }
 
-  // Election quarter annotation
   const electionYear = candidate.election_year;
   if (electionYear) {
     const electionQ = `${electionYear}-Q4`;
@@ -68,7 +64,6 @@ export async function GET(request) {
     if (match) match.annotation = 'Election';
   }
 
-  // PAC formation dates
   const pacs = (linkedPCs || []).map(r => ({
     acct_num: r.pc_acct_num,
     name: r.committees?.committee_name || null,
@@ -77,7 +72,6 @@ export async function GET(request) {
     link_type: r.link_type,
   }));
 
-  // Mark PAC formation quarters on timeline
   for (const pac of pacs) {
     if (pac.formed) {
       const d = new Date(pac.formed);

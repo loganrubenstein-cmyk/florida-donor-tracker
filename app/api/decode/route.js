@@ -8,7 +8,6 @@ export async function GET(request) {
 
   const db = getDb();
 
-  // Search mode — return matching committees
   if (!acct && q.trim()) {
     const { data, error } = await db
       .from('committees')
@@ -20,7 +19,6 @@ export async function GET(request) {
     return NextResponse.json({ results: data || [] });
   }
 
-  // Decode mode — full decode for one committee
   if (!acct) return NextResponse.json({ error: 'Provide ?acct= or ?q=' }, { status: 400 });
 
   const [
@@ -59,7 +57,6 @@ export async function GET(request) {
 
   if (!committee) return NextResponse.json({ error: 'Committee not found' }, { status: 404 });
 
-  // Compute donor type breakdown
   const donors = topDonors || [];
   const totalFromTop = donors.reduce((s, d) => s + parseFloat(d.total_amount || 0), 0);
   const typeBreakdown = {};
@@ -68,14 +65,13 @@ export async function GET(request) {
     typeBreakdown[t] = (typeBreakdown[t] || 0) + parseFloat(d.total_amount || 0);
   }
 
-  // Single-donor PAC detection
+  // Single-donor PAC = top donor ≥ 80% of total received.
   const totalReceived = parseFloat(committee.total_received) || 0;
   const topDonorPct = donors.length > 0 && totalReceived > 0
     ? (parseFloat(donors[0].total_amount) / totalReceived) * 100
     : 0;
   const isSingleDonorPAC = topDonorPct >= 80;
 
-  // Linked candidates
   const candidates = (linkedCandidates || []).map(r => ({
     acct_num: r.candidate_acct_num,
     name: r.candidates?.candidate_name || null,
