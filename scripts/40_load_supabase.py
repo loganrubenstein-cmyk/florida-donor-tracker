@@ -407,19 +407,9 @@ def main():
     cur = conn.cursor()
 
     try:
-        print("\nTruncating all tables for clean load...")
-        cur.execute("""
-            TRUNCATE TABLE
-              donors, donor_committees, donor_candidates, donor_by_year,
-              candidates, candidate_quarterly, candidate_top_donors,
-              committees, committee_top_donors,
-              lobbyists, lobbyist_principals,
-              principals, principal_lobbyists, principal_donation_matches,
-              industry_buckets, industry_by_committee, industry_trends,
-              entity_connections, candidate_pc_links, cycle_donors
-            RESTART IDENTITY
-        """)
-        conn.commit()
+        # Tables are pre-truncated before this script runs via scripts/pre_truncate_40.py
+        # (pgbouncer times out on a single multi-table TRUNCATE statement).
+        print("\nSkipping TRUNCATE — tables must be pre-truncated via pre_truncate_40.py")
 
         print("\n── Loading data ──────────────────────────────────")
         load_donors(cur);         conn.commit()
