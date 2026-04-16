@@ -675,6 +675,17 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
         </EntityHeader>
       )}
 
+      {!hideHeader && data.office_desc && data.election_year && (
+        <div style={{ marginBottom: '0.75rem' }}>
+          <Link
+            href={`/race/${encodeURIComponent(data.office_desc.toLowerCase().replace(/\s+/g, '-'))}/${data.election_year}`}
+            style={{ fontSize: '0.65rem', color: 'var(--teal)', textDecoration: 'none', fontFamily: 'var(--font-mono)' }}
+          >
+            all candidates this race →
+          </Link>
+        </div>
+      )}
+
       {/* Cycle connector pill bar */}
       {cycles.length > 0 && (
         <div style={{ marginBottom: '1.25rem' }}>
