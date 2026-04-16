@@ -80,9 +80,12 @@ export default function ContractsList() {
         }}>
           Florida State Contracts
         </h1>
-        <div style={{ fontSize: '0.82rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+        <div style={{ fontSize: '0.82rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
           <span>{loading ? '…' : (total ?? 0).toLocaleString()} vendors</span>
           <span>FL Dept of Financial Services · FACTS system</span>
+          <a href="/federal-contracts" style={{ color: 'var(--green)', textDecoration: 'none', fontSize: '0.75rem' }}>
+            → federal contracts ($219B) ↗
+          </a>
         </div>
         <p style={{
           marginTop: '0.75rem', fontSize: '0.82rem', color: 'var(--text-dim)',

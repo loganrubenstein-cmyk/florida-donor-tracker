@@ -288,6 +288,7 @@ export default async function Home() {
               <CardLink href="/elections" color="var(--blue)" accent="rgba(160,192,255,0.12)" title="→ elections" desc="FL election results 2012–2024 — finance-matched race breakdowns, cost per vote, statewide races." />
               <CardLink href="/party-finance" color="var(--teal)" accent="rgba(77,216,240,0.1)" title="→ party finance" desc="Republican vs Democrat fundraising trends by year and office." />
               <CardLink href="/contracts" color="var(--gold)" accent="rgba(255,208,96,0.15)" title="→ state contracts" desc="FL vendors who received state contracts — cross-referenced with campaign donors." />
+              <CardLink href="/federal-contracts" color="var(--green)" accent="rgba(128,255,160,0.1)" title="→ federal contracts" desc="$219B in federal awards to FL recipients — matched to state vendors and campaign donors." />
             </div>
           </div>
 
