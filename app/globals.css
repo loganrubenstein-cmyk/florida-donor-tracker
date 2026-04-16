@@ -245,17 +245,18 @@ body {
 }
 .nav-group-trigger {
   background: none; border: none; cursor: pointer;
-  color: var(--text-dim); font-family: var(--font-mono); font-size: 0.85rem;
-  padding: 0.25rem 0; white-space: nowrap;
+  color: var(--text); font-family: var(--font-mono); font-size: 0.92rem; font-weight: 700;
+  padding: 0.4rem 0; white-space: nowrap;
   display: inline-flex; align-items: center;
-  transition: color 0.12s;
+  opacity: 0.75;
+  transition: opacity 0.12s;
 }
 .nav-group:hover .nav-group-trigger,
-.nav-group-active .nav-group-trigger { color: var(--text); }
+.nav-group-active .nav-group-trigger { opacity: 1; }
 .nav-dropdown {
   display: none;
   flex-direction: column;
-  position: absolute; top: calc(100% + 6px); left: 50%;
+  position: absolute; top: calc(100% + 2px); left: 50%;
   transform: translateX(-50%);
   z-index: 200;
   background: rgba(8, 8, 24, 0.99);
@@ -265,18 +266,34 @@ body {
   min-width: 175px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
 }
-.nav-group:hover .nav-dropdown { display: flex; }
+/* Invisible bridge fills the gap so mouse doesn't escape hover zone */
+.nav-dropdown::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 0; right: 0;
+  height: 10px;
+}
+.nav-group:hover .nav-dropdown,
+.nav-dropdown.open { display: flex; }
+@keyframes dropIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.nav-dropdown.open { animation: dropIn 0.12s ease-out; }
 .nav-dropdown-item {
-  padding: 0.42rem 1.1rem;
-  font-size: 0.8rem;
-  color: var(--text-dim);
+  padding: 0.45rem 1.1rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text);
   text-decoration: none;
   white-space: nowrap;
   font-family: var(--font-mono);
-  transition: color 0.1s, background 0.1s;
+  opacity: 0.7;
+  transition: opacity 0.1s, background 0.1s;
 }
-.nav-dropdown-item:hover { color: var(--text); background: rgba(100,140,220,0.07); }
-.nav-dropdown-item.active { color: var(--orange); }
+.nav-dropdown-item:hover { opacity: 1; background: rgba(100,140,220,0.07); }
+.nav-dropdown-item.active { opacity: 1; color: var(--orange); }
 
 /* Mobile hamburger */
 .nav-hamburger {
