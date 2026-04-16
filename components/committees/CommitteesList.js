@@ -20,6 +20,7 @@ const PAGE_SIZE = 50;
 export default function CommitteesList() {
   const [results, setResults]       = useState({ data: [], total: 0, pages: 0 });
   const [loading, setLoading]       = useState(true);
+  const [explainerOpen, setExplainerOpen] = useState(false);
   const [search, setSearch]         = useState('');
   const [debouncedQ, setDebouncedQ] = useState('');
   const [sort, setSort]             = useState('total');
@@ -58,6 +59,47 @@ export default function CommitteesList() {
 
   return (
     <div>
+      {/* Committee type explainer */}
+      <div style={{
+        border: '1px solid var(--border)', borderRadius: '4px', marginBottom: '1.25rem',
+        background: 'var(--surface)', overflow: 'hidden',
+      }}>
+        <button
+          onClick={() => setExplainerOpen(o => !o)}
+          style={{
+            width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            padding: '0.55rem 0.85rem', background: 'none', border: 'none',
+            cursor: 'pointer', textAlign: 'left',
+          }}
+        >
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
+            What are PACs, ECOs, and CCEs in Florida?
+          </span>
+          <span style={{ fontSize: '0.65rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+            {explainerOpen ? '▲' : '▼'}
+          </span>
+        </button>
+        {explainerOpen && (
+          <div style={{ padding: '0 0.85rem 0.85rem', borderTop: '1px solid var(--border)' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '0.75rem', paddingTop: '0.75rem' }}>
+              {[
+                { abbr: 'PAC', name: 'Political Action Committee', color: 'var(--teal)', desc: 'Raises and spends money to elect or defeat candidates. No contribution limits in Florida state races — one donor can give millions. Can donate directly to candidates.' },
+                { abbr: 'ECO', name: 'Electioneering Comm. Org.', color: 'var(--orange)', desc: 'Runs ads or communications about candidates within 60 days of an election. Cannot coordinate directly with candidates. Unlimited contributions allowed.' },
+                { abbr: 'CCE', name: 'Candidate Campaign Ext.', color: 'var(--blue)', desc: 'The main campaign account for a candidate. Hard-money contributions — limited to $3,000 per individual per election. Most transparent type.' },
+                { abbr: 'PTY', name: 'Political Party', color: 'var(--gold)', desc: 'Statewide or local party organizations (Republican Party of Florida, Florida Democratic Party). Raise money for party operations and candidate support.' },
+              ].map(({ abbr, name, color, desc }) => (
+                <div key={abbr}>
+                  <div style={{ fontSize: '0.72rem', fontWeight: 700, color, marginBottom: '0.2rem', fontFamily: 'var(--font-mono)' }}>
+                    {abbr} — {name}
+                  </div>
+                  <div style={{ fontSize: '0.73rem', color: 'var(--text-dim)', lineHeight: 1.55 }}>{desc}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* Controls */}
       <div style={{ display: 'flex', gap: '0.75rem', marginBottom: '1.25rem', flexWrap: 'wrap', alignItems: 'center' }}>
         <input
@@ -104,7 +146,7 @@ export default function CommitteesList() {
 
       {/* Table */}
       <div style={{ overflowX: 'auto', opacity: loading ? 0.5 : 1, transition: 'opacity 0.15s' }}>
-        <table className="dir-table" style={{ width: '100%', minWidth: '400px', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
+        <table className="dir-table" style={{ width: '100%', minWidth: '400px', borderCollapse: 'collapse', fontSize: '0.83rem' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid var(--border)' }}>
               {[
@@ -167,10 +209,10 @@ export default function CommitteesList() {
                     }}>{p}</span>
                   ) : null; })()}
                 </td>
-                <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.78rem' }}>
+                <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.82rem' }}>
                   {fmtCount(c.num_contributions)}
                 </td>
-                <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--orange)', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '0.78rem', whiteSpace: 'nowrap' }}>
+                <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--orange)', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '0.82rem', whiteSpace: 'nowrap' }}>
                   {fmt(c.total_received)}
                 </td>
               </tr>

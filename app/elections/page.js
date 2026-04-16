@@ -6,7 +6,7 @@ import SectionHeader from '@/components/shared/SectionHeader';
 
 export const metadata = {
   title: 'Election Results',
-  description: 'Florida election results 2012–2024 — finance-matched race results, cost per vote, and statewide race breakdowns.',
+  description: 'Florida election results 2012–2024 — ballot-style race results, vote totals, and finance data matched to candidates.',
 };
 
 function loadCycles() {
@@ -15,37 +15,29 @@ function loadCycles() {
   );
 }
 
-const LEG_CONTESTS = new Set(['State Representative', 'State Senator', 'STATE REPRESENTATIVE', 'STATE SENATOR']);
-
-function loadLegLeaderboards(electionType = 'general') {
-  const years = ['2012', '2014', '2016', '2018', '2020', '2022', '2024'];
-  const result = {};
-  for (const year of years) {
-    try {
-      const d = JSON.parse(
-        readFileSync(join(process.cwd(), 'public', 'data', 'elections', `${year}_${electionType}.json`), 'utf-8')
-      );
-      const leg = (d.candidates || []).filter(c =>
-        LEG_CONTESTS.has(c.contest_name) && c.finance_acct_num && c.finance_total_raised > 0
-      );
-      if (leg.length > 0) result[year] = leg;
-    } catch {
-      // file not found for this year
+function loadDistrictMap() {
+  const stats = JSON.parse(
+    readFileSync(join(process.cwd(), 'public', 'data', 'candidate_stats.json'), 'utf-8')
+  );
+  const map = {};
+  for (const s of stats) {
+    if (s.acct_num && s.district && s.election_year) {
+      if (!map[s.acct_num]) map[s.acct_num] = {};
+      map[s.acct_num][s.election_year] = s.district;
     }
   }
-  return result;
+  return map;
 }
 
 export default function ElectionsPage() {
   const cycles = loadCycles();
-  const legLeaderboards = loadLegLeaderboards('general');
-  const legLeaderboardsPrimary = loadLegLeaderboards('primary');
+  const districtMap = loadDistrictMap();
 
   const generals = cycles.filter(c => c.election_type === 'general');
   const totalRaces = generals.reduce((s, c) => s + c.contests_with_finance, 0);
 
   return (
-    <main style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
+    <main style={{ maxWidth: '960px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
       <BackLinks links={[{ href: '/', label: 'home' }]} />
 
       <SectionHeader title="Election Results" eyebrow="Florida · 2012–2024" />
@@ -53,11 +45,7 @@ export default function ElectionsPage() {
         {generals.length} general elections · {totalRaces} races with finance data matched
       </div>
 
-      <ElectionsView
-        cycles={cycles}
-        legLeaderboards={legLeaderboards}
-        legLeaderboardsPrimary={legLeaderboardsPrimary}
-      />
+      <ElectionsView cycles={cycles} districtMap={districtMap} />
     </main>
   );
 }

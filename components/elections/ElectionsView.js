@@ -1,185 +1,127 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { fmtMoneyCompact as fmtMoney, fmtCountCompact as fmtNum } from '@/lib/fmt';
 import { PARTY_COLOR } from '@/lib/partyUtils';
 
-const PARTY_LABEL = { REP: 'R', DEM: 'D', NPA: 'I' };
+const PARTY_LABEL = { REP: 'R', DEM: 'D', NPA: 'I', LPF: 'L', IND: 'I' };
+const SKIP_NAMES = new Set(['UnderVotes', 'OverVotes', 'WriteinVotes', 'Write-ins', 'WriteinVotes', 'WRITE-IN']);
 
 const STATEWIDE_CONTESTS = new Set([
-  'Governor', 'GOVERNOR AND  LT.GOVERNOR',
+  'Governor and Lieutenant Governor', 'GOVERNOR AND  LT.GOVERNOR', 'Governor',
   'United States Senator', 'U.S. Senator',
   'Attorney General', 'ATTORNEY GENERAL',
   'Chief Financial Officer', 'CHIEF FINANCIAL OFFICER',
   'Commissioner of Agriculture', 'COMMISSIONER OF AGRICULTURE',
 ]);
 
+const CONTEST_DISPLAY = {
+  'Governor and Lieutenant Governor': 'Governor / Lt. Governor',
+  'GOVERNOR AND  LT.GOVERNOR': 'Governor / Lt. Governor',
+  'United States Senator': 'U.S. Senate',
+  'Attorney General': 'Attorney General',
+  'Chief Financial Officer': 'Chief Financial Officer',
+  'Commissioner of Agriculture': 'Commissioner of Agriculture',
+};
+
+const LEG_CONTESTS = new Set(['State Representative', 'State Senator']);
+
 function PartyDot({ party }) {
   return (
     <span style={{
-      display: 'inline-block', width: '7px', height: '7px',
-      borderRadius: '50%', background: PARTY_COLOR[party] || 'var(--text-dim)',
-      marginRight: '5px', flexShrink: 0,
+      display: 'inline-block', width: '7px', height: '7px', borderRadius: '50%',
+      background: PARTY_COLOR[party] || 'var(--text-dim)',
+      flexShrink: 0,
     }} />
   );
 }
 
-function WinnerBadge() {
-  return (
-    <span style={{ color: 'var(--green)', fontSize: '0.58rem', marginRight: '4px' }}>✓</span>
-  );
-}
+function BallotRaceCard({ title, subtitle, candidates, useWinnerFlag = false }) {
+  const valid = candidates.filter(c => !SKIP_NAMES.has(c.candidate_name));
+  if (!valid.length) return null;
+  const sorted = [...valid].sort((a, b) => (b.total_votes || 0) - (a.total_votes || 0));
+  const totalVotes = sorted.reduce((s, c) => s + (c.total_votes || 0), 0);
+  const maxVotes = sorted[0]?.total_votes || 1;
 
-function StatewideRaceCard({ race }) {
-  const realCandidates = race.candidates.filter(c => c.candidate_name !== 'UnderVotes' && c.finance_acct_num);
-  if (!realCandidates.length) return null;
-
-  const winner = realCandidates.find(c => c.winner);
-  const sorted = [...realCandidates].sort((a, b) => (b.total_raised || 0) - (a.total_raised || 0));
-  const maxRaised = sorted[0]?.total_raised || 1;
-  const topFunded = sorted[0];
-  const topFundedWon = topFunded?.winner;
+  function isWinner(c, idx) {
+    if (useWinnerFlag) return !!c.winner;
+    return idx === 0 && totalVotes > 0;
+  }
 
   return (
-    <div style={{ border: '1px solid var(--border)', borderRadius: '4px', padding: '1rem 1.1rem', background: 'var(--surface)' }}>
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '0.85rem', gap: '0.5rem' }}>
-        <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--text)', lineHeight: 1.3 }}>
-          {race.contest_name.replace('GOVERNOR AND  LT.GOVERNOR', 'Governor')}
+    <div style={{
+      border: '1px solid var(--border)', borderRadius: '5px',
+      background: 'var(--surface)', overflow: 'hidden',
+    }}>
+      <div style={{
+        padding: '0.6rem 0.9rem', borderBottom: '1px solid var(--border)',
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem',
+      }}>
+        <div style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text)', fontFamily: 'var(--font-mono)' }}>
+          {title}
         </div>
-        {winner && (
-          <div style={{ fontSize: '0.62rem', color: PARTY_COLOR[winner.party] || 'var(--green)', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap', flexShrink: 0 }}>
-            ✓ {winner.candidate_name.split(' ').slice(-1)[0]}
-          </div>
+        {subtitle && (
+          <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', flexShrink: 0 }}>{subtitle}</div>
         )}
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
-        {sorted.map(c => {
-          const votePct = c.total_votes > 0 && realCandidates.reduce((s, x) => s + (x.total_votes || 0), 0) > 0
-            ? Math.round(c.total_votes / realCandidates.reduce((s, x) => s + (x.total_votes || 0), 0) * 100)
-            : null;
+      <div style={{ padding: '0.5rem 0' }}>
+        {sorted.map((c, idx) => {
+          const won = isWinner(c, idx);
+          const votePct = totalVotes > 0 ? Math.round(c.total_votes / totalVotes * 100) : null;
+          const barPct = maxVotes > 0 ? (c.total_votes / maxVotes * 100) : 0;
+          const pColor = PARTY_COLOR[c.party] || 'var(--text-dim)';
           return (
-            <div key={c.candidate_name}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.25rem' }}>
+            <div key={`${c.candidate_name}-${idx}`} style={{ padding: '0.45rem 0.9rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.3rem' }}>
                 <PartyDot party={c.party} />
-                <div style={{ fontSize: '0.72rem', color: c.winner ? 'var(--text)' : 'var(--text-dim)', flex: 1, fontWeight: c.winner ? 600 : 400, minWidth: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  {c.winner && <WinnerBadge />}
+                <div style={{
+                  flex: 1, fontSize: '0.83rem', minWidth: 0,
+                  color: won ? 'var(--text)' : 'var(--text-dim)',
+                  fontWeight: won ? 600 : 400,
+                  overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                }}>
+                  {won && <span style={{ color: 'var(--green)', marginRight: '0.3rem', fontSize: '0.75rem' }}>✓</span>}
                   {c.candidate_name}
-                  <span style={{ color: 'var(--text-dim)', fontWeight: 400 }}> ({PARTY_LABEL[c.party] || c.party})</span>
+                  <span style={{ marginLeft: '0.35rem', fontSize: '0.68rem', color: pColor, fontWeight: 400 }}>
+                    ({PARTY_LABEL[c.party] || c.party || '?'})
+                  </span>
+                </div>
+                <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexShrink: 0 }}>
+                  {votePct !== null && (
+                    <span style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: won ? 'var(--text)' : 'var(--text-dim)', minWidth: '28px', textAlign: 'right' }}>
+                      {votePct}%
+                    </span>
+                  )}
+                  {c.total_votes > 0 && (
+                    <span style={{ fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: 'var(--text-dim)', minWidth: '52px', textAlign: 'right' }}>
+                      {fmtNum(c.total_votes)}
+                    </span>
+                  )}
+                  {c.finance_total_raised > 0 && (
+                    <span style={{ fontSize: '0.7rem', fontFamily: 'var(--font-mono)', color: 'var(--orange)', minWidth: '50px', textAlign: 'right' }}>
+                      {fmtMoney(c.finance_total_raised)}
+                    </span>
+                  )}
                 </div>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <div style={{ flex: 1, height: '4px', borderRadius: '2px', background: 'rgba(255,255,255,0.05)', overflow: 'hidden' }}>
-                  <div style={{
-                    height: '100%', borderRadius: '2px',
-                    background: c.winner ? (PARTY_COLOR[c.party] || 'var(--green)') : 'rgba(255,255,255,0.15)',
-                    width: `${Math.max(2, (c.total_raised / maxRaised) * 100)}%`,
-                  }} />
-                </div>
-                <span style={{ fontSize: '0.65rem', fontFamily: 'var(--font-mono)', color: 'var(--orange)', minWidth: '55px', textAlign: 'right' }}>
-                  {fmtMoney(c.total_raised)}
-                </span>
-                {votePct !== null && (
-                  <span style={{ fontSize: '0.62rem', fontFamily: 'var(--font-mono)', color: 'var(--text-dim)', minWidth: '36px', textAlign: 'right' }}>
-                    {votePct}%
-                  </span>
-                )}
-                {c.cost_per_vote > 0 && (
-                  <span style={{ fontSize: '0.6rem', fontFamily: 'var(--font-mono)', color: 'var(--teal)', minWidth: '50px', textAlign: 'right' }}>
-                    ${c.cost_per_vote.toFixed(2)}/v
-                  </span>
-                )}
+              <div style={{ height: '3px', background: 'rgba(255,255,255,0.05)', borderRadius: '2px', marginLeft: '1.1rem' }}>
+                <div style={{
+                  height: '100%', borderRadius: '2px',
+                  width: `${Math.max(1, barPct)}%`,
+                  background: won ? (pColor || 'var(--green)') : 'rgba(255,255,255,0.15)',
+                  transition: 'width 0.3s',
+                }} />
               </div>
             </div>
           );
         })}
       </div>
-    </div>
-  );
-}
-
-function LegLeaderboard({ leaderboard, year }) {
-  const [sortBy, setSortBy] = useState('raised');
-
-  const sorted = useMemo(() => {
-    return [...leaderboard].sort((a, b) =>
-      sortBy === 'raised' ? (b.finance_total_raised || 0) - (a.finance_total_raised || 0) :
-      sortBy === 'cpv' ? (b.cost_per_vote || 0) - (a.cost_per_vote || 0) :
-      (b.total_votes || 0) - (a.total_votes || 0)
-    ).slice(0, 25);
-  }, [leaderboard, sortBy]);
-
-  if (!sorted.length) return null;
-
-  const SortBtn = ({ val, label }) => (
-    <button
-      onClick={() => setSortBy(val)}
-      style={{
-        fontSize: '0.58rem', padding: '0.2rem 0.5rem', borderRadius: '3px', cursor: 'pointer',
-        border: `1px solid ${sortBy === val ? 'var(--orange)' : 'var(--border)'}`,
-        background: sortBy === val ? 'rgba(255,176,96,0.1)' : 'transparent',
-        color: sortBy === val ? 'var(--orange)' : 'var(--text-dim)',
-        fontFamily: 'var(--font-mono)',
-      }}
-    >
-      {label}
-    </button>
-  );
-
-  return (
-    <div>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-        <div style={{ fontSize: '0.62rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-dim)', fontWeight: 600 }}>
-          FL House + Senate — Finance-Matched · {year}
+      {totalVotes > 0 && (
+        <div style={{ padding: '0.3rem 0.9rem 0.55rem', fontSize: '0.6rem', color: 'rgba(90,106,136,0.6)', fontFamily: 'var(--font-mono)' }}>
+          {totalVotes.toLocaleString()} votes cast
         </div>
-        <div style={{ display: 'flex', gap: '0.4rem' }}>
-          <SortBtn val="raised" label="by raised" />
-          <SortBtn val="cpv" label="cost/vote" />
-          <SortBtn val="votes" label="by votes" />
-        </div>
-      </div>
-      <div style={{ border: '1px solid var(--border)', borderRadius: '4px', overflow: 'hidden' }}>
-        <div style={{
-          display: 'grid', gridTemplateColumns: '1.8fr 40px 85px 80px 70px',
-          background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid var(--border)', padding: '0.4rem 0.85rem'
-        }}>
-          {['Candidate', 'Pty', 'Raised', 'Votes', '$/Vote'].map(h => (
-            <div key={h} style={{ fontSize: '0.55rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{h}</div>
-          ))}
-        </div>
-        {sorted.map((c, i) => (
-          <div key={c.finance_acct_num || c.candidate_name} style={{
-            display: 'grid', gridTemplateColumns: '1.8fr 40px 85px 80px 70px',
-            padding: '0.45rem 0.85rem',
-            borderBottom: i < sorted.length - 1 ? '1px solid rgba(100,140,220,0.07)' : 'none',
-            background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.01)',
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', minWidth: 0 }}>
-              {c.winner && <WinnerBadge />}
-              <PartyDot party={c.party} />
-              {c.finance_acct_num ? (
-                <Link href={`/candidate/${c.finance_acct_num}`} style={{ fontSize: '0.72rem', color: c.winner ? 'var(--text)' : 'var(--text-dim)', textDecoration: 'none', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontWeight: c.winner ? 600 : 400 }}>
-                  {c.candidate_name}
-                </Link>
-              ) : (
-                <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>{c.candidate_name}</span>
-              )}
-            </div>
-            <div style={{ fontSize: '0.65rem', color: PARTY_COLOR[c.party] || 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
-              {PARTY_LABEL[c.party] || c.party || '—'}
-            </div>
-            <div style={{ fontSize: '0.68rem', fontFamily: 'var(--font-mono)', color: 'var(--orange)' }}>
-              {fmtMoney(c.finance_total_raised)}
-            </div>
-            <div style={{ fontSize: '0.65rem', fontFamily: 'var(--font-mono)', color: 'var(--text-dim)' }}>
-              {fmtNum(c.total_votes)}
-            </div>
-            <div style={{ fontSize: '0.65rem', fontFamily: 'var(--font-mono)', color: 'var(--teal)' }}>
-              {c.cost_per_vote > 0 ? `$${c.cost_per_vote.toFixed(2)}` : '—'}
-            </div>
-          </div>
-        ))}
-      </div>
+      )}
     </div>
   );
 }
@@ -190,15 +132,12 @@ function MoneyWinsBanner({ cycle }) {
     let total = 0, wins = 0;
     for (const race of races) {
       const financed = race.candidates.filter(c =>
-        c.finance_acct_num && c.candidate_name !== 'UnderVotes' && (c.total_raised || 0) > 0
+        c.finance_acct_num && !SKIP_NAMES.has(c.candidate_name) && (c.total_raised || 0) > 0
       );
       if (financed.length < 2) continue;
       const sorted = [...financed].sort((a, b) => (b.total_raised || 0) - (a.total_raised || 0));
       const top = sorted[0];
-      if (top.winner !== undefined) {
-        total++;
-        if (top.winner) wins++;
-      }
+      if (top.winner !== undefined) { total++; if (top.winner) wins++; }
     }
     return total >= 3 ? { wins, total, pct: Math.round(wins / total * 100) } : null;
   }, [cycle]);
@@ -209,169 +148,309 @@ function MoneyWinsBanner({ cycle }) {
     <div style={{
       display: 'flex', alignItems: 'center', gap: '0.75rem',
       padding: '0.65rem 1rem', background: 'var(--surface)', border: '1px solid var(--border)',
-      borderLeft: `3px solid var(--orange)`, borderRadius: '3px', marginBottom: '1.75rem',
+      borderLeft: '3px solid var(--orange)', borderRadius: '3px', marginBottom: '1.5rem',
     }}>
       <span style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--orange)', fontFamily: 'var(--font-mono)' }}>
         {stat.pct}%
       </span>
       <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)', lineHeight: 1.5 }}>
-        of the time, the top-funded candidate won — in {stat.wins} of {stat.total} finance-matched races
+        of the time, the top-funded candidate won — in {stat.wins} of {stat.total} finance-matched races this cycle
       </span>
     </div>
   );
 }
 
-export default function ElectionsView({ cycles, legLeaderboards = {}, legLeaderboardsPrimary = {} }) {
+function SkeletonRace() {
+  return (
+    <div style={{ border: '1px solid var(--border)', borderRadius: '5px', background: 'var(--surface)', padding: '0.6rem 0.9rem' }}>
+      <div className="skeleton-row" style={{ height: '16px', width: '40%', marginBottom: '0.75rem' }} />
+      {[75, 50, 30].map((w, i) => (
+        <div key={i} className="skeleton-row" style={{ height: '28px', width: `${w}%`, marginBottom: '0.4rem' }} />
+      ))}
+    </div>
+  );
+}
+
+export default function ElectionsView({ cycles, districtMap = {} }) {
   const [electionType, setElectionType] = useState('general');
   const [selectedYear, setSelectedYear] = useState(2024);
+  const [activeTab, setActiveTab] = useState('statewide');
+  const [search, setSearch] = useState('');
+  const [flatData, setFlatData] = useState(null);
+  const [fetching, setFetching] = useState(false);
 
   const filteredCycles = useMemo(() =>
     cycles.filter(c => c.election_type === electionType).sort((a, b) => b.year - a.year),
     [cycles, electionType]
   );
-
   const availableYears = useMemo(() => filteredCycles.map(c => c.year), [filteredCycles]);
-
   const resolvedYear = availableYears.includes(selectedYear) ? selectedYear : (availableYears[0] || 2024);
   const cycle = filteredCycles.find(c => c.year === resolvedYear) || filteredCycles[0];
 
-  const statewideRaces = useMemo(() => {
-    const seen = new Set();
-    return (cycle?.finance_races_top50 || []).filter(r => {
-      if (!STATEWIDE_CONTESTS.has(r.contest_name)) return false;
-      if (!r.candidates.some(c => c.finance_acct_num && c.candidate_name !== 'UnderVotes')) return false;
-      const normalized = r.contest_name.toLowerCase().replace(/[^a-z]/g, '').replace('andlt', '');
-      if (seen.has(normalized)) return false;
-      seen.add(normalized);
-      return true;
-    });
-  }, [cycle]);
+  useEffect(() => {
+    setFetching(true);
+    setFlatData(null);
+    fetch(`/data/elections/${resolvedYear}_${electionType}.json`)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => { setFlatData(data); setFetching(false); })
+      .catch(() => setFetching(false));
+  }, [resolvedYear, electionType]);
 
-  const leaderboardMap = electionType === 'general' ? legLeaderboards : legLeaderboardsPrimary;
-  const legLeaderboard = leaderboardMap[String(resolvedYear)] || [];
-
-  function TypeBtn({ val, label }) {
-    const active = electionType === val;
+  function getDistrict(c) {
+    const acct = c.finance_acct_num;
+    if (!acct || !districtMap[acct]) return null;
+    const yearMap = districtMap[acct];
     return (
-      <button
-        onClick={() => setElectionType(val)}
-        style={{
-          fontSize: '0.7rem', padding: '0.3rem 0.8rem', borderRadius: '3px', cursor: 'pointer',
-          border: `1px solid ${active ? 'var(--orange)' : 'var(--border)'}`,
-          background: active ? 'rgba(255,176,96,0.12)' : 'transparent',
-          color: active ? 'var(--orange)' : 'var(--text-dim)',
-          fontFamily: 'var(--font-mono)', fontWeight: active ? 700 : 400,
-        }}
-      >
+      yearMap[String(resolvedYear)] ||
+      yearMap['2024'] || yearMap['2022'] || yearMap['2020'] || yearMap['2018'] ||
+      Object.values(yearMap)[0] || null
+    );
+  }
+
+  const { statewideRaces, legRaces, flatStats } = useMemo(() => {
+    if (!flatData) return { statewideRaces: [], legRaces: [], flatStats: null };
+    const candidates = flatData.candidates || [];
+
+    // Statewide - group by contest_name
+    const swMap = {};
+    for (const c of candidates) {
+      if (SKIP_NAMES.has(c.candidate_name)) continue;
+      if (STATEWIDE_CONTESTS.has(c.contest_name)) {
+        const key = CONTEST_DISPLAY[c.contest_name] || c.contest_name;
+        if (!swMap[key]) swMap[key] = [];
+        swMap[key].push(c);
+      }
+    }
+
+    // Legislature - group by district
+    const legMap = {};
+    for (const c of candidates) {
+      if (SKIP_NAMES.has(c.candidate_name)) continue;
+      if (!LEG_CONTESTS.has(c.contest_name)) continue;
+      const district = getDistrict(c);
+      if (!district) continue;
+      const prefix = c.contest_name === 'State Representative' ? 'HD' : 'SD';
+      const key = `${prefix}_${district}`;
+      if (!legMap[key]) legMap[key] = { prefix, district, contestName: c.contest_name, candidates: [] };
+      legMap[key].candidates.push(c);
+    }
+
+    const statewideRaces = Object.entries(swMap).map(([name, cands]) => ({ name, candidates: cands }));
+    const legRaces = Object.values(legMap).sort((a, b) => {
+      if (a.prefix !== b.prefix) return a.prefix === 'HD' ? -1 : 1;
+      return parseInt(a.district || '999') - parseInt(b.district || '999');
+    });
+
+    const flatStats = {
+      total: candidates.filter(c => !SKIP_NAMES.has(c.candidate_name)).length,
+      matched: candidates.filter(c => c.finance_acct_num && !SKIP_NAMES.has(c.candidate_name)).length,
+    };
+
+    return { statewideRaces, legRaces, flatStats };
+  }, [flatData, districtMap, resolvedYear]);
+
+  const filteredLegRaces = useMemo(() => {
+    const s = search.trim().toLowerCase();
+    if (!s) return legRaces;
+
+    const hdMatch = s.match(/(?:hd|house|h\.d\.|state\s+rep)[\s#.]*(\d+)/);
+    const sdMatch = s.match(/(?:sd|senate|s\.d\.|state\s+sen)[\s#.]*(\d+)/);
+    const numOnly = !hdMatch && !sdMatch && s.match(/^(\d+)$/);
+
+    if (hdMatch || sdMatch || numOnly) {
+      const num = ((hdMatch || sdMatch || numOnly)[1]).padStart(3, '0');
+      const type = hdMatch ? 'HD' : sdMatch ? 'SD' : null;
+      return legRaces.filter(r => {
+        const rNum = String(parseInt(r.district || '0')).padStart(3, '0');
+        return (!type || r.prefix === type) && rNum === num;
+      });
+    }
+
+    return legRaces.filter(r =>
+      r.candidates.some(c => c.candidate_name.toLowerCase().includes(s))
+    );
+  }, [legRaces, search]);
+
+  const filteredStatewideRaces = useMemo(() => {
+    const s = search.trim().toLowerCase();
+    if (!s) return statewideRaces;
+    return statewideRaces.filter(r =>
+      r.name.toLowerCase().includes(s) ||
+      r.candidates.some(c => c.candidate_name.toLowerCase().includes(s))
+    );
+  }, [statewideRaces, search]);
+
+  function TabBtn({ val, label, count }) {
+    const active = activeTab === val;
+    return (
+      <button onClick={() => setActiveTab(val)} style={{
+        fontSize: '0.78rem', padding: '0.35rem 0.85rem', borderRadius: '3px',
+        cursor: 'pointer', fontFamily: 'var(--font-mono)',
+        border: `1px solid ${active ? 'var(--teal)' : 'var(--border)'}`,
+        background: active ? 'rgba(77,216,240,0.1)' : 'transparent',
+        color: active ? 'var(--teal)' : 'var(--text-dim)',
+        fontWeight: active ? 600 : 400,
+      }}>
         {label}
+        {count !== undefined && (
+          <span style={{ marginLeft: '0.4rem', fontSize: '0.6rem', opacity: 0.7 }}>
+            ({count})
+          </span>
+        )}
       </button>
     );
   }
 
+  const showingLeg = activeTab === 'legislature';
+  const racesToShow = showingLeg ? filteredLegRaces : filteredStatewideRaces;
+
   return (
     <div>
       {/* General / Primary toggle */}
-      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.25rem' }}>
-        <TypeBtn val="general" label="General" />
-        <TypeBtn val="primary" label="Primary" />
+      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+        {['general', 'primary'].map(type => (
+          <button key={type} onClick={() => setElectionType(type)} style={{
+            fontSize: '0.72rem', padding: '0.3rem 0.8rem', borderRadius: '3px', cursor: 'pointer',
+            border: `1px solid ${electionType === type ? 'var(--orange)' : 'var(--border)'}`,
+            background: electionType === type ? 'rgba(255,176,96,0.12)' : 'transparent',
+            color: electionType === type ? 'var(--orange)' : 'var(--text-dim)',
+            fontFamily: 'var(--font-mono)', fontWeight: electionType === type ? 700 : 400,
+          }}>
+            {type.charAt(0).toUpperCase() + type.slice(1)}
+          </button>
+        ))}
       </div>
 
       {/* Year selector */}
-      <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginBottom: '1.75rem' }}>
+      <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
         {filteredCycles.map(c => (
-          <button
-            key={c.year}
-            onClick={() => setSelectedYear(c.year)}
-            style={{
-              fontSize: '0.68rem', padding: '0.3rem 0.7rem', borderRadius: '3px', cursor: 'pointer',
-              border: `1px solid ${resolvedYear === c.year ? 'var(--teal)' : 'var(--border)'}`,
-              background: resolvedYear === c.year ? 'rgba(77,216,240,0.1)' : 'transparent',
-              color: resolvedYear === c.year ? 'var(--teal)' : 'var(--text-dim)',
-              fontFamily: 'var(--font-mono)',
-            }}
-          >
+          <button key={c.year} onClick={() => setSelectedYear(c.year)} style={{
+            fontSize: '0.72rem', padding: '0.3rem 0.7rem', borderRadius: '3px', cursor: 'pointer',
+            border: `1px solid ${resolvedYear === c.year ? 'var(--teal)' : 'var(--border)'}`,
+            background: resolvedYear === c.year ? 'rgba(77,216,240,0.1)' : 'transparent',
+            color: resolvedYear === c.year ? 'var(--teal)' : 'var(--text-dim)',
+            fontFamily: 'var(--font-mono)',
+          }}>
             {c.year}
           </button>
         ))}
       </div>
 
-      {/* Cycle stats */}
+      {/* Cycle stats row */}
       {cycle && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', border: '1px solid var(--border)', borderRadius: '4px', overflow: 'hidden', marginBottom: '1.5rem' }}>
+        <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', padding: '0.75rem 1rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '4px', marginBottom: '1.25rem' }}>
           {[
-            { label: 'Total Contests', value: cycle.total_contests.toLocaleString(), color: 'var(--text)' },
-            { label: 'Finance Matched', value: cycle.contests_with_finance.toLocaleString(), color: 'var(--green)' },
-            { label: 'Match Rate', value: `${Math.round(cycle.contests_with_finance / cycle.total_contests * 100)}%`, color: 'var(--teal)' },
-          ].map(({ label, value, color }, i, arr) => (
-            <div key={label} style={{ padding: '0.65rem 1rem', borderRight: i < arr.length - 1 ? '1px solid var(--border)' : 'none', background: 'var(--surface)' }}>
-              <div style={{ fontSize: '0.55rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.2rem' }}>{label}</div>
-              <div style={{ fontSize: '1rem', fontWeight: 700, color, fontFamily: 'var(--font-mono)' }}>{value}</div>
+            { label: 'Year', value: `${resolvedYear} ${electionType.charAt(0).toUpperCase() + electionType.slice(1)}`, color: 'var(--text)' },
+            { label: 'Total Contests', value: cycle.total_contests?.toLocaleString(), color: 'var(--text)' },
+            { label: 'Finance Matched', value: cycle.contests_with_finance?.toLocaleString(), color: 'var(--green)' },
+            flatStats && { label: 'Candidates', value: flatStats.total.toLocaleString(), color: 'var(--text-dim)' },
+          ].filter(Boolean).map(({ label, value, color }) => (
+            <div key={label}>
+              <div style={{ fontSize: '0.55rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.15rem' }}>{label}</div>
+              <div style={{ fontSize: '0.92rem', fontWeight: 700, color, fontFamily: 'var(--font-mono)' }}>{value || '—'}</div>
             </div>
           ))}
         </div>
       )}
 
-      {/* Money-wins banner */}
       <MoneyWinsBanner cycle={cycle} />
 
-      {/* Statewide races */}
-      {statewideRaces.length > 0 && (
-        <div style={{ marginBottom: '2.5rem' }}>
-          <div style={{ fontSize: '0.62rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-dim)', fontWeight: 600, marginBottom: '1rem', paddingBottom: '0.4rem', borderBottom: '1px solid var(--border)' }}>
-            Statewide Races — {resolvedYear} {electionType === 'primary' ? 'Primary' : 'General'}
+      {/* Search */}
+      <div style={{ marginBottom: '1.25rem' }}>
+        <input
+          type="text"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          placeholder='Search races, candidates, or districts — e.g. "HD 96" or "DeSantis"'
+          style={{
+            width: '100%', boxSizing: 'border-box',
+            background: 'var(--surface)', border: '1px solid var(--border)',
+            color: 'var(--text)', padding: '0.5rem 0.75rem',
+            fontSize: '0.82rem', borderRadius: '3px',
+            fontFamily: 'var(--font-mono)', outline: 'none',
+            transition: 'border-color 0.12s',
+          }}
+          onFocus={e => e.target.style.borderColor = 'rgba(77,216,240,0.45)'}
+          onBlur={e => e.target.style.borderColor = 'var(--border)'}
+        />
+      </div>
+
+      {/* Tabs */}
+      <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
+        <TabBtn val="statewide" label="Statewide" count={fetching ? null : statewideRaces.length} />
+        <TabBtn val="legislature" label="Legislature" count={fetching ? null : legRaces.length} />
+      </div>
+
+      {/* Content */}
+      {fetching ? (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {[1, 2, 3].map(i => <SkeletonRace key={i} />)}
+        </div>
+      ) : !flatData ? (
+        <div style={{ padding: '2rem', border: '1px solid var(--border)', borderRadius: '4px', textAlign: 'center', color: 'var(--text-dim)', fontSize: '0.78rem' }}>
+          No detailed results available for {resolvedYear} {electionType}.
+        </div>
+      ) : activeTab === 'statewide' ? (
+        <>
+          {filteredStatewideRaces.length === 0 && search ? (
+            <div style={{ color: 'var(--text-dim)', fontSize: '0.78rem', padding: '1rem 0' }}>
+              No statewide races match "{search}"
+            </div>
+          ) : (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(400px, 1fr))', gap: '1rem' }}>
+              {filteredStatewideRaces.map(race => (
+                <BallotRaceCard
+                  key={race.name}
+                  title={race.name}
+                  candidates={race.candidates}
+                  useWinnerFlag
+                />
+              ))}
+            </div>
+          )}
+        </>
+      ) : (
+        <>
+          {/* Legislature header / context */}
+          <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', marginBottom: '1rem', lineHeight: 1.6 }}>
+            Showing <strong style={{ color: 'var(--text)' }}>{filteredLegRaces.length}</strong> of{' '}
+            <strong style={{ color: 'var(--text)' }}>{legRaces.length}</strong> districts with finance-matched candidates.
+            {search && legRaces.length > 0 && filteredLegRaces.length === 0 && (
+              <span style={{ color: 'var(--text-dim)' }}> No results for "{search}" — try "HD 11" or a candidate name.</span>
+            )}
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: '1rem' }}>
-            {statewideRaces.map(race => (
-              <StatewideRaceCard key={race.contest_name} race={race} />
-            ))}
+
+          {filteredLegRaces.length === 0 && !search ? (
+            <div style={{ padding: '2rem', border: '1px solid var(--border)', borderRadius: '4px', textAlign: 'center', color: 'var(--text-dim)', fontSize: '0.78rem' }}>
+              No legislative race data available for {resolvedYear} {electionType}.
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+              {filteredLegRaces.map(race => (
+                <BallotRaceCard
+                  key={`${race.prefix}_${race.district}`}
+                  title={`${race.prefix} ${parseInt(race.district)} — ${race.contestName}`}
+                  candidates={race.candidates}
+                  useWinnerFlag={false}
+                />
+              ))}
+            </div>
+          )}
+
+          <div style={{ marginTop: '1.25rem', fontSize: '0.65rem', color: 'var(--text-dim)', lineHeight: 1.7, padding: '0.75rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '4px' }}>
+            <strong style={{ color: 'var(--text)' }}>Note on legislative data:</strong> Districts are matched by linking election candidates to FL Division of Elections finance records.
+            Only candidates with a finance account match appear here — unmatched candidates (those who raised no reportable money) are not shown.
+            Winners in district races are inferred as the highest vote-getter among matched candidates.
           </div>
-        </div>
+        </>
       )}
 
-      {/* FL Legislative leaderboard */}
-      {legLeaderboard.length > 0 && (
-        <div style={{ marginBottom: '2.5rem' }}>
-          <LegLeaderboard leaderboard={legLeaderboard} year={resolvedYear} />
-        </div>
-      )}
-
-      {/* Fallback: top50 races for years without flat files */}
-      {statewideRaces.length === 0 && legLeaderboard.length === 0 && cycle?.finance_races_top50?.length > 0 && (
-        <div style={{ marginBottom: '2.5rem' }}>
-          <div style={{ fontSize: '0.62rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-dim)', fontWeight: 600, marginBottom: '0.75rem', paddingBottom: '0.4rem', borderBottom: '1px solid var(--border)' }}>
-            Top Finance Races · {resolvedYear} {electionType === 'primary' ? 'Primary' : 'General'}
-          </div>
-          {cycle.finance_races_top50.slice(0, 15).map(race => {
-            const top = [...race.candidates].filter(c => c.finance_acct_num).sort((a, b) => (b.total_raised || 0) - (a.total_raised || 0))[0];
-            if (!top) return null;
-            const winner = race.candidates.find(c => c.winner && c.finance_acct_num);
-            return (
-              <div key={race.contest_name} style={{ display: 'grid', gridTemplateColumns: '1fr 110px 80px', gap: '0.5rem', padding: '0.5rem 0', borderBottom: '1px solid rgba(100,140,220,0.08)', alignItems: 'center' }}>
-                <div style={{ fontSize: '0.72rem', color: 'var(--text)' }}>
-                  {race.contest_name}
-                </div>
-                <div style={{ fontSize: '0.66rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', display: 'flex', alignItems: 'center' }}>
-                  {winner && <WinnerBadge />}
-                  <PartyDot party={(winner || top).party} />
-                  {(winner || top).candidate_name.split(' ').slice(-1)[0]}
-                </div>
-                <div style={{ fontSize: '0.66rem', fontFamily: 'var(--font-mono)', color: 'var(--orange)', textAlign: 'right' }}>{fmtMoney(top.total_raised)}</div>
-              </div>
-            );
-          })}
-        </div>
-      )}
-
-      {statewideRaces.length === 0 && legLeaderboard.length === 0 && !cycle?.finance_races_top50?.length && (
-        <div style={{ padding: '2rem', border: '1px solid var(--border)', borderRadius: '4px', textAlign: 'center', color: 'var(--text-dim)', fontSize: '0.75rem' }}>
-          No finance data available for {resolvedYear} {electionType}.
-        </div>
-      )}
-
-      <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', marginTop: '1.5rem', lineHeight: 1.7, borderTop: '1px solid var(--border)', paddingTop: '1rem' }}>
-        Source: <a href="https://dos.elections.myflorida.com/election-results/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)', textDecoration: 'none' }}>FL Division of Elections</a> results matched to campaign finance records.
-        Finance totals reflect hard-money contributions only. Not all candidates have finance matches.
-        District-level grouping not available for legislative races.
+      <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', marginTop: '2rem', lineHeight: 1.7, borderTop: '1px solid var(--border)', paddingTop: '1rem' }}>
+        Source:{' '}
+        <a href="https://dos.elections.myflorida.com/election-results/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+          FL Division of Elections
+        </a>{' '}
+        results matched to campaign finance records. Finance totals reflect hard-money contributions. Not all candidates have finance matches.
       </div>
     </div>
   );

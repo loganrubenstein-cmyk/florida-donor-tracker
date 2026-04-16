@@ -48,6 +48,7 @@ export default function CandidatesList() {
 
   const [results, setResults]       = useState({ data: [], total: 0, pages: 0 });
   const [loading, setLoading]       = useState(true);
+  const [explainerOpen, setExplainerOpen] = useState(false);
   const [search, setSearch]         = useState(() => searchParams?.get('q') || '');
   const [debouncedQ, setDebouncedQ] = useState(() => searchParams?.get('q') || '');
   const [party, setParty]           = useState(() => searchParams?.get('party') || 'all');
@@ -182,6 +183,53 @@ export default function CandidatesList() {
         </button>
       </div>
 
+      {/* Hard vs Soft money explainer */}
+      <div style={{
+        border: '1px solid var(--border)', borderRadius: '4px', marginBottom: '1.25rem',
+        background: 'var(--surface)', overflow: 'hidden',
+      }}>
+        <button
+          onClick={() => setExplainerOpen(o => !o)}
+          style={{
+            width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            padding: '0.55rem 0.85rem', background: 'none', border: 'none',
+            cursor: 'pointer', textAlign: 'left',
+          }}
+        >
+          <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
+            What is hard money vs. soft money?
+          </span>
+          <span style={{ fontSize: '0.65rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+            {explainerOpen ? '▲' : '▼'}
+          </span>
+        </button>
+        {explainerOpen && (
+          <div style={{ padding: '0 0.85rem 0.85rem', display: 'flex', flexDirection: 'column', gap: '0.6rem', borderTop: '1px solid var(--border)' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', paddingTop: '0.75rem' }}>
+              <div>
+                <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--orange)', marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
+                  Hard Money
+                </div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
+                  Contributions made directly to a candidate's campaign committee. Subject to strict limits — individuals can give up to $3,000 per election in Florida state races. Goes directly to the candidate.
+                </div>
+              </div>
+              <div>
+                <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--blue)', marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
+                  Soft Money
+                </div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
+                  Money raised by linked political committees (PACs, ECOs, CCEs) associated with a candidate. Florida has no contribution limits for state-level PACs — a single donor can give millions. Tracked via committee connections.
+                </div>
+              </div>
+            </div>
+            <div style={{ fontSize: '0.68rem', color: 'rgba(90,106,136,0.7)', paddingTop: '0.25rem', borderTop: '1px solid var(--border)' }}>
+              Combined = hard money raised + soft money from linked committees. Soft money links are inferred from shared treasurers and candidate-committee relationships — see individual profiles for confidence levels.
+            </div>
+          </div>
+        )}
+      </div>
+
       <div style={{
         fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase',
         letterSpacing: '0.08em', marginBottom: '0.6rem',
@@ -190,7 +238,7 @@ export default function CandidatesList() {
       </div>
 
       <div style={{ overflowX: 'auto', opacity: loading ? 0.5 : 1, transition: 'opacity 0.15s' }}>
-        <table className="dir-table" style={{ width: '100%', minWidth: '650px', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
+        <table className="dir-table" style={{ width: '100%', minWidth: '650px', borderCollapse: 'collapse', fontSize: '0.83rem' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid var(--border)' }}>
               {[
@@ -270,29 +318,30 @@ export default function CandidatesList() {
                       </span>
                     )}
                   </td>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.78rem' }}>
+                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.82rem' }}>
                     {p.latest_office || '—'}
                     {p.latest_district ? ` · ${p.latest_district}` : ''}
                   </td>
                   <td style={{ padding: '0.45rem 0.6rem', textAlign: 'center' }}>
                     <span style={{
-                      fontSize: '0.62rem', padding: '0.1rem 0.35rem',
-                      border: `1px solid ${pColor}`, color: pColor,
-                      borderRadius: '2px', fontWeight: 'bold',
+                      display: 'inline-flex', alignItems: 'center', gap: '0.25rem',
                     }}>
-                      {p.party || '—'}
+                      <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: pColor, display: 'inline-block', flexShrink: 0 }} />
+                      <span style={{ fontSize: '0.65rem', color: pColor, fontFamily: 'var(--font-mono)', fontWeight: 700 }}>
+                        {p.party === 'REP' ? 'R' : p.party === 'DEM' ? 'D' : p.party === 'NPA' ? 'I' : (p.party || '—')}
+                      </span>
                     </span>
                   </td>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '0.78rem' }}>
+                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '0.82rem' }}>
                     {cycleRange}
                   </td>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text)', textAlign: 'right', whiteSpace: 'nowrap' }}>
+                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text)', textAlign: 'right', whiteSpace: 'nowrap', fontFamily: 'var(--font-mono)', fontSize: '0.82rem' }}>
                     {fmt(p.hard_money_all)}
                   </td>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text)', textAlign: 'right', whiteSpace: 'nowrap' }}>
+                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text)', textAlign: 'right', whiteSpace: 'nowrap', fontFamily: 'var(--font-mono)', fontSize: '0.82rem' }}>
                     {p.soft_money_all > 0 ? fmt(p.soft_money_all) : '—'}
                   </td>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--orange)', textAlign: 'right', whiteSpace: 'nowrap', fontWeight: 700 }}>
+                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--orange)', textAlign: 'right', whiteSpace: 'nowrap', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '0.82rem' }}>
                     {fmt(p.total_combined_all)}
                   </td>
                 </tr>
