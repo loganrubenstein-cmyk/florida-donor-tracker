@@ -45,6 +45,7 @@ export default function QuarterlyChart({ data }) {
             axisLine={false}
             tickLine={false}
             width={48}
+            domain={[0, 'auto']}
           />
           <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,176,96,0.06)' }} />
           <Bar dataKey="amount" fill="#ffb060" radius={[2, 2, 0, 0]} maxBarSize={32} />
