@@ -138,6 +138,25 @@ export default function LobbyistProfile({ data }) {
           </a>
         </div>
       )}
+
+      {data.topBills && data.topBills.length > 0 && (
+        <div style={{ marginTop: '2rem' }}>
+          <SectionLabel>Lobbied Bills — top {data.topBills.length} by filing count</SectionLabel>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+            {data.topBills.map(b => (
+              <div key={b.bill_slug} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0.75rem', border: '1px solid rgba(100,140,220,0.1)', borderRadius: '3px', background: 'var(--bg)' }}>
+                <a href={`/lobbying/bill/${b.bill_slug}`} style={{ color: 'var(--teal)', textDecoration: 'none', fontSize: '0.78rem', fontWeight: 600 }}>
+                  {b.bill_canon || b.bill_slug}
+                </a>
+                <div style={{ display: 'flex', gap: '0.75rem', fontSize: '0.65rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', flexShrink: 0, marginLeft: '1rem' }}>
+                  <span>{b.filings} filing{b.filings !== 1 ? 's' : ''}</span>
+                  <span>{b.num_principals} principal{b.num_principals !== 1 ? 's' : ''}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 

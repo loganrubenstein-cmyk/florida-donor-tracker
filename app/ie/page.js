@@ -6,6 +6,7 @@ import { getDb } from '@/lib/db';
 import { fmtMoneyCompact, fmtCount } from '../../lib/fmt';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import IECandidatesTable from '@/components/ie/IECandidatesTable';
+import IEForAgainstTable from '@/components/ie/IEForAgainstTable';
 
 export const dynamic = 'force-dynamic';
 
@@ -30,12 +31,16 @@ const TYPE_COLORS = {
 
 async function loadData() {
   const db = getDb();
-  const [{ data: summaryRows }, { data: ieCommittees }, { data: dbCandidates }] = await Promise.all([
+  const [{ data: summaryRows }, { data: ieCommittees }, { data: dbCandidates }, { data: forAgainstRows }] = await Promise.all([
     db.from('ie_summary').select('total_amount, total_rows, num_committees, date_start, date_end, by_type').limit(1),
     db.from('ie_committees').select('acct_num, committee_name, total_amount, num_transactions, year_min, year_max')
       .order('total_amount', { ascending: false }).limit(50),
     db.from('ie_candidates').select('candidate_acct_num, candidate_name, total_ie_amount, num_expenditures, num_committees, by_year')
       .order('total_ie_amount', { ascending: false }),
+    db.from('independent_expenditures')
+      .select('candidate_name, candidate_slug, support_oppose, amount')
+      .not('candidate_name', 'is', null)
+      .not('support_oppose', 'is', null),
   ]);
 
   // Fill missing committee names from committees table
@@ -77,6 +82,23 @@ async function loadData() {
   const forAmount     = byType.filter(t => t.type_code === 'IES').reduce((s, t) => s + (parseFloat(t.total_amount) || 0), 0);
   const againstAmount = byType.filter(t => t.type_code === 'IEO').reduce((s, t) => s + (parseFloat(t.total_amount) || 0), 0);
 
+  // Aggregate for/against per candidate from independent_expenditures table
+  const forAgainstMap = {};
+  for (const r of forAgainstRows || []) {
+    const key = r.candidate_slug || r.candidate_name;
+    if (!key) continue;
+    if (!forAgainstMap[key]) {
+      forAgainstMap[key] = { name: r.candidate_name, slug: r.candidate_slug, for: 0, against: 0 };
+    }
+    const amt = parseFloat(r.amount) || 0;
+    if (r.support_oppose === 'S') forAgainstMap[key].for += amt;
+    else if (r.support_oppose === 'O') forAgainstMap[key].against += amt;
+  }
+  const forAgainst = Object.values(forAgainstMap)
+    .map(r => ({ ...r, total: r.for + r.against, net: r.for - r.against }))
+    .sort((a, b) => b.total - a.total)
+    .slice(0, 100);
+
   return {
     summary: {
       total_amount:   parseFloat(s.total_amount) || 0,
@@ -110,11 +132,13 @@ async function loadData() {
         }))
         .sort((a, b) => b.amount - a.amount),
     })),
+    forAgainst,
   };
 }
 
-export default async function IEPage() {
-  const { summary, committees, candidates } = await loadData();
+export default async function IEPage({ searchParams }) {
+  const { summary, committees, candidates, forAgainst } = await loadData();
+  const tab = (await searchParams)?.tab || 'committees';
 
   const byType  = summary.by_type || [];
   const maxType = Math.max(...byType.map(t => parseFloat(t.total_amount) || 0), 1);
@@ -164,8 +188,100 @@ export default async function IEPage() {
         ))}
       </div>
 
-      {/* ── Targeted Candidates — FIRST ────────────────────── */}
-      {candidates.length > 0 && (
+      {/* Tab bar */}
+      <div style={{ display: 'flex', gap: '0', marginBottom: '2rem', borderBottom: '1px solid var(--border)' }}>
+        {[
+          { id: 'committees', label: 'By Committee' },
+          { id: 'candidates', label: 'By Candidate' },
+          { id: 'foragainst', label: 'For vs. Against' },
+        ].map(t => (
+          <a key={t.id} href={`/ie?tab=${t.id}`} style={{
+            fontSize: '0.75rem', padding: '0.5rem 1rem',
+            color: tab === t.id ? 'var(--orange)' : 'var(--text-dim)',
+            borderBottom: tab === t.id ? '2px solid var(--orange)' : '2px solid transparent',
+            textDecoration: 'none', fontFamily: 'var(--font-mono)',
+            marginBottom: '-1px',
+          }}>
+            {t.label}
+          </a>
+        ))}
+      </div>
+
+      {/* ── By Committee tab ────────────────────────────────── */}
+      {tab === 'committees' && (
+        <div style={{ display: 'grid', gridTemplateColumns: '3fr 2fr', gap: '2rem', alignItems: 'start' }}>
+          <div>
+            <div style={{
+              fontSize: '0.7rem', letterSpacing: '0.12em', textTransform: 'uppercase',
+              color: 'var(--text-dim)', fontWeight: 600,
+              marginBottom: '1rem', paddingBottom: '0.4rem', borderBottom: '1px solid var(--border)',
+            }}>
+              Top Committees by IE/EC Spending
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+              {top25.map((c, i) => (
+                <CommitteeRow key={c.acct_num} committee={c} rank={i + 1} maxAmount={top25[0]?.total_amount || 1} />
+              ))}
+              {committees.length > 25 && (
+                <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', padding: '0.5rem 0.75rem' }}>
+                  +{committees.length - 25} more committees
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div>
+            <div style={{ padding: '1rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '3px', marginBottom: '1.5rem' }}>
+              <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text)', marginBottom: '1rem' }}>
+                By Expenditure Type
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                {byType.map(t => {
+                  const amt = parseFloat(t.total_amount) || 0;
+                  const pct = (amt / maxType * 100).toFixed(0);
+                  const color = TYPE_COLORS[t.type_code] || 'var(--text-dim)';
+                  const label = TYPE_LABELS[t.type_code] || t.label || t.type_code;
+                  return (
+                    <div key={t.type_code}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', marginBottom: '2px' }}>
+                        <span style={{ color: 'var(--text-dim)', flex: 1, marginRight: '0.5rem' }}>{label}</span>
+                        <span style={{ color: 'var(--text)', fontFamily: 'var(--font-mono)', flexShrink: 0 }}>{fmtMoneyCompact(amt)}</span>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                        <div style={{ flex: 1, height: '4px', background: 'var(--border)', borderRadius: '2px' }}>
+                          <div style={{ height: '100%', width: `${pct}%`, background: color, borderRadius: '2px', opacity: 0.7 }} />
+                        </div>
+                        <span style={{ fontSize: '0.62rem', color: 'var(--text-dim)', width: '30px', textAlign: 'right' }}>
+                          {fmtCount(t.num_rows)}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div style={{ padding: '1rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '3px', fontSize: '0.78rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
+              <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text)', marginBottom: '0.5rem' }}>What is an IE?</div>
+              <p style={{ margin: '0 0 0.5rem' }}>
+                An <strong style={{ color: 'var(--text)' }}>independent expenditure</strong> is campaign spending by a committee to
+                expressly advocate for or against a candidate — without coordinating with the campaign.
+              </p>
+              <p style={{ margin: '0 0 0.5rem' }}>
+                An <strong style={{ color: 'var(--text)' }}>electioneering communication</strong> refers to a candidate by name
+                within 30 days of a primary or 60 days of a general election.
+              </p>
+              <p style={{ margin: 0 }}>
+                Both are disclosed to the FL Division of Elections but are separate from direct contributions.{' '}
+                <Link href="/methodology" style={{ color: 'var(--teal)' }}>More →</Link>
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── By Candidate tab ────────────────────────────────── */}
+      {tab === 'candidates' && candidates.length > 0 && (
         <div style={{ marginBottom: '3rem' }}>
           <div style={{
             fontSize: '0.7rem', letterSpacing: '0.12em', textTransform: 'uppercase',
@@ -182,78 +298,22 @@ export default async function IEPage() {
         </div>
       )}
 
-      {/* ── Committees + Sidebar ───────────────────────────── */}
-      <div style={{ display: 'grid', gridTemplateColumns: '3fr 2fr', gap: '2rem', alignItems: 'start' }}>
-        <div>
+      {/* ── For vs. Against tab ─────────────────────────────── */}
+      {tab === 'foragainst' && (
+        <div style={{ marginBottom: '3rem' }}>
           <div style={{
             fontSize: '0.7rem', letterSpacing: '0.12em', textTransform: 'uppercase',
             color: 'var(--text-dim)', fontWeight: 600,
-            marginBottom: '1rem', paddingBottom: '0.4rem', borderBottom: '1px solid var(--border)',
+            marginBottom: '0.6rem', paddingBottom: '0.4rem', borderBottom: '1px solid var(--border)',
           }}>
-            Top Committees by IE/EC Spending
+            For vs. Against by Candidate — top {forAgainst.length} by total IE spending
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-            {top25.map((c, i) => (
-              <CommitteeRow key={c.acct_num} committee={c} rank={i + 1} maxAmount={top25[0]?.total_amount || 1} />
-            ))}
-            {committees.length > 25 && (
-              <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', padding: '0.5rem 0.75rem' }}>
-                +{committees.length - 25} more committees
-              </div>
-            )}
-          </div>
+          <p style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginBottom: '1rem', lineHeight: 1.6 }}>
+            Breakdown of independent expenditures by direction (support vs. oppose) for each candidate. Blue = support, red = oppose.
+          </p>
+          <IEForAgainstTable rows={forAgainst} />
         </div>
-
-        <div>
-          {/* By expenditure type */}
-          <div style={{ padding: '1rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '3px', marginBottom: '1.5rem' }}>
-            <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text)', marginBottom: '1rem' }}>
-              By Expenditure Type
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-              {byType.map(t => {
-                const amt = parseFloat(t.total_amount) || 0;
-                const pct = (amt / maxType * 100).toFixed(0);
-                const color = TYPE_COLORS[t.type_code] || 'var(--text-dim)';
-                const label = TYPE_LABELS[t.type_code] || t.label || t.type_code;
-                return (
-                  <div key={t.type_code}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', marginBottom: '2px' }}>
-                      <span style={{ color: 'var(--text-dim)', flex: 1, marginRight: '0.5rem' }}>{label}</span>
-                      <span style={{ color: 'var(--text)', fontFamily: 'var(--font-mono)', flexShrink: 0 }}>{fmtMoneyCompact(amt)}</span>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                      <div style={{ flex: 1, height: '4px', background: 'var(--border)', borderRadius: '2px' }}>
-                        <div style={{ height: '100%', width: `${pct}%`, background: color, borderRadius: '2px', opacity: 0.7 }} />
-                      </div>
-                      <span style={{ fontSize: '0.62rem', color: 'var(--text-dim)', width: '30px', textAlign: 'right' }}>
-                        {fmtCount(t.num_rows)}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* What is an IE */}
-          <div style={{ padding: '1rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '3px', fontSize: '0.78rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
-            <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text)', marginBottom: '0.5rem' }}>What is an IE?</div>
-            <p style={{ margin: '0 0 0.5rem' }}>
-              An <strong style={{ color: 'var(--text)' }}>independent expenditure</strong> is campaign spending by a committee to
-              expressly advocate for or against a candidate — without coordinating with the campaign.
-            </p>
-            <p style={{ margin: '0 0 0.5rem' }}>
-              An <strong style={{ color: 'var(--text)' }}>electioneering communication</strong> refers to a candidate by name
-              within 30 days of a primary or 60 days of a general election.
-            </p>
-            <p style={{ margin: 0 }}>
-              Both are disclosed to the FL Division of Elections but are separate from direct contributions.{' '}
-              <Link href="/methodology" style={{ color: 'var(--teal)' }}>More →</Link>
-            </p>
-          </div>
-        </div>
-      </div>
+      )}
 
       <div style={{ maxWidth: '900px', margin: '2rem auto 0' }}>
         <DataTrustBlock
