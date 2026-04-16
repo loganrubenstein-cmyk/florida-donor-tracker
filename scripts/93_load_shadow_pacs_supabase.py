@@ -31,8 +31,58 @@ DB_URL = os.getenv("SUPABASE_DB_URL")
 if not DB_URL:
     sys.exit("ERROR: SUPABASE_DB_URL not set in .env.local")
 
-STUBS_CSV  = PROJECT_ROOT / "data" / "processed" / "solicitation_stubs_resolved.csv"
-BATCH_SIZE = 500
+STUBS_CSV      = PROJECT_ROOT / "data" / "processed" / "solicitation_stubs_resolved.csv"
+COMMITTEES_CSV = PROJECT_ROOT / "data" / "processed" / "committees.csv"
+BATCH_SIZE     = 500
+
+_PUNCT_RE   = re.compile(r"[^A-Z0-9\s]")
+_SUFFIX_RE  = re.compile(
+    r"\b(PC|CCE|ECO|PAC|INC|LLC|CORP|FOUNDATION|FUND|COMMITTEE|POLITICAL COMMITTEE"
+    r"|ELECTIONEERING COMMUNICATIONS ORGANIZATION|527|501C4|501\(C\)\(4\))\b"
+)
+_NOW_PAT    = re.compile(r"\(now\s+(.+?)\)\s*$", re.IGNORECASE)
+
+
+def _norm(s: str) -> str:
+    upper = str(s).upper()
+    return " ".join(_PUNCT_RE.sub(" ", upper).split())
+
+
+def _norm_strip(s: str) -> str:
+    n = _norm(s)
+    n = n.replace(" & ", " AND ")
+    n = re.sub(r"^THE\s+", "", n)
+    return " ".join(_SUFFIX_RE.sub("", n).split())
+
+
+def _build_committee_acct_map(committees_csv: Path) -> dict:
+    """
+    Returns dict: normalized_name -> acct_num
+    Covers exact names, suffix-stripped names, and "(now X)" aliases.
+    """
+    if not committees_csv.exists():
+        return {}
+    df = pd.read_csv(committees_csv, dtype=str).fillna("")
+    acct_map = {}
+    for _, r in df.iterrows():
+        acct = str(r.get("acct_num", "")).strip()
+        name = str(r.get("committee_name", "")).strip()
+        if not acct or not name:
+            continue
+        acct_map[_norm(name)]       = acct
+        acct_map[_norm_strip(name)] = acct
+        # Extract alias from "(now X)" rename
+        m = _NOW_PAT.search(name)
+        if m:
+            alias = m.group(1).strip()
+            acct_map[_norm(alias)]       = acct
+            acct_map[_norm_strip(alias)] = acct
+        # Also map the base name (before "(now X)") back to the same acct
+        base = _NOW_PAT.sub("", name).strip()
+        if base != name:
+            acct_map[_norm(base)]       = acct
+            acct_map[_norm_strip(base)] = acct
+    return acct_map
 
 
 # ── Schema ────────────────────────────────────────────────────────────────────
@@ -178,6 +228,27 @@ def main(drop: bool = False) -> int:
         cur.execute("SELECT COUNT(*) FROM shadow_orgs WHERE num_candidates > 0")
         cand_linked = cur.fetchone()[0]
         print(f"  Candidate-linked: {cand_linked} orgs soliciting for known candidates")
+
+        # ── Backfill fl_acct_num ───────────────────────────────────────────────
+        # Match shadow_orgs rows to FL DoE committee registry using normalized
+        # name matching (exact + suffix-stripped + "(now X)" alias extraction).
+        print("\n  Backfilling fl_acct_num from committees.csv ...", flush=True)
+        acct_map = _build_committee_acct_map(COMMITTEES_CSV)
+        if acct_map:
+            cur.execute("SELECT id, org_name FROM shadow_orgs WHERE fl_acct_num IS NULL")
+            unlinked = cur.fetchall()
+            updated_fl = 0
+            for row_id, org_name in unlinked:
+                matched_acct = acct_map.get(_norm(org_name)) or acct_map.get(_norm_strip(org_name))
+                if matched_acct:
+                    cur.execute(
+                        "UPDATE shadow_orgs SET fl_acct_num = %s WHERE id = %s",
+                        (matched_acct, row_id)
+                    )
+                    updated_fl += 1
+            print(f"  fl_acct_num backfilled: {updated_fl:,} rows linked to FL committees")
+        else:
+            print("  WARNING: committees.csv not found — fl_acct_num backfill skipped")
 
     except Exception as e:
         con.rollback()
