@@ -155,7 +155,7 @@ export default function CandidateCompareResult({ data }) {
         display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: '1rem', alignItems: 'center',
       }}>
         {/* Entity A */}
-        <div style={{ textAlign: 'center' }}>
+        <div className="slide-from-left" style={{ textAlign: 'center' }}>
           <div style={{ fontSize: '0.95rem', color: 'var(--text)', fontWeight: 700, fontFamily: 'var(--font-mono)', marginBottom: '0.2rem' }}>
             {entity_a.name}
           </div>
@@ -172,7 +172,7 @@ export default function CandidateCompareResult({ data }) {
         <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', textAlign: 'center' }}>vs.</div>
 
         {/* Entity B */}
-        <div style={{ textAlign: 'center' }}>
+        <div className="slide-from-right" style={{ textAlign: 'center' }}>
           <div style={{ fontSize: '0.95rem', color: 'var(--text)', fontWeight: 700, fontFamily: 'var(--font-mono)', marginBottom: '0.2rem' }}>
             {entity_b.name}
           </div>

@@ -48,7 +48,7 @@ export default function TabbedProfile({ tabs, defaultTab }) {
           </Link>
         ))}
       </div>
-      <div>
+      <div key={activeId} className="tab-content-enter">
         {activeTab?.content}
       </div>
     </div>

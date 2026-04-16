@@ -155,14 +155,19 @@ export default async function PoliticianPage({ params, searchParams }) {
                 </tr>
               </thead>
               <tbody>
-                {sortedCycles.map(c => {
+                {(() => {
+                  const maxCombined = Math.max(...sortedCycles.map(c => cycleFinMap[String(c.acct_num)]?.combined || 0), 1);
+                  return sortedCycles.map(c => {
                   const isActive = c.acct_num === activeCycle.acct_num;
                   const fin = cycleFinMap[String(c.acct_num)] || {};
                   const officeStr = `${OFFICE_SHORT[c.office_code] || c.office_desc || ''}${c.district ? ` D${c.district}` : ''}`;
+                  const barPct = ((fin.combined || 0) / maxCombined * 100).toFixed(1);
                   return (
                     <tr key={c.acct_num} style={{
                       borderBottom: '1px solid rgba(100,140,220,0.06)',
-                      background: isActive ? 'rgba(77,216,240,0.04)' : 'transparent',
+                      background: isActive
+                        ? `linear-gradient(to right, rgba(77,216,240,0.07) ${barPct}%, rgba(77,216,240,0.03) ${barPct}%)`
+                        : `linear-gradient(to right, rgba(100,140,220,0.04) ${barPct}%, transparent ${barPct}%)`,
                     }}>
                       <td style={{ padding: '0.35rem 0.6rem', fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>
                         <a href={`/politician/${slug}?cycle=${c.acct_num}`} style={{
@@ -186,7 +191,7 @@ export default async function PoliticianPage({ params, searchParams }) {
                       </td>
                     </tr>
                   );
-                })}
+                }); })()}
                 {/* Career totals row */}
                 {sortedCycles.length > 1 && (
                   <tr style={{ borderTop: '1px solid var(--border)', background: 'var(--surface)' }}>

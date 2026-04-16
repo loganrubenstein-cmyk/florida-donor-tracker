@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import BackLinks from '@/components/BackLinks';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import MoneyLens from '@/components/shared/MoneyLens';
 import { fmtMoneyCompact as fmtCompact } from '@/lib/fmt';
 
 const SORT_OPTIONS = [
@@ -69,6 +70,7 @@ export default function InfluenceIndex() {
   const [industry, setIndustry] = useState('');
   const [sort, setSort]         = useState('total');
   const [page, setPage]         = useState(1);
+  const [animKey, setAnimKey]   = useState(0);
 
   useEffect(() => {
     fetch('/api/influence/stats')
@@ -89,7 +91,7 @@ export default function InfluenceIndex() {
     const params = new URLSearchParams({ q: debouncedQ, industry, sort, page });
     fetch(`/api/influence?${params}`)
       .then(r => r.json())
-      .then(json => { setResults(json); setLoading(false); })
+      .then(json => { setResults(json); setLoading(false); setAnimKey(k => k + 1); })
       .catch(() => setLoading(false));
   }, [debouncedQ, industry, sort, page]);
 
@@ -121,7 +123,7 @@ export default function InfluenceIndex() {
           border: '1px solid var(--border)', borderRadius: '4px', overflow: 'hidden', flexWrap: 'wrap',
         }}>
           {[
-            { label: 'Combined Political Spend', value: fmtCompact(stats.totalInfluence), color: 'var(--orange)', sub: 'lobbying + campaign finance' },
+            { label: 'Combined Political Spend', value: <MoneyLens value={stats.totalInfluence}>{fmtCompact(stats.totalInfluence)}</MoneyLens>, color: 'var(--orange)', sub: 'lobbying + campaign finance' },
             { label: 'Campaign Donations', value: fmtCompact(stats.totalDonations), color: 'var(--teal)', sub: 'direct contributions' },
             { label: 'Lobbying Comp', value: fmtCompact(stats.totalLobbying), color: 'var(--blue)', sub: 'paid to lobbyists' },
             { label: 'Organizations Tracked', value: (stats.totalOrgs).toLocaleString(), color: 'var(--text)', sub: 'with $100K+ combined spend' },
@@ -224,7 +226,14 @@ export default function InfluenceIndex() {
               const total   = parseFloat(org.total_influence  || 0);
 
               return (
-                <tr key={org.slug} style={{ borderBottom: '1px solid rgba(100,140,220,0.07)' }}>
+                <tr
+                  key={`${org.slug}-${animKey}`}
+                  className="stagger-item"
+                  style={{
+                    borderBottom: '1px solid rgba(100,140,220,0.07)',
+                    animationDelay: `${Math.min(i * 0.022, 0.4)}s`,
+                  }}
+                >
                   <td style={{ padding: '0.5rem 0.75rem', textAlign: 'center', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.72rem' }}>
                     {rank}
                   </td>

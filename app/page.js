@@ -2,6 +2,9 @@ import DonorTable from '@/components/donors/DonorTable'
 import FloridaOutline from '@/components/shared/FloridaOutline'
 import HeroCounter from '@/components/home/HeroCounter'
 import AnimatedStat from '@/components/shared/AnimatedStat'
+import MoneyClock from '@/components/home/MoneyClock'
+import DidYouKnow from '@/components/home/DidYouKnow'
+import MoneyLens from '@/components/shared/MoneyLens'
 import { getDb } from '@/lib/db'
 import { FEDERAL_OFFICE_CODES } from '@/lib/officeCodes'
 import { DATA_LAST_UPDATED } from '@/lib/dataLastUpdated'
@@ -206,6 +209,8 @@ export default async function Home() {
             Updated {updatedDate}
           </span>
         </div>
+        <MoneyClock />
+        <DidYouKnow />
       </section>
 
       {/* ── Stats Strip ── */}
@@ -219,14 +224,17 @@ export default async function Home() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '2.5rem' }}>
           <div className="rg-4" style={{ gap: '1.5rem', flex: 1 }}>
             {[
-              { rawValue: meta.grand_totals?.total_political_spending_tracked ?? 0, format: 'billions', label: 'total political\nspending tracked', color: 'var(--orange)' },
+              { rawValue: meta.grand_totals?.total_political_spending_tracked ?? 0, format: 'billions', label: 'total political\nspending tracked', color: 'var(--orange)', lens: true },
               { rawValue: meta.campaign_finance?.total_donors ?? 0,                  format: 'count',    label: 'donor\nprofiles',              color: 'var(--teal)'   },
               { rawValue: meta.committees?.total_committees ?? 0,                    format: 'count',    label: 'committees\ntracked',          color: 'var(--green)'  },
               { rawValue: meta.candidates?.total_candidates ?? 0,                    format: 'count',    label: 'candidates\ntracked',          color: 'var(--blue)'   },
-            ].map(({ rawValue, format, label, color }) => (
+            ].map(({ rawValue, format, label, color, lens }) => (
               <div key={label}>
                 <div style={{ fontSize: '1.65rem', fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1 }}>
-                  <AnimatedStat value={rawValue} format={format} color={color} />
+                  {lens
+                    ? <MoneyLens value={rawValue}><AnimatedStat value={rawValue} format={format} color={color} /></MoneyLens>
+                    : <AnimatedStat value={rawValue} format={format} color={color} />
+                  }
                 </div>
                 <div style={{ fontSize: '0.67rem', color: 'var(--text-dim)', marginTop: '0.35rem', lineHeight: 1.6, whiteSpace: 'pre-line' }}>
                   {label}

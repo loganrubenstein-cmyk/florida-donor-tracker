@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import SectionHeader from '@/components/shared/SectionHeader';
+import PartyFinanceBars from '@/components/party-finance/PartyFinanceBars';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { fmtMoney, fmtMoneyCompact, fmtCount } from '../../lib/fmt';
@@ -94,23 +95,7 @@ export default function PartyFinancePage() {
             Fundraising by Year — Republican vs Democrat
           </h2>
           <div style={{ padding: '1rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '6px' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              {yearData.filter(y => y.year >= 2012).map(y => {
-                const repW = (y.rep / maxYearTotal * 100).toFixed(1);
-                const demW = (y.dem / maxYearTotal * 100).toFixed(1);
-                return (
-                  <div key={y.year} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <div style={{ width: '36px', fontSize: '0.72rem', color: 'var(--text-dim)', textAlign: 'right', flexShrink: 0 }}>{y.year}</div>
-                    <div style={{ flex: 1, display: 'flex', gap: '2px', height: '20px', alignItems: 'stretch' }}>
-                      <div style={{ width: `${repW}%`, background: 'var(--republican)', borderRadius: '2px 0 0 2px', minWidth: y.rep > 0 ? '2px' : '0' }} title={`R: ${fmtMoneyCompact(y.rep)}`} />
-                      <div style={{ width: `${demW}%`, background: 'var(--democrat)', borderRadius: '0 2px 2px 0', minWidth: y.dem > 0 ? '2px' : '0' }} title={`D: ${fmtMoneyCompact(y.dem)}`} />
-                    </div>
-                    <div style={{ width: '56px', fontSize: '0.7rem', color: 'var(--republican)', textAlign: 'right', fontFamily: 'var(--font-mono)', flexShrink: 0 }}>{fmtMoneyCompact(y.rep)}</div>
-                    <div style={{ width: '56px', fontSize: '0.7rem', color: 'var(--democrat)', textAlign: 'right', fontFamily: 'var(--font-mono)', flexShrink: 0 }}>{fmtMoneyCompact(y.dem)}</div>
-                  </div>
-                );
-              })}
-            </div>
+            <PartyFinanceBars yearData={yearData} maxYearTotal={maxYearTotal} />
             <div style={{ display: 'flex', gap: '1.5rem', marginTop: '0.75rem', paddingTop: '0.5rem', borderTop: '1px solid var(--border)', fontSize: '0.72rem' }}>
               <span style={{ color: 'var(--republican)' }}>■ Republican</span>
               <span style={{ color: 'var(--democrat)' }}>■ Democrat</span>
