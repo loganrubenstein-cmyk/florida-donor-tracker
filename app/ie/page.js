@@ -14,13 +14,24 @@ export const metadata = {
 async function loadData() {
   try {
     const db = getDb();
-    const [{ data: summaryRows }, { data: committees }, { data: candidates }] = await Promise.all([
+    const [{ data: summaryRows }, { data: ieCommittees }, { data: candidates }] = await Promise.all([
       db.from('ie_summary').select('total_amount, total_rows, num_committees, date_start, date_end, by_type').limit(1),
       db.from('ie_committees').select('acct_num, committee_name, total_amount, num_transactions, year_min, year_max')
         .order('total_amount', { ascending: false }).limit(50),
       db.from('ie_candidates').select('candidate_acct_num, candidate_name, total_ie_amount, num_expenditures, num_committees, by_year')
         .order('total_ie_amount', { ascending: false }),
     ]);
+
+    // Fill in missing committee names from the committees table
+    const missingAccts = (ieCommittees || []).filter(c => !c.committee_name).map(c => c.acct_num);
+    const nameMap = {};
+    if (missingAccts.length > 0) {
+      const { data: nameRows } = await db.from('committees')
+        .select('acct_num, committee_name')
+        .in('acct_num', missingAccts);
+      for (const r of nameRows || []) nameMap[r.acct_num] = r.committee_name;
+    }
+
     const s = summaryRows?.[0] || {};
     return {
       summary: {
@@ -30,9 +41,9 @@ async function loadData() {
         date_range:     { start: s.date_start, end: s.date_end },
         by_type:        s.by_type ? JSON.parse(s.by_type) : [],
       },
-      committees: (committees || []).map(c => ({
+      committees: (ieCommittees || []).map(c => ({
         acct_num:         c.acct_num,
-        committee_name:   c.committee_name,
+        committee_name:   c.committee_name || nameMap[c.acct_num] || `Committee ${c.acct_num}`,
         total_amount:     parseFloat(c.total_amount) || 0,
         num_transactions: c.num_transactions || 0,
         year_min:         c.year_min,
