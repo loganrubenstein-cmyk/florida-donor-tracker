@@ -167,5 +167,109 @@ export async function GET(request) {
     return NextResponse.json({ results });
   }
 
-  return NextResponse.json({ error: 'Invalid level. Use: industries, donors, committees, candidates' }, { status: 400 });
+  // ── Party summary ──────────────────────────────────────────────────────────
+  if (level === 'parties') {
+    const PARTIES = [
+      { party: 'REP', label: 'Republican' },
+      { party: 'DEM', label: 'Democrat' },
+      { party: 'NPA', label: 'No Party Affiliation' },
+    ];
+    const results = await Promise.all(PARTIES.map(async ({ party, label }) => {
+      const { data } = await db.from('candidates')
+        .select('acct_num', { count: 'exact' })
+        .eq('party_code', party)
+        .gt('total_combined', 0)
+        .limit(1);
+      const { count } = await db.from('candidates')
+        .select('acct_num', { count: 'exact', head: true })
+        .eq('party_code', party)
+        .gt('total_combined', 0);
+      const { data: totRow } = await db.from('candidates')
+        .select('total_combined')
+        .eq('party_code', party)
+        .gt('total_combined', 0)
+        .order('total_combined', { ascending: false })
+        .limit(100);
+      const total = (totRow || []).reduce((s, r) => s + (parseFloat(r.total_combined) || 0), 0);
+      return { party, label, candidate_count: count || 0, total };
+    }));
+    return NextResponse.json({ results });
+  }
+
+  // ── Candidates by party ─────────────────────────────────────────────────────
+  if (level === 'party_candidates') {
+    const party = searchParams.get('party');
+    if (!party) return NextResponse.json({ error: 'Missing ?party=' }, { status: 400 });
+
+    const { data } = await db.from('candidates')
+      .select('acct_num, candidate_name, office_desc, party_code, election_year, total_combined')
+      .eq('party_code', party)
+      .gt('total_combined', 0)
+      .order('total_combined', { ascending: false })
+      .limit(25);
+
+    const results = (data || []).map(c => ({
+      slug: c.acct_num,
+      name: c.candidate_name,
+      total: parseFloat(c.total_combined) || 0,
+      office: c.office_desc,
+      party: c.party_code,
+      year: c.election_year,
+      _isCandidateRow: true,
+    }));
+    return NextResponse.json({ results });
+  }
+
+  // ── Quick search (typeahead) ────────────────────────────────────────────────
+  if (level === 'search') {
+    const type = searchParams.get('type');
+    const q = searchParams.get('q');
+    if (!q || !type) return NextResponse.json({ error: 'Missing ?type= and ?q=' }, { status: 400 });
+
+    if (type === 'committee') {
+      const { data } = await db.from('committees')
+        .select('acct_num, committee_name')
+        .ilike('committee_name', `%${q}%`)
+        .limit(10);
+      return NextResponse.json({
+        results: (data || []).map(c => ({ acct_num: c.acct_num, committee_name: c.committee_name })),
+      });
+    }
+
+    if (type === 'candidate') {
+      const { data } = await db.from('candidates')
+        .select('acct_num, candidate_name, office_desc, party_code, election_year, total_combined')
+        .ilike('candidate_name', `%${q}%`)
+        .gt('total_combined', 0)
+        .order('total_combined', { ascending: false })
+        .limit(10);
+      return NextResponse.json({
+        results: (data || []).map(c => ({
+          slug: c.acct_num,
+          name: c.candidate_name,
+          total: parseFloat(c.total_combined) || 0,
+          office: c.office_desc,
+          party: c.party_code,
+          year: c.election_year,
+          _isCandidateRow: true,
+        })),
+      });
+    }
+
+    if (type === 'donor') {
+      const { data } = await db.from('donors')
+        .select('slug, name, total_combined')
+        .ilike('name', `%${q}%`)
+        .gt('total_combined', 1000)
+        .order('total_combined', { ascending: false })
+        .limit(10);
+      return NextResponse.json({
+        results: (data || []).map(d => ({ slug: d.slug, name: d.name, total: parseFloat(d.total_combined) || 0 })),
+      });
+    }
+
+    return NextResponse.json({ error: 'Invalid type. Use: committee, candidate, donor' }, { status: 400 });
+  }
+
+  return NextResponse.json({ error: 'Invalid level. Use: industries, donors, committees, candidates, parties, party_candidates, search' }, { status: 400 });
 }

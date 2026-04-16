@@ -8,7 +8,9 @@ const PARTY_COLOR = { REP: 'var(--republican)', DEM: 'var(--democrat)' };
 
 const LEVEL_LABELS = {
   industries: 'Industries',
+  parties: 'Parties',
   donors: 'Top Candidates',
+  party_candidates: 'Top Candidates',
   topdonors: 'Top Donors',
   committees: 'Committees Funded',
   candidates: 'Linked Candidates',
@@ -25,11 +27,13 @@ function SkeletonRows() {
 }
 
 function getKey(item, level) {
-  if (level === 'industries') return item.industry;
-  if (level === 'donors')     return item.slug;
-  if (level === 'topdonors')  return item.slug;
-  if (level === 'committees') return item.acct_num;
-  if (level === 'candidates') return item.acct_num;
+  if (level === 'industries')      return item.industry;
+  if (level === 'parties')         return item.party;
+  if (level === 'donors')          return item.slug;
+  if (level === 'party_candidates') return item.slug;
+  if (level === 'topdonors')       return item.slug;
+  if (level === 'committees')      return item.acct_num;
+  if (level === 'candidates')      return item.acct_num;
   return null;
 }
 
@@ -74,6 +78,55 @@ export default function ColumnPanel({ col, onSelect }) {
               {item.donor_count.toLocaleString()} donors
             </span>
           </div>
+        </button>
+      );
+    }
+
+    if (level === 'parties') {
+      const partyColor = item.party === 'REP' ? 'var(--republican)' : item.party === 'DEM' ? 'var(--democrat)' : 'var(--text-dim)';
+      return (
+        <button key={item.party}
+          onClick={() => onSelect(item, item.party)}
+          style={{ ...rowBase, ...selStyle }}
+          onMouseOver={e => { if (!isSelected) e.currentTarget.style.background = 'rgba(100,140,220,0.07)'; }}
+          onMouseOut={e => { if (!isSelected) e.currentTarget.style.background = 'transparent'; }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+            <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: partyColor, flexShrink: 0 }} />
+            <span style={{ fontSize: '0.73rem', color: 'var(--text)' }}>{item.label}</span>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+            <span style={{ fontSize: '0.65rem', color: 'var(--orange)', fontFamily: 'var(--font-mono)' }}>
+              {fmtMoneyCompact(item.total)}
+            </span>
+            <span style={{ fontSize: '0.58rem', color: 'var(--text-dim)' }}>
+              {(item.candidate_count || 0).toLocaleString()} candidates
+            </span>
+          </div>
+        </button>
+      );
+    }
+
+    if (level === 'party_candidates') {
+      const partyColor = item.party === 'REP' ? 'var(--republican)' : item.party === 'DEM' ? 'var(--democrat)' : null;
+      return (
+        <button key={item.slug}
+          onClick={() => onSelect(item, item.slug)}
+          style={{ ...rowBase, ...selStyle, flexDirection: 'column', alignItems: 'flex-start' }}
+          onMouseOver={e => { if (!isSelected) e.currentTarget.style.background = 'rgba(100,140,220,0.07)'; }}
+          onMouseOut={e => { if (!isSelected) e.currentTarget.style.background = 'transparent'; }}>
+          <div style={{ display: 'flex', width: '100%', alignItems: 'baseline', gap: '0.35rem' }}>
+            <span style={{ fontSize: '0.73rem', color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>
+              {item.name}
+            </span>
+            <span style={{ fontSize: '0.65rem', color: 'var(--orange)', fontFamily: 'var(--font-mono)', flexShrink: 0 }}>
+              {fmtMoneyCompact(item.total)}
+            </span>
+          </div>
+          {item.office && (
+            <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', marginTop: '0.05rem' }}>
+              {[item.office, item.year].filter(Boolean).join(' · ')}
+            </div>
+          )}
         </button>
       );
     }
