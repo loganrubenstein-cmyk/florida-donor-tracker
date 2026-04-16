@@ -123,7 +123,7 @@
     "total_amount": 12733947.84,
     "num_contributions": 8,
     "is_corporate": true,
-    "type": "corporate"
+    "type": "committee"
   },
   {
     "name": "THE FLORIDA EDUCATION ASSOCIATION ADVOCACY FUND",
@@ -144,7 +144,7 @@
     "total_amount": 11593071.42,
     "num_contributions": 341,
     "is_corporate": true,
-    "type": "corporate"
+    "type": "committee"
   },
   {
     "name": "F. ANNETTE SCOTT REVOCABLE TRUST ACCOUNT",
@@ -165,7 +165,7 @@
     "total_amount": 10271102.78,
     "num_contributions": 124,
     "is_corporate": true,
-    "type": "corporate"
+    "type": "committee"
   },
   {
     "name": "NEW VENTURE FUND",
@@ -235,7 +235,7 @@
     "total_amount": 8300000.0,
     "num_contributions": 11,
     "is_corporate": true,
-    "type": "corporate"
+    "type": "committee"
   },
   {
     "name": "HCA WEST FLORIDA DIVISION AND GOOD GOVERNMENT PAC",
@@ -249,7 +249,7 @@
     "total_amount": 7728638.93,
     "num_contributions": 431,
     "is_corporate": true,
-    "type": "corporate"
+    "type": "committee"
   },
   {
     "name": "HCA NORTH FLORIDA DIVISION AND GOOD GOVERNMENT PAC",
@@ -599,7 +599,7 @@
     "total_amount": 3626748.7,
     "num_contributions": 17,
     "is_corporate": true,
-    "type": "corporate"
+    "type": "committee"
   },
   {
     "name": "AMERICAN FEDERATION FOR CHILDREN ACTION FUND",
@@ -613,7 +613,7 @@
     "total_amount": 3471480.91,
     "num_contributions": 53,
     "is_corporate": true,
-    "type": "corporate"
+    "type": "committee"
   },
   {
     "name": "CDR ENTERPRISES, INC.",
@@ -641,7 +641,7 @@
     "total_amount": 3355051.78,
     "num_contributions": 62,
     "is_corporate": true,
-    "type": "corporate"
+    "type": "committee"
   },
   {
     "name": "DEFEND JUSTICE FROM POLITICS, INC",

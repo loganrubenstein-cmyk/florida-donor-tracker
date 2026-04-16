@@ -74,7 +74,7 @@
     "total_amount": 31024645.0,
     "num_contributions": 62,
     "is_corporate": false,
-    "type": "individual"
+    "type": "committee"
   },
   {
     "name": "REPUBLICAN PARTY OF FLORIDA",
@@ -95,14 +95,14 @@
     "total_amount": 28609250.0,
     "num_contributions": 32,
     "is_corporate": false,
-    "type": "individual"
+    "type": "committee"
   },
   {
     "name": "LET'S GET TO WORK",
     "total_amount": 27680367.97,
     "num_contributions": 4,
     "is_corporate": false,
-    "type": "individual"
+    "type": "committee"
   },
   {
     "name": "GRIFFIN KENNETH C.",
@@ -116,7 +116,7 @@
     "total_amount": 26133166.67,
     "num_contributions": 21,
     "is_corporate": false,
-    "type": "individual"
+    "type": "committee"
   },
   {
     "name": "PUBLIX SUPER MARKETS, INC.",
@@ -249,7 +249,7 @@
     "total_amount": 13183350.01,
     "num_contributions": 163,
     "is_corporate": false,
-    "type": "individual"
+    "type": "committee"
   },
   {
     "name": "JONES, PAULT T.",
@@ -270,7 +270,7 @@
     "total_amount": 12733947.84,
     "num_contributions": 8,
     "is_corporate": true,
-    "type": "corporate"
+    "type": "committee"
   },
   {
     "name": "AMERICAN FEDERATION OF STATE COUNTY AND MUNICIPAL EMPLOYEES",
@@ -284,7 +284,7 @@
     "total_amount": 12707532.54,
     "num_contributions": 43,
     "is_corporate": false,
-    "type": "individual"
+    "type": "committee"
   },
   {
     "name": "FANDUEL",
@@ -319,14 +319,14 @@
     "total_amount": 11712270.57,
     "num_contributions": 145,
     "is_corporate": false,
-    "type": "individual"
+    "type": "committee"
   },
   {
     "name": "CONSERVATIVE PRINCIPLES FOR FLORIDA",
     "total_amount": 11593071.42,
     "num_contributions": 341,
     "is_corporate": true,
-    "type": "corporate"
+    "type": "committee"
   },
   {
     "name": "FERNANDEZ MIGUEL",
@@ -368,7 +368,7 @@
     "total_amount": 10899700.34,
     "num_contributions": 405,
     "is_corporate": false,
-    "type": "individual"
+    "type": "committee"
   },
   {
     "name": "THE MORGAN FIRM PA",
@@ -389,7 +389,7 @@
     "total_amount": 10271102.78,
     "num_contributions": 124,
     "is_corporate": true,
-    "type": "corporate"
+    "type": "committee"
   },
   {
     "name": "NEW VENTURE FUND",
@@ -431,7 +431,7 @@
     "total_amount": 9482840.91,
     "num_contributions": 486,
     "is_corporate": false,
-    "type": "individual"
+    "type": "committee"
   },
   {
     "name": "THE VOICE OF FLORIDA BUSINESS PAC, INC.",
@@ -452,7 +452,7 @@
     "total_amount": 9009401.95,
     "num_contributions": 498,
     "is_corporate": false,
-    "type": "individual"
+    "type": "committee"
   },
   {
     "name": "AMERICAN CIVIL LIBERTIES UNION, INC.",
@@ -515,7 +515,7 @@
     "total_amount": 8300000.0,
     "num_contributions": 11,
     "is_corporate": true,
-    "type": "corporate"
+    "type": "committee"
   },
   {
     "name": "HCA WEST FLORIDA DIVISION AND GOOD GOVERNMENT PAC",
@@ -564,7 +564,7 @@
     "total_amount": 7728638.93,
     "num_contributions": 431,
     "is_corporate": true,
-    "type": "corporate"
+    "type": "committee"
   },
   {
     "name": "HCA NORTH FLORIDA DIVISION AND GOOD GOVERNMENT PAC",
@@ -599,7 +599,7 @@
     "total_amount": 7279166.51,
     "num_contributions": 34,
     "is_corporate": false,
-    "type": "individual"
+    "type": "committee"
   },
   {
     "name": "TREASURE FLORIDA",

@@ -515,11 +515,18 @@ def main() -> int:
     print(f"   → {len(donor_links):,} donor matches")
     print(f"   → {len(all_links):,} total cross-reference edges\n")
 
-    n_links = load_links(cur, all_links)
-    print(f"   {n_links:,} edges upserted to federal_contract_links\n")
-
     cur.close()
     conn.close()
+
+    # Fresh connection for link inserts — original connection may have timed out
+    conn2 = psycopg2.connect(DB_URL)
+    conn2.autocommit = False
+    cur2 = conn2.cursor()
+    cur2.execute("SET statement_timeout = 0")
+    n_links = load_links(cur2, all_links)
+    cur2.close()
+    conn2.close()
+    print(f"   {n_links:,} edges upserted to federal_contract_links\n")
 
     # ── 5. Summary ────────────────────────────────────────────────────────────
     print("=== Summary ===")
