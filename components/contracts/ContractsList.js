@@ -50,7 +50,11 @@ export default function ContractsList() {
     const params = new URLSearchParams({ q: debouncedQ, filter, sort: sortBy, page });
     fetch(`/api/contracts?${params}`)
       .then(r => r.json())
-      .then(json => { setResults(json); setLoading(false); })
+      .then(json => {
+        if (json.error) { setLoading(false); return; }
+        setResults(json);
+        setLoading(false);
+      })
       .catch(() => setLoading(false));
   }, [debouncedQ, filter, sortBy, page]);
 
@@ -77,7 +81,7 @@ export default function ContractsList() {
           Florida State Contracts
         </h1>
         <div style={{ fontSize: '0.82rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
-          <span>{loading ? '…' : total.toLocaleString()} vendors</span>
+          <span>{loading ? '…' : (total ?? 0).toLocaleString()} vendors</span>
           <span>FL Dept of Financial Services · FACTS system</span>
         </div>
         <p style={{
