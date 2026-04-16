@@ -83,6 +83,15 @@ def norm_strip_corp(s: str) -> str:
     return " ".join(_CORP_SUFFIXES.sub("", n).split())
 
 
+def slugify(name: str) -> str:
+    import re as _re
+    s = str(name).lower()
+    s = _re.sub(r"[^\w\s-]", "", s)
+    s = _re.sub(r"\s+", "-", s.strip())
+    s = _re.sub(r"-+", "-", s).strip("-")
+    return s[:120]
+
+
 # ── Cache helpers ─────────────────────────────────────────────────────────────
 
 def load_cache(path: Path) -> dict:
@@ -287,7 +296,7 @@ def trigger_csv_download(
     post_data["__EVENTARGUMENT"] = event_argument
 
     try:
-        r = session.post(FACTS_URL, data=post_data, headers=HEADERS, timeout=60,
+        r = session.post(FACTS_URL, data=post_data, headers=HEADERS, timeout=300,
                          allow_redirects=True)
         r.raise_for_status()
     except Exception as e:
@@ -341,6 +350,8 @@ def parse_csv_records(raw_records: list[dict]) -> list[dict]:
     def find_col(*patterns):
         for p in patterns:
             for k in keys:
+                if k is None:
+                    continue
                 if re.search(p, k, re.I):
                     return k
         return None
@@ -389,18 +400,35 @@ def parse_csv_records(raw_records: list[dict]) -> list[dict]:
     return normalized
 
 
+def _update_form_state(form_state: dict, html: str) -> None:
+    """
+    In-place update of form_state's ASP.NET tokens (__VIEWSTATE, __EVENTVALIDATION, etc.)
+    from the latest HTML response. Must be called after every POST so the next request
+    carries fresh tokens — ASP.NET invalidates tokens after each use.
+    """
+    soup = BeautifulSoup(html, "html.parser")
+    for key in ("__VIEWSTATE", "__VIEWSTATEGENERATOR", "__EVENTVALIDATION",
+                "__VIEWSTATEENCRYPTED"):
+        inp = soup.find("input", attrs={"name": key, "type": "hidden"})
+        if inp and inp.get("value"):
+            form_state[key] = inp.get("value", "")
+
+
 def search_facts_vendor(session: requests.Session, vendor_prefix: str, form_state: dict) -> list[dict]:
     """
     Search FACTS for vendors matching a prefix.
     Tries CSV download first; falls back to HTML table pagination.
+    Updates form_state in-place after each POST so subsequent calls use fresh tokens.
     """
     records = []
     vendor_field  = form_state.get("_vendor_field", "ctl00$MainContent$txtVendorName")
     submit_field  = form_state.get("_submit_field", "ctl00$MainContent$btnSearch")
     submit_value  = form_state.get("_submit_value", "Search")
 
-    # Build POST data — include all hidden fields + vendor search
-    post_data = {k: v for k, v in form_state.items() if not k.startswith("_")}
+    # Build POST data — include all form fields except our internal meta-keys
+    # (our meta-keys use single "_" prefix; ASP.NET fields use "__" which must be included)
+    _META_KEYS = {"_vendor_field", "_submit_field", "_submit_value"}
+    post_data = {k: v for k, v in form_state.items() if k not in _META_KEYS}
     post_data[vendor_field] = vendor_prefix
     post_data[submit_field] = submit_value
 
@@ -410,12 +438,21 @@ def search_facts_vendor(session: requests.Session, vendor_prefix: str, form_stat
         r.raise_for_status()
     except Exception as e:
         print(f"    Search error for '{vendor_prefix}': {e}", flush=True)
-        return []
+        return None  # None = network failure (don't cache); [] = empty results (cache)
 
     search_html = r.text
+    # Update ViewState tokens from search response so next call uses fresh state
+    _update_form_state(form_state, search_html)
 
     # ── Try CSV download first ────────────────────────────────────────────────
+    # Note: trigger_csv_download always POSTs to the server (consuming ViewState),
+    # even for zero-result searches. Always refresh form_state after via GET.
     csv_records = trigger_csv_download(session, search_html, form_state, vendor_prefix)
+    try:
+        rf = session.get(FACTS_URL, headers=HEADERS, timeout=30)
+        _update_form_state(form_state, rf.text)
+    except Exception:
+        pass
     if csv_records is not None:
         return parse_csv_records(csv_records)
 
@@ -453,6 +490,7 @@ def search_facts_vendor(session: requests.Session, vendor_prefix: str, form_stat
             rp = session.post(FACTS_URL, data=next_post, headers=HEADERS, timeout=30)
             rp.raise_for_status()
             current_html = rp.text
+            _update_form_state(form_state, current_html)
         except Exception as e:
             print(f"    Page {page_num+1} error for '{vendor_prefix}': {e}", flush=True)
             break
@@ -512,6 +550,18 @@ def fetch_fl_state_contracts(force: bool = False, targeted_names: list = None) -
             print(f"  [{i}/{total_prefixes}] prefix '{prefix}' ...", flush=True)
 
         records = search_facts_vendor(session, prefix, form_state)
+        if records:
+            print(f"  [{i}] '{prefix}' → {len(records)} records", flush=True)
+
+        # None = network failure → don't cache, reconnect session and continue
+        if records is None:
+            try:
+                session = requests.Session()
+                form_state = get_form_state(session)
+            except Exception:
+                pass
+            time.sleep(REQUEST_DELAY)
+            continue
 
         # Refresh form state periodically (ViewState can expire)
         if i > 0 and i % 100 == 0:
@@ -603,7 +653,7 @@ def load_entity_names() -> list[dict]:
             is_corp = str(row.get("is_corporate", "")).lower() in ("true", "1", "yes")
             if name and is_corp:
                 entities.append({
-                    "slug":                row.get("slug", ""),
+                    "slug":                row.get("slug", "") or slugify(name),
                     "name":                name,
                     "entity_type":         "donor_corporate",
                     "total_contributions": float(row.get("total_combined", 0) or 0),
@@ -618,7 +668,7 @@ def load_entity_names() -> list[dict]:
             name = row.get("principal_name", "").strip()
             if name:
                 entities.append({
-                    "slug":                row.get("slug", ""),
+                    "slug":                row.get("slug", "") or slugify(name),
                     "name":                name,
                     "entity_type":         "principal",
                     "total_contributions": 0,
