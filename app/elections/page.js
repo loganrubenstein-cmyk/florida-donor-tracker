@@ -17,13 +17,13 @@ function loadCycles() {
 
 const LEG_CONTESTS = new Set(['State Representative', 'State Senator', 'STATE REPRESENTATIVE', 'STATE SENATOR']);
 
-function loadLegLeaderboards() {
+function loadLegLeaderboards(electionType = 'general') {
   const years = ['2012', '2014', '2016', '2018', '2020', '2022', '2024'];
   const result = {};
   for (const year of years) {
     try {
       const d = JSON.parse(
-        readFileSync(join(process.cwd(), 'public', 'data', 'elections', `${year}_general.json`), 'utf-8')
+        readFileSync(join(process.cwd(), 'public', 'data', 'elections', `${year}_${electionType}.json`), 'utf-8')
       );
       const leg = (d.candidates || []).filter(c =>
         LEG_CONTESTS.has(c.contest_name) && c.finance_acct_num && c.finance_total_raised > 0
@@ -38,30 +38,26 @@ function loadLegLeaderboards() {
 
 export default function ElectionsPage() {
   const cycles = loadCycles();
-  const legLeaderboards = loadLegLeaderboards();
+  const legLeaderboards = loadLegLeaderboards('general');
+  const legLeaderboardsPrimary = loadLegLeaderboards('primary');
 
   const generals = cycles.filter(c => c.election_type === 'general');
-  const totalCycles = generals.length;
-  const totalFinanceRaces = generals.reduce((s, c) => s + c.contests_with_finance, 0);
-  const totalLegCandidates = Object.values(legLeaderboards).reduce((s, a) => s + a.length, 0);
+  const totalRaces = generals.reduce((s, c) => s + c.contests_with_finance, 0);
 
   return (
     <main style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
       <BackLinks links={[{ href: '/', label: 'home' }]} />
 
       <SectionHeader title="Election Results" eyebrow="Florida · 2012–2024" />
-      <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginTop: '-0.75rem', marginBottom: '1.75rem' }}>
-        {totalCycles} general elections · {totalFinanceRaces} races with finance data · {totalLegCandidates.toLocaleString()} FL legislative candidates matched
+      <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginTop: '-0.75rem', marginBottom: '2rem' }}>
+        {generals.length} general elections · {totalRaces} races with finance data matched
       </div>
 
-      <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', lineHeight: 1.8, marginBottom: '2rem', maxWidth: '620px', padding: '0.85rem 1rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '4px' }}>
-        <strong style={{ color: 'var(--text)' }}>About this data:</strong> FL Division of Elections results matched to campaign finance records.
-        Statewide races (US Senate, AG, CFO) have individual candidate breakdowns where finance was matched.
-        FL House and Senate races show finance-matched candidates sorted by total raised — district-level
-        groupings are not available in this dataset.
-      </div>
-
-      <ElectionsView cycles={cycles} legLeaderboards={legLeaderboards} />
+      <ElectionsView
+        cycles={cycles}
+        legLeaderboards={legLeaderboards}
+        legLeaderboardsPrimary={legLeaderboardsPrimary}
+      />
     </main>
   );
 }
