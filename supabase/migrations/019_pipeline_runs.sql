@@ -59,9 +59,19 @@ create table if not exists external_anchors (
   tolerance_pct   numeric(5,2) default 5.00,
   source_citation text not null,          -- full URL + title
   published_at    date,
-  created_at      timestamptz default now(),
-  unique (entity_type, coalesce(entity_slug,''), coalesce(entity_acct_num,''), anchor_metric, coalesce(anchor_year, 0))
+  created_at      timestamptz default now()
 );
+
+-- Postgres disallows function calls inside an inline UNIQUE constraint, so the
+-- dedup key is enforced via a partial unique index over the same expressions.
+create unique index if not exists ux_external_anchors_dedup
+  on external_anchors (
+    entity_type,
+    coalesce(entity_slug, ''),
+    coalesce(entity_acct_num, ''),
+    anchor_metric,
+    coalesce(anchor_year, 0)
+  );
 
 create index if not exists idx_anchors_slug on external_anchors(entity_slug) where entity_slug is not null;
 create index if not exists idx_anchors_acct on external_anchors(entity_acct_num) where entity_acct_num is not null;

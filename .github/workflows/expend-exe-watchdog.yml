@@ -1,0 +1,51 @@
+name: Hourly — expend.exe Watchdog
+
+on:
+  schedule:
+    - cron: '7 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: expend-exe-watchdog
+  cancel-in-progress: true
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Probe endpoint
+        id: probe
+        run: |
+          set +e
+          CODE=$(curl -s -o /tmp/body.html -w "%{http_code}" \
+            "https://dos.elections.myflorida.com/cgi-bin/expend.exe" \
+            --max-time 15)
+          echo "http_code=$CODE" >> "$GITHUB_OUTPUT"
+          if [ "$CODE" = "200" ]; then
+            echo "status=up" >> "$GITHUB_OUTPUT"
+          else
+            echo "status=down" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Record status
+        env:
+          CODE: ${{ steps.probe.outputs.http_code }}
+          STATE: ${{ steps.probe.outputs.status }}
+        run: |
+          mkdir -p data/logs
+          printf '%s %s %s\n' "$(date -u +%FT%TZ)" "$CODE" "$STATE" \
+            >> data/logs/expend_watchdog.log
+
+      - name: Open issue if down
+        if: steps.probe.outputs.status == 'down'
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: "[data-source-down] expend.exe non-200"
+          content-filepath: data/logs/expend_watchdog.log
+          labels: pipeline-failure,data-source-down,severity:high

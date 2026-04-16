@@ -1,0 +1,40 @@
+name: Nightly — Smoke + Audit
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: nightly-smoke
+  cancel-in-progress: false
+
+env:
+  SUPABASE_DB_URL:               ${{ secrets.SUPABASE_DB_URL }}
+  SUPABASE_SERVICE_ROLE_KEY:     ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+  NEXT_PUBLIC_SUPABASE_URL:      ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+  SITE_URL:                      ${{ secrets.SITE_URL }}
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      issues: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Integrity audit
+        uses: ./.github/actions/run-script
+        with: { script: 84_audit_data_integrity.py }
+      - name: Smoke test
+        uses: ./.github/actions/run-script
+        with: { script: 99_smoke_test.py }
+      - name: Open issue on failure
+        if: failure()
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: "[pipeline-failure:high] nightly-smoke"
+          content-filepath: data/logs/99_smoke_test.py.log
+          labels: pipeline-failure,severity:high,smoke-test
