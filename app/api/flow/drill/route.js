@@ -54,7 +54,7 @@ export async function GET(request) {
     const results = topCandidates
       .map(c => {
         const cand = candMap[c.acct_num];
-        if (!cand) return null;
+        if (!cand || !cand.candidate_name) return null;
         return {
           // Shaped like a "donor" row so ColumnPanel renders it, but these are candidates
           slug: c.acct_num,

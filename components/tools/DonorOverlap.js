@@ -154,6 +154,11 @@ function EntityPicker({ label, value, onChange, initialValue = null }) {
   const wrapperRef = useRef(null);
 
   useEffect(() => {
+    if (value?.name) setQuery(value.name);
+    else if (!value) setQuery('');
+  }, [value]);
+
+  useEffect(() => {
     function handleClick(e) {
       if (wrapperRef.current && !wrapperRef.current.contains(e.target)) setOpen(false);
     }

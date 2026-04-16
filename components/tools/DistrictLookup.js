@@ -34,9 +34,12 @@ export default function DistrictLookup() {
       // Trigger lookup after state is set
       setLoading(true);
       fetch(`/api/district?chamber=${validChamber}&district=${dist}`)
-        .then(r => r.json())
-        .then(json => setData(json))
-        .catch(e => setError('Network error'))
+        .then(async r => {
+          const json = await r.json();
+          if (!r.ok) setError(json.error || 'Lookup failed');
+          else setData(json);
+        })
+        .catch(() => setError('Network error'))
         .finally(() => setLoading(false));
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -415,7 +418,7 @@ function VotingBar({ voting }) {
         ))}
       </div>
       <div style={{ marginTop: '0.35rem', fontSize: '0.72rem', color: 'var(--teal)' }}>
-        Participation rate: {voting.participation ? `${voting.participation}%` : 'N/A'}
+        Participation rate: {voting.participation ? `${(voting.participation * 100).toFixed(1)}%` : 'N/A'}
       </div>
     </div>
   );
