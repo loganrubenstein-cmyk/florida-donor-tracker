@@ -103,8 +103,14 @@ def load_contracts(cur, drop: bool) -> int:
         cur.execute(DROP_CONTRACTS)
     cur.execute(CREATE_CONTRACTS)
 
-    rows = []
+    # Deduplicate by slug (punctuation variants of the same vendor name)
+    # Keep the row with the highest total_amount per slug
+    seen: dict = {}
     for _, r in df.iterrows():
+        vendor = r.get("vendor_name", "").strip()
+        if not vendor:
+            continue
+        slug = slugify(vendor)
         try:
             amount = float(r.get("total_amount", 0) or 0)
         except ValueError:
@@ -113,20 +119,20 @@ def load_contracts(cur, drop: bool) -> int:
             num = int(r.get("num_contracts", 0) or 0)
         except ValueError:
             num = 0
+        if slug not in seen or amount > seen[slug][2]:
+            seen[slug] = (
+                vendor,
+                slug,
+                amount,
+                num,
+                r.get("top_agency", ""),
+                r.get("all_agencies", ""),
+                r.get("year_range", ""),
+            )
 
-        vendor = r.get("vendor_name", "").strip()
-        if not vendor:
-            continue
-
-        rows.append((
-            vendor,
-            slugify(vendor),
-            amount,
-            num,
-            r.get("top_agency", ""),
-            r.get("all_agencies", ""),
-            r.get("year_range", ""),
-        ))
+    rows = list(seen.values())
+    if len(rows) < len(df):
+        print(f"  Deduplicated {len(df) - len(rows):,} slug collisions → {len(rows):,} unique vendors")
 
     if rows:
         execute_values(
@@ -165,7 +171,8 @@ def load_links(cur, drop: bool) -> int:
         cur.execute(DROP_LINKS)
     cur.execute(CREATE_LINKS)
 
-    rows = []
+    # Deduplicate by (entity_slug, vendor_slug) — keep highest contract amount
+    seen: dict = {}
     for _, r in df.iterrows():
         entity_slug  = r.get("entity_slug", "").strip()
         vendor_name  = r.get("vendor_name", "").strip()
@@ -191,20 +198,26 @@ def load_links(cur, drop: bool) -> int:
         except ValueError:
             score = 0
 
-        rows.append((
-            entity_slug,
-            entity_name,
-            r.get("entity_type", ""),
-            contrib,
-            vendor_name,
-            slugify(vendor_name),
-            contract_amt,
-            num,
-            r.get("top_agency", ""),
-            r.get("year_range", ""),
-            score,
-            r.get("match_method", ""),
-        ))
+        key = (entity_slug, slugify(vendor_name))
+        if key not in seen or contract_amt > seen[key][6]:
+            seen[key] = (
+                entity_slug,
+                entity_name,
+                r.get("entity_type", ""),
+                contrib,
+                vendor_name,
+                slugify(vendor_name),
+                contract_amt,
+                num,
+                r.get("top_agency", ""),
+                r.get("year_range", ""),
+                score,
+                r.get("match_method", ""),
+            )
+
+    rows = list(seen.values())
+    if len(rows) < len(df):
+        print(f"  Deduplicated {len(df) - len(rows):,} duplicate pairs → {len(rows):,} unique links")
 
     if rows:
         execute_values(

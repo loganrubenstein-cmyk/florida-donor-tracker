@@ -311,6 +311,7 @@ def upsert_to_supabase(rows: list[dict]) -> None:
 
         tuples = [
             (
+                r.get("org_name", r["org_slug"]),
                 r["org_slug"],
                 r.get("fec_source"),
                 r.get("fec_committee_id"),
@@ -326,7 +327,7 @@ def upsert_to_supabase(rows: list[dict]) -> None:
         execute_values(
             cur,
             """
-            INSERT INTO shadow_orgs (org_slug,
+            INSERT INTO shadow_orgs (org_name, org_slug,
                 fec_source, fec_committee_id, fec_name, fec_match_score,
                 fec_total_receipts, fec_total_disb, fec_latest_year)
             VALUES %s

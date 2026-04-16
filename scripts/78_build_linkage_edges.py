@@ -981,6 +981,59 @@ def compute_candidate_specific(
     from collections import defaultdict
     from datetime import datetime, timedelta
 
+    # Build candidate last-name set so sole_filer only counts candidate filers.
+    # Non-candidate filers (staffers, treasurers) should not block sole_filer.
+    # We match on last name only — first names in solicitation CSV often include
+    # middle names (e.g. "Charlie Joseph" vs "Charlie"), making exact (last, first)
+    # matching too strict. The final sf_last == cand_last_nc check still gates attribution.
+    cand_last_names: set[str] = set()
+    for _, row in cand_df.iterrows():
+        last = str(row.get("last_name", "")).strip().upper()
+        if last:
+            cand_last_names.add(last)
+
+    # Index-based sole_filer override: the SolicitationsReport index is the
+    # authoritative published FL DoE record. When it lists exactly one candidate-
+    # solicitor for an org, that overrides the CSV-based count (which includes
+    # amendment filings and later officers that don't represent original control).
+    #
+    # Running-mate rule: when exactly 2 candidate filers exist for the same org
+    # and one filed as Governor and the other as Lt. Governor (or equivalent top-
+    # vs. running-mate ticket pairing), the Governor/top-ticket filer is the
+    # principal. We reduce to that one candidate so sole_filer can fire.
+    _HONORABLE_RE = re.compile(r"the\s+honorable\s*", re.I)
+    # Build per-org list of (last, sol_type) for all candidate solicitors in index
+    _index_org_entries: dict[str, list] = defaultdict(list)  # norm_org → [(last, sol_type)]
+    for sol in (sol_index or []):
+        org = clean(sol.get("organization", "") or sol.get("org_name", ""))
+        if not org:
+            continue
+        sol_type = sol.get("type", "")
+        for solicitor in sol.get("solicitors", []):
+            s_stripped = _HONORABLE_RE.sub("", solicitor).strip()
+            parts = s_stripped.split()
+            if parts:
+                last = parts[-1].upper()
+                if last in cand_last_names:
+                    _index_org_entries[org].append((last, sol_type))
+
+    # Reduce running-mate pairs: if all entries for an org are from the same
+    # gubernatorial ticket (one Governor, one Lt. Governor), keep only the
+    # top-of-ticket (Governor) filer so sole_filer can attribute to them.
+    _TOP_TICKET_RE = re.compile(r"\bgovernor\b", re.I)
+    _RUNNING_MATE_RE = re.compile(r"\blt\.?\s*governor\b", re.I)
+    _index_org_filers: dict[str, set] = defaultdict(set)  # norm_org → set of last_name (str)
+    for org, entries in _index_org_entries.items():
+        if len(entries) == 2:
+            tops  = [(l, t) for l, t in entries if _TOP_TICKET_RE.search(t) and not _RUNNING_MATE_RE.search(t)]
+            mates = [(l, t) for l, t in entries if _RUNNING_MATE_RE.search(t)]
+            if len(tops) == 1 and len(mates) == 1:
+                # Running-mate pair — attribute to top-of-ticket only
+                _index_org_filers[org].add(tops[0][0])
+                continue
+        for last, _ in entries:
+            _index_org_filers[org].add(last)
+
     # Step 1: collect (last, first, date) per org
     _org_filer_dates: dict[str, list] = defaultdict(list)  # norm_org → [(last, first, date)]
     for row in (sol_csv or []):
@@ -1012,7 +1065,7 @@ def compute_candidate_specific(
             if key not in filer_latest or dt > filer_latest[key]:
                 filer_latest[key] = dt
         for (last, frst), latest_dt in filer_latest.items():
-            if latest_dt >= cutoff:
+            if latest_dt >= cutoff and last in cand_last_names:
                 _sol_org_filers[org].add((last, frst))
 
     def _extract_org_from_evidence(evidence: str) -> str:
@@ -1087,6 +1140,14 @@ def compute_candidate_specific(
                 org_key and fuzz.ratio(_org_norm, _pac_norm) >= 90
             )
             filers = _sol_org_filers.get(org_key, set())
+            # Prefer index-based filers when the org appears in the authoritative
+            # SolicitationsReport index — the index is more precise than the CSV
+            # (it shows the current registered solicitors, not historical amendments).
+            index_filers = _index_org_filers.get(org_key, None)
+            if index_filers is not None and len(index_filers) > 0:
+                # Index available: use it as the authoritative filer set.
+                # Convert to (last, "") tuples to match the sole_filer path below.
+                filers = {(last, "") for last in index_filers}
             if org_matches_pac and len(filers) == 1:
                 # Verify this candidate IS the sole filer (not just that one exists).
                 # Prevents e.g. Powell from claiming Edmonds's PAC after recency excludes Powell.

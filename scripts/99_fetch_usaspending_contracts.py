@@ -432,12 +432,16 @@ ON CONFLICT (recipient_slug, entity_slug) DO UPDATE SET
 def load_links(cur, links: list[dict]) -> int:
     if not links:
         return 0
-    execute_values(cur, UPSERT_LINKS, [
+    rows = [
         (l["recipient_slug"], l["entity_slug"], l["entity_type"],
          l["match_score"], l["federal_total"], l["state_total"])
         for l in links
-    ], page_size=BATCH_SIZE)
-    return len(links)
+    ]
+    for i in range(0, len(rows), BATCH_SIZE):
+        execute_values(cur, UPSERT_LINKS, rows[i : i + BATCH_SIZE], page_size=BATCH_SIZE)
+        cur.connection.commit()
+        print(f"   upserted {min(i + BATCH_SIZE, len(rows)):,}/{len(rows):,} link edges ...", flush=True)
+    return len(rows)
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
@@ -512,7 +516,6 @@ def main() -> int:
     print(f"   → {len(all_links):,} total cross-reference edges\n")
 
     n_links = load_links(cur, all_links)
-    conn.commit()
     print(f"   {n_links:,} edges upserted to federal_contract_links\n")
 
     cur.close()
