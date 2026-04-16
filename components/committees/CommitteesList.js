@@ -104,7 +104,7 @@ export default function CommitteesList() {
 
       {/* Table */}
       <div style={{ overflowX: 'auto', opacity: loading ? 0.5 : 1, transition: 'opacity 0.15s' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
+        <table style={{ width: '100%', minWidth: '400px', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid var(--border)' }}>
               {[
@@ -147,7 +147,7 @@ export default function CommitteesList() {
                 <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '3rem', fontFamily: 'var(--font-mono)', fontSize: '0.72rem' }}>
                   {(page - 1) * PAGE_SIZE + i + 1}
                 </td>
-                <td style={{ padding: '0.4rem 0.6rem', wordBreak: 'break-word', maxWidth: '340px' }}>
+                <td style={{ padding: '0.4rem 0.6rem' }}>
                   <a href={`/committee/${c.acct_num}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
                     {c.committee_name}
                   </a>

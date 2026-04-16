@@ -76,7 +76,7 @@ export default function DonorOverlap({ initialEntityA = null }) {
         ))}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: '0.75rem', alignItems: 'end', marginBottom: '1.5rem' }}>
+      <div className="entity-picker-grid">
         <EntityPicker label="Entity A" value={entityA} onChange={setEntityA} initialValue={initialEntityA} />
         <div style={{ padding: '0.5rem 0', color: 'var(--text-dim)', fontSize: '0.82rem', fontFamily: 'var(--font-mono)' }}>vs</div>
         <EntityPicker label="Entity B" value={entityB} onChange={setEntityB} />

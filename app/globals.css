@@ -419,3 +419,20 @@ body {
   transition: color 0.12s;
 }
 .cross-link:hover { color: var(--orange); }
+
+/* ── Entity picker grid (compare/overlap tools) ─────────────────────────── */
+.entity-picker-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 0.75rem;
+  align-items: end;
+  margin-bottom: 1.5rem;
+}
+@media (max-width: 480px) {
+  .entity-picker-grid {
+    grid-template-columns: 1fr;
+  }
+  .entity-picker-grid > div:nth-child(2) {
+    display: none;
+  }
+}

@@ -133,7 +133,7 @@ export default function PrincipalsList() {
 
       {/* Table */}
       <div style={{ overflowX: 'auto', opacity: loading ? 0.5 : 1, transition: 'opacity 0.15s' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
+        <table style={{ width: '100%', minWidth: '520px', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid var(--border)' }}>
               {[
