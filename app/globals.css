@@ -473,6 +473,36 @@ body {
 .dir-table tbody tr { transition: background 0.1s; }
 .dir-table tbody tr:hover { background: rgba(100,140,220,0.04); }
 
+/* ── Mobile layout helpers ──────────────────────────────────────────────────── */
+
+/* 2-column profile layout (e.g. main content + sidebar) — collapses on mobile */
+.profile-2col {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+@media (max-width: 640px) {
+  .profile-2col { grid-template-columns: 1fr; gap: 1.5rem; }
+}
+
+/* Horizontal scroll wrapper for wide tables on small screens */
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+.table-scroll::-webkit-scrollbar       { height: 4px; }
+.table-scroll::-webkit-scrollbar-track { background: transparent; }
+.table-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* Reduce main page padding on small screens */
+@media (max-width: 640px) {
+  main { padding-left: 1rem !important; padding-right: 1rem !important; }
+  .tab { padding: 0.6rem 0.85rem; font-size: 0.78rem; }
+}
+
 /* ── Back-to-top button ─────────────────────────────────────────────────────── */
 .back-to-top {
   position: fixed;

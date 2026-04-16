@@ -7,6 +7,9 @@ import { fmtCount } from '../../../../lib/fmt';
 import { slugify } from '@/lib/slugify';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import { buildMeta } from '@/lib/seo';
+import dynamic from 'next/dynamic';
+
+const BillMoneyMap = dynamic(() => import('@/components/lobbying/BillMoneyMap'), { ssr: false });
 
 export const dynamic = 'force-dynamic';
 
@@ -86,8 +89,9 @@ export async function generateMetadata({ params }) {
   });
 }
 
-export default async function BillLobbyingPage({ params }) {
+export default async function BillLobbyingPage({ params, searchParams }) {
   const { slug } = await params;
+  const tab = (await searchParams)?.tab || 'overview';
   const data = await loadBill(slug);
   if (!data) return notFound();
 
@@ -137,7 +141,14 @@ export default async function BillLobbyingPage({ params }) {
         </div>
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem', alignItems: 'start' }}>
+      <div className="tab-bar" style={{ marginBottom: '1.75rem' }}>
+        <a href={`/lobbying/bill/${slug}`} className={`tab${tab === 'overview' ? ' tab-active' : ''}`}>Overview</a>
+        <a href={`/lobbying/bill/${slug}?tab=money`} className={`tab${tab === 'money' ? ' tab-active' : ''}`}>Money Map</a>
+      </div>
+
+      {tab === 'money' && <BillMoneyMap billSlug={slug} />}
+
+      {tab === 'overview' && <div className="profile-2col">
         <div>
           <h2 style={{ fontSize: '1rem', color: 'var(--text)', marginBottom: '0.75rem' }}>
             Principals Filing on This Bill — {fmtCount(principalList.length)} total
@@ -205,7 +216,7 @@ export default async function BillLobbyingPage({ params }) {
             </div>
           </div>
         </div>
-      </div>
+      </div>}
 
       <div style={{ marginTop: '2rem' }}>
         <Link href="/lobbying/bills" style={{ fontSize: '0.78rem', color: 'var(--teal)', textDecoration: 'none' }}>

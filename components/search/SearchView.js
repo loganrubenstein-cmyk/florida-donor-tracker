@@ -91,13 +91,14 @@ export default function SearchView() {
       const name = e.n.toUpperCase();
       return tokens.every(tok => name.includes(tok));
     });
-    // Sort: exact prefix matches first, then any-token prefix, then contains
+    // Sort: exact prefix matches first, then any-token prefix, then contains; prominence as tiebreaker
     filtered.sort((a, b) => {
       const an = a.n.toUpperCase();
       const bn = b.n.toUpperCase();
       const aExact = an.startsWith(q) ? 0 : tokens.some(t => an.startsWith(t)) ? 1 : 2;
       const bExact = bn.startsWith(q) ? 0 : tokens.some(t => bn.startsWith(t)) ? 1 : 2;
-      return aExact - bExact;
+      if (aExact !== bExact) return aExact - bExact;
+      return (b.p || 0) - (a.p || 0);
     });
     return filtered.slice(0, 200);
   }, [index, debouncedQ, typeFilter]);

@@ -28,12 +28,13 @@ export async function GET() {
     from += BATCH;
   }
 
-  const index = all.map(d => ({
+  const index = all.map((d, i) => ({
     id: d.slug,
     n:  d.name,
     t:  'donor',
     u:  `/donor/${d.slug}`,
     s:  [d.industry, d.top_location].filter(Boolean).join(' · '),
+    p:  all.length - i,
   }));
 
   return NextResponse.json(index);
