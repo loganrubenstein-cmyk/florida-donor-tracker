@@ -35,7 +35,7 @@ export default function LobbyistsList() {
   const [search, setSearch]         = useState('');
   const [debouncedQ, setDebouncedQ] = useState('');
   const [type, setType]             = useState('all');
-  const [sortBy, setSortBy]         = useState('total_comp');
+  const [sortBy, setSortBy]         = useState('num_active');
   const [sortDir, setSortDir]       = useState('desc');
   const [page, setPage]             = useState(1);
 

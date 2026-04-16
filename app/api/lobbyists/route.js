@@ -7,7 +7,7 @@ export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const q       = searchParams.get('q') || '';
   const type    = searchParams.get('type') || 'all';
-  const sort    = searchParams.get('sort') || 'total_donation_influence';
+  const sort    = searchParams.get('sort') || 'num_active';
   const sortDir = searchParams.get('sort_dir') || '';
   const page    = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
 
