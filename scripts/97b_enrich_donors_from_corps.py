@@ -191,12 +191,10 @@ def main(dry_run=False):
             print(f"    '{id_to_name.get(m[4], m[4])}' → corp {m[0]} (score={m[3]})")
         return len(matches)
 
-    # Reconnect: the initial connection held an implicit transaction during
-    # ~20min Steps 2-3. Explicitly rollback before close so pgbouncer cleanly
-    # releases the server-side connection (otherwise it stays idle-in-transaction
-    # and blocks the upcoming ALTER TABLE on a relation lock).
+    # Reconnect with autocommit=False for the DDL + UPDATE phase.
+    # The initial connection used autocommit=True (every statement already
+    # committed), so no rollback is needed — just close cleanly.
     try:
-        con.rollback()   # release implicit transaction before closing
         cur.close()
         con.close()
     except Exception:

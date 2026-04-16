@@ -151,7 +151,7 @@ OFFICER_TITLE_MAP = {
 
 # ── Name normalization (matches project convention in scripts 92/94) ───────────
 
-_PUNCT = re.compile(r"[^A-Z0-9\s]")
+_PUNCT = re.compile(r"[^\w\s-]")   # keep hyphens; matches 97b convention
 _CORP_SUFFIXES = re.compile(
     r"\b(LLC|INC|CORP|CORPORATION|LTD|LP|LLP|CO|COMPANY|GROUP|HOLDINGS|PARTNERS"
     r"|ENTERPRISES|SERVICES|SOLUTIONS|ASSOCIATES|CONSULTING|TECHNOLOGIES|SYSTEMS"
@@ -462,7 +462,11 @@ def write_csv(records_iter, output: Path, active_only: bool = False) -> tuple[in
 
 # ── Supabase: create + load fl_corporations ───────────────────────────────────
 
-CREATE_CORPS_TABLE = """
+# Multi-statement DDL must be split into separate cur.execute() calls —
+# psycopg2 silently ignores statements after the first in a single call.
+# Each statement is also committed before bulk inserts start so that a
+# rollback on insert failure doesn't undo the schema creation.
+_CREATE_CORPS_TABLE = """
 CREATE TABLE IF NOT EXISTS fl_corporations (
     id                    SERIAL PRIMARY KEY,
     corp_number           TEXT UNIQUE NOT NULL,
@@ -479,12 +483,14 @@ CREATE TABLE IF NOT EXISTS fl_corporations (
     more_officers         BOOLEAN DEFAULT FALSE,
     officers              JSONB,
     updated_at            TIMESTAMPTZ DEFAULT NOW()
-);
-CREATE INDEX IF NOT EXISTS idx_fl_corporations_corp_number ON fl_corporations(corp_number);
-CREATE INDEX IF NOT EXISTS idx_fl_corporations_entity_name ON fl_corporations(entity_name);
-CREATE INDEX IF NOT EXISTS idx_fl_corporations_ein         ON fl_corporations(ein);
-CREATE INDEX IF NOT EXISTS idx_fl_corporations_status      ON fl_corporations(status);
+)
 """
+_CREATE_CORPS_INDEXES = [
+    "CREATE INDEX IF NOT EXISTS idx_fl_corporations_corp_number ON fl_corporations(corp_number)",
+    "CREATE INDEX IF NOT EXISTS idx_fl_corporations_entity_name ON fl_corporations(entity_name)",
+    "CREATE INDEX IF NOT EXISTS idx_fl_corporations_ein         ON fl_corporations(ein)",
+    "CREATE INDEX IF NOT EXISTS idx_fl_corporations_status      ON fl_corporations(status)",
+]
 
 
 def load_corporations(csv_path: Path, cur, dry_run: bool) -> int:
@@ -498,7 +504,12 @@ def load_corporations(csv_path: Path, cur, dry_run: bool) -> int:
     print(f"\nStep 3: Loading corporations → fl_corporations ...", flush=True)
 
     if not dry_run:
-        cur.execute(CREATE_CORPS_TABLE)
+        # Create table + indexes in separate execute calls (psycopg2 multi-statement bug),
+        # committed immediately so a later insert rollback doesn't undo the schema.
+        cur.execute(_CREATE_CORPS_TABLE)
+        for idx_sql in _CREATE_CORPS_INDEXES:
+            cur.execute(idx_sql)
+        cur.connection.commit()
 
     UPSERT_SQL = """
         INSERT INTO fl_corporations
@@ -763,6 +774,7 @@ def main(force: bool = False, dry_run: bool = False) -> int:
     con = psycopg2.connect(DB_URL)
     con.autocommit = False
     cur = con.cursor()
+    con2 = None   # initialise so finally block is safe if step 3 raises
 
     try:
         corp_count = load_corporations(OUTPUT_CSV, cur, dry_run)
@@ -785,18 +797,19 @@ def main(force: bool = False, dry_run: bool = False) -> int:
             con2.rollback()
 
     except Exception as e:
-        try:
-            con2.rollback()
-        except Exception:
-            pass
+        if con2 is not None:
+            try:
+                con2.rollback()
+            except Exception:
+                pass
         print(f"\nERROR: {e}", file=sys.stderr)
         return 1
     finally:
-        try:
-            cur2.close()
-            con2.close()
-        except Exception:
-            pass
+        if con2 is not None:
+            try:
+                con2.close()
+            except Exception:
+                pass
 
     print("\n=== DONE ===")
     print(f"Raw file:  {raw_path}")

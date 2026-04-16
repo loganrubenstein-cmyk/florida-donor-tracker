@@ -87,39 +87,39 @@ FORM_TYPE_CODES = {
 
 # ── Supabase schema ────────────────────────────────────────────────────────────
 
-CREATE_TABLE = """
+# Multi-statement DDL must be split into separate cur.execute() calls.
+# See data_integrity_lessons.md — psycopg2 silently ignores statements
+# after the first in a single execute() call.
+_CREATE_TABLE = """
 CREATE TABLE IF NOT EXISTS official_disclosures (
     id                  SERIAL PRIMARY KEY,
     filer_name          TEXT,
     filer_slug          TEXT,
     position            TEXT,
     filing_year         INTEGER,
-    filing_type         TEXT,          -- 'Form 1' or 'Form 6'
-    net_worth           NUMERIC,       -- Form 6 only: net worth as of Dec 31
-    income_sources      JSONB,         -- [{source, address, amount}]
-    real_estate         JSONB,         -- [{description, value, address}]
-    business_interests  JSONB,         -- [{name, value}] non-traded business interests
-    liabilities         JSONB,         -- [{creditor, amount}]
-    source_url          TEXT,          -- GetFormContent URL for this specific filing
+    filing_type         TEXT,
+    net_worth           NUMERIC,
+    income_sources      JSONB,
+    real_estate         JSONB,
+    business_interests  JSONB,
+    liabilities         JSONB,
+    source_url          TEXT,
     pdf_local_path      TEXT,
-    legislator_id       INTEGER,       -- FK to legislators.people_id (nullable)
-    raw_text_length     INTEGER,       -- chars in PDF raw text (debug)
+    legislator_id       INTEGER,
+    raw_text_length     INTEGER,
     scraped_at          TIMESTAMPTZ DEFAULT NOW(),
     updated_at          TIMESTAMPTZ DEFAULT NOW()
-);
-
-ALTER TABLE official_disclosures ADD COLUMN IF NOT EXISTS net_worth NUMERIC;
-
-CREATE UNIQUE INDEX IF NOT EXISTS idx_official_disclosures_slug_year
-    ON official_disclosures (filer_slug, filing_year, filing_type)
-    WHERE filing_year IS NOT NULL;
-
-CREATE INDEX IF NOT EXISTS idx_official_disclosures_legislator
-    ON official_disclosures (legislator_id);
-
-CREATE INDEX IF NOT EXISTS idx_official_disclosures_year
-    ON official_disclosures (filing_year DESC);
+)
 """
+_DDL_STEPS = [
+    _CREATE_TABLE,
+    "ALTER TABLE official_disclosures ADD COLUMN IF NOT EXISTS net_worth NUMERIC",
+    """CREATE UNIQUE INDEX IF NOT EXISTS idx_official_disclosures_slug_year
+        ON official_disclosures (filer_slug, filing_year, filing_type)
+        WHERE filing_year IS NOT NULL""",
+    "CREATE INDEX IF NOT EXISTS idx_official_disclosures_legislator ON official_disclosures (legislator_id)",
+    "CREATE INDEX IF NOT EXISTS idx_official_disclosures_year ON official_disclosures (filing_year DESC)",
+]
 
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
@@ -178,6 +178,40 @@ def load_legislators() -> list[dict]:
         con.close()
 
 
+# ── Name cleaning for EFDMS search ───────────────────────────────────────────
+# Raw DB names contain titles (Dr, Ms), generational suffixes (Jr., III), and
+# compound last names that confuse the EFDMS search form.
+
+_LAST_SUFFIX = re.compile(
+    r",?\s*\b(Jr\.?|Sr\.?|II|III|IV|V|Esq\.?)\s*$", re.IGNORECASE
+)
+_FIRST_TITLE = re.compile(
+    r"^(Dr\.?|Mr\.?|Mrs\.?|Ms\.?|Prof\.?)\s+", re.IGNORECASE
+)
+
+
+def _clean_last(raw: str) -> str:
+    """Strip generational suffixes from last name: 'Massullo, Jr.' → 'Massullo'."""
+    return _LAST_SUFFIX.sub("", raw).strip().rstrip(",").strip()
+
+
+def _clean_first(raw: str) -> str:
+    """Strip honorific titles from first name: 'Dr' → '' (search by last only),
+    'Ms Dee' → 'Dee', 'Dr Anna' → 'Anna'."""
+    cleaned = _FIRST_TITLE.sub("", raw).strip()
+    # If the entire first_name was a title (e.g. field = "Dr"), return empty so
+    # the search falls back to last-name-only, which EFDMS supports.
+    if re.fullmatch(r"(Dr\.?|Mr\.?|Mrs\.?|Ms\.?|Prof\.?)", raw.strip(), re.IGNORECASE):
+        return ""
+    return cleaned
+
+
+def _is_vacant(leg: dict) -> bool:
+    """True for placeholder rows with no real legislator (display_name='Vacant')."""
+    name = (leg.get("display_name") or leg.get("last_name") or "").strip().lower()
+    return name in ("vacant", "")
+
+
 # ── Phase 1a: Playwright scraper ───────────────────────────────────────────────
 
 def scrape_with_playwright(legislators: list[dict], cache: dict, force: bool,
@@ -226,8 +260,12 @@ def scrape_with_playwright(legislators: list[dict], cache: dict, force: bool,
         print(f"  Starting legislator search ...")
 
         for i, leg in enumerate(legislators):
-            last  = (leg.get("last_name") or "").strip()
-            first = (leg.get("first_name") or "").strip()
+            if _is_vacant(leg):
+                print(f"  [{i+1:3d}] SKIP  (vacant seat)")
+                continue
+
+            last  = _clean_last((leg.get("last_name") or "").strip())
+            first = _clean_first((leg.get("first_name") or "").strip())
             slug  = slugify(f"{last} {first}")
 
             if single_name and single_name.lower() not in f"{last} {first}".lower():
@@ -242,6 +280,11 @@ def scrape_with_playwright(legislators: list[dict], cache: dict, force: bool,
             page = context.new_page()
             try:
                 filings = _search_one_legislator(page, first, last, leg)
+                # Compound last name fallback: "Gonzalez Pittman" → try "Gonzalez" if 0 results
+                if not filings and " " in last:
+                    first_part = last.split()[0]
+                    print(f"         → 0 results; retrying with last={first_part!r} ...", flush=True)
+                    filings = _search_one_legislator(page, first, first_part, leg)
                 cache[slug] = {
                     "people_id":    leg["people_id"],
                     "display_name": leg.get("display_name", f"{first} {last}"),
@@ -630,8 +673,11 @@ def scrape_with_requests(legislators: list[dict], cache: dict, force: bool) -> d
         print("  WARNING: No anti-forgery token found — POST will likely be rejected")
 
     for i, leg in enumerate(legislators):
-        last  = (leg.get("last_name") or "").strip()
-        first = (leg.get("first_name") or "").strip()
+        if _is_vacant(leg):
+            continue
+
+        last  = _clean_last((leg.get("last_name") or "").strip())
+        first = _clean_first((leg.get("first_name") or "").strip())
         slug  = slugify(f"{last} {first}")
 
         if not force and slug in cache:
@@ -1322,7 +1368,9 @@ def upsert_to_supabase(records: list[dict]) -> None:
     con.autocommit = False
     cur = con.cursor()
     try:
-        cur.execute(CREATE_TABLE)
+        for _ddl in _DDL_STEPS:
+            cur.execute(_ddl)
+        con.commit()   # commit schema before touching data
         # Remove stub rows from prior runs that had no filing_year (NULL rows
         # can't be matched by the partial unique index, so they accumulate)
         cur.execute("DELETE FROM official_disclosures WHERE filing_year IS NULL")
