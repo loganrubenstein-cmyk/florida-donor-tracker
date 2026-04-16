@@ -13,6 +13,7 @@ import AnimatedStat from '@/components/shared/AnimatedStat';
 import { slugify } from '@/lib/slugify';
 import { fmtMoneyCompact, fmtMoney, fmtCount } from '@/lib/fmt';
 import { getPoliticianSlugByAcctNum } from '@/lib/loadCandidate';
+import InsightStrip from '@/components/shared/InsightStrip';
 
 const DonorYearChart      = dynamic(() => import('./DonorYearChart'), { ssr: false });
 const TransactionExplorer = dynamic(() => import('@/components/explorer/TransactionExplorer'), { ssr: false });
@@ -546,6 +547,8 @@ export default function DonorProfile({ data, annotations = {} }) {
           </div>
         )}
       </EntityHeader>
+
+      <InsightStrip insights={data.insights} />
 
       <TabbedProfile tabs={tabs} defaultTab="overview" />
     </main>

@@ -23,17 +23,27 @@ export async function generateStaticParams() {
   } catch { return []; }
 }
 
-async function loadBill(slug) {
+async function loadBill(slug, yearFilter) {
   try {
     const db = getDb();
-    const { data: entries } = await db
+    let query = db
       .from('bill_disclosures')
       .select('bill_canon, lobbyist, principal, firm, issues, year')
       .eq('bill_slug', slug)
       .order('year', { ascending: true })
       .limit(20000);
+    if (yearFilter) query = query.eq('year', parseInt(yearFilter, 10));
 
+    const { data: entries } = await query;
     if (!entries || entries.length === 0) return null;
+
+    // All years for this bill number (unfiltered) — used for the year-selector
+    const { data: allYearRows } = await db
+      .from('bill_disclosures')
+      .select('year')
+      .eq('bill_slug', slug)
+      .order('year', { ascending: true });
+    const allYears = [...new Set((allYearRows || []).map(r => r.year))].sort();
 
     const years      = [...new Set(entries.map(e => e.year))].sort();
     const principals = [...new Set(entries.map(e => e.principal))].sort();
@@ -66,6 +76,7 @@ async function loadBill(slug) {
       bill: entries[0].bill_canon,
       entries,
       years,
+      allYears,
       principals,
       lobbyists,
       firms,
@@ -91,12 +102,16 @@ export async function generateMetadata({ params }) {
 
 export default async function BillLobbyingPage({ params, searchParams }) {
   const { slug } = await params;
-  const tab = (await searchParams)?.tab || 'overview';
-  const data = await loadBill(slug);
+  const sp = await searchParams;
+  const tab        = sp?.tab  || 'overview';
+  const yearFilter = sp?.year || null;
+  const data = await loadBill(slug, yearFilter);
   if (!data) return notFound();
 
-  const { bill, entries, years, principals, lobbyists, firms, issues, byYear, principalList } = data;
-  const yearStr = years.length > 1 ? `${years[0]}–${years[years.length - 1]}` : String(years[0]);
+  const { bill, entries, years, allYears, principals, lobbyists, firms, issues, byYear, principalList } = data;
+  const yearStr = yearFilter
+    ? `${yearFilter} session`
+    : years.length > 1 ? `${years[0]}–${years[years.length - 1]}` : String(years[0]);
   const maxFilings = Math.max(...Object.values(byYear).map(y => y.filings), 1);
   const maxPrincipal = principalList[0]?.filings || 1;
 
@@ -113,12 +128,34 @@ export default async function BillLobbyingPage({ params, searchParams }) {
       </div>
 
       <h1 style={{ fontFamily: 'var(--font-mono)', fontSize: '1.8rem', color: 'var(--teal)', marginBottom: '0.25rem' }}>
-        {bill}
+        {bill}{yearFilter ? ` · ${yearFilter}` : ''}
       </h1>
       <p style={{ color: 'var(--text-dim)', fontSize: '0.88rem', lineHeight: 1.6, marginBottom: '0.25rem' }}>
         Florida House lobbyist disclosure filings for this bill number, {yearStr}.
         Each filing represents one lobbyist–principal pair reporting they lobbied on this bill.
       </p>
+      <p style={{ fontSize: '0.72rem', color: 'var(--orange)', marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
+        Note: the same bill number (e.g. HB 5001) refers to different legislation each session year.
+        {!yearFilter && allYears.length > 1 && ' Filter by session to view a specific bill.'}
+      </p>
+      {allYears.length > 1 && (
+        <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
+          <a href={`/lobbying/bill/${slug}`}
+            style={{ fontSize: '0.68rem', padding: '2px 8px', borderRadius: '3px', textDecoration: 'none',
+              background: !yearFilter ? 'rgba(77,216,240,0.12)' : 'transparent',
+              border: `1px solid ${!yearFilter ? 'rgba(77,216,240,0.4)' : 'var(--border)'}`,
+              color: !yearFilter ? 'var(--teal)' : 'var(--text-dim)',
+            }}>All sessions</a>
+          {allYears.map(yr => (
+            <a key={yr} href={`/lobbying/bill/${slug}?year=${yr}`}
+              style={{ fontSize: '0.68rem', padding: '2px 8px', borderRadius: '3px', textDecoration: 'none',
+                background: String(yearFilter) === String(yr) ? 'rgba(77,216,240,0.12)' : 'transparent',
+                border: `1px solid ${String(yearFilter) === String(yr) ? 'rgba(77,216,240,0.4)' : 'var(--border)'}`,
+                color: String(yearFilter) === String(yr) ? 'var(--teal)' : 'var(--text-dim)',
+              }}>{yr}</a>
+          ))}
+        </div>
+      )}
       <p style={{ fontSize: '0.72rem', color: 'var(--text-dim)', marginBottom: '2rem' }}>
         Source: FL House Lobbyist Disclosure portal. Not affiliated with the State of Florida. All data from public records.
       </p>
@@ -142,11 +179,11 @@ export default async function BillLobbyingPage({ params, searchParams }) {
       )}
 
       <div className="tab-bar" style={{ marginBottom: '1.75rem' }}>
-        <a href={`/lobbying/bill/${slug}`} className={`tab${tab === 'overview' ? ' tab-active' : ''}`}>Overview</a>
-        <a href={`/lobbying/bill/${slug}?tab=money`} className={`tab${tab === 'money' ? ' tab-active' : ''}`}>Money Map</a>
+        <a href={`/lobbying/bill/${slug}${yearFilter ? `?year=${yearFilter}` : ''}`} className={`tab${tab === 'overview' ? ' tab-active' : ''}`}>Overview</a>
+        <a href={`/lobbying/bill/${slug}?tab=money${yearFilter ? `&year=${yearFilter}` : ''}`} className={`tab${tab === 'money' ? ' tab-active' : ''}`}>Money Map</a>
       </div>
 
-      {tab === 'money' && <BillMoneyMap billSlug={slug} />}
+      {tab === 'money' && <BillMoneyMap billSlug={slug} year={yearFilter} />}
 
       {tab === 'overview' && <div className="profile-2col">
         <div>

@@ -1,11 +1,186 @@
 {
-  "generated_at": "2026-04-16T03:53:48.584426+00:00",
-  "total_contributions": 19300405,
-  "total_amount": 5646584856.72,
-  "total_committees_with_data": 5896,
-  "total_donors": 1653301,
-  "date_range": {
-    "earliest": "1990-01-20",
-    "latest": "2026-10-30"
+  "generated_at": "2026-04-16T13:59:37.528195+00:00",
+  "note": "All figures are FL state-level data unless otherwise noted.",
+  "campaign_finance": {
+    "total_donors": 884334,
+    "corporate_donors": 43879,
+    "individual_donors": 840455,
+    "estimated_total_contributions": 3578859986.78
+  },
+  "committees": {
+    "total_committees": 8651,
+    "total_received": 5875892928.7
+  },
+  "candidates": {
+    "total_candidates": 3336,
+    "total_raised": 1710638841.38
+  },
+  "committee_expenditures": {
+    "total_amount": 2819148977.43,
+    "total_payments": 518725,
+    "num_committees": 1700,
+    "date_range": {
+      "start": "1996-01-01",
+      "end": "2026-12-29"
+    }
+  },
+  "candidate_expenditures": {
+    "total_amount": 1068162381.29,
+    "total_payments": 780998,
+    "num_candidates": 7651
+  },
+  "transfers": {
+    "total_amount": 195796762.44,
+    "total_records": 2495,
+    "num_committees": 95
+  },
+  "independent_expenditures": {
+    "total_amount": 73338265.84,
+    "total_rows": 9067,
+    "num_committees": 498,
+    "date_range": {
+      "start": "2004-08-05",
+      "end": "2026-03-31"
+    }
+  },
+  "lobbyist_compensation": {
+    "total_estimated_comp": 434835000,
+    "total_records": 54681,
+    "num_principals": 5841,
+    "num_firms": 441,
+    "note": "Compensation figures are midpoints of FL-mandated ranges, not exact amounts."
+  },
+  "lobbyist_registrations": {
+    "total_lobbyists": 2474,
+    "total_principals": 4275
+  },
+  "news": {
+    "total_articles": 288,
+    "total_outlets": 4,
+    "outlets": [
+      "Florida Daily",
+      "Florida Phoenix",
+      "Florida Politics",
+      "Tampa Bay Times"
+    ],
+    "targeted_entities": 125
+  },
+  "election_results": {
+    "years_covered": [
+      2012,
+      2014,
+      2016,
+      2018,
+      2020,
+      2022,
+      2024
+    ],
+    "elections_covered": [
+      {
+        "year": 2024,
+        "type": "general",
+        "name": "2024 General Election"
+      },
+      {
+        "year": 2024,
+        "type": "primary",
+        "name": "2024 Primary Election"
+      },
+      {
+        "year": 2022,
+        "type": "general",
+        "name": "2022 General Election"
+      },
+      {
+        "year": 2022,
+        "type": "primary",
+        "name": "2022 Primary Election"
+      },
+      {
+        "year": 2020,
+        "type": "general",
+        "name": "2020 General Election"
+      },
+      {
+        "year": 2020,
+        "type": "primary",
+        "name": "2020 Primary Election"
+      },
+      {
+        "year": 2018,
+        "type": "general",
+        "name": "2018 General Election"
+      },
+      {
+        "year": 2018,
+        "type": "primary",
+        "name": "2018 Primary Election"
+      },
+      {
+        "year": 2016,
+        "type": "general",
+        "name": "2016 General Election"
+      },
+      {
+        "year": 2016,
+        "type": "primary",
+        "name": "2016 Primary Election"
+      },
+      {
+        "year": 2014,
+        "type": "general",
+        "name": "2014 General Election"
+      },
+      {
+        "year": 2012,
+        "type": "general",
+        "name": "2012 General Election"
+      }
+    ],
+    "total_elections": 12,
+    "contests_with_finance": 261
+  },
+  "voting_records": {
+    "total_legislators": 224,
+    "total_bills": 1000,
+    "total_roll_calls": 546,
+    "sessions_covered": [
+      2135,
+      2220
+    ]
+  },
+  "lobbyist_disclosures": {
+    "total_records": 68785,
+    "unique_lobbyists": 2682,
+    "unique_principals": 8394,
+    "unique_bills": 14045,
+    "years_covered": [
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025,
+      2026
+    ],
+    "source": "FL House Lobbyist Disclosure portal"
+  },
+  "fec_federal": {
+    "fl_federal_candidates": 300,
+    "fl_federal_committees": 0,
+    "donor_crossref_count": 9,
+    "candidate_crossref_count": 18
+  },
+  "principals_influence": {
+    "total_principals_indexed": 3549,
+    "combined_influence_total": 2899897214.21
+  },
+  "grand_totals": {
+    "total_political_spending_tracked": 4087033252.62,
+    "total_expenditures_tracked": 3887311358.72,
+    "note": "Campaign contributions + est. lobbyist compensation + IE/EC spending"
   }
 }

@@ -162,6 +162,19 @@ export default function ColumnPanel({ col, onSelect }) {
     }
 
     if (level === 'topdonors') {
+      if (item.isStateMatching) {
+        return (
+          <div key="state-fl" style={{ ...rowBase, opacity: 0.65, cursor: 'default' }}>
+            <span style={{ fontSize: '0.73rem', color: 'var(--text-dim)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>
+              {item.name}
+              <span style={{ marginLeft: '0.4rem', fontSize: '0.58rem', color: 'var(--text-dim)', border: '1px solid var(--border)', borderRadius: '2px', padding: '0.05rem 0.25rem' }}>matching funds</span>
+            </span>
+            <span style={{ fontSize: '0.65rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', flexShrink: 0, marginLeft: '0.5rem' }}>
+              {fmtMoneyCompact(item.total)}
+            </span>
+          </div>
+        );
+      }
       return (
         <Link key={item.slug} href={`/donor/${item.slug}`}
           style={{

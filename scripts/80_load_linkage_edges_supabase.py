@@ -88,15 +88,27 @@ def main() -> int:
             else:
                 edges_load[bool_col] = "false"
         # Replace empty strings with NULL for nullable columns
-        for col in ("pc_acct_num", "direction", "match_score", "amount", "edge_date"):
-            edges_load[col] = edges_load[col].replace("", None)
+        nullable_cols = (
+            "pc_acct_num", "direction", "match_score", "amount", "edge_date",
+            "source_url", "source_filing_id", "source_filing_date",
+            "source_filing_status", "confidence_score", "evidence_json",
+        )
+        for col in nullable_cols:
+            if col in edges_load.columns:
+                edges_load[col] = edges_load[col].replace("", None)
+            else:
+                edges_load[col] = None
 
-        n = copy_table(cur, edges_load, "candidate_pc_edges", [
+        copy_cols = [
             "candidate_acct_num", "pc_acct_num", "pc_name", "pc_type",
             "edge_type", "direction", "evidence_summary", "source_type",
             "source_record_id", "match_method", "match_score", "amount",
             "edge_date", "is_publishable", "is_candidate_specific",
-        ])
+            "source_url", "source_filing_id", "source_filing_date",
+            "source_filing_status", "confidence_score",
+        ]
+        # evidence_json → evidence (jsonb) — cast on insert via staging table
+        n = copy_table(cur, edges_load, "candidate_pc_edges", copy_cols)
         print(f"Loaded {n:,} rows into candidate_pc_edges")
 
         # ── committee_lineage ────────────────────────────────────────────────

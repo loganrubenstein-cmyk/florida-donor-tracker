@@ -95,11 +95,12 @@ CREATE TABLE IF NOT EXISTS official_disclosures (
     position            TEXT,
     filing_year         INTEGER,
     filing_type         TEXT,          -- 'Form 1' or 'Form 6'
-    income_sources      JSONB,         -- [{employer, amount, type}]
+    net_worth           NUMERIC,       -- Form 6 only: net worth as of Dec 31
+    income_sources      JSONB,         -- [{source, address, amount}]
     real_estate         JSONB,         -- [{description, value, address}]
-    business_interests  JSONB,
-    liabilities         JSONB,
-    source_url          TEXT,
+    business_interests  JSONB,         -- [{name, value}] non-traded business interests
+    liabilities         JSONB,         -- [{creditor, amount}]
+    source_url          TEXT,          -- GetFormContent URL for this specific filing
     pdf_local_path      TEXT,
     legislator_id       INTEGER,       -- FK to legislators.people_id (nullable)
     raw_text_length     INTEGER,       -- chars in PDF raw text (debug)
@@ -107,8 +108,11 @@ CREATE TABLE IF NOT EXISTS official_disclosures (
     updated_at          TIMESTAMPTZ DEFAULT NOW()
 );
 
+ALTER TABLE official_disclosures ADD COLUMN IF NOT EXISTS net_worth NUMERIC;
+
 CREATE UNIQUE INDEX IF NOT EXISTS idx_official_disclosures_slug_year
-    ON official_disclosures (filer_slug, filing_year, filing_type);
+    ON official_disclosures (filer_slug, filing_year, filing_type)
+    WHERE filing_year IS NOT NULL;
 
 CREATE INDEX IF NOT EXISTS idx_official_disclosures_legislator
     ON official_disclosures (legislator_id);
@@ -216,15 +220,10 @@ def scrape_with_playwright(legislators: list[dict], cache: dict, force: bool,
             ),
             accept_downloads=True,
         )
-        page = context.new_page()
-
-        # Initial page load to establish session + cookies
-        print(f"  Loading ethics search page ...")
-        try:
-            page.goto(SEARCH_URL, wait_until="networkidle", timeout=30_000)
-        except PWTimeout:
-            print("  WARNING: page load timed out (networkidle) — trying domcontentloaded")
-            page.goto(SEARCH_URL, wait_until="domcontentloaded", timeout=30_000)
+        # Fresh page per legislator: reusing a page after a Playwright timeout leaves
+        # it in a bad state where subsequent calls also timeout. Opening + closing
+        # a page per legislator is a tiny overhead vs. the AJAX wait per search.
+        print(f"  Starting legislator search ...")
 
         for i, leg in enumerate(legislators):
             last  = (leg.get("last_name") or "").strip()
@@ -240,6 +239,7 @@ def scrape_with_playwright(legislators: list[dict], cache: dict, force: bool,
 
             print(f"  [{i+1:3d}] Searching  {last}, {first} ...", flush=True)
 
+            page = context.new_page()
             try:
                 filings = _search_one_legislator(page, first, last, leg)
                 cache[slug] = {
@@ -259,6 +259,8 @@ def scrape_with_playwright(legislators: list[dict], cache: dict, force: bool,
             except Exception as e:
                 print(f"         → ERROR: {e}")
                 cache[slug] = {"people_id": leg["people_id"], "filings": [], "error": str(e)}
+            finally:
+                page.close()
 
             time.sleep(REQUEST_DELAY)
 
@@ -274,131 +276,92 @@ def scrape_with_playwright(legislators: list[dict], cache: dict, force: bool,
 
 def _search_one_legislator(page, first: str, last: str, leg: dict) -> list[dict]:
     """
-    Fill the search form and collect filing rows for one legislator.
-    Returns list of filing dicts.
+    Navigate directly to FilingsResults URL and collect filings for one legislator.
 
-    SELECTOR NOTES — update these if the site redesigns:
-      The form appears to use standard HTML inputs inside collapsible panels.
-      If selectors fail, open DevTools on /PublicSearch/Filings and inspect:
-        - Last Name field: look for input near "Last Name" label
-        - Search button: look for button with text "Search" near the name fields
-        - Results table: the table that appears after searching
+    The site (Knockout.js SPA) submits the search form to:
+      /PublicSearch/FilingsResults?FirstName={first}&LastName={last}
+    Navigating there directly is more reliable than filling the form.
     """
     from playwright.sync_api import TimeoutError as PWTimeout
+    from urllib.parse import quote
 
-    # ── Fill Last Name ──
-    # TODO: Confirm the exact selector. Common patterns for ASP.NET sites:
-    #   input[id*="LastName"], input[name*="lastName"], input[placeholder*="Last"]
-    last_sel = 'input[id*="LastName"], input[name*="lastName"], input[placeholder*="Last Name"]'
-    try:
-        page.wait_for_selector(last_sel, timeout=10_000)
-        page.fill(last_sel, last)
-    except PWTimeout:
-        # Fallback: look for any visible text input near "Last Name" label
-        # If this also fails, print page content for debugging
-        _debug_page_inputs(page, "last_name_selector_failed")
-        raise
-
-    # ── Fill First Name (optional but reduces false matches) ──
-    first_sel = 'input[id*="FirstName"], input[name*="firstName"], input[placeholder*="First Name"]'
-    try:
-        page.fill(first_sel, first)
-    except Exception:
-        pass  # First name filter is optional
-
-    # ── Click Search ──
-    search_btn = (
-        'button:has-text("Search"), '
-        'input[type="submit"][value*="Search"], '
-        'a:has-text("Search Criteria")'
+    # No FormYear filter — returns all years so we don't miss recently-due filings
+    results_url = (
+        f"{ETHICS_BASE}/PublicSearch/FilingsResults"
+        f"?FirstName={quote(first)}&LastName={quote(last)}"
     )
-    page.click(search_btn)
 
-    # ── Wait for results ──
-    # The results table appears below the form. Common ASP.NET patterns:
-    # a loading spinner disappears, then a results table renders.
     try:
-        # Wait for either results or "No records found" message
-        page.wait_for_selector(
-            'table.results, table[id*="grid"], div[id*="result"], '
-            'span:has-text("No records"), p:has-text("No records")',
-            timeout=15_000,
-        )
+        # domcontentloaded is immediate. The ethics site has persistent background XHR
+        # polling that prevents networkidle from ever completing.
+        page.goto(results_url, wait_until="domcontentloaded", timeout=30_000)
     except PWTimeout:
-        _debug_page_inputs(page, f"results_timeout_{slugify(last)}")
+        _debug_page_inputs(page, f"nav_timeout_{slugify(last)}")
         return []
 
-    # ── Check for "no records" ──
-    if page.locator('span:has-text("No records"), p:has-text("No records")').count() > 0:
+    # KO creates empty table skeleton at domcontentloaded, then populates via AJAX
+    # ~5s later. Confirmed by debug: after time.sleep(5), td count=9, NAME cols=1.
+    # wait_for_function / wait_for_selector based approaches cause Playwright state
+    # corruption; plain sleep is the reliable path.
+    time.sleep(7)
+
+    # "No records to display" check — use is_visible() since the element exists but
+    # is hidden (display:none) when there ARE records
+    no_rec = page.locator('td:has-text("No records to display")')
+    if no_rec.count() > 0 and no_rec.first.is_visible():
+        return []
+
+    # No NAME cells means KO hasn't rendered data rows yet or no results
+    if page.locator('td[data-column="NAME"]').count() == 0:
         return []
 
     # ── Parse result rows ──
     filings = _parse_search_results(page, last, first)
 
-    # ── Download PDFs for Form 1 / Form 6 only, most recent year ──
-    for filing in filings:
-        if filing.get("form_type") in ("Form 1", "Form 6") and filing.get("pdf_url"):
-            local_path = _download_pdf(page, filing)
-            filing["pdf_local"] = str(local_path) if local_path else None
+    # PDF downloads deferred to a second pass (--pdf-only flag) after metadata is
+    # confirmed. FilingHistory is also a KO SPA needing ~7s AJAX wait; resolving
+    # stale locators from .all() causes Locator.get_attribute timeouts.
 
     return filings
 
 
 def _parse_search_results(page, last: str, first: str) -> list[dict]:
     """
-    Parse the search results table into a list of filing dicts.
+    Parse the /PublicSearch/FilingsResults table.
 
-    TODO: After running the script once, inspect what the page actually renders
-    and adjust the selectors below. The results table likely has columns:
-      Filer Name | Position | Year | Form Type | (View link)
+    Observed columns (via data-column attributes):
+      FILER NAME | ORGANIZATION | FORM TYPE | FILLINGS | (View Filings link)
 
-    If the site uses a data grid (DevExtreme, Kendo, etc.) the structure may
-    differ — look for div[class*="dx-row"] or tr[class*="k-master-row"].
+    Each row links to /PublicSearch/FilingHistory/{id} for the full filing list.
     """
     filings = []
 
-    # Try standard table first
-    rows = page.locator("table tr").all()
-    if not rows:
-        # Try DevExtreme grid rows (common in ASP.NET SPAs)
-        rows = page.locator("div[class*='dx-row']:not([class*='header'])").all()
-
+    rows = page.locator("table tbody tr").all()
     for row in rows:
-        cells = row.locator("td").all()
-        if len(cells) < 4:
+        if not row.is_visible():
+            continue
+        filer_el    = row.locator('td[data-column="NAME"]')
+        formtype_el = row.locator('td[data-column="FORM TYPE"]')
+        link_el     = row.locator('a[href*="FilingHistory"]')
+
+        if filer_el.count() == 0 or link_el.count() == 0:
             continue
 
-        texts = [c.inner_text().strip() for c in cells]
-
-        # TODO: Map actual column positions. Expected order:
-        #   texts[0] = filer_name, texts[1] = position,
-        #   texts[2] = year,       texts[3] = form_type
-        # Adjust indices if columns differ.
-        filer_name = texts[0] if len(texts) > 0 else ""
-        position   = texts[1] if len(texts) > 1 else ""
-        year_str   = texts[2] if len(texts) > 2 else ""
-        form_type  = texts[3] if len(texts) > 3 else ""
-
-        # Skip header rows
-        if not year_str or not year_str.strip().isdigit():
-            continue
-
-        # Find the "View" or "Download" link
-        link = row.locator("a").first
-        href = link.get_attribute("href") if link.count() > 0 else None
-        full_url = f"{ETHICS_BASE}{href}" if href and href.startswith("/") else href
+        filer_name  = filer_el.inner_text().strip()
+        form_type   = formtype_el.inner_text().strip() if formtype_el.count() > 0 else ""
+        history_href = link_el.get_attribute("href")
+        history_url  = (
+            f"{ETHICS_BASE}{history_href}"
+            if history_href and history_href.startswith("/")
+            else history_href
+        )
 
         filings.append({
-            "filer_name": filer_name,
-            "position":   position,
-            "year":       int(year_str.strip()),
-            "form_type":  _normalize_form_type(form_type),
-            "pdf_url":    full_url,
-            "filing_id":  _extract_filing_id(href or ""),
+            "filer_name":  filer_name,
+            "form_type":   _normalize_form_type(form_type),
+            "history_url": history_url,
         })
 
-    # Sort by year descending
-    filings.sort(key=lambda f: f.get("year", 0), reverse=True)
     return filings
 
 
@@ -466,6 +429,150 @@ def _download_pdf(page, filing: dict) -> Path | None:
         except Exception as e2:
             print(f"           PDF download failed: {e2}")
     return None
+
+
+def _download_pdf_via_history(page, filing: dict) -> Path | None:
+    """
+    Visit the FilingHistory page for a filer, find the most recent Form 1/6 PDF,
+    and download it.
+
+    FilingHistory is also a KO SPA: domcontentloaded + sleep(7) required.
+    Use page.evaluate() to extract hrefs rather than .all() locators, which
+    return stale references before AJAX renders and cause 30s timeouts.
+    """
+    from playwright.sync_api import TimeoutError as PWTimeout
+
+    history_url = filing.get("history_url")
+    if not history_url:
+        return None
+
+    form_type = filing.get("form_type", "form").replace(" ", "").lower()
+    filer_slug = slugify(filing.get("filer_name", "unknown"))
+
+    try:
+        page.goto(history_url, wait_until="domcontentloaded", timeout=30_000)
+    except PWTimeout:
+        return None
+
+    # KO SPA — AJAX populates the table ~5-7s after domcontentloaded
+    time.sleep(7)
+
+    # Extract filing links. The FilingHistory page has two link patterns:
+    #   Report/PrintForm/?filingId=NNN   (electronic forms — view/print page)
+    #   DownloadScannedForm/NNN          (older scanned PDFs — direct download)
+    hrefs = page.evaluate("""() => {
+        const links = document.querySelectorAll(
+            'a[href*="PrintForm"], a[href*="DownloadScannedForm"]'
+        );
+        return Array.from(links).map(a => a.getAttribute('href')).filter(Boolean);
+    }""")
+
+    if not hrefs:
+        _debug_page_inputs(page, f"history_{filer_slug}")
+        return None
+
+    for href in hrefs:
+        abs_href = f"{ETHICS_BASE}{href}" if href.startswith("/") else href
+        filing_id = _extract_filing_id(href)
+
+        # Electronic forms: PrintForm page links to GetFormContent for PDF download.
+        # Scanned forms: DownloadScannedForm/{id} directly serves the PDF.
+        if "PrintForm" in href and filing_id:
+            download_url = f"{ETHICS_BASE}/Report/GetFormContent?filingId={filing_id}"
+        else:
+            download_url = abs_href
+
+        filename = f"{filer_slug}_{filing_id or 'unknown'}_{form_type}.pdf"
+        dest = PDF_DIR / filename
+        if dest.exists():
+            return dest
+
+        try:
+            # GetFormContent and DownloadScannedForm both send Content-Disposition: attachment.
+            # page.goto() throws "Download is starting" for download URLs;
+            # use window.location.href instead to trigger the download event properly.
+            with page.expect_download(timeout=30_000) as dl_info:
+                page.evaluate(f"window.location.href = '{download_url}'")
+            dl_info.value.save_as(dest)
+            filing["source_url"] = download_url  # persist for upsert
+            return dest
+        except Exception:
+            continue
+
+    return None
+
+
+def download_pdfs_phase(cache: dict) -> dict:
+    """
+    Phase 1b: Download PDFs for all cached filings that don't yet have pdf_local.
+
+    Uses Playwright with a fresh page per filing (same approach as Phase 1).
+    Updates cache in-place with pdf_local paths and returns updated cache.
+    """
+    from playwright.sync_api import sync_playwright, TimeoutError as PWTimeout
+
+    # Pre-build index of existing PDFs by filer slug for fast skip check
+    existing = {}  # filer_slug → Path
+    for p in PDF_DIR.glob("*.pdf"):
+        parts = p.stem.split("_")
+        if parts:
+            existing[parts[0]] = p
+
+    # Collect filings that need PDFs
+    todo = []
+    for slug, entry in cache.items():
+        for filing in entry.get("filings", []):
+            if filing.get("form_type") not in ("Form 1", "Form 6"):
+                continue
+            pdf_local = filing.get("pdf_local")
+            if pdf_local and Path(pdf_local).exists():
+                continue  # already downloaded in a previous run (cache is fresh)
+            # Check disk for slug-based match (cache may have been cleared)
+            filer_slug = slugify(filing.get("filer_name", slug))
+            if filer_slug in existing:
+                filing["pdf_local"] = str(existing[filer_slug])
+                continue  # found on disk without navigating
+            todo.append((slug, filing))
+
+    if not todo:
+        print("  All PDFs already downloaded.")
+        return cache
+
+    print(f"  Downloading PDFs for {len(todo):,} filings ...")
+    downloaded = 0
+    errors = 0
+
+    with sync_playwright() as pw:
+        browser = pw.chromium.launch(headless=True)
+        context = browser.new_context(accept_downloads=True)
+
+        for i, (slug, filing) in enumerate(todo):
+            filer_name = filing.get("filer_name", slug)
+            print(f"  [{i+1}/{len(todo)}] {filer_name} ...", end=" ", flush=True)
+
+            page = context.new_page()
+            try:
+                local_path = _download_pdf_via_history(page, filing)
+                if local_path:
+                    filing["pdf_local"] = str(local_path)
+                    downloaded += 1
+                    print(f"saved → {local_path.name}")
+                else:
+                    errors += 1
+                    print("no PDF found")
+            except Exception as e:
+                errors += 1
+                print(f"ERROR: {e}")
+            finally:
+                page.close()
+
+            time.sleep(REQUEST_DELAY)
+
+        context.close()
+        browser.close()
+
+    print(f"\n  Downloaded: {downloaded:,}, errors: {errors:,}")
+    return cache
 
 
 def _debug_page_inputs(page, label: str) -> None:
@@ -658,6 +765,11 @@ def parse_pdfs(cache: dict) -> list[dict]:
         if not debug_path.exists() and raw_text:
             debug_path.write_text(raw_text, encoding="utf-8")
 
+        # Extract filing year from PDF text: "2024 Form 6 - Full and Public..."
+        year_m = re.search(r"^(\d{4})\s+Form\s+[16]", raw_text, re.MULTILINE)
+        if year_m:
+            target_filing["year"] = int(year_m.group(1))
+
         # Parse structured fields from raw text
         form_type = target_filing.get("form_type", "Form 1")
         if form_type == "Form 6":
@@ -676,17 +788,30 @@ def parse_pdfs(cache: dict) -> list[dict]:
 def _build_record(entry: dict, filing: dict, parsed: dict, pdf_local=None,
                   raw_text_len: int = 0) -> dict:
     filer_name = (filing.get("filer_name") or entry.get("display_name") or "").strip()
+    # net_worth comes from _parse_form6 as a dict {year, net_worth}; extract the value
+    nw_data = parsed.get("net_worth", {}) or {}
+    net_worth_val = nw_data.get("net_worth") if isinstance(nw_data, dict) else None
+
+    # Derive source_url from pdf_local filename if not saved during download
+    # (filename pattern: filer-slug_filingId_formtype.pdf)
+    source_url = filing.get("source_url") or filing.get("history_url", "")
+    if not source_url and pdf_local:
+        fid_m = re.search(r"_(\d+)_", Path(str(pdf_local)).name)
+        if fid_m:
+            source_url = f"{ETHICS_BASE}/Report/GetFormContent?filingId={fid_m.group(1)}"
+
     return {
         "filer_name":         filer_name,
         "filer_slug":         slugify(filer_name),
         "position":           filing.get("position", ""),
         "filing_year":        filing.get("year"),
         "filing_type":        filing.get("form_type", ""),
+        "net_worth":          net_worth_val,
         "income_sources":     parsed.get("income_sources", []),
         "real_estate":        parsed.get("real_estate", []),
         "business_interests": parsed.get("business_interests", []),
         "liabilities":        parsed.get("liabilities", []),
-        "source_url":         filing.get("pdf_url", ""),
+        "source_url":         source_url,
         "pdf_local_path":     str(pdf_local) if pdf_local else None,
         "legislator_id":      None,  # filled in Phase 3
         "raw_text_length":    raw_text_len,
@@ -696,57 +821,169 @@ def _build_record(entry: dict, filing: dict, parsed: dict, pdf_local=None,
 
 def _parse_form1(raw_text: str, slug: str) -> dict:
     """
-    Parse Form 1 PDF text into structured fields.
+    Parse Form 1 (EFDMS electronic) PDF text into structured fields.
 
-    Form 1 sections (FL Commission on Ethics, standard layout):
-      PART A — Primary sources of income (employer name, address, amount)
-      PART B — Secondary sources of income (businesses, customers)
-      PART C — Real property (description, value)
-      PART D — Intangible personal property (stocks, bonds, accounts)
-      PART E — Liabilities (creditor, amount)
-      PART F — Interests in specified businesses
-      PART G — Training (constitutional officers only)
-
-    TODO: Run the script once, then open data/raw/ethics/pdf_text_debug/<slug>.txt
-    to see the actual PDF text layout. The section headers may appear as:
-      "PART A – PRIMARY SOURCES OF INCOME"
-    or as table cells separated by whitespace. Adjust the regexes below
-    to match the actual text format.
-
-    Current state: returns empty lists with a warning so the pipeline
-    completes end-to-end. Fill in the TODOs to enable real extraction.
+    Actual section headers in the EFDMS-generated PDFs (observed from real filings):
+      "PRIMARY SOURCE OF INCOME (Over $2,500)"
+      "SECONDARY SOURCES OF INCOME ..."
+      "REAL PROPERTY ..."
+      "INTANGIBLE PERSONAL PROPERTY ..."
+      "LIABILITIES (Major debts valued over $10,000):"
+      "INTERESTS IN SPECIFIED BUSINESSES ..."
+      "Training"
     """
     if not raw_text:
         return {}
 
-    result = {
-        "income_sources":     _extract_part_a(raw_text),
-        "real_estate":        _extract_part_c(raw_text),
-        "business_interests": _extract_part_f(raw_text),
-        "liabilities":        _extract_part_e(raw_text),
+    return {
+        "income_sources":     _extract_form1_income(raw_text),
+        "real_estate":        _extract_form1_real_property(raw_text),
+        "business_interests": _extract_form1_businesses(raw_text),
+        "liabilities":        _extract_form1_liabilities(raw_text),
     }
-    return result
 
 
 def _parse_form6(raw_text: str, slug: str) -> dict:
     """
-    Parse Form 6 PDF text into structured fields.
+    Parse Form 6 (EFDMS electronic form) PDF text into structured fields.
 
-    Form 6 is a fuller net-worth disclosure required of constitutional officers.
-    It includes everything in Form 1 plus:
-      PART H — Net worth summary
-      PART I — Assets (with FMV)
-      PART J — Liabilities (detailed)
-
-    TODO: Same approach as Form 1 — inspect PDF text debug files first.
+    Form 6 layout observed from actual PDFs:
+      - Net Worth: "My Net Worth as of December 31, YYYY was $ X.00"
+      - Assets:    Section "ASSETS INDIVIDUALLY VALUED OVER $1,000:" with
+                   description / value pairs (descriptions may span lines)
+      - Liabilities: "LIABILITIES IN EXCESS OF $1,000:" with name/address/amount
+      - Income:    "PRIMARY SOURCES OF INCOME:" with name/address/amount lines
     """
     if not raw_text:
         return {}
 
-    # Form 6 uses same Part A/C/E/F structure but adds net worth
-    result = _parse_form1(raw_text, slug)
-    result["net_worth"] = _extract_net_worth(raw_text)
-    return result
+    return {
+        "net_worth":          _extract_form6_net_worth(raw_text),
+        "income_sources":     _extract_form6_income(raw_text),
+        "real_estate":        [],  # assets parsing deferred — complex multi-line layout
+        "business_interests": _extract_form6_business_interests(raw_text),
+        "liabilities":        _extract_form6_liabilities(raw_text),
+    }
+
+
+def _extract_form6_net_worth(raw_text: str) -> dict:
+    """Extract net worth figure from Form 6 text."""
+    m = re.search(
+        r"My Net Worth as of December 31,\s*(\d{4})\s+was\s+\$\s*([\d,]+\.?\d*)",
+        raw_text, re.IGNORECASE
+    )
+    if not m:
+        return {}
+    return {
+        "year":      int(m.group(1)),
+        "net_worth": _parse_dollar(m.group(2)),
+    }
+
+
+def _extract_form6_income(raw_text: str) -> list[dict]:
+    """
+    Extract primary income sources from Form 6.
+
+    The income section runs from "PRIMARY SOURCES OF INCOME:" to
+    "SECONDARY SOURCES" or "Printed from".  Each income entry occupies
+    one line ending with a dollar amount:
+      <Source Name>   <Address>   $ NN,NNN.00
+    The source name and address are tab/space separated; the dollar amount
+    is at line end.
+    """
+    # Find the primary income section
+    m = re.search(
+        r"PRIMARY SOURCES OF INCOME:\s*\n"
+        r"(?:Name of Source.*?\n)?"          # optional header row
+        r"(.*?)"
+        r"(?:SECONDARY SOURCES|Printed from|$)",
+        raw_text, re.IGNORECASE | re.DOTALL
+    )
+    if not m:
+        return []
+
+    section = m.group(1)
+    entries = []
+
+    for line in section.split("\n"):
+        line = line.strip()
+        if not line or line.startswith("Name of Source") or line.startswith("none"):
+            continue
+        # Lines with income end with "$  NN,NNN.00"
+        dollar_match = re.search(r"\$\s*([\d,]+\.?\d*)\s*$", line)
+        if not dollar_match:
+            continue
+        amount = _parse_dollar(dollar_match.group(1))
+        # Everything before the dollar sign is "name   address"
+        rest = line[:dollar_match.start()].strip()
+        # Heuristic: address starts at a 5-digit zip pattern or last long token
+        addr_m = re.search(r"\s{2,}(.+?(?:,\s*FL|,\s*\d{5}).*?)$", rest, re.IGNORECASE)
+        if addr_m:
+            source_name = rest[:addr_m.start()].strip()
+            address = addr_m.group(1).strip()
+        else:
+            source_name = rest
+            address = ""
+        if source_name and amount is not None:
+            entries.append({"source": source_name, "address": address, "amount": amount})
+
+    return entries
+
+
+def _extract_form6_liabilities(raw_text: str) -> list[dict]:
+    """
+    Extract liabilities from Form 6.
+
+    Section: "LIABILITIES IN EXCESS OF $1,000:" to "JOINT AND SEVERAL".
+    Each liability line: <Creditor Name>   <Address>   <Amount>
+    """
+    m = re.search(
+        r"LIABILITIES IN EXCESS OF \$1,000:\s*\n"
+        r"(?:Name of Creditor.*?\n)?"
+        r"(.*?)"
+        r"(?:JOINT AND SEVERAL|Printed from|$)",
+        raw_text, re.IGNORECASE | re.DOTALL
+    )
+    if not m:
+        return []
+
+    section = m.group(1)
+    entries = []
+
+    for line in section.split("\n"):
+        line = line.strip()
+        if not line or line.startswith("Name of Creditor") or line.upper() == "N/A":
+            continue
+        dollar_match = re.search(r"\$\s*([\d,]+\.?\d*)\s*$", line)
+        if not dollar_match:
+            continue
+        amount = _parse_dollar(dollar_match.group(1))
+        rest = line[:dollar_match.start()].strip()
+        if rest and amount is not None:
+            entries.append({"creditor": rest, "amount": amount})
+
+    return entries
+
+
+def _extract_form6_business_interests(raw_text: str) -> list[dict]:
+    """
+    Extract non-traded business interests from Form 6 assets section.
+
+    Look for lines mentioning "non-traded business ownership" in assets.
+    """
+    entries = []
+    # Match lines like: "Prescription Place - DeFuniak (non-traded business"
+    # followed (possibly next line) by amount "$ 2,119,750.00"
+    pattern = re.compile(
+        r"((?:\w[^\n]+?)\s*\(non-traded business\s*\n?(?:ownership\))?\s*)\n\s*\$\s*([\d,]+\.?\d*)",
+        re.IGNORECASE
+    )
+    for m in pattern.finditer(raw_text):
+        name = m.group(1).replace("\n", " ").strip().rstrip("(")
+        value = _parse_dollar(m.group(2))
+        if name and value:
+            entries.append({"name": name, "value": value})
+    return entries
 
 
 def _split_sections(raw_text: str) -> dict[str, str]:
@@ -772,6 +1009,162 @@ def _split_sections(raw_text: str) -> dict[str, str]:
         end      = matches[i + 1].start() if i + 1 < len(matches) else len(raw_text)
         sections[part_key] = raw_text[start:end].strip()
     return sections
+
+
+def _form1_lines_in_section(raw_text: str, section_title: str, next_titles: list[str]) -> list[str]:
+    """
+    Extract meaningful data lines from a Form 1 section.
+
+    Form 1 PDFs have a consistent structure per section:
+      1. Title-case heading (e.g., "Primary Sources of Income")
+      2. ALL-CAPS heading with details
+      3. Column headers (skip)
+      4. Boilerplate "(If you have nothing to report...)" (skip)
+      5. Data lines  OR  "N/A"
+      6. Next title-case heading marks the boundary
+
+    We split on title-case headings to isolate sections, then strip boilerplate.
+    """
+    # Build boundary pattern from next-section titles
+    boundary = "|".join(re.escape(t) for t in next_titles)
+    # Find start of this section (title-case heading)
+    m = re.search(rf"^{re.escape(section_title)}\s*$", raw_text, re.MULTILINE | re.IGNORECASE)
+    if not m:
+        return []
+    body = raw_text[m.end():]
+    # Cut at next section title
+    m_end = re.search(rf"^(?:{boundary})\s*$", body, re.MULTILINE | re.IGNORECASE)
+    if m_end:
+        body = body[:m_end.start()]
+
+    # Lines to skip — either exact matches OR lines that start with these prefixes
+    _SKIP_PREFIXES = re.compile(
+        r"^\s*(?:"
+        r"PRIMARY SOURCE OF INCOME|SECONDARY SOURCES OF INCOME|"
+        r"REAL PROPERTY\s*\(|INTANGIBLE PERSONAL PROPERTY|"
+        r"LIABILITIES\s*\(|INTERESTS IN SPECIFIED BUSINESSES|"
+        r"Name of Source|Source'?s Address|Description of the Source|"
+        r"Principal Business|Name of Business|Name of Major|"
+        r"Address of Source|Business' Income|Location/Description|"
+        r"Type of Intangible|Business Entity to Which|"
+        r"Name of Creditor|Address of Creditor|"
+        r"Printed from the Florida|Filed with COE:|"
+        r"THIS STATEMENT REFLECTS|DISCLOSURE PERIOD|AGENCY INFORMATION|"
+        r"General Information|"
+        r"\(If you have nothing|\(Major sources|\(Major customers|"
+        r"person\)\s*\(If|owned by the reporting"
+        r")",
+        re.IGNORECASE,
+    )
+    _SKIP_EXACT = re.compile(
+        r"^\s*(?:N/A|none|n/a|\d{4}\s+Form\s+[16].*|Page \d+ of \d+)\s*$",
+        re.IGNORECASE,
+    )
+
+    def _skip(line):
+        return bool(_SKIP_PREFIXES.match(line) or _SKIP_EXACT.match(line))
+    lines = []
+    for line in body.split("\n"):
+        line = line.strip()
+        if line and not _skip(line):
+            lines.append(line)
+    return lines
+
+
+# Section titles used in EFDMS Form 1 PDFs (title-case, exact)
+_F1_SECTIONS = [
+    "Primary Sources of Income",
+    "Secondary Sources of Income",
+    "Real Property",
+    "Intangible Personal Property",
+    "Liabilities",
+    "Interests in Specified Businesses",
+    "Training",
+    "Signature of Filer",
+]
+
+
+def _extract_form1_income(raw_text: str) -> list[dict]:
+    """
+    Extract primary income sources from Form 1.
+    Columns (merged onto one line by pdfplumber): Source Name | Address | Description
+    No dollar amounts on Form 1.
+    """
+    lines = _form1_lines_in_section(
+        raw_text, "Primary Sources of Income",
+        ["Secondary Sources of Income", "Real Property"],
+    )
+    entries = []
+    pending = None  # accumulate continuation lines (address wraps to next line)
+    for line in lines:
+        # A new entry starts if the line doesn't look like a bare zip/continuation
+        if re.match(r"^\d{5}$", line):
+            # Bare zip — append to previous entry's address
+            if pending:
+                pending["address"] = (pending["address"] + " " + line).strip()
+            continue
+        # Flush pending
+        if pending:
+            entries.append(pending)
+        pending = {"source": line, "address": "", "description": ""}
+    if pending:
+        entries.append(pending)
+    return entries
+
+
+def _extract_form1_real_property(raw_text: str) -> list[dict]:
+    """Extract real property entries from Form 1 (location/description strings)."""
+    lines = _form1_lines_in_section(
+        raw_text, "Real Property",
+        ["Intangible Personal Property", "Liabilities"],
+    )
+    return [{"description": line} for line in lines]
+
+
+def _extract_form1_liabilities(raw_text: str) -> list[dict]:
+    """Extract liability entries from Form 1 (creditor name + address, merged line)."""
+    lines = _form1_lines_in_section(
+        raw_text, "Liabilities",
+        ["Interests in Specified Businesses", "Training", "Signature of Filer"],
+    )
+    entries = []
+    for line in lines:
+        # Columns merged: creditor name then address — try 3+ space split
+        parts = re.split(r"\s{3,}", line)
+        entries.append({
+            "creditor": parts[0].strip(),
+            "address":  parts[1].strip() if len(parts) > 1 else "",
+        })
+    return entries
+
+
+def _extract_form1_businesses(raw_text: str) -> list[dict]:
+    """Extract interests in specified businesses from Form 1."""
+    lines = _form1_lines_in_section(
+        raw_text, "Interests in Specified Businesses",
+        ["Training", "Signature of Filer"],
+    )
+    # Each business block starts with "Business Entity # N" (filtered by skip above)
+    # Remaining lines are key: value pairs or freeform text
+    entries = []
+    current: dict = {}
+    for line in lines:
+        if re.match(r"^Business Entity", line, re.IGNORECASE):
+            if current:
+                entries.append(current)
+            current = {}
+        elif ":" in line:
+            k, _, v = line.partition(":")
+            current[k.strip().lower().replace(" ", "_")] = v.strip()
+        else:
+            current.setdefault("name", line)
+    if current:
+        entries.append(current)
+    non_empty = [
+        e for e in entries
+        if any(v and str(v).lower() not in ("n/a", "none", "") for v in e.values())
+    ]
+    return non_empty
 
 
 def _extract_part_a(raw_text: str) -> list[dict]:
@@ -853,13 +1246,8 @@ def _extract_part_f(raw_text: str) -> list[dict]:
 
 
 def _extract_net_worth(raw_text: str) -> dict:
-    """
-    Form 6 only — net worth summary.
-
-    TODO: Extract total assets, total liabilities, net worth figures.
-    """
-    # TODO: implement
-    return {}
+    """Form 6 only — delegates to _extract_form6_net_worth."""
+    return _extract_form6_net_worth(raw_text)
 
 
 def _parse_dollar(s: str) -> float | None:
@@ -935,6 +1323,9 @@ def upsert_to_supabase(records: list[dict]) -> None:
     cur = con.cursor()
     try:
         cur.execute(CREATE_TABLE)
+        # Remove stub rows from prior runs that had no filing_year (NULL rows
+        # can't be matched by the partial unique index, so they accumulate)
+        cur.execute("DELETE FROM official_disclosures WHERE filing_year IS NULL")
 
         def _jdump(v):
             if not v:
@@ -949,6 +1340,7 @@ def upsert_to_supabase(records: list[dict]) -> None:
                 r.get("position"),
                 r.get("filing_year"),
                 r.get("filing_type"),
+                r.get("net_worth"),
                 _jdump(r.get("income_sources")),
                 _jdump(r.get("real_estate")),
                 _jdump(r.get("business_interests")),
@@ -964,12 +1356,15 @@ def upsert_to_supabase(records: list[dict]) -> None:
             """
             INSERT INTO official_disclosures (
                 filer_name, filer_slug, position, filing_year, filing_type,
-                income_sources, real_estate, business_interests, liabilities,
+                net_worth, income_sources, real_estate, business_interests, liabilities,
                 source_url, pdf_local_path, legislator_id, raw_text_length
             ) VALUES %s
-            ON CONFLICT (filer_slug, filing_year, filing_type) DO UPDATE SET
+            ON CONFLICT (filer_slug, filing_year, filing_type)
+            WHERE filing_year IS NOT NULL
+            DO UPDATE SET
                 filer_name          = EXCLUDED.filer_name,
                 position            = EXCLUDED.position,
+                net_worth           = EXCLUDED.net_worth,
                 income_sources      = EXCLUDED.income_sources,
                 real_estate         = EXCLUDED.real_estate,
                 business_interests  = EXCLUDED.business_interests,
@@ -1006,6 +1401,8 @@ def main() -> int:
                     help="Skip scraping; re-parse cached PDFs and reload Supabase")
     ap.add_argument("--load-only",     action="store_true",
                     help="Skip scraping and parsing; just upsert parsed_disclosures.json")
+    ap.add_argument("--pdf-only",      action="store_true",
+                    help="Skip Phase 1 scraping; only download PDFs for cached filings")
     ap.add_argument("--legislator",    metavar="NAME",
                     help='Scrape one legislator only, e.g. "Smith, John"')
     args = ap.parse_args()
@@ -1024,7 +1421,7 @@ def main() -> int:
         legislators = []
 
     # ── Phase 1: Scrape ──
-    if not args.parse_only and not args.load_only:
+    if not args.parse_only and not args.load_only and not args.pdf_only:
         cache = load_cache(SEARCH_CACHE)
         print(f"Phase 1: Scraping ethics disclosures ({len(cache)} cached) ...")
 
@@ -1043,6 +1440,13 @@ def main() -> int:
         print()
     else:
         cache = load_cache(SEARCH_CACHE)
+
+    # ── Phase 1b: Download PDFs ──
+    if not args.load_only and not args.parse_only:
+        print("Phase 1b: Downloading PDFs ...")
+        cache = download_pdfs_phase(cache)
+        save_cache(cache, SEARCH_CACHE)
+        print(f"  Cache updated → {SEARCH_CACHE}\n")
 
     # ── Phase 2: Parse PDFs ──
     if not args.load_only:

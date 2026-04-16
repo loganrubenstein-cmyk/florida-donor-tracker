@@ -7,10 +7,11 @@ export const metadata = {
 };
 
 async function fetchEntity(db, acct) {
-  const { data: cand } = await db.from('candidates')
+  const { data: candRows } = await db.from('candidates')
     .select('acct_num, candidate_name, office_desc, election_year, party_code')
     .eq('acct_num', acct)
-    .maybeSingle();
+    .limit(1);
+  const cand = candRows?.[0] ?? null;
 
   if (cand) {
     return {
@@ -21,10 +22,11 @@ async function fetchEntity(db, acct) {
     };
   }
 
-  const { data: comm } = await db.from('committees')
+  const { data: commRows } = await db.from('committees')
     .select('acct_num, committee_name, total_received')
     .eq('acct_num', acct)
-    .maybeSingle();
+    .limit(1);
+  const comm = commRows?.[0] ?? null;
 
   if (comm) {
     return {

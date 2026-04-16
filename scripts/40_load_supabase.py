@@ -346,7 +346,7 @@ def load_industries(cur):
 
 def load_analysis(cur):
     print("Loading analysis tables...")
-    ec = load_json(DATA_DIR / "entity_connections.json")
+    ec = load_json(DATA_DIR / "entity_connections_full.json")
     ec_rows = []
     for c in ec.get("connections", []):
         ea = c["entity_a"]

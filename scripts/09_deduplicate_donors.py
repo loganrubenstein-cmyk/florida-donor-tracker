@@ -1,231 +1,392 @@
-# scripts/09_deduplicate_donors.py
+#!/usr/bin/env python3
 """
-Script 09: Deduplicate contributor names using fuzzy string matching.
+Script 09: Deduplicate contributor names into canonical donor entities.
 
-Reads contributions.csv, clusters similar contributor names, picks a canonical
-spelling per cluster, and writes contributions_deduped.csv + donor_dedup_map.csv.
+Replaces the legacy CSV-only clustering pass with a DB-aware multi-pass pipeline
+that writes to donor_entities + donor_aliases (see migration 015). Contributions
+become source-of-truth; `donors` / `donors_mv` are derived.
 
-Usage (from project root, with .venv activated):
-    python scripts/09_deduplicate_donors.py
-    python scripts/09_deduplicate_donors.py --force
+Passes, in priority order:
+    1. exact_normalized  — alias_text identical → merge (trivial, just ensure row)
+    2. corp_match        — donor_entities.corp_ein or corp_number match
+    3. manual_merge      — already populated by 09b; we never overwrite
+    4. fuzzy_high        — token_sort_ratio ≥ 92 AND token_set_ratio ≥ 95
+                           → write alias with source='dedup_pipeline'
+    5. fuzzy_gray        — 0.85 ≤ token_sort_ratio < 0.92
+                           → write to donor_review_queue for human review
+
+Design choices:
+  - Block by first 5 chars of normalized name to keep the N² comparison tractable.
+  - Length-ratio guard (min/max >= 0.67) skips obviously-different individual names.
+  - "Corporate" pairs (detected via CORP_KEYWORDS) get no length guard — handles
+    "FPL, INC" vs "FLORIDA POWER & LIGHT COMPANY" via the manual YAML, not fuzzy.
+  - Canonical slug for auto-clusters: highest-$-total alias wins (most-active
+    spelling is least likely to be a typo).
+
+Usage:
+    python3 scripts/09_deduplicate_donors.py              # normal run
+    python3 scripts/09_deduplicate_donors.py --dry-run    # no DB writes
+    python3 scripts/09_deduplicate_donors.py --limit 5000 # debug, top-N by $
 """
 
+import os
 import re
 import sys
 from pathlib import Path
+from collections import defaultdict
 
-import pandas as pd
+import psycopg2
+from psycopg2.extras import execute_values
+from dotenv import load_dotenv
 from thefuzz import fuzz
 
-sys.path.insert(0, str(Path(__file__).parent))
-from config import PROCESSED_DIR
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+load_dotenv(PROJECT_ROOT / ".env.local")
 
-SIMILARITY_THRESHOLD          = 90  # token_sort_ratio score for non-corporate names
-SIMILARITY_THRESHOLD_CORPORATE = 80  # looser threshold for corporate/PAC names (handles punctuation variants)
+DB_URL = os.getenv("SUPABASE_DB_URL")
 
-# Output paths
-DEDUPED_CSV   = PROCESSED_DIR / "contributions_deduped.csv"
-DEDUP_MAP_CSV = PROCESSED_DIR / "donor_dedup_map.csv"
+# Thresholds
+FUZZY_HIGH_SORT      = 92   # auto-merge floor
+FUZZY_HIGH_SET       = 95   # additional gate for auto-merge
+FUZZY_GRAY_FLOOR     = 85   # below this we don't even enqueue for review
+LENGTH_RATIO_MIN     = 0.67
+BLOCK_PREFIX_LEN     = 5
 
-_PUNCT_RE = re.compile(r"[^A-Z0-9\s]")
-
-
-def clean_name(name: str) -> str:
-    """Uppercase, strip punctuation, collapse whitespace for comparison."""
-    upper = str(name).upper()
-    no_punct = _PUNCT_RE.sub("", upper)
-    return " ".join(no_punct.split())
-
-
-_CORP_KEYWORDS = frozenset([
-    "INC", "LLC", "CORP", "CO.", "COMPANY", "ASSOCIATION",
+CORP_KEYWORDS = frozenset([
+    "INC", "LLC", "CORP", "CO", "COMPANY", "ASSOCIATION", "ASSN",
     "FOUNDATION", "PAC", "FUND", "TRUST", "GROUP", "ENTERPRISES",
-    "SERVICES", "INDUSTRIES", "PARTNERS", "HOLDINGS",
+    "SERVICES", "INDUSTRIES", "PARTNERS", "HOLDINGS", "LP", "LLP",
 ])
 
 
-def is_corporate_name(cleaned: str) -> bool:
-    """Return True if the cleaned name looks like a corporation or PAC."""
-    words = set(cleaned.split())
-    return bool(words & _CORP_KEYWORDS)
+# ── Normalization (mirrors SQL donor_normalize) ───────────────────────────────
+def normalize(raw: str) -> str:
+    s = str(raw or "").upper()
+    s = re.sub(r"[^A-Z0-9 ]", " ", s)
+    s = re.sub(r"\s+", " ", s).strip()
+    return s
 
 
-def get_blocks(cleaned_to_key: dict) -> dict:
-    """
-    Group raw names by the first 5 characters of their cleaned form.
-    cleaned_to_key maps raw_name -> cleaned_name.
-    Returns dict: block_key -> [raw_name, ...]
-    """
-    blocks: dict = {}
-    for raw, cleaned in cleaned_to_key.items():
-        key = cleaned[:5] if len(cleaned) >= 5 else cleaned
-        blocks.setdefault(key, []).append(raw)
-    return blocks
+def is_corporate(cleaned: str) -> bool:
+    return bool(set(cleaned.split()) & CORP_KEYWORDS)
 
 
-class UnionFind:
-    """Disjoint-set data structure for clustering matched names."""
+def slugify(name: str) -> str:
+    s = str(name).lower()
+    s = re.sub(r"[^\w\s-]", "", s)
+    s = re.sub(r"\s+", "-", s.strip())
+    s = re.sub(r"-+", "-", s).strip("-")
+    return s[:120]
 
-    def __init__(self, items: list):
-        self.parent = {item: item for item in items}
 
-    def find(self, item: str) -> str:
-        if self.parent[item] != item:
-            self.parent[item] = self.find(self.parent[item])
-        return self.parent[item]
-
-    def union(self, a: str, b: str) -> None:
-        self.parent[self.find(a)] = self.find(b)
-
-    def clusters(self) -> list:
-        groups: dict = {}
-        for item in self.parent:
-            root = self.find(item)
-            groups.setdefault(root, []).append(item)
+# ── Union-find ────────────────────────────────────────────────────────────────
+class UF:
+    def __init__(self, items):
+        self.p = {x: x for x in items}
+    def find(self, x):
+        while self.p[x] != x:
+            self.p[x] = self.p[self.p[x]]
+            x = self.p[x]
+        return x
+    def union(self, a, b):
+        ra, rb = self.find(a), self.find(b)
+        if ra != rb:
+            self.p[ra] = rb
+    def clusters(self):
+        groups = defaultdict(list)
+        for x in self.p:
+            groups[self.find(x)].append(x)
         return list(groups.values())
 
 
-def build_clusters(
-    name_stats: dict,
-    threshold: int = SIMILARITY_THRESHOLD,
-) -> list:
+# ── Load contribution name totals from the DB ─────────────────────────────────
+def load_name_totals(cur, limit=None):
     """
-    Find clusters of similar contributor names.
-
-    name_stats: {raw_name: {"total": float, "count": int, "cleaned": str}}
-    Returns list of clusters (each cluster is a list of raw names).
-
-    Matching rules:
-    - Corporate/PAC names: SIMILARITY_THRESHOLD_CORPORATE, no length guard
-      (handles "TECO ENERGY INC" vs "TECO ENERGY, INC." and similar punctuation variants)
-    - Individual names: SIMILARITY_THRESHOLD (higher), plus length-ratio guard
-      (prevents "JOHN SMITH" merging with "JOHN WILLIAM SMITH")
+    Returns {normalized: {"display": best_display, "total": float, "count": int}}.
+    Reads from `contributions.contributor_name` directly — the authoritative source.
     """
-    all_names = list(name_stats.keys())
-    cleaned_map = {n: name_stats[n]["cleaned"] for n in all_names}
-    blocks = get_blocks(cleaned_map)
-
-    uf = UnionFind(all_names)
-
-    for block_names in blocks.values():
-        if len(block_names) < 2:
+    q = """
+        SELECT
+            contributor_name,
+            SUM(amount)::numeric AS total,
+            COUNT(*)::bigint     AS cnt
+        FROM contributions
+        WHERE contributor_name IS NOT NULL
+          AND contributor_name <> ''
+        GROUP BY contributor_name
+    """
+    if limit:
+        q += f" ORDER BY total DESC LIMIT {int(limit)}"
+    cur.execute(q)
+    out = {}
+    for (name, total, cnt) in cur.fetchall():
+        norm = normalize(name)
+        if not norm:
             continue
-        for i in range(len(block_names)):
-            for j in range(i + 1, len(block_names)):
-                a, b = block_names[i], block_names[j]
-                a_cleaned = name_stats[a]["cleaned"]
-                b_cleaned = name_stats[b]["cleaned"]
-
-                corp_a = is_corporate_name(a_cleaned)
-                corp_b = is_corporate_name(b_cleaned)
-                either_corporate = corp_a or corp_b
-
-                # Length-ratio guard for individual names:
-                # skip pairs where one name is >33% longer than the other
-                if not either_corporate:
-                    len_a, len_b = len(a_cleaned), len(b_cleaned)
-                    if len_a > 0 and len_b > 0:
-                        len_ratio = min(len_a, len_b) / max(len_a, len_b)
-                        if len_ratio < 0.67:
-                            continue
-
-                score = fuzz.token_sort_ratio(a_cleaned, b_cleaned)
-                required = SIMILARITY_THRESHOLD_CORPORATE if either_corporate else SIMILARITY_THRESHOLD
-                if score >= required:
-                    uf.union(a, b)
-
-    return uf.clusters()
+        prev = out.get(norm)
+        if prev is None or total > prev["total"]:
+            out[norm] = {"display": name, "total": float(total or 0), "count": int(cnt)}
+        else:
+            prev["total"] += float(total or 0)
+            prev["count"] += int(cnt)
+    return out
 
 
-def pick_canonical(cluster: list, name_stats: dict) -> str:
+def load_existing_aliases(cur):
+    cur.execute("""
+        SELECT alias_text, canonical_slug, source
+        FROM donor_aliases
+    """)
+    return {r[0]: (r[1], r[2]) for r in cur.fetchall()}
+
+
+def load_entity_corp_index(cur):
+    """Returns {ein: slug, corp_number: slug} for corp-match pass."""
+    cur.execute("""
+        SELECT canonical_slug, corp_ein, corp_number
+        FROM donor_entities
+        WHERE corp_ein IS NOT NULL OR corp_number IS NOT NULL
+    """)
+    by_ein, by_corp = {}, {}
+    for slug, ein, corp in cur.fetchall():
+        if ein:  by_ein[ein.strip()] = slug
+        if corp: by_corp[corp.strip()] = slug
+    return by_ein, by_corp
+
+
+# ── Fuzzy clustering on unassigned names ──────────────────────────────────────
+def fuzzy_cluster(name_stats, existing, pre_assigned):
     """
-    Pick the canonical name for a cluster.
-    Chooses the spelling with the highest total $ donated
-    (most financially active donors tend to have the most consistent names).
+    Returns (auto_clusters, gray_pairs).
+
+      auto_clusters: list[list[norm]] — each list is a merge group (≥2 members).
+      gray_pairs: list[(norm_a, norm_b, score)] — needs human review.
+
+    Only operates on names that are NOT already assigned (via manual_merge or
+    corp_match). We still allow them to be unioned with a manually-merged
+    canonical — the canonical slug comes from the anchor member.
     """
-    return max(cluster, key=lambda n: name_stats[n]["total"])
+    names = [n for n in name_stats if n not in pre_assigned]
+    uf = UF(names)
+    gray = []
+
+    blocks = defaultdict(list)
+    for n in names:
+        key = n[:BLOCK_PREFIX_LEN] if len(n) >= BLOCK_PREFIX_LEN else n
+        blocks[key].append(n)
+
+    for block in blocks.values():
+        if len(block) < 2:
+            continue
+        for i in range(len(block)):
+            a = block[i]
+            a_corp = is_corporate(a)
+            la = len(a)
+            for j in range(i + 1, len(block)):
+                b = block[j]
+                b_corp = is_corporate(b)
+                either_corp = a_corp or b_corp
+
+                if not either_corp:
+                    lb = len(b)
+                    if la and lb and min(la, lb) / max(la, lb) < LENGTH_RATIO_MIN:
+                        continue
+
+                score = fuzz.token_sort_ratio(a, b)
+                if score >= FUZZY_HIGH_SORT:
+                    set_score = fuzz.token_set_ratio(a, b)
+                    if set_score >= FUZZY_HIGH_SET:
+                        uf.union(a, b)
+                        continue
+                if FUZZY_GRAY_FLOOR <= score < FUZZY_HIGH_SORT:
+                    gray.append((a, b, score))
+
+    auto = [c for c in uf.clusters() if len(c) > 1]
+    return auto, gray
 
 
-def main(force: bool = False) -> int:
-    print("=== Script 09: Deduplicate Donors ===\n")
+def pick_canonical(cluster, name_stats, existing):
+    """
+    If any member of the cluster already has a canonical_slug via existing
+    aliases (e.g. self-row from seed), use that slug. Otherwise pick the
+    highest-$-total member and slugify its display name.
+    """
+    for n in cluster:
+        if n in existing:
+            return existing[n][0]
+    anchor = max(cluster, key=lambda x: name_stats[x]["total"])
+    return slugify(name_stats[anchor]["display"])
 
-    contributions_csv = PROCESSED_DIR / "contributions.csv"
-    if not contributions_csv.exists():
-        print(f"ERROR: {contributions_csv} not found. Run 01_import_finance.py first.", file=sys.stderr)
-        return 1
 
-    if DEDUPED_CSV.exists() and not force:
-        print(f"Skipped — {DEDUPED_CSV.name} already exists (use --force to redo)")
-        return 0
+# ── Main ──────────────────────────────────────────────────────────────────────
+def main():
+    dry_run = "--dry-run" in sys.argv
+    limit = None
+    for i, arg in enumerate(sys.argv):
+        if arg == "--limit" and i + 1 < len(sys.argv):
+            limit = int(sys.argv[i + 1])
 
-    print(f"Loading {contributions_csv.name} ...", flush=True)
-    df = pd.read_csv(contributions_csv, dtype=str, low_memory=False)
-    df["amount"] = pd.to_numeric(df["amount"], errors="coerce").fillna(0.0)
+    if not DB_URL:
+        sys.exit("ERROR: SUPABASE_DB_URL not set")
 
-    # Build per-name stats
-    print("Building name statistics ...", flush=True)
-    name_groups = df.groupby("contributor_name")["amount"]
-    name_stats: dict = {
-        name: {
-            "total": float(grp.sum()),
-            "count": int(grp.count()),
-            "cleaned": clean_name(name),
+    print("=== Script 09: Deduplicate Donors (canonical model) ===\n")
+    conn = psycopg2.connect(DB_URL)
+    conn.autocommit = False
+
+    with conn.cursor() as cur:
+        print("Loading contributor totals from contributions…", flush=True)
+        name_stats = load_name_totals(cur, limit=limit)
+        print(f"  distinct normalized names: {len(name_stats):,}")
+
+        print("Loading existing aliases + corp index…", flush=True)
+        existing = load_existing_aliases(cur)
+        by_ein, by_corp = load_entity_corp_index(cur)
+        print(f"  existing aliases: {len(existing):,}")
+        print(f"  entities with EIN: {len(by_ein):,}; with corp_number: {len(by_corp):,}")
+
+        # Pre-assigned set — names that already have a manual_merge or corp_match
+        # row. These are immutable in this pass.
+        pre_assigned = {
+            n for n, (_slug, src) in existing.items()
+            if src in ("manual_merge", "corp_match", "lobbyist_match")
         }
-        for name, grp in name_groups
-    }
+        print(f"  pre-assigned (manual/corp/lobbyist): {len(pre_assigned):,}")
 
-    unique_before = len(name_stats)
-    print(f"Unique contributor names before dedup: {unique_before:,}")
+        print(f"\nFuzzy clustering (≥{FUZZY_HIGH_SORT}% sort AND ≥{FUZZY_HIGH_SET}% set)…",
+              flush=True)
+        auto_clusters, gray = fuzzy_cluster(name_stats, existing, pre_assigned)
+        print(f"  auto-merge clusters (≥2 members): {len(auto_clusters):,}")
+        print(f"  gray-zone pairs (85-91%):         {len(gray):,}")
 
-    # Cluster
-    print(f"Clustering (individual threshold={SIMILARITY_THRESHOLD}%, corporate threshold={SIMILARITY_THRESHOLD_CORPORATE}%, block=5-char) ...", flush=True)
-    clusters = build_clusters(name_stats)
+        # Emit sample for visibility
+        largest = sorted(auto_clusters, key=len, reverse=True)[:5]
+        if largest:
+            print("\nLargest auto-merge clusters:")
+            for c in largest:
+                slug = pick_canonical(c, name_stats, existing)
+                print(f"  [{len(c)}] → {slug}")
+                for n in sorted(c, key=lambda x: -name_stats[x]["total"])[:4]:
+                    print(f"      ${name_stats[n]['total']:>14,.0f}  {name_stats[n]['display']!r}")
 
-    # Build canonical map
-    canonical_map: dict = {}
-    multi_clusters = 0
-    for cluster in clusters:
-        canonical = pick_canonical(cluster, name_stats)
-        for name in cluster:
-            canonical_map[name] = canonical
-        if len(cluster) > 1:
-            multi_clusters += 1
+        if dry_run:
+            print("\n[dry-run] no writes performed.")
+            return 0
 
-    unique_after = len({v for v in canonical_map.values()})
-    print(f"Unique canonical names after dedup:   {unique_after:,}")
-    print(f"Clusters with >1 variant:             {multi_clusters:,}")
+        # ── Write auto-merge clusters ───────────────────────────────────────
+        entity_rows = []
+        alias_rows  = []
+        merge_log   = []
 
-    # Show top 10 largest clusters
-    large = sorted(
-        [c for c in clusters if len(c) > 1],
-        key=len,
-        reverse=True,
-    )[:10]
-    if large:
-        print("\nTop merged clusters:")
-        for cluster in large:
-            canonical = pick_canonical(cluster, name_stats)
-            variants = [n for n in cluster if n != canonical]
-            print(f"  [{len(cluster)}] {canonical!r}")
-            for v in variants:
-                print(f"         ← {v!r}")
+        for cluster in auto_clusters:
+            slug = pick_canonical(cluster, name_stats, existing)
+            canon_display = max(cluster, key=lambda x: name_stats[x]["total"])
+            entity_rows.append((
+                slug,
+                name_stats[canon_display]["display"],
+                is_corporate(canon_display),
+                None, None, None,
+                "auto-created by dedup_pipeline",
+            ))
+            anchor = max(cluster, key=lambda x: name_stats[x]["total"])
+            for n in cluster:
+                if n in pre_assigned:
+                    continue
+                score = 100.0 if n == anchor else float(
+                    fuzz.token_sort_ratio(n, anchor)
+                )
+                alias_rows.append((
+                    n,
+                    name_stats[n]["display"],
+                    slug,
+                    "dedup_pipeline",
+                    score,
+                    "auto",
+                    None,
+                    None,
+                ))
+            if len(cluster) > 1:
+                merge_log.append((
+                    "merge",
+                    None,
+                    slug,
+                    None,
+                    sum(name_stats[n]["count"] for n in cluster),
+                    "scripts/09",
+                    f"fuzzy auto-merge, {len(cluster)} variants",
+                ))
 
-    # Write outputs
-    PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
+        if entity_rows:
+            print(f"\nUpserting {len(entity_rows):,} entities…", flush=True)
+            execute_values(cur, """
+                INSERT INTO donor_entities
+                    (canonical_slug, canonical_name, is_corporate,
+                     corp_ein, corp_number, industry, notes)
+                VALUES %s
+                ON CONFLICT (canonical_slug) DO NOTHING
+            """, entity_rows, page_size=1000)
 
-    df["canonical_name"] = df["contributor_name"].map(canonical_map)
-    df.to_csv(DEDUPED_CSV, index=False)
-    print(f"\nWrote {len(df):,} rows to {DEDUPED_CSV.name}")
+        if alias_rows:
+            print(f"Upserting {len(alias_rows):,} aliases…", flush=True)
+            execute_values(cur, """
+                INSERT INTO donor_aliases
+                    (alias_text, alias_text_display, canonical_slug,
+                     source, match_score, review_status, verified_by, verified_at)
+                VALUES %s
+                ON CONFLICT (alias_text) DO UPDATE SET
+                    alias_text_display = EXCLUDED.alias_text_display,
+                    canonical_slug     = EXCLUDED.canonical_slug,
+                    source             = EXCLUDED.source,
+                    match_score        = EXCLUDED.match_score
+                WHERE donor_aliases.source = 'self'
+                   OR donor_aliases.source = 'dedup_pipeline'
+            """, alias_rows, page_size=1000)
 
-    map_df = pd.DataFrame(
-        [{"raw_name": k, "canonical_name": v} for k, v in canonical_map.items()]
-    ).sort_values("canonical_name")
-    map_df.to_csv(DEDUP_MAP_CSV, index=False)
-    print(f"Wrote {len(map_df):,} rows to {DEDUP_MAP_CSV.name}")
+        if merge_log:
+            execute_values(cur, """
+                INSERT INTO donor_merge_log
+                    (action, from_slug, to_slug, alias_text,
+                     rows_affected, actor, rationale)
+                VALUES %s
+            """, merge_log, page_size=1000)
 
+        # ── Write gray-zone pairs to review queue ──────────────────────────
+        if gray:
+            # Dedup pairs: one row per candidate (worst offender), not both directions
+            seen = set()
+            q_rows = []
+            for a, b, score in gray:
+                key = tuple(sorted([a, b]))
+                if key in seen:
+                    continue
+                seen.add(key)
+                # Candidate = lower-$ name; proposed canonical = higher-$ name
+                if name_stats[a]["total"] >= name_stats[b]["total"]:
+                    winner, loser = a, b
+                else:
+                    winner, loser = b, a
+                q_rows.append((
+                    slugify(name_stats[loser]["display"]),
+                    name_stats[loser]["display"],
+                    existing.get(winner, (slugify(name_stats[winner]["display"]),))[0],
+                    name_stats[winner]["display"],
+                    float(score),
+                    "fuzzy_gray",
+                    float(name_stats[loser]["total"]),
+                ))
+            print(f"Enqueuing {len(q_rows):,} pairs for human review…", flush=True)
+            execute_values(cur, """
+                INSERT INTO donor_review_queue
+                    (candidate_slug, candidate_name,
+                     proposed_canonical_slug, proposed_canonical_name,
+                     match_score, method, total_amount)
+                VALUES %s
+            """, q_rows, page_size=1000)
+
+        conn.commit()
+        print("\nCommitted.")
+    conn.close()
     return 0
 
 
 if __name__ == "__main__":
-    force = "--force" in sys.argv
-    sys.exit(main(force=force))
+    sys.exit(main() or 0)

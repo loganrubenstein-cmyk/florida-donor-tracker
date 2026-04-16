@@ -90,7 +90,7 @@ export default function DataDictionary() {
       <Group title="Lobbyists &amp; Principals">
         <Field name="lobbyist_name" source="Lobbyist Registration Office" confidence="direct">Registered lobbyist name as filed.</Field>
         <Field name="principal_name" source="Lobbyist Registration Office" confidence="direct">Principal (client) organization name as filed.</Field>
-        <Field name="compensation_range" source="Lobbyist Registration Office" confidence="direct">Disclosed compensation band (e.g., &apos;$10,000 - $24,999&apos;). Exact figures are not public.</Field>
+        <Field name="compensation_range" source="Lobbyist Registration Office" confidence="direct">Disclosed compensation amount. Below $50K: reported in $10K bands (e.g., &apos;$10,000–$19,999&apos;) — midpoint used. $50K and above: exact figures as reported to the state.</Field>
         <Field name="donor_link" source="computed" confidence="inferred">Link between a lobbyist or principal and a campaign donor profile. Matched by normalized name — not confirmed.</Field>
       </Group>
     </main>

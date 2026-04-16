@@ -8,7 +8,9 @@ export async function GET(request) {
   const q        = searchParams.get('q')        || '';
   const chamber  = searchParams.get('chamber')  || 'all';
   const party    = searchParams.get('party')    || 'all';
-  const sort     = searchParams.get('sort')     || 'display_name';
+  const ALLOWED_SORTS = new Set(['display_name', 'last_name', 'district', 'total_raised', 'participation_rate', 'votes_yea']);
+  const sortRaw  = searchParams.get('sort')     || 'display_name';
+  const sort     = ALLOWED_SORTS.has(sortRaw) ? sortRaw : 'display_name';
   const sortDir  = searchParams.get('sort_dir') || '';
   const page     = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
 

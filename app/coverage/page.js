@@ -51,7 +51,7 @@ export default function CoveragePage() {
         <h2 style={{ fontSize: '0.85rem', color: 'var(--teal)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem' }}>
           Data Categories
         </h2>
-        <Row label="Committee contributions (receipts)" status="complete" note="~19.3M rows — active and dissolved committees on file with FL Division of Elections" />
+        <Row label="Committee contributions (receipts)" status="complete" note="~19.4M rows — active and dissolved committees on file with FL Division of Elections" />
         <Row label="Candidate contributions (receipts)" status="complete" note="~2.6M rows" />
         <Row label="Committee expenditures (disbursements)" status="complete" note="Summary totals + top vendors for 1,673 committees; $2.78B tracked" />
         <Row label="Candidate expenditures" status="complete" note="Summary totals + top vendors for all candidates" />
@@ -81,7 +81,7 @@ export default function CoveragePage() {
         <ul style={{ fontSize: '0.82rem', color: 'var(--text-dim)', lineHeight: 1.8, paddingLeft: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
           <li>Name deduplication is exact-match only. The same real-world donor may appear under multiple profiles if their name was filed differently across reports.</li>
           <li>Industry and entity type classifications are rules-based — not verified against any external registry.</li>
-          <li>Lobbyist compensation is disclosed in bands (&lt;$10K, $10K–$24K, etc.) — exact amounts are not public.</li>
+          <li>Lobbyist compensation below $50K is disclosed in $10K bands ($1–$9,999, $10K–$19,999 … $40K–$49,999) — we use band midpoints. Amounts of $50K+ are exact figures reported to the state.</li>
           <li>Race-level comparisons (candidates running for the same seat in the same year) are not yet supported.</li>
           <li>This site reflects <em>reported</em> campaign finance — late, amended, or unfiled reports will not appear.</li>
           <li>Federal PAC contributions to Florida candidates or committees are not included — only state-level filings.</li>

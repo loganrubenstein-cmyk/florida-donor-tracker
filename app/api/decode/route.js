@@ -32,7 +32,8 @@ export async function GET(request) {
     db.from('committees')
       .select('acct_num, committee_name, total_received, num_contributions, date_start, date_end')
       .eq('acct_num', acct)
-      .maybeSingle(),
+      .limit(1)
+      .then(r => ({ data: r.data?.[0] ?? null, error: r.error })),
     db.from('committee_top_donors')
       .select('donor_name, donor_slug, total_amount, num_contributions, type')
       .eq('acct_num', acct)
@@ -45,14 +46,16 @@ export async function GET(request) {
     db.from('committee_meta')
       .select('treasurer_name, chair_name, address_line, type_desc')
       .eq('acct_num', acct)
-      .maybeSingle(),
+      .limit(1)
+      .then(r => ({ data: r.data?.[0] ?? null, error: r.error })),
     db.from('candidate_pc_links_v')
       .select('candidate_acct_num, link_type, candidates(candidate_name, office_desc, election_year)')
       .eq('pc_acct_num', String(acct)),
     db.from('committee_expenditure_summary')
       .select('total_spent, num_expenditures')
       .eq('acct_num', acct)
-      .maybeSingle(),
+      .limit(1)
+      .then(r => ({ data: r.data?.[0] ?? null, error: r.error })),
   ]);
 
   if (!committee) return NextResponse.json({ error: 'Committee not found' }, { status: 404 });

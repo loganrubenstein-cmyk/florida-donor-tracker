@@ -1,0 +1,42 @@
+name: Daily — New + Closed Committees
+
+on:
+  schedule:
+    - cron: '0 10 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: daily-new-committees
+  cancel-in-progress: false
+
+env:
+  SUPABASE_DB_URL:               ${{ secrets.SUPABASE_DB_URL }}
+  SUPABASE_SERVICE_ROLE_KEY:     ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+  NEXT_PUBLIC_SUPABASE_URL:      ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download active + closed committee registry
+        uses: ./.github/actions/run-script
+        with:
+          script: 02_download_registry.py
+      - name: Load committees
+        uses: ./.github/actions/run-script
+        with:
+          script: 40_load_committees_supabase.py
+      - name: Open issue on failure
+        if: failure()
+        uses: peter-evans/create-issue-from-file@v5
+        env:
+          RUN_ID: ${{ github.run_id }}
+        with:
+          title: "[pipeline-failure:high] daily-new-committees"
+          content-filepath: data/logs/02_download_registry.py.log
+          labels: pipeline-failure,severity:high,data-update

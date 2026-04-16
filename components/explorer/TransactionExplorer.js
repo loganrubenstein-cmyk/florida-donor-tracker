@@ -197,6 +197,10 @@ export default function TransactionExplorer({
         gap: '0.75rem', padding: '1rem', background: 'rgba(8,8,24,0.6)',
         border: '1px solid var(--border)', borderRadius: '4px', marginBottom: '1rem',
       }}>
+        {/* WHO */}
+        <div style={{ gridColumn: '1 / -1', fontSize: '0.55rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.12em', borderBottom: '1px solid var(--border)', paddingBottom: '0.25rem' }}>
+          Who
+        </div>
         <FilterInput label="Contributor name" value={q} onChange={v => { setQ(v); setPage(1); }} placeholder="First or last name…"
           hint={q.trim().includes(' ') ? 'Each word must appear — results may include similar names' : 'Matches any name containing this text'} />
         {!initialRecipientAcct && (
@@ -205,11 +209,41 @@ export default function TransactionExplorer({
         {!initialDonorSlug && (
           <FilterInput label="Donor slug" value={donorSlug} onChange={v => { setDonorSlug(v); setPage(1); }} placeholder="e.g. john-smith" />
         )}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+          <label style={{ fontSize: '0.65rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+            Recipient type
+          </label>
+          <select
+            value={recipType}
+            onChange={e => { setRecipType(e.target.value); setPage(1); }}
+            disabled={!!initialRecipientType}
+            style={{
+              background: 'var(--surface)', border: '1px solid var(--border)',
+              color: 'var(--text)', padding: '0.4rem 0.6rem', fontSize: '0.78rem',
+              borderRadius: '3px', fontFamily: 'var(--font-mono)',
+              opacity: initialRecipientType ? 0.5 : 1,
+            }}
+          >
+            <option value="">Both</option>
+            <option value="committee">Committee</option>
+            <option value="candidate">Candidate</option>
+          </select>
+        </div>
+
+        {/* WHEN */}
+        <div style={{ gridColumn: '1 / -1', fontSize: '0.55rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.12em', borderBottom: '1px solid var(--border)', paddingBottom: '0.25rem', marginTop: '0.25rem' }}>
+          When
+        </div>
         <FilterInput label="Year" value={year} onChange={v => { setYear(v); setPage(1); }} placeholder="e.g. 2022" type="number" />
-        <FilterInput label="Amount min ($)" value={amountMin} onChange={v => { setAmountMin(v); setPage(1); }} placeholder="e.g. 1000" type="number" />
-        <FilterInput label="Amount max ($)" value={amountMax} onChange={v => { setAmountMax(v); setPage(1); }} placeholder="e.g. 50000" type="number" />
         <FilterInput label="Date start" value={dateStart} onChange={v => { setDateStart(v); setPage(1); }} placeholder="YYYY-MM-DD" />
         <FilterInput label="Date end" value={dateEnd} onChange={v => { setDateEnd(v); setPage(1); }} placeholder="YYYY-MM-DD" />
+
+        {/* HOW MUCH */}
+        <div style={{ gridColumn: '1 / -1', fontSize: '0.55rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.12em', borderBottom: '1px solid var(--border)', paddingBottom: '0.25rem', marginTop: '0.25rem' }}>
+          How Much
+        </div>
+        <FilterInput label="Amount min ($)" value={amountMin} onChange={v => { setAmountMin(v); setPage(1); }} placeholder="e.g. 1000" type="number" />
+        <FilterInput label="Amount max ($)" value={amountMax} onChange={v => { setAmountMax(v); setPage(1); }} placeholder="e.g. 50000" type="number" />
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
           <label style={{ fontSize: '0.65rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
             Type
@@ -229,26 +263,6 @@ export default function TransactionExplorer({
             <option value="INK">In-Kind (INK)</option>
             <option value="LOA">Loan (LOA)</option>
             <option value="CAS">Cash (CAS)</option>
-          </select>
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-          <label style={{ fontSize: '0.65rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-            Recipient type
-          </label>
-          <select
-            value={recipType}
-            onChange={e => { setRecipType(e.target.value); setPage(1); }}
-            disabled={!!initialRecipientType}
-            style={{
-              background: 'var(--surface)', border: '1px solid var(--border)',
-              color: 'var(--text)', padding: '0.4rem 0.6rem', fontSize: '0.78rem',
-              borderRadius: '3px', fontFamily: 'var(--font-mono)',
-              opacity: initialRecipientType ? 0.5 : 1,
-            }}
-          >
-            <option value="">Both</option>
-            <option value="committee">Committee</option>
-            <option value="candidate">Candidate</option>
           </select>
         </div>
       </div>

@@ -290,11 +290,11 @@ export default function InfluenceIndex() {
         fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.6,
       }}>
         <strong style={{ color: 'var(--text)' }}>Methodology:</strong>{' '}
-        "Total influence" combines two independent spending streams: estimated lobbying compensation paid to
-        registered FL lobbyists (from quarterly compensation reports, 2007–present) and direct campaign contributions
-        to FL candidates and committees (from FL Division of Elections filings). Organizations are matched across
-        both datasets by name — the same entity may appear under different names in each source. Figures are
-        all-time totals, not a single election cycle.
+        "Total influence" combines estimated lobbying compensation (FL Lobbyist Registration Office quarterly reports,
+        2007–present) and direct campaign contributions (FL Division of Elections). Figures are all-time totals.{' '}
+        <strong style={{ color: 'var(--gold)' }}>Note on lobbying figures:</strong>{' '}
+        FL disclosure requires each registered lobbyist to report the same firm-level compensation amount, so principal
+        totals are inflated by the number of lobbyists per firm. Relative rankings are reliable; absolute dollar amounts are overstated.
       </div>
 
       <div style={{ marginTop: '1rem' }}>
@@ -305,6 +305,7 @@ export default function InfluenceIndex() {
           inferred={['total influence score (lobbying + donations combined)']}
           caveats={[
             'Lobbying compensation below $50K is reported in ranges — midpoints used.',
+            'Lobbying totals are the sum of per-lobbyist compensation reports per principal. The FL disclosure system records each lobbyist at a firm as reporting the same (firm-level) amount — this inflates principal totals by roughly the number of lobbyists per firm. Rankings are directionally correct; absolute dollar figures are overstated.',
             'Name matching is not verified against any external registry — some false matches possible.',
             'Federal lobbying and federal campaign finance are excluded.',
             'Only organizations with $100K+ combined spend are shown.',

@@ -177,7 +177,7 @@ def download_candidates(force: bool = False) -> int:
     return len(combined)
 
 
-def main(force: bool = False) -> int:
+def main(force: bool = False, skip_closed: bool = False) -> int:
     print("=== Script 02: Download Registry Files ===\n")
 
     try:
@@ -194,10 +194,34 @@ def main(force: bool = False) -> int:
         print(f"ERROR: {e}", file=sys.stderr)
         return 1
 
+    # ── Always run closed-committee discovery as a first-class step ──────────
+    # Previously this was a separate 02b patch script; the canonical committee
+    # pipeline now always includes closed/revoked/terminated PACs on every run
+    # so dissolved committees like 70275 (Friends of Ron DeSantis) appear in
+    # the registry without bespoke scripts.
+    if not skip_closed:
+        print("\n=== Step 2/2: Closed-committee discovery ===")
+        try:
+            import importlib.util
+            here = Path(__file__).parent
+            spec = importlib.util.spec_from_file_location(
+                "closed_discovery", here / "02b_discover_closed_committees.py"
+            )
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            rc = mod.main(force=force) if hasattr(mod, "main") else 0
+            if rc:
+                print(f"  Closed-committee discovery exited {rc}", file=sys.stderr)
+                return rc
+        except Exception as e:
+            print(f"  WARNING: closed-committee discovery failed — {e}", file=sys.stderr)
+            # Not fatal — active-registry data is still usable.
+
     print("\nDone.")
     return 0
 
 
 if __name__ == "__main__":
     force = "--force" in sys.argv
-    sys.exit(main(force=force))
+    skip_closed = "--skip-closed" in sys.argv
+    sys.exit(main(force=force, skip_closed=skip_closed))

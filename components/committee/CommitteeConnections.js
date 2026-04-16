@@ -2,6 +2,14 @@
 
 import { useState, useEffect } from 'react';
 
+const CAPS_KEEP = new Set(['PAC', 'LLC', 'ECO', 'NOP', 'DBA', 'INC', 'II', 'III', 'IV', 'PC', 'LP', 'LLP']);
+function toTitle(s) {
+  if (!s) return s;
+  return s.toLowerCase().replace(/\b\w+/g, w =>
+    CAPS_KEEP.has(w.toUpperCase()) ? w.toUpperCase() : w.charAt(0).toUpperCase() + w.slice(1)
+  );
+}
+
 export default function CommitteeConnections({ acctNum }) {
   const [connections, setConnections] = useState(null);
 
@@ -12,7 +20,11 @@ export default function CommitteeConnections({ acctNum }) {
       .catch(() => setConnections([]));
   }, [acctNum]);
 
-  if (!connections) return null;
+  if (!connections) return (
+    <div style={{ color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.75rem', padding: '1rem 0' }}>
+      Loading…
+    </div>
+  );
   if (connections.length === 0) return (
     <div style={{ color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.75rem', padding: '1rem 0' }}>
       No coordination signals found for this committee.
@@ -35,7 +47,7 @@ export default function CommitteeConnections({ acctNum }) {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
         {connections.map((conn) => {
           const isSideA      = conn.entity_a_acct === acctNum;
-          const otherName    = isSideA ? conn.entity_b     : conn.entity_a;
+          const otherName    = toTitle(isSideA ? conn.entity_b : conn.entity_a);
           const otherAcct    = isSideA ? conn.entity_b_acct : conn.entity_a_acct;
           const pct          = conn.donor_overlap_pct ? parseFloat(conn.donor_overlap_pct).toFixed(0) : null;
 

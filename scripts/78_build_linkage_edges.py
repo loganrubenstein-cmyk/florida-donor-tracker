@@ -119,6 +119,15 @@ class Edge:
     edge_date: str            # "" if not applicable
     is_publishable: bool
     is_candidate_specific: bool = False  # True = PAC total attributed to candidate in soft money
+    # ── Migration 018: source verification fields ─────────────────────────────
+    # Every edge must carry a clickable primary-source URL so users can verify
+    # the relationship independently. Populated per-pass below.
+    source_url: str           = ""
+    source_filing_id: str     = ""
+    source_filing_date: str   = ""
+    source_filing_status: str = ""   # 'active' | 'withdrawn' | 'amended' | 'unknown'
+    confidence_score: str     = ""   # 0-100 as string; derived from match_score + source quality
+    evidence_json: str        = ""   # JSON blob with extra evidence (shared treasurer, etc.)
 
 
 # ── Data loading ─────────────────────────────────────────────────────────────
@@ -315,6 +324,9 @@ def pass_1_solicitation_control(
         is_withdrawn = sol.get("withdrawn", False)
         sol_date = sol.get("file_date", sol.get("received_date", ""))
 
+        sol_url    = sol.get("source_url", "https://dos.fl.gov/elections/political-activities/registration/")
+        sol_status = "withdrawn" if is_withdrawn else "active"
+
         for cand in expand_to_all_accounts(best_cand, person_idx, nameclean_idx):
             acct = str(cand["candidate_acct"])
             if com:
@@ -338,6 +350,11 @@ def pass_1_solicitation_control(
                     amount="",
                     edge_date=sol_date,
                     is_publishable=True,
+                    source_url=sol_url,
+                    source_filing_id=str(sol.get("id", "")),
+                    source_filing_date=sol_date,
+                    source_filing_status=sol_status,
+                    confidence_score=f"{min(100.0, best_score + 5.0):.1f}",
                 ))
             else:
                 # Stub: solicitation exists but committee not found in registry
@@ -360,6 +377,11 @@ def pass_1_solicitation_control(
                     amount="",
                     edge_date=sol_date,
                     is_publishable=True,
+                    source_url=sol_url,
+                    source_filing_id=str(sol.get("id", "")),
+                    source_filing_date=sol_date,
+                    source_filing_status=sol_status,
+                    confidence_score=f"{best_score:.1f}",
                 ))
 
     p1a_count = len(edges)
@@ -394,6 +416,11 @@ def pass_1_solicitation_control(
 
         com, com_score = match_committee(org, com_list)
 
+        sol_csv_url    = "https://dos.fl.gov/elections/political-activities/registration/"
+        sol_csv_status = "withdrawn" if is_withdrawn else "active"
+        sol_csv_date   = latest.get("received_date", "")
+        sol_csv_fid    = f"{last}_{first}_{org}"
+
         for cand in cands:
             acct = str(cand["candidate_acct"])
             if com:
@@ -409,14 +436,19 @@ def pass_1_solicitation_control(
                     pc_type=com.get("pc_type", ""),
                     edge_type="SOLICITATION_CONTROL",
                     direction="",
-                    evidence_summary=f"Solicitation CSV: {first} {last} → {org}{withdrawn_note} ({latest.get('received_date', '')})",
+                    evidence_summary=f"Solicitation CSV: {first} {last} → {org}{withdrawn_note} ({sol_csv_date})",
                     source_type="solicitation_csv",
-                    source_record_id=f"{last}_{first}_{org}",
+                    source_record_id=sol_csv_fid,
                     match_method="exact_name",
                     match_score="100.0",
                     amount="",
-                    edge_date=latest.get("received_date", ""),
+                    edge_date=sol_csv_date,
                     is_publishable=True,
+                    source_url=sol_csv_url,
+                    source_filing_id=sol_csv_fid,
+                    source_filing_date=sol_csv_date,
+                    source_filing_status=sol_csv_status,
+                    confidence_score="100.0",
                 ))
             else:
                 stub_key = (acct, f"__stub_csv__{clean(org)}")
@@ -432,12 +464,17 @@ def pass_1_solicitation_control(
                     direction="",
                     evidence_summary=f"Solicitation CSV: {first} {last} → {org}; committee not in registry",
                     source_type="solicitation_csv",
-                    source_record_id=f"{last}_{first}_{org}",
+                    source_record_id=sol_csv_fid,
                     match_method="exact_name",
                     match_score="100.0",
                     amount="",
-                    edge_date=latest.get("received_date", ""),
+                    edge_date=sol_csv_date,
                     is_publishable=True,
+                    source_url=sol_csv_url,
+                    source_filing_id=sol_csv_fid,
+                    source_filing_date=sol_csv_date,
+                    source_filing_status=sol_csv_status,
+                    confidence_score="90.0",
                 ))
 
     p1b_count = len(edges) - p1a_count
@@ -542,6 +579,8 @@ def pass_2_direct_contribution(
         source_pac_name = source_com.get("pc_name", f"Committee {source_acct}")
         amount_str      = str(row.get("amount", "")).strip()
 
+        exp_date = str(row.get("expenditure_date", ""))
+        exp_url  = f"https://dos.elections.myflorida.com/cgi-bin/expend.exe?account={source_acct}"
         edges.append(Edge(
             candidate_acct_num   = candidate_acct,
             pc_acct_num          = source_acct,
@@ -555,9 +594,14 @@ def pass_2_direct_contribution(
             match_method         = "vendor_name_candidate_match",
             match_score          = f"{score:.1f}",
             amount               = amount_str,
-            edge_date            = str(row.get("expenditure_date", "")),
+            edge_date            = exp_date,
             is_publishable       = True,
             is_candidate_specific= False,
+            source_url           = exp_url,
+            source_filing_id     = str(row.get("source_file", "")),
+            source_filing_date   = exp_date,
+            source_filing_status = "active",
+            confidence_score     = f"{min(100.0, score + 3.0):.1f}",
         ))
         matched += 1
 
@@ -705,6 +749,9 @@ def pass_4_5_iec_ecc(
             continue
         seen.add(key)
 
+        exp_date = str(row.get("expenditure_date", ""))
+        ie_url = f"https://dos.elections.myflorida.com/cgi-bin/expend.exe?account={source_acct}"
+        ie_conf = 85.0 if type_code in ("ECC", "ECI") else 75.0
         edges.append(Edge(
             candidate_acct_num   = candidate_acct,
             pc_acct_num          = source_acct,
@@ -718,9 +765,14 @@ def pass_4_5_iec_ecc(
             match_method         = "vendor_name_match" if type_code in ("ECC", "ECI") else "purpose_text_parse",
             match_score          = "",
             amount               = amount_str,
-            edge_date            = str(row.get("expenditure_date", "")),
+            edge_date            = exp_date,
             is_publishable       = True,
             is_candidate_specific= False,
+            source_url           = ie_url,
+            source_filing_id     = str(row.get("source_file", "")),
+            source_filing_date   = exp_date,
+            source_filing_status = "active",
+            confidence_score     = f"{ie_conf:.1f}",
         ))
 
     total_ie = len(ie_rows)
@@ -1367,6 +1419,8 @@ def main() -> int:
             "edge_type", "direction", "evidence_summary", "source_type",
             "source_record_id", "match_method", "match_score", "amount",
             "edge_date", "is_publishable", "is_candidate_specific",
+            "source_url", "source_filing_id", "source_filing_date",
+            "source_filing_status", "confidence_score", "evidence_json",
         ])
         writer.writeheader()
         for edge in all_edges:

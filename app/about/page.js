@@ -86,7 +86,7 @@ export default function AboutPage() {
         <ul style={{ fontSize: '0.78rem', color: 'var(--text)', lineHeight: 1.85, paddingLeft: '1.25rem' }}>
           <li>Donor name deduplication is heuristic. "John Smith" in one filing may or may not be the same "John Smith" in another.</li>
           <li>Industry classification is rules-based on occupation text — accuracy varies by field.</li>
-          <li>Lobbyist compensation is self-reported in bands; totals are midpoint estimates.</li>
+          <li>Lobbyist compensation below $50K is self-reported in $10K bands; we use midpoint estimates. Amounts of $50K+ are exact figures.</li>
           <li>Committee party labels are inferred from name keywords, not an official field.</li>
         </ul>
       </section>

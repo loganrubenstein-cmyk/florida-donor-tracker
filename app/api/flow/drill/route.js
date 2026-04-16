@@ -118,12 +118,15 @@ export async function GET(request) {
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
     return NextResponse.json({
-      results: (data || []).map(d => ({
-        slug: d.donor_slug,
-        name: d.donor_name,
-        total: parseFloat(d.total_amount) || 0,
-        num_contributions: d.num_contributions,
-      })),
+      results: (data || [])
+        .filter(d => d.donor_name && parseFloat(d.total_amount) > 0)
+        .map(d => ({
+          slug: d.donor_slug,
+          name: d.donor_name,
+          total: parseFloat(d.total_amount) || 0,
+          num_contributions: d.num_contributions,
+          isStateMatching: d.donor_name === 'STATE OF FLORIDA',
+        })),
     });
   }
 
@@ -175,11 +178,6 @@ export async function GET(request) {
       { party: 'NPA', label: 'No Party Affiliation' },
     ];
     const results = await Promise.all(PARTIES.map(async ({ party, label }) => {
-      const { data } = await db.from('candidates')
-        .select('acct_num', { count: 'exact' })
-        .eq('party_code', party)
-        .gt('total_combined', 0)
-        .limit(1);
       const { count } = await db.from('candidates')
         .select('acct_num', { count: 'exact', head: true })
         .eq('party_code', party)

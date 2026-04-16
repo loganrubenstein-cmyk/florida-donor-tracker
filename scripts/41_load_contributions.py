@@ -123,29 +123,53 @@ def _name_variants(normalized: str):
             yield _strip_punct(v)
 
 
-def load_donor_slug_map(cur) -> dict:
-    """Return {normalized_name: slug} from the donors table.
-
-    Populates exact canonical name plus punctuation-stripped and suffix
-    variant forms. Exact matches take precedence; variants fill gaps only.
+def _donor_normalize(name: str) -> str:
+    """Mirrors SQL donor_normalize() from migration 015.
+    Uppercase, strip non-alphanumeric to space, collapse, trim.
     """
-    print("  Loading donor slug map from donors table...", flush=True)
-    cur.execute("select name, slug from donors")
+    if not isinstance(name, str):
+        return ""
+    s = name.upper()
+    s = re.sub(r"[^A-Z0-9 ]", " ", s)
+    s = re.sub(r"\s+", " ", s).strip()
+    return s
+
+
+def load_donor_slug_map(cur) -> dict:
+    """Return {canonical-normalized name: canonical_slug} from donor_aliases.
+
+    Post-migration 015, donor_aliases is the single source of truth for the
+    contributor-name → canonical-slug mapping. This includes manual merges
+    (e.g. every FPL variant points to florida-power-light-company), EIN
+    matches, lobbyist matches, and auto-fuzzy results.
+
+    Legacy suffix-variant fallbacks are preserved so long-tail spellings
+    that pre-date the canonical model still resolve.
+    """
+    print("  Loading donor slug map from donor_aliases…", flush=True)
+    cur.execute("""
+        SELECT alias_text, canonical_slug
+        FROM donor_aliases
+        WHERE review_status IN ('auto','approved')
+    """)
     rows = cur.fetchall()
 
-    exact = {}
-    for name, slug in rows:
-        if not name or not slug:
+    m = {}
+    for alias_text, slug in rows:
+        if not alias_text or not slug:
             continue
-        exact[normalize_name(name)] = slug
+        m[alias_text] = slug
 
-    m = dict(exact)
-    for canonical, slug in exact.items():
-        for variant in _name_variants(canonical):
+    # Variant fallbacks (suffix swaps) — don't overwrite exact alias hits.
+    variants = 0
+    for alias_text, slug in list(m.items()):
+        for variant in _name_variants(alias_text):
             if variant and variant not in m:
                 m[variant] = slug
+                variants += 1
 
-    print(f"  → {len(exact):,} exact + {len(m)-len(exact):,} variant entries indexed", flush=True)
+    exact_count = len(rows)
+    print(f"  → {exact_count:,} canonical aliases + {variants:,} suffix variants", flush=True)
     return m
 
 
@@ -202,14 +226,26 @@ def prepare_chunk(df: pd.DataFrame, slug_map: dict) -> tuple[str, int, dict]:
     df["contributor_name"] = df["contributor_name"].fillna("").astype(str)
     df["contributor_name_normalized"] = df["contributor_name"].map(normalize_name)
 
-    # Match to donor slug: exact first, then punctuation-stripped fallback
-    df["donor_slug"] = df["contributor_name_normalized"].map(slug_map)
+    # Match to canonical donor slug via donor_aliases.
+    # Step 1: exact canonical-normalized form (strips all non-alphanumeric).
+    df["_canon_norm"] = df["contributor_name"].map(_donor_normalize)
+    df["donor_slug"] = df["_canon_norm"].map(slug_map)
+
+    # Step 2: legacy whitespace-only normalized form (backward-compat).
+    unmatched = df["donor_slug"].isna()
+    if unmatched.any():
+        df.loc[unmatched, "donor_slug"] = (
+            df.loc[unmatched, "contributor_name_normalized"].map(slug_map)
+        )
+
+    # Step 3: punctuation-stripped suffix-variant fallback.
     unmatched = df["donor_slug"].isna()
     if unmatched.any():
         df.loc[unmatched, "donor_slug"] = (
             df.loc[unmatched, "contributor_name_normalized"]
             .map(lambda n: slug_map.get(_strip_punct(n)))
         )
+    df.drop(columns=["_canon_norm"], inplace=True)
 
     # Dates: pandas auto-detects ISO and US formats
     df["contribution_date"] = pd.to_datetime(

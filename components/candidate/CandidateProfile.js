@@ -11,6 +11,8 @@ import SourceLink from '@/components/shared/SourceLink';
 import EntityHeader from '@/components/shared/EntityHeader';
 import GlossaryTerm from '@/components/shared/GlossaryTerm';
 import AnimatedStat from '@/components/shared/AnimatedStat';
+import ConfidenceBadge from '@/components/shared/ConfidenceBadge';
+import InsightStrip from '@/components/shared/InsightStrip';
 import { slugify } from '@/lib/slugify';
 import { fmtMoneyCompact, fmtMoney } from '@/lib/fmt';
 import { PARTY_COLOR } from '@/lib/partyUtils';
@@ -407,24 +409,54 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
                   </tr>
                 </thead>
                 <tbody>
-                  {pcsSpecific.map((pc, i) => (
-                    <tr key={i} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
-                      <td style={{ padding: '0.45rem 0.6rem', wordBreak: 'break-word' }}>
-                        <a href={`/committee/${pc.pc_acct}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
-                          {pc.pc_name || pc.pc_acct}
-                        </a>
-                      </td>
-                      <td style={{ padding: '0.45rem 0.6rem', fontSize: '0.68rem', color: 'var(--text-dim)' }}>
-                        {LINK_TYPE_LABEL[pc.link_type] || pc.link_type}
-                      </td>
-                      <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--orange)', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap' }}>
-                        {fmt(pc.total_received)}
-                      </td>
-                      <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
-                        {pc.num_contributions > 0 ? pc.num_contributions.toLocaleString() : '—'}
-                      </td>
-                    </tr>
-                  ))}
+                  {pcsSpecific.map((pc, i) => {
+                    const filingStatus = (pc.source_filing_status || '').toLowerCase();
+                    const statusDim = filingStatus && filingStatus !== 'active';
+                    return (
+                      <tr key={i} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
+                        <td style={{ padding: '0.45rem 0.6rem', wordBreak: 'break-word' }}>
+                          <a href={`/committee/${pc.pc_acct}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+                            {pc.pc_name || pc.pc_acct}
+                          </a>
+                        </td>
+                        <td style={{ padding: '0.45rem 0.6rem', fontSize: '0.68rem', color: 'var(--text-dim)' }}>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', alignItems: 'flex-start' }}>
+                            <span>{LINK_TYPE_LABEL[pc.link_type] || pc.link_type}</span>
+                            <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                              <ConfidenceBadge tier={pc.confidence_tier} score={pc.confidence_score} />
+                              {pc.source_url && (
+                                <a href={pc.source_url}
+                                   target="_blank" rel="noopener noreferrer"
+                                   style={{
+                                     fontSize: '0.6rem', color: statusDim ? 'var(--text-dim)' : 'var(--teal)',
+                                     textDecoration: 'none', fontFamily: 'var(--font-mono)',
+                                   }}>
+                                  View filing →
+                                </a>
+                              )}
+                              {pc.num_sources > 1 && (
+                                <span style={{ fontSize: '0.58rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+                                  {pc.num_sources} sources
+                                </span>
+                              )}
+                            </div>
+                            {(pc.source_filing_date || filingStatus) && (
+                              <span style={{ fontSize: '0.58rem', color: statusDim ? 'var(--text-dim)' : 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+                                {pc.source_filing_date ? fmtDate(pc.source_filing_date) : ''}
+                                {filingStatus ? (pc.source_filing_date ? ' · ' : '') + filingStatus : ''}
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                        <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--orange)', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap' }}>
+                          {fmt(pc.total_received)}
+                        </td>
+                        <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+                          {pc.num_contributions > 0 ? pc.num_contributions.toLocaleString() : '—'}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -721,6 +753,8 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
           </div>
         </div>
       )}
+
+      <InsightStrip insights={data.insights} />
 
       <div style={{ marginBottom: '1.25rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
         <a href={`/compare?a=${data.acct_num}`} className="cross-link">

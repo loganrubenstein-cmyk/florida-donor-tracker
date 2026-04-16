@@ -44,7 +44,7 @@ function SectionHeader({ children }) {
 }
 
 export default async function LegislatorPage({ params }) {
-  const { legislator: leg, memberships, votes, sponsorships, topDonors } = await loadLegislator(params.people_id);
+  const { legislator: leg, memberships, votes, sponsorships, topDonors, disclosure } = await loadLegislator(params.people_id);
   if (!leg) return notFound();
 
   const partyColor = PARTY_COLOR[leg.party] || 'var(--text-dim)';
@@ -346,11 +346,129 @@ export default async function LegislatorPage({ params }) {
     </div>
   );
 
+  // ── Disclosures tab ───────────────────────────────────────────────────────
+  const DisclosuresTab = disclosure ? (
+    <div>
+      <div style={{ padding: '1.25rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '6px', marginBottom: '1.25rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1rem' }}>
+          <div>
+            <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.25rem' }}>
+              {disclosure.filing_type} · {disclosure.filing_year}
+            </div>
+            {disclosure.net_worth != null && (
+              <div style={{ fontSize: '1.8rem', fontWeight: 700, color: 'var(--teal)', fontFamily: 'var(--font-mono)' }}>
+                {fmtMoney(disclosure.net_worth)}
+              </div>
+            )}
+            {disclosure.net_worth != null && (
+              <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', marginTop: '2px' }}>net worth (self-reported)</div>
+            )}
+          </div>
+          {disclosure.source_url && (
+            <a href={disclosure.source_url} target="_blank" rel="noopener noreferrer"
+               style={{ fontSize: '0.7rem', padding: '0.3rem 0.75rem', background: 'rgba(77,216,240,0.06)', border: '1px solid rgba(77,216,240,0.2)', borderRadius: '3px', color: 'var(--teal)', textDecoration: 'none', whiteSpace: 'nowrap' }}>
+              View source PDF ↗
+            </a>
+          )}
+        </div>
+
+        {disclosure.income_sources?.length > 0 && (
+          <div style={{ marginBottom: '1rem' }}>
+            <SectionHeader>Income Sources</SectionHeader>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+              {disclosure.income_sources.map((src, i) => (
+                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '0.3rem 0', borderBottom: '1px solid rgba(100,140,220,0.07)', fontSize: '0.76rem' }}>
+                  <div>
+                    <span style={{ color: 'var(--text)' }}>{src.source || src.name || '—'}</span>
+                    {src.address && <span style={{ fontSize: '0.68rem', color: 'var(--text-dim)', marginLeft: '0.5rem' }}>{src.address}</span>}
+                  </div>
+                  {src.amount != null && (
+                    <span style={{ color: 'var(--orange)', fontFamily: 'var(--font-mono)', fontSize: '0.72rem', whiteSpace: 'nowrap', marginLeft: '1rem' }}>
+                      {fmtMoney(src.amount)}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {disclosure.real_estate?.length > 0 && (
+          <div style={{ marginBottom: '1rem' }}>
+            <SectionHeader>Real Estate Holdings</SectionHeader>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+              {disclosure.real_estate.map((re, i) => (
+                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '0.3rem 0', borderBottom: '1px solid rgba(100,140,220,0.07)', fontSize: '0.76rem' }}>
+                  <div>
+                    <span style={{ color: 'var(--text)' }}>{re.description || re.address || '—'}</span>
+                    {re.county && <span style={{ fontSize: '0.68rem', color: 'var(--text-dim)', marginLeft: '0.5rem' }}>{re.county} County</span>}
+                  </div>
+                  {re.value != null && (
+                    <span style={{ color: 'var(--orange)', fontFamily: 'var(--font-mono)', fontSize: '0.72rem', whiteSpace: 'nowrap', marginLeft: '1rem' }}>
+                      {fmtMoney(re.value)}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {disclosure.business_interests?.length > 0 && (
+          <div style={{ marginBottom: '1rem' }}>
+            <SectionHeader>Business Interests</SectionHeader>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+              {disclosure.business_interests.map((biz, i) => (
+                <div key={i} style={{ padding: '0.3rem 0', borderBottom: '1px solid rgba(100,140,220,0.07)', fontSize: '0.76rem' }}>
+                  <span style={{ color: 'var(--text)' }}>{biz.entity || biz.name || '—'}</span>
+                  {biz.title && <span style={{ fontSize: '0.68rem', color: 'var(--text-dim)', marginLeft: '0.5rem' }}>· {biz.title}</span>}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {disclosure.liabilities?.length > 0 && (
+          <div>
+            <SectionHeader>Liabilities</SectionHeader>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+              {disclosure.liabilities.map((lib, i) => (
+                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', padding: '0.3rem 0', borderBottom: '1px solid rgba(100,140,220,0.07)', fontSize: '0.76rem' }}>
+                  <span style={{ color: 'var(--text)' }}>{lib.creditor || lib.description || '—'}</span>
+                  {lib.amount != null && (
+                    <span style={{ color: 'var(--republican)', fontFamily: 'var(--font-mono)', fontSize: '0.72rem', whiteSpace: 'nowrap', marginLeft: '1rem' }}>
+                      {fmtMoney(lib.amount)}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
+        Financial disclosures are self-reported and filed annually with the Florida Commission on Ethics.
+        {' '}<a href="https://public.ethics.state.fl.us/index.html" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+          Search all FL Ethics disclosures ↗
+        </a>
+      </div>
+    </div>
+  ) : (
+    <div style={{ padding: '1.25rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '6px', fontSize: '0.78rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
+      No financial disclosure found for this legislator. Disclosures are filed annually with the Florida Commission on Ethics.{' '}
+      <a href="https://public.ethics.state.fl.us/index.html" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+        Search manually ↗
+      </a>
+    </div>
+  );
+
   const tabs = [
-    { id: 'overview',  label: 'Overview',       content: OverviewTab },
-    { id: 'votes',     label: `Votes (${fmtCount(totalVotes)})`, content: VotesTab },
+    { id: 'overview',     label: 'Overview',                      content: OverviewTab },
+    { id: 'votes',        label: `Votes (${fmtCount(totalVotes)})`, content: VotesTab },
     ...(sponsorships.length > 0 ? [{ id: 'bills', label: `Bills (${sponsorships.length})`, content: BillsTab }] : []),
-    { id: 'finance',   label: 'Finance',         content: FinanceTab },
+    { id: 'finance',      label: 'Finance',                       content: FinanceTab },
+    { id: 'disclosures',  label: 'Disclosures',                   content: DisclosuresTab },
   ];
 
   return (
@@ -438,7 +556,7 @@ export default async function LegislatorPage({ params }) {
 
       <div style={{ marginTop: '3rem' }}>
         <DataTrustBlock
-          source="LobbyTools (contact + district) · LegiScan API (votes + bills) · FL Division of Elections (finance)"
+          source="LobbyTools (contact + district) · LegiScan API (votes + bills) · FL Division of Elections (finance) · FL Commission on Ethics (disclosures)"
           
           direct={['name', 'party', 'district', 'chamber', 'leadership title', 'contact info', 'committee assignments', 'individual vote records']}
           normalized={['finance totals matched from FL DoE candidate records by name + district']}

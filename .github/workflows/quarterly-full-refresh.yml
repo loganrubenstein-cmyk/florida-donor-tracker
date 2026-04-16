@@ -1,0 +1,103 @@
+name: Quarterly — Full Pipeline Refresh
+
+on:
+  schedule:
+    - cron: '0 17 11 1,4,7,10 *'
+  workflow_dispatch:
+
+concurrency:
+  group: quarterly-full-refresh
+  cancel-in-progress: false
+
+env:
+  SUPABASE_DB_URL:               ${{ secrets.SUPABASE_DB_URL }}
+  SUPABASE_SERVICE_ROLE_KEY:     ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+  NEXT_PUBLIC_SUPABASE_URL:      ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+  SITE_URL:                      ${{ secrets.SITE_URL }}
+
+jobs:
+  full-refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 480
+    permissions:
+      issues: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "01 committees directory"
+        uses: ./.github/actions/run-script
+        with: { script: 01_scrape_committees.py }
+
+      - name: "02 registry + closed discovery"
+        uses: ./.github/actions/run-script
+        with: { script: 02_download_registry.py }
+
+      - name: "03 contributions scrape"
+        uses: ./.github/actions/run-script
+        with: { script: 03_scrape_contributions.py }
+
+      - name: "04 candidate contributions"
+        uses: ./.github/actions/run-script
+        with: { script: 04_scrape_candidate_contributions.py }
+
+      - name: "09 canonical donor dedup"
+        uses: ./.github/actions/run-script
+        with: { script: 09_deduplicate_donors.py }
+
+      - name: "09b manual merges"
+        uses: ./.github/actions/run-script
+        with: { script: 09b_apply_manual_merges.py }
+
+      - name: "10 donor enrichment"
+        uses: ./.github/actions/run-script
+        with: { script: 10_enrich_donors.py }
+
+      - name: "25 export donor profiles"
+        uses: ./.github/actions/run-script
+        with: { script: 25_export_donor_profiles.py }
+
+      - name: "40 load committees"
+        uses: ./.github/actions/run-script
+        with: { script: 40_load_committees_supabase.py }
+
+      - name: "41 load contributions"
+        uses: ./.github/actions/run-script
+        with: { script: 41_load_contributions.py }
+
+      - name: "42 load candidate contributions"
+        uses: ./.github/actions/run-script
+        with: { script: 42_load_candidate_contributions.py }
+
+      - name: "78 build linkage edges"
+        uses: ./.github/actions/run-script
+        with: { script: 78_build_linkage_edges.py }
+
+      - name: "80 load linkage edges"
+        uses: ./.github/actions/run-script
+        with: { script: 80_load_linkage_edges_supabase.py }
+
+      - name: "85 reconcile donors"
+        uses: ./.github/actions/run-script
+        with: { script: 85_reconcile_donor_aggregates.py }
+
+      - name: "85b reconcile committees"
+        uses: ./.github/actions/run-script
+        with: { script: 85b_reconcile_committees.py }
+
+      - name: "84 integrity audit"
+        uses: ./.github/actions/run-script
+        with: { script: 84_audit_data_integrity.py }
+
+      - name: "99 smoke test"
+        uses: ./.github/actions/run-script
+        with: { script: 99_smoke_test.py }
+
+      - name: Open issue on failure
+        if: failure()
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: "[pipeline-failure:high] quarterly-full-refresh"
+          content-filepath: data/logs/84_audit_data_integrity.py.log
+          labels: pipeline-failure,severity:high,data-update

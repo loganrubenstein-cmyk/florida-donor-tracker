@@ -8,6 +8,7 @@ import MoneyLens from '@/components/shared/MoneyLens'
 import { getDb } from '@/lib/db'
 import { FEDERAL_OFFICE_CODES } from '@/lib/officeCodes'
 import { DATA_LAST_UPDATED } from '@/lib/dataLastUpdated'
+import PulseSection from '@/components/home/PulseSection'
 
 export const dynamic = 'force-dynamic';
 
@@ -43,13 +44,13 @@ async function getHomeData() {
   ]);
 
   const totalSpending = donorAgg?.sum ?? 3894316430;
-  const totalDonors = donorCount ?? 336478;
-  const totalContributions = contributionCount ?? 10898659;
+  const totalDonors = donorCount ?? 883681;
+  const totalContributions = contributionCount ?? 21955118;
 
   return {
     topDonors: topDonorsData || [],
-    candidateCount: candidateCount || 4421,
-    committeeCount: committeeCount || 1687,
+    candidateCount: candidateCount || 7172,
+    committeeCount: committeeCount || 5974,
     totalSpending,
     totalContributions,
     totalDonors,
@@ -130,7 +131,7 @@ export default async function Home() {
           maxWidth: '540px',
           lineHeight: 1.75,
         }}>
-          10.8 million transactions. 336,000 donors. Billions in PAC money.
+          22 million transactions. 883,000 donors. Billions in PAC money.
           The most complete picture of Florida political finance — free, searchable, and built from public records.
         </p>
 
@@ -218,6 +219,11 @@ export default async function Home() {
         <DidYouKnow />
       </section>
 
+      {/* ── Pulse ── */}
+      <section style={{ maxWidth: '900px', margin: '0 auto', padding: '1.5rem 2.5rem 0' }}>
+        <PulseSection />
+      </section>
+
       {/* ── Stats Strip ── */}
       <section style={{
         padding: '1.75rem 2.5rem',
@@ -264,41 +270,7 @@ export default async function Home() {
 
         <div className="tool-grid-3">
 
-          {/* Column 1 — Who Gave */}
-          <div>
-            <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem', borderBottom: '1px solid rgba(100,140,220,0.1)', paddingBottom: '0.4rem' }}>
-              Who gave
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <CardLink href="/donors" color="var(--orange)" accent="rgba(255,176,96,0.2)" title="→ donors" desc="336K deduped donor profiles. Search by name, see total giving across all committees and candidates." />
-              <CardLink href="/explorer" color="var(--orange)" accent="rgba(255,176,96,0.35)" title="→ transaction explorer" desc="Every contribution row — filter by name, amount, date, or recipient." highlight />
-              <CardLink href="/industries" color="var(--blue)" accent="rgba(160,192,255,0.15)" title="→ industries" desc="Which sectors — Legal, Real Estate, Healthcare — fund which candidates and how much." />
-              <CardLink href="/lobbyists" color="var(--blue)" accent="rgba(160,192,255,0.15)" title="→ lobbyists" desc="2,480 registered FL lobbyists, their clients, their bills, and their campaign donations." />
-              <CardLink href="/principals" color="var(--green)" accent="rgba(128,255,160,0.2)" title="→ principals" desc="Lobbying clients matched to their campaign contributions — see the full spend." />
-              <CardLink href="/lobbying/bills" color="var(--blue)" accent="rgba(160,192,255,0.1)" title="→ lobbied bills" desc="14K FL House bills tagged by lobbying activity 2016–2026. Who pushed what." />
-              <CardLink href="/influence" color="var(--orange)" accent="rgba(255,176,96,0.2)" title="→ influence index" desc="Orgs ranked by combined lobbying + donations. The most comprehensive political spending index in FL." highlight />
-            </div>
-          </div>
-
-          {/* Column 2 — Who Got Paid */}
-          <div>
-            <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem', borderBottom: '1px solid rgba(100,140,220,0.1)', paddingBottom: '0.4rem' }}>
-              Who got paid
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <CardLink href="/candidates" color="var(--blue)" accent="rgba(160,192,255,0.2)" title="→ candidates" desc="Every FL candidate — hard money raised, linked PACs, soft money, career totals." />
-              <CardLink href="/committees" color="var(--green)" accent="rgba(128,255,160,0.2)" title="→ committees" desc="4,440 PACs, ECOs, and party committees. See every donor and where the money went." />
-              <CardLink href="/cycles" color="var(--green)" accent="rgba(128,255,160,0.15)" title="→ election cycles" desc="2008–2026: totals by cycle, top raisers, party splits, office breakdown." />
-              <CardLink href="/investigations" color="var(--orange)" accent="rgba(255,176,96,0.25)" title="→ investigations" desc="11 entities with documented political influence, cross-referenced with journalism." />
-              <CardLink href="/legislature" color="var(--gold)" accent="rgba(255,208,96,0.12)" title="→ legislature" desc="All 160 current FL House + Senate members — their donors, votes, and committee assignments." />
-              <CardLink href="/elections" color="var(--blue)" accent="rgba(160,192,255,0.12)" title="→ elections" desc="FL results 2012–2024. Finance-matched breakdowns, cost per vote, margin vs. money." />
-              <CardLink href="/party-finance" color="var(--teal)" accent="rgba(77,216,240,0.1)" title="→ party finance" desc="Republican vs Democrat fundraising by year and office. 30-year trend." />
-              <CardLink href="/contracts" color="var(--gold)" accent="rgba(255,208,96,0.15)" title="→ state contracts" desc="FL vendors who got state contracts — matched against campaign donors." />
-              <CardLink href="/federal-contracts" color="var(--green)" accent="rgba(128,255,160,0.1)" title="→ federal contracts" desc="$219B in federal awards to FL recipients — mapped to donors and state vendors." />
-            </div>
-          </div>
-
-          {/* Column 3 — How Money Moved */}
+          {/* Column 1 — How Money Moved (front for mobile visibility) */}
           <div>
             <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem', borderBottom: '1px solid rgba(100,140,220,0.1)', paddingBottom: '0.4rem' }}>
               How money moved
@@ -309,6 +281,40 @@ export default async function Home() {
               <CardLink href="/ie" color="var(--orange)" accent="rgba(255,176,96,0.15)" title="→ independent expenditures" desc="$70.9M in IE spending — committees that ran ads for and against candidates outside their campaigns." />
               <CardLink href="/connections" color="var(--orange)" accent="rgba(255,176,96,0.12)" title="→ committee connections" desc="56K+ committee pairs sharing treasurers, addresses, donors, or money. Shadow networks mapped." />
               <CardLink href="/search" color="var(--orange)" accent="rgba(255,176,96,0.35)" title="→ global search" desc="Search everything — donors, committees, candidates, lobbyists. 20K+ entities." highlight />
+            </div>
+          </div>
+
+          {/* Column 2 — Who Got Paid */}
+          <div>
+            <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem', borderBottom: '1px solid rgba(100,140,220,0.1)', paddingBottom: '0.4rem' }}>
+              Who got paid
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <CardLink href="/candidates" color="var(--blue)" accent="rgba(160,192,255,0.2)" title="→ candidates" desc="Every FL candidate — hard money raised, linked PACs, soft money, career totals." />
+              <CardLink href="/committees" color="var(--green)" accent="rgba(128,255,160,0.2)" title="→ committees" desc="5,974 PACs, ECOs, and party committees. See every donor and where the money went." />
+              <CardLink href="/cycles" color="var(--green)" accent="rgba(128,255,160,0.15)" title="→ election cycles" desc="2008–2026: totals by cycle, top raisers, party splits, office breakdown." />
+              <CardLink href="/investigations" color="var(--orange)" accent="rgba(255,176,96,0.25)" title="→ investigations" desc="11 entities with documented political influence, cross-referenced with journalism." />
+              <CardLink href="/legislature" color="var(--gold)" accent="rgba(255,208,96,0.12)" title="→ legislature" desc="All 160 current FL House + Senate members — their donors, votes, and committee assignments." />
+              <CardLink href="/elections" color="var(--blue)" accent="rgba(160,192,255,0.12)" title="→ elections" desc="FL results 2012–2024. Finance-matched breakdowns, cost per vote, margin vs. money." />
+              <CardLink href="/party-finance" color="var(--teal)" accent="rgba(77,216,240,0.1)" title="→ party finance" desc="Republican vs Democrat fundraising by year and office. 30-year trend." />
+              <CardLink href="/contracts" color="var(--gold)" accent="rgba(255,208,96,0.15)" title="→ state contracts" desc="FL vendors who got state contracts — matched against campaign donors." />
+              <CardLink href="/federal-contracts" color="var(--green)" accent="rgba(128,255,160,0.1)" title="→ federal contracts" desc="$219B in federal awards to FL recipients — mapped to donors and state vendors." />
+            </div>
+          </div>
+
+          {/* Column 3 — Who Gave */}
+          <div>
+            <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem', borderBottom: '1px solid rgba(100,140,220,0.1)', paddingBottom: '0.4rem' }}>
+              Who gave
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <CardLink href="/donors" color="var(--orange)" accent="rgba(255,176,96,0.2)" title="→ donors" desc="883K deduped donor profiles. Search by name, see total giving across all committees and candidates." />
+              <CardLink href="/explorer" color="var(--orange)" accent="rgba(255,176,96,0.35)" title="→ transaction explorer" desc="Every contribution row — filter by name, amount, date, or recipient." highlight />
+              <CardLink href="/industries" color="var(--blue)" accent="rgba(160,192,255,0.15)" title="→ industries" desc="Which sectors — Legal, Real Estate, Healthcare — fund which candidates and how much." />
+              <CardLink href="/lobbyists" color="var(--blue)" accent="rgba(160,192,255,0.15)" title="→ lobbyists" desc="2,473 registered FL lobbyists, their clients, their bills, and their campaign donations." />
+              <CardLink href="/principals" color="var(--green)" accent="rgba(128,255,160,0.2)" title="→ principals" desc="Lobbying clients matched to their campaign contributions — see the full spend." />
+              <CardLink href="/lobbying/bills" color="var(--blue)" accent="rgba(160,192,255,0.1)" title="→ lobbied bills" desc="14K FL House bills tagged by lobbying activity 2017–2026. Who pushed what." />
+              <CardLink href="/influence" color="var(--orange)" accent="rgba(255,176,96,0.2)" title="→ influence index" desc="Orgs ranked by combined lobbying + donations. The most comprehensive political spending index in FL." highlight />
             </div>
           </div>
 

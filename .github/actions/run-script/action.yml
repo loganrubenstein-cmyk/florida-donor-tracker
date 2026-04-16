@@ -1,0 +1,70 @@
+name: "Run Pipeline Script"
+description: "Checkout → Python setup → restore cache → run a numbered pipeline script → upload logs"
+
+inputs:
+  script:
+    description: "Script filename (e.g. 02_download_registry.py)"
+    required: true
+  args:
+    description: "CLI arguments to pass to the script"
+    required: false
+    default: ""
+  python-version:
+    description: "Python version"
+    required: false
+    default: "3.12"
+  upload-artifacts:
+    description: "Upload data/logs and data/processed as artifacts"
+    required: false
+    default: "true"
+
+runs:
+  using: composite
+  steps:
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python-version }}
+        cache: pip
+
+    - name: Install dependencies
+      shell: bash
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then
+          pip install -r requirements.txt
+        else
+          pip install psycopg2-binary pandas requests python-dotenv thefuzz pyyaml
+        fi
+
+    - name: Ensure log dir
+      shell: bash
+      run: mkdir -p data/logs data/processed
+
+    - name: Run ${{ inputs.script }}
+      shell: bash
+      env:
+        SUPABASE_DB_URL:            ${{ env.SUPABASE_DB_URL }}
+        SUPABASE_SERVICE_ROLE_KEY:  ${{ env.SUPABASE_SERVICE_ROLE_KEY }}
+        NEXT_PUBLIC_SUPABASE_URL:   ${{ env.NEXT_PUBLIC_SUPABASE_URL }}
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ env.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+        SUNBIZ_SFTP_USER:           ${{ env.SUNBIZ_SFTP_USER }}
+        SUNBIZ_SFTP_PASS:           ${{ env.SUNBIZ_SFTP_PASS }}
+        SITE_URL:                   ${{ env.SITE_URL }}
+      run: |
+        set -e
+        STAMP=$(date -u +'%Y%m%dT%H%M%SZ')
+        LOG="data/logs/${{ inputs.script }}.${STAMP}.log"
+        echo "::notice::Running scripts/${{ inputs.script }} ${{ inputs.args }}"
+        python -u "scripts/${{ inputs.script }}" ${{ inputs.args }} 2>&1 | tee "$LOG"
+
+    - name: Upload logs + generated data
+      if: ${{ always() && inputs.upload-artifacts == 'true' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: logs-${{ inputs.script }}
+        path: |
+          data/logs/*
+          data/processed/*.csv
+        if-no-files-found: ignore
+        retention-days: 14

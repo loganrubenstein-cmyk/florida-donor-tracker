@@ -60,6 +60,12 @@ ALTER TABLE donors
     ADD COLUMN IF NOT EXISTS corp_match_score INTEGER;
 """
 
+# Executed separately: fix NUMERIC(5,3) → INTEGER if a prior run used wrong type
+FIX_MATCH_SCORE_TYPE = """
+ALTER TABLE donors
+    ALTER COLUMN corp_match_score TYPE INTEGER USING corp_match_score::INTEGER;
+"""
+
 CREATE_DONORS_IDX = """
 CREATE INDEX IF NOT EXISTS idx_donors_corp_number ON donors(corp_number);
 """
@@ -82,8 +88,11 @@ def main(dry_run=False):
     if not OUTPUT_CSV.exists():
         sys.exit(f"ERROR: {OUTPUT_CSV} not found. Run script 97 first.")
 
+    # autocommit=True so no transaction is held open during the ~20min CSV load.
+    # With transaction pooling, a SELECT in autocommit mode releases the server
+    # connection immediately — no idle-in-transaction to block ALTER TABLE later.
     con = psycopg2.connect(DB_URL)
-    con.autocommit = False
+    con.autocommit = True
     cur = con.cursor()
     cur.execute("SET statement_timeout = 0")
 
@@ -182,8 +191,24 @@ def main(dry_run=False):
             print(f"    '{id_to_name.get(m[4], m[4])}' → corp {m[0]} (score={m[3]})")
         return len(matches)
 
+    # Reconnect: the initial connection held an implicit transaction during
+    # ~20min Steps 2-3. Explicitly rollback before close so pgbouncer cleanly
+    # releases the server-side connection (otherwise it stays idle-in-transaction
+    # and blocks the upcoming ALTER TABLE on a relation lock).
+    try:
+        con.rollback()   # release implicit transaction before closing
+        cur.close()
+        con.close()
+    except Exception:
+        pass
+    con = psycopg2.connect(DB_URL)
+    con.autocommit = False
+    cur = con.cursor()
+    cur.execute("SET statement_timeout = 0")
+
     print("\nStep 4: Applying ALTER TABLE + index ...", flush=True)
     cur.execute(ALTER_DONORS)
+    cur.execute(FIX_MATCH_SCORE_TYPE)   # ensure INTEGER, not NUMERIC
     cur.execute(CREATE_DONORS_IDX)
 
     print("Step 5: Bulk-updating donors via temp table ...", flush=True)

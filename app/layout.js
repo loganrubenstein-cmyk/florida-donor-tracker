@@ -3,7 +3,6 @@ import Link from 'next/link';
 import FloridaOutline from '@/components/shared/FloridaOutline';
 import NavLinks from '@/components/shared/NavLinks';
 import KonamiCode from '@/components/shared/KonamiCode';
-import BottomToast from '@/components/shared/BottomToast';
 
 export const metadata = {
   metadataBase: new URL('https://florida-donor-tracker.vercel.app'),
@@ -66,7 +65,6 @@ export default function RootLayout({ children }) {
         </nav>
         {children}
         <KonamiCode />
-        <BottomToast />
         <footer className="site-footer">
           <div style={{ maxWidth: '900px', margin: '0 auto', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '0.5rem' }}>
             <span>Data source: <a href="https://dos.elections.myflorida.com/campaign-finance/" target="_blank" rel="noopener noreferrer">Florida Division of Elections</a></span>

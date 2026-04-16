@@ -20,13 +20,14 @@ export async function GET(request) {
   const db = getDb();
 
   // Get the legislator for this district
-  const { data: legislator, error: legErr } = await db
+  const { data: legRows, error: legErr } = await db
     .from('legislators')
     .select('people_id, display_name, chamber, district, party, total_raised, acct_num, counties, leadership_title, term_limit_year, votes_yea, votes_nay, votes_nv, votes_absent, participation_rate, email, twitter')
     .eq('chamber', validChamber)
     .eq('district', num)
     .eq('is_current', true)
-    .maybeSingle();
+    .limit(1);
+  const legislator = legRows?.[0] ?? null;
 
   if (legErr) return NextResponse.json({ error: legErr.message }, { status: 500 });
   if (!legislator) return NextResponse.json({ error: 'No current legislator found for this district' }, { status: 404 });

@@ -8,7 +8,7 @@ import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 export const metadata = {
   title: 'Most Lobbied Bills',
-  description: 'Florida bills with the most lobbyist disclosure filings. See which legislation attracted the most lobbying activity 2016–2026.',
+  description: 'Florida bills with the most lobbyist disclosure filings. See which legislation attracted the most lobbying activity 2017–2026.',
 };
 
 function loadData() {
@@ -66,13 +66,13 @@ export default function LobbyingBillsPage() {
         <span>Bills</span>
       </div>
 
-      <SectionHeader title="Most Lobbied Bills" eyebrow="FL Lobbying · 2016–2026" />
+      <SectionHeader title="Most Lobbied Bills" eyebrow="FL Lobbying · 2017–2026" />
       <p style={{ color: 'var(--text-dim)', fontSize: '0.88rem', lineHeight: 1.6, marginBottom: '0.25rem', marginTop: '-0.75rem' }}>
         Florida House bills ranked by number of lobbyist disclosure filings. Each filing represents one
         lobbyist–principal pair reporting activity on the bill for a given year.
       </p>
       <p style={{ fontSize: '0.72rem', color: 'var(--text-dim)', marginBottom: '2rem' }}>
-        Source: FL House Lobbyist Disclosure portal, 2016–2026. Not affiliated with the State of Florida. All data from public records.
+        Source: FL House Lobbyist Disclosure portal, 2017–2026. Not affiliated with the State of Florida. All data from public records.
       </p>
 
       {/* Stats bar */}
@@ -81,7 +81,7 @@ export default function LobbyingBillsPage() {
         <StatBox value={fmtCount(totals.unique_bills)} label="Unique Bills" />
         <StatBox value={fmtCount(totals.unique_lobbyists)} label="Unique Lobbyists" />
         <StatBox value={fmtCount(totals.unique_principals)} label="Unique Principals" />
-        <StatBox value="2016–2026" label="Years Covered" color="var(--text-dim)" />
+        <StatBox value="2017–2026" label="Years Covered" color="var(--text-dim)" />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '2rem', alignItems: 'start' }}>
@@ -142,7 +142,7 @@ export default function LobbyingBillsPage() {
           <div style={{ padding: '1rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '6px' }}>
             <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', marginBottom: '0.75rem' }}>
               Most Active Lobbyists
-              <span style={{ fontSize: '0.68rem', color: 'var(--text-dim)', fontWeight: 400, marginLeft: '0.4rem' }}>(by filings 2016–2026)</span>
+              <span style={{ fontSize: '0.68rem', color: 'var(--text-dim)', fontWeight: 400, marginLeft: '0.4rem' }}>(by filings 2017–2026)</span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               {topLobbyists.slice(0, 15).map((l, i) => {
@@ -177,7 +177,7 @@ export default function LobbyingBillsPage() {
           direct={['bill number', 'lobbyist name', 'principal name', 'filing year', 'issue category']}
           normalized={['filings aggregated by bill across years and lobbyist-principal pairs']}
           caveats={[
-            'Coverage: 2016–2026 Florida House lobbyist disclosure filings only.',
+            'Coverage: 2017–2026 Florida House lobbyist disclosure filings only.',
             'Each filing = one lobbyist–principal pair for one year. A bill with 500 filings had 500 such pairs report activity on it.',
             'General Appropriations bills are separated because they appear every session and dominate raw filing counts.',
           ]}

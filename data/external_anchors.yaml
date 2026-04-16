@@ -1,0 +1,109 @@
+# data/external_anchors.yaml
+#
+# Published totals from primary sources. Audit Check M compares our computed
+# numbers against these anchors; if we drift beyond `tolerance_pct`, the build
+# fails and opens a GitHub issue.
+#
+# Consumed by:
+#   - scripts/09c_load_external_anchors.py (upserts into external_anchors table)
+#   - scripts/84_audit_data_integrity.py   (runs the comparison)
+#
+# How to add an anchor:
+#   - Cite a primary source (FL DoE, FEC, IRS, or a reputable news org quoting
+#     an FEC/DoE filing number). No blog posts, no secondary aggregators.
+#   - `anchor_year: null` means all-time / cumulative.
+#   - Default tolerance is 5.00%. Tighten for precise filings; loosen for
+#     estimates and journalism-sourced rollups.
+
+anchors:
+
+  # ── Donors (rollup across every entity in the alias set) ────────────────────
+  - entity_type: donor
+    entity_slug: florida-power-light-company
+    anchor_metric: total_contributions
+    anchor_value: 30000000
+    anchor_year: null
+    tolerance_pct: 15.00
+    source_citation: |
+      Miami Herald / Orlando Sentinel investigations 2019-2024 citing FL DoE
+      campaign-finance filings for FPL + NextEra Energy PAC activity. ~$30M
+      over the past two decades across state candidates + committees (state
+      only; excludes federal).
+
+  - entity_type: donor
+    entity_slug: florida-realtors
+    anchor_metric: total_contributions
+    anchor_value: 45000000
+    anchor_year: null
+    tolerance_pct: 10.00
+    source_citation: |
+      Florida Realtors PAC public filings (combined with Florida Association
+      of Realtors PAC pre-rebrand) via FL DoE contributions tracker. Anchor
+      reflects all-time total after the $136M drift fix (audit Check B,
+      2026-04-16).
+
+  - entity_type: donor
+    entity_slug: the-walt-disney-company
+    anchor_metric: total_contributions
+    anchor_value: 6000000
+    anchor_year: null
+    tolerance_pct: 20.00
+    source_citation: |
+      Aggregated Disney + subsidiaries (Disney Worldwide Services, Walt
+      Disney Parks & Resorts) + Reedy Creek Improvement District state
+      contributions per FL DoE. Wider tolerance: RCID treatment pre-2023
+      is an editorial call and reasonable estimates vary.
+
+  - entity_type: donor
+    entity_slug: publix-super-markets
+    anchor_metric: total_contributions
+    anchor_value: 12000000
+    anchor_year: null
+    tolerance_pct: 15.00
+    source_citation: |
+      Publix Super Markets + Publix Super Markets Charities state-level
+      political contributions per FL DoE + 990 filings (Charities arm).
+
+  - entity_type: donor
+    entity_slug: us-sugar-corporation
+    anchor_metric: total_contributions
+    anchor_value: 25000000
+    anchor_year: null
+    tolerance_pct: 15.00
+    source_citation: |
+      U.S. Sugar Corp + United States Sugar Corp state political
+      contributions (FL DoE). Known heavy-hitter in agriculture /
+      water-policy lobbying.
+
+  # ── Committees (per-account) ────────────────────────────────────────────────
+  - entity_type: committee
+    entity_acct_num: "70275"
+    anchor_metric: total_raised
+    anchor_value: 200000000
+    anchor_year: null
+    tolerance_pct: 10.00
+    source_citation: |
+      Friends of Ron DeSantis (now Empower Parents PAC), FL DoE account
+      70275. $200M+ raised during 2022 gubernatorial cycle per FL DoE
+      reports. https://dos.elections.myflorida.com/campaign-finance/contributions/?account=70275
+
+  # ── Candidates (per-account) ────────────────────────────────────────────────
+  # Add as we get solid numbers. Examples commented out pending verification:
+  # - entity_type: candidate
+  #   entity_acct_num: "XXXXX"
+  #   anchor_metric: total_raised
+  #   anchor_value: XXXXXXX
+  #   anchor_year: 2022
+  #   source_citation: "FL DoE candidate filings for <candidate>, 2022 cycle"
+
+  # ── Cycle totals ────────────────────────────────────────────────────────────
+  - entity_type: cycle
+    entity_slug: "2022"
+    anchor_metric: total_contributions
+    anchor_value: 1500000000
+    anchor_year: 2022
+    tolerance_pct: 15.00
+    source_citation: |
+      FL DoE 2022 election cycle aggregate (all candidates + committees,
+      statewide + legislative). Approximate; wide tolerance because the
+      exact universe depends on which committee types are included.

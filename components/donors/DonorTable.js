@@ -87,7 +87,7 @@ export default function DonorTable({ donors: rawDonors }) {
                 {rankMap.get(donor.name)}
               </td>
               <td style={{ padding: '0.55rem 0.75rem', color: 'var(--text)' }}>
-                <a href={`/donor/${slugify(donor.name)}`}
+                <a href={`/donor/${donor.slug || slugify(donor.name)}`}
                   style={{ color: 'var(--text)', textDecoration: 'none' }}
                   onMouseEnter={e => e.target.style.color = 'var(--teal)'}
                   onMouseLeave={e => e.target.style.color = 'var(--text)'}>

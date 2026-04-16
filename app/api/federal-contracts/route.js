@@ -7,7 +7,9 @@ export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const q      = searchParams.get('q') || '';
   const filter = searchParams.get('filter') || 'all';
-  const sort   = searchParams.get('sort') || 'total_obligation';
+  const ALLOWED_SORTS = new Set(['total_obligation', 'recipient_name', 'period_start', 'period_end']);
+  const sortRaw = searchParams.get('sort') || 'total_obligation';
+  const sort    = ALLOWED_SORTS.has(sortRaw) ? sortRaw : 'total_obligation';
   const page   = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
 
   const db = getDb();

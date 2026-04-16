@@ -69,16 +69,18 @@ export async function GET(request) {
   }
 
   async function getEntityName(acct) {
-    const { data: cand } = await db.from('candidates')
+    const { data: candRows } = await db.from('candidates')
       .select('candidate_name')
       .eq('acct_num', acct)
-      .maybeSingle();
+      .limit(1);
+    const cand = candRows?.[0] ?? null;
     if (cand) return { name: cand.candidate_name, type: 'candidate' };
 
-    const { data: comm } = await db.from('committees')
+    const { data: commRows } = await db.from('committees')
       .select('committee_name')
       .eq('acct_num', acct)
-      .maybeSingle();
+      .limit(1);
+    const comm = commRows?.[0] ?? null;
     if (comm) return { name: comm.committee_name, type: 'committee' };
     return { name: acct, type: 'unknown' };
   }
@@ -145,19 +147,21 @@ export async function GET(request) {
     const allSlugs = [...new Set([...mapA.keys(), ...mapB.keys()])].slice(0, 500);
 
     async function getEntityMeta(acct) {
-      const { data: cand } = await db.from('candidates')
+      const { data: candRows } = await db.from('candidates')
         .select('total_combined, total_hard, soft_money_total, party_code, office_desc')
         .eq('acct_num', acct)
-        .maybeSingle();
+        .limit(1);
+      const cand = candRows?.[0] ?? null;
       if (cand) return {
         total_combined: parseFloat(cand.total_combined) || 0,
         party: cand.party_code,
         office: cand.office_desc,
       };
-      const { data: comm } = await db.from('committees')
+      const { data: commRows } = await db.from('committees')
         .select('total_received')
         .eq('acct_num', acct)
-        .maybeSingle();
+        .limit(1);
+      const comm = commRows?.[0] ?? null;
       return { total_combined: parseFloat(comm?.total_received) || 0 };
     }
 

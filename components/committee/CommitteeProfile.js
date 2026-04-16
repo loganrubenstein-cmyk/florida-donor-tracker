@@ -16,6 +16,7 @@ import EntityHeader from '@/components/shared/EntityHeader';
 import RelationshipsBlock from '@/components/shared/RelationshipsBlock';
 import dynamic from 'next/dynamic';
 import { fmtMoneyCompact, fmtMoney } from '@/lib/fmt';
+import InsightStrip from '@/components/shared/InsightStrip';
 
 const TransactionExplorer = dynamic(() => import('@/components/explorer/TransactionExplorer'), { ssr: false });
 const ContributionChart   = dynamic(() => import('./ContributionChart'), { ssr: false });
@@ -467,6 +468,63 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
       >
         <SourceLink type="committee" id={data.acct_num} />
       </EntityHeader>
+
+      {(Array.isArray(data.former_names) && data.former_names.length > 0) || data.successor_acct_num ? (
+        <div style={{
+          border: '1px solid var(--border)',
+          borderLeft: '3px solid var(--orange)',
+          padding: '0.75rem 1rem',
+          marginBottom: '1rem',
+          background: 'var(--surface)',
+          borderRadius: '3px',
+          fontSize: '0.82rem',
+        }}>
+          {Array.isArray(data.former_names) && data.former_names.length > 0 && (
+            <div style={{ marginBottom: data.successor_acct_num ? '0.5rem' : 0 }}>
+              <span style={{ color: 'var(--text-dim)', fontSize: '0.76rem', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                Formerly known as
+              </span>
+              <div style={{ marginTop: '0.25rem', display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+                {data.former_names.map((n, i) => (
+                  <div key={i} style={{ color: 'var(--text)' }}>
+                    &ldquo;{n.name}&rdquo;
+                    {n.effective_date && (
+                      <span style={{ color: 'var(--text-dim)', marginLeft: '0.5rem' }}>
+                        until {n.effective_date}
+                      </span>
+                    )}
+                    {n.source_url && (
+                      <a href={n.source_url} target="_blank" rel="noopener noreferrer"
+                         style={{ color: 'var(--teal)', marginLeft: '0.5rem', fontSize: '0.75rem' }}>
+                        source →
+                      </a>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          {data.successor_acct_num && (
+            <div>
+              <span style={{ color: 'var(--text-dim)', fontSize: '0.76rem', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                Successor
+              </span>
+              <div style={{ marginTop: '0.25rem' }}>
+                <a href={`/committee/${data.successor_acct_num}`} style={{ color: 'var(--orange)' }}>
+                  Acct #{data.successor_acct_num} →
+                </a>
+              </div>
+            </div>
+          )}
+          {data.status && data.status !== 'active' && (
+            <div style={{ marginTop: '0.4rem', color: 'var(--text-dim)', fontSize: '0.74rem' }}>
+              Status: {data.status}{data.closed_date ? ` (${data.closed_date})` : ''}
+            </div>
+          )}
+        </div>
+      ) : null}
+
+      <InsightStrip insights={data.insights} />
 
       <div style={{ marginBottom: '1.25rem' }}>
         <a href={`/compare?a=${data.acct_num}`} className="cross-link">

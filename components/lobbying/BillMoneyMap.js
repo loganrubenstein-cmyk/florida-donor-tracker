@@ -2,18 +2,20 @@
 import { useEffect, useState } from 'react';
 import { fmtMoneyCompact } from '@/lib/fmt';
 
-export default function BillMoneyMap({ billSlug }) {
+export default function BillMoneyMap({ billSlug, year }) {
   const [data,    setData]    = useState(null);
   const [loading, setLoading] = useState(true);
   const [error,   setError]   = useState(null);
 
   useEffect(() => {
-    fetch(`/api/bill-money?bill=${encodeURIComponent(billSlug)}`)
+    const qs = new URLSearchParams({ bill: billSlug });
+    if (year) qs.set('year', year);
+    fetch(`/api/bill-money?${qs}`)
       .then(r => r.json())
       .then(d => { if (d.error) setError(d.error); else setData(d); })
       .catch(() => setError('Failed to load.'))
       .finally(() => setLoading(false));
-  }, [billSlug]);
+  }, [billSlug, year]);
 
   if (loading) return <div style={{ color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.78rem', padding: '2rem 0' }}>Loading money map…</div>;
   if (error)   return <div style={{ color: 'var(--text-dim)', fontSize: '0.8rem', padding: '2rem 0' }}>{error}</div>;

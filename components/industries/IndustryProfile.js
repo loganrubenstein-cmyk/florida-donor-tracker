@@ -255,10 +255,10 @@ export default function IndustryProfile({ data, totalAmount, trendData, topDonor
                 </td>
               </tr>
             )) : donors.map((d, i) => (
-              <tr key={d.name} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
+              <tr key={d.slug || d.name} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
                 <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2rem' }}>{i + 1}</td>
                 <td style={{ padding: '0.4rem 0.6rem', wordBreak: 'break-word', maxWidth: '300px' }}>
-                  <a href={`/donor/${slugify(d.name)}`}
+                  <a href={`/donor/${d.slug || slugify(d.name)}`}
                     style={{ color: 'var(--teal)', textDecoration: 'none' }}>
                     {d.name}
                   </a>

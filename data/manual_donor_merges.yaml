@@ -1,0 +1,164 @@
+# data/manual_donor_merges.yaml
+#
+# Hand-curated canonical-entity map. Every entry below is a merge decision
+# that has been verified against public records — the alias on the left
+# really is the same real-world donor as the canonical on the right.
+#
+# Consumed by: scripts/09b_apply_manual_merges.py
+#
+# Rules:
+#   - `canonical_slug` is the slug that wins (shortest, most recognizable)
+#   - `canonical_name` is how the entity displays on its profile page
+#   - `is_corporate: true` for companies, associations, PACs, LLCs
+#   - `aliases` is the full list of name variants (case-insensitive, normalized)
+#   - `notes` should cite a public source whenever possible
+#
+# To add an entity: put the canonical first, then list every variant we've
+# seen in contributions.contributor_name_normalized. Re-run script 09b.
+
+entities:
+
+  - canonical_slug: florida-power-light-company
+    canonical_name: Florida Power & Light Company
+    is_corporate: true
+    corp_ein: "59-0247775"
+    industry: Energy / Utilities
+    aliases:
+      - FLORIDA POWER & LIGHT COMPANY
+      - FLORIDA POWER AND LIGHT COMPANY
+      - FLORIDA POWER & LIGHT CO
+      - FLORIDA POWER AND LIGHT CO
+      - FLORIDA POWER & LIGHT
+      - FLORIDA POWER AND LIGHT
+      - FLORIDA POWER
+      - FPL
+      - FPL GROUP
+      - FPL GROUP INC
+      - FPL INC
+      - NEXTERA ENERGY
+      - NEXTERA ENERGY INC
+      - NEXTERA ENERGY RESOURCES
+    notes: |
+      FPL is a wholly-owned subsidiary of NextEra Energy (NYSE:NEE). Before the
+      2010 rebrand, the parent was "FPL Group". Rolling all variants up to a
+      single entity reflects real-world beneficial ownership.
+      Source: https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0000753308
+
+  - canonical_slug: florida-realtors
+    canonical_name: Florida Realtors
+    is_corporate: true
+    industry: Real Estate
+    aliases:
+      - FLORIDA REALTORS
+      - FLORIDA REALTORS PAC
+      - FLORIDA REALTORS POLITICAL ACTION COMMITTEE
+      - FLORIDA ASSOCIATION OF REALTORS
+      - FLORIDA ASSOCIATION OF REALTORS PAC
+      - FAR PAC
+    notes: |
+      The trade association and its PAC file under multiple names. The $136M
+      drift flagged by audit Check B (2026-04-16) was caused by four of these
+      variants existing as separate donor rows.
+
+  - canonical_slug: the-walt-disney-company
+    canonical_name: The Walt Disney Company
+    is_corporate: true
+    corp_ein: "95-0684440"
+    industry: Entertainment / Media
+    aliases:
+      - WALT DISNEY COMPANY
+      - THE WALT DISNEY COMPANY
+      - WALT DISNEY CO
+      - DISNEY
+      - DISNEY WORLDWIDE SERVICES
+      - DISNEY WORLDWIDE SERVICES INC
+      - WALT DISNEY PARKS & RESORTS
+      - WALT DISNEY PARKS AND RESORTS
+      - WALT DISNEY WORLD CO
+      - WALT DISNEY WORLD COMPANY
+      - REEDY CREEK IMPROVEMENT DISTRICT
+    notes: |
+      Reedy Creek is included because until 2023 it was functionally the
+      Disney-controlled special district; the successor (Central Florida
+      Tourism Oversight District) has separate governance and is NOT
+      aliased to Disney.
+
+  - canonical_slug: publix-super-markets
+    canonical_name: Publix Super Markets, Inc.
+    is_corporate: true
+    corp_ein: "59-0324412"
+    industry: Retail / Grocery
+    aliases:
+      - PUBLIX
+      - PUBLIX SUPER MARKETS
+      - PUBLIX SUPER MARKETS INC
+      - PUBLIX SUPERMARKETS
+      - PUBLIX SUPERMARKETS INC
+      - PUBLIX SUPER MARKETS CHARITIES
+    notes: |
+      Publix Super Markets Charities is a 501(c)(3) and technically a
+      separate entity, but for political-giving rollup it's Publix family
+      money. Reviewer may choose to split if needed.
+
+  - canonical_slug: us-sugar-corporation
+    canonical_name: U.S. Sugar Corporation
+    is_corporate: true
+    industry: Agriculture
+    aliases:
+      - US SUGAR CORPORATION
+      - U S SUGAR CORPORATION
+      - U.S. SUGAR CORPORATION
+      - US SUGAR CORP
+      - UNITED STATES SUGAR CORPORATION
+      - UNITED STATES SUGAR CORP
+
+  - canonical_slug: florida-chamber-of-commerce
+    canonical_name: Florida Chamber of Commerce
+    is_corporate: true
+    industry: Business Association
+    aliases:
+      - FLORIDA CHAMBER OF COMMERCE
+      - FLORIDA CHAMBER
+      - FL CHAMBER OF COMMERCE
+      - FLORIDA CHAMBER OF COMMERCE FEDERATION
+      - FLORIDA CHAMBER PAC
+      - FLORIDA CHAMBER POLITICAL INSTITUTE
+
+  - canonical_slug: associated-industries-of-florida
+    canonical_name: Associated Industries of Florida
+    is_corporate: true
+    industry: Business Association
+    aliases:
+      - ASSOCIATED INDUSTRIES OF FLORIDA
+      - AIF
+      - ASSOCIATED INDUSTRIES
+      - ASSOCIATED INDUSTRIES PAC
+      - AIF PAC
+
+  - canonical_slug: gaetz-family
+    canonical_name: Gaetz Family (Don Gaetz / Matt Gaetz)
+    is_corporate: false
+    industry: null
+    aliases: []   # intentionally empty — never auto-merge individual political figures
+    notes: |
+      PLACEHOLDER — do NOT add aliases to this entry. Individual human
+      donors are dedup'd only on exact-normalized-name match. This entry
+      exists as a sentinel to block fuzzy dedup from ever merging Don
+      Gaetz with Matt Gaetz (they're father and son).
+
+  - canonical_slug: geo-group-inc
+    canonical_name: The GEO Group, Inc.
+    is_corporate: true
+    corp_ein: "65-0043078"
+    industry: Private Prisons
+    aliases:
+      - GEO GROUP
+      - GEO GROUP INC
+      - THE GEO GROUP
+      - THE GEO GROUP INC
+      - GEO CORRECTIONS HOLDINGS
+      - WACKENHUT CORRECTIONS CORPORATION    # pre-2003 name
+      - WACKENHUT CORRECTIONS
+
+# Add new entries below this line. Format is verified by
+# scripts/09b_apply_manual_merges.py — run that after editing.

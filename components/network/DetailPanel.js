@@ -110,7 +110,7 @@ export default function DetailPanel({ node, graphData, onRecenter, annotations =
 
   const profileHref = node.type === 'committee'
     ? (node.acct_num ? `/committee/${node.acct_num}` : null)
-    : `/donor/${slugify(node.label)}`;
+    : `/donor/${node.slug || slugify(node.label)}`;
 
   const researchLinks = [
     ...(profileHref ? [{ label: 'Open Full Profile →', href: profileHref, internal: true }] : []),

@@ -82,10 +82,12 @@ def committees_df_simple():
     })
 
 def test_build_donor_type_committee(committees_df_simple):
-    assert build_donor_type("REPUBLICAN PARTY OF FLORIDA", committees_df_simple) == "committee"
+    names = set(committees_df_simple["committee_name"].str.strip().str.upper())
+    assert build_donor_type("REPUBLICAN PARTY OF FLORIDA", names) == "committee"
 
 def test_build_donor_type_committee_case_insensitive(committees_df_simple):
-    assert build_donor_type("republican party of florida", committees_df_simple) == "committee"
+    names = set(committees_df_simple["committee_name"].str.strip().str.upper())
+    assert build_donor_type("republican party of florida", names) == "committee"
 
 def test_build_donor_type_corporate(committees_df_simple):
     assert build_donor_type("TECO ENERGY INC", committees_df_simple) == "corporate"

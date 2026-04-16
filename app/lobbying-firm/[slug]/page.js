@@ -17,11 +17,12 @@ function fmt(n) { return n ? fmtMoneyCompact(parseFloat(n)) : '—'; }
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const db = getDb();
-  const { data } = await db
+  const { data: rows } = await db
     .from('lobbying_firms')
     .select('firm_name, total_comp, num_principals')
     .eq('slug', slug)
-    .maybeSingle();
+    .limit(1);
+  const data = rows?.[0] ?? null;
   if (!data) return { title: 'Lobbying Firm' };
   const comp = data.total_comp ? `${fmt(parseFloat(data.total_comp))} in compensation` : '';
   const clients = data.num_principals ? `${data.num_principals} clients` : '';
@@ -38,7 +39,8 @@ export default async function LobbyingFirmPage({ params }) {
     db.from('lobbying_firms')
       .select('slug, firm_name, total_comp, num_principals, num_quarters, first_year, last_year, num_years')
       .eq('slug', slug)
-      .maybeSingle(),
+      .limit(1)
+      .then(r => ({ data: r.data?.[0] ?? null, error: r.error })),
     db.from('lobbying_firm_clients')
       .select('principal_name, principal_slug, total_comp, first_year, last_year')
       .eq('firm_slug', slug)
@@ -126,7 +128,7 @@ export default async function LobbyingFirmPage({ params }) {
       </div>
 
       <div style={{ fontSize: '0.7rem', color: 'rgba(90,106,136,0.7)', marginBottom: '1.5rem', lineHeight: 1.6 }}>
-        Compensation figures are midpoints of FL-mandated disclosure bands — not exact amounts.
+        Compensation figures are midpoints of FL-mandated disclosure bands. The FL disclosure system records the same firm-level amount for every registered lobbyist at the firm — totals above are overstated by roughly the firm&apos;s average lobbyist count. Relative rankings across firms are reliable; absolute figures are not.
       </div>
 
       {/* Top clients */}

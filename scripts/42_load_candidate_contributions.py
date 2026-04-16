@@ -103,24 +103,33 @@ def parse_acct_from_source(source_file) -> str | None:
     return m.group(1) if m else None
 
 
+def _donor_normalize(name: str) -> str:
+    """Mirrors SQL donor_normalize() from migration 015."""
+    if not isinstance(name, str):
+        return ""
+    s = name.upper()
+    s = re.sub(r"[^A-Z0-9 ]", " ", s)
+    s = re.sub(r"\s+", " ", s).strip()
+    return s
+
+
 def load_donor_slug_map(cur) -> dict:
-    print("  Loading donor slug map from donors table...", flush=True)
-    cur.execute("select name, slug from donors")
+    """Return {alias_text: canonical_slug} from donor_aliases. See script 41."""
+    print("  Loading donor slug map from donor_aliases…", flush=True)
+    cur.execute("""
+        SELECT alias_text, canonical_slug
+        FROM donor_aliases
+        WHERE review_status IN ('auto','approved')
+    """)
     rows = cur.fetchall()
-
-    exact = {}
-    for name, slug in rows:
-        if not name or not slug:
-            continue
-        exact[normalize_name(name)] = slug
-
-    m = dict(exact)
-    for canonical, slug in exact.items():
-        for variant in _name_variants(canonical):
-            if variant and variant not in m:
-                m[variant] = slug
-
-    print(f"  → {len(exact):,} exact + {len(m)-len(exact):,} variant entries indexed", flush=True)
+    m = {a: s for (a, s) in rows if a and s}
+    variants = 0
+    for alias_text, slug in list(m.items()):
+        for v in _name_variants(alias_text):
+            if v and v not in m:
+                m[v] = slug
+                variants += 1
+    print(f"  → {len(rows):,} canonical aliases + {variants:,} suffix variants", flush=True)
     return m
 
 
@@ -197,13 +206,21 @@ def prepare_chunk(df: pd.DataFrame, slug_map: dict) -> tuple[str, int, dict]:
 
     df["contributor_name"] = df["contributor_name"].fillna("").astype(str)
     df["contributor_name_normalized"] = df["contributor_name"].map(normalize_name)
-    df["donor_slug"] = df["contributor_name_normalized"].map(slug_map)
+    df["_canon_norm"] = df["contributor_name"].map(_donor_normalize)
+    df["donor_slug"] = df["_canon_norm"].map(slug_map)
+
+    unmatched = df["donor_slug"].isna()
+    if unmatched.any():
+        df.loc[unmatched, "donor_slug"] = (
+            df.loc[unmatched, "contributor_name_normalized"].map(slug_map)
+        )
     unmatched = df["donor_slug"].isna()
     if unmatched.any():
         df.loc[unmatched, "donor_slug"] = (
             df.loc[unmatched, "contributor_name_normalized"]
             .map(lambda n: slug_map.get(_strip_punct(n)))
         )
+    df.drop(columns=["_canon_norm"], inplace=True)
 
     df["contribution_date"] = pd.to_datetime(
         df["contribution_date"], errors="coerce"

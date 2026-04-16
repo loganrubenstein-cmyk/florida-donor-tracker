@@ -37,7 +37,8 @@ export async function GET(request) {
     db.from('candidates')
       .select('candidate_name, office_desc, election_year, party_code, hard_money_total, total_combined')
       .eq('acct_num', acct)
-      .maybeSingle(),
+      .limit(1)
+      .then(r => ({ data: r.data?.[0] ?? null, error: r.error })),
     db.from('candidate_pc_links_v')
       .select('pc_acct_num, link_type, committees(committee_name, total_received, date_start)')
       .eq('candidate_acct_num', acct),

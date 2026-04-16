@@ -3,25 +3,23 @@ import { getDb } from '@/lib/db';
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
-  const billSlug = searchParams.get('bill') || '';
+  const billSlug  = searchParams.get('bill') || '';
+  const yearParam = searchParams.get('year') || null;
   if (!billSlug) return NextResponse.json({ error: 'bill required' }, { status: 400 });
 
   const db = getDb();
 
-  // Get canonical bill name
-  const { data: billRows } = await db
-    .from('bill_disclosures')
-    .select('bill_canon')
-    .eq('bill_slug', billSlug)
-    .limit(1);
+  // Get canonical bill name (optionally filtered to one session year)
+  let canonQuery = db.from('bill_disclosures').select('bill_canon').eq('bill_slug', billSlug);
+  if (yearParam) canonQuery = canonQuery.eq('year', parseInt(yearParam, 10));
+  const { data: billRows } = await canonQuery.limit(1);
   const billCanon = billRows?.[0]?.bill_canon;
   if (!billCanon) return NextResponse.json({ principals: [], votes: [], bill_canon: null, num_principals: 0, num_voters: 0 });
 
-  // Get all principals + lobbyists who disclosed on this bill
-  const { data: discRows } = await db
-    .from('bill_disclosures')
-    .select('principal, lobbyist')
-    .eq('bill_slug', billSlug);
+  // Get all principals + lobbyists who disclosed on this bill (same year filter)
+  let discQuery = db.from('bill_disclosures').select('principal, lobbyist').eq('bill_slug', billSlug);
+  if (yearParam) discQuery = discQuery.eq('year', parseInt(yearParam, 10));
+  const { data: discRows } = await discQuery;
 
   const principalNames = [...new Set((discRows || []).map(r => r.principal).filter(Boolean))];
   if (principalNames.length === 0) {

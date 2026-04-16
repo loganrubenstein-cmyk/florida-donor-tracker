@@ -1,0 +1,42 @@
+name: Daily — Contributions Scrape
+
+on:
+  schedule:
+    - cron: '0 11 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: daily-contributions
+  cancel-in-progress: false
+
+env:
+  SUPABASE_DB_URL:               ${{ secrets.SUPABASE_DB_URL }}
+  SUPABASE_SERVICE_ROLE_KEY:     ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+  NEXT_PUBLIC_SUPABASE_URL:      ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    permissions:
+      issues: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scrape new contributions
+        uses: ./.github/actions/run-script
+        with:
+          script: 03_scrape_contributions.py
+          args: --since-last-manifest
+      - name: Load contributions
+        uses: ./.github/actions/run-script
+        with:
+          script: 41_load_contributions.py
+      - name: Open issue on failure
+        if: failure()
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: "[pipeline-failure:medium] daily-contributions"
+          content-filepath: data/logs/03_scrape_contributions.py.log
+          labels: pipeline-failure,severity:medium,data-update

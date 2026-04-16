@@ -105,7 +105,7 @@ export default async function LegislaturePage() {
         <Link href="/lobbying/bills" className="hub-card">
           <div className="hub-card-title">Lobbied Bills</div>
           <div className="hub-card-desc">14K FL House bills by lobbying activity — see which bills attracted the most principals and lobbyist registrations.</div>
-          <div className="hub-card-stat">2016–2026 · FL House disclosures</div>
+          <div className="hub-card-stat">2017–2026 · FL House disclosures</div>
         </Link>
       </div>
 

@@ -78,10 +78,10 @@ export default function MethodologyPage() {
         <div style={{ marginTop: '1rem', padding: '0.75rem 1rem', background: 'rgba(100,140,220,0.05)', border: '1px solid rgba(100,140,220,0.15)', borderRadius: '3px' }}>
           <strong style={{ color: 'var(--text)', fontSize: '0.78rem' }}>Why do different pages show different donor counts?</strong>
           <ul style={{ marginTop: '0.5rem', paddingLeft: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
-            <li><strong>~10M+ contribution records</strong> — every filed contribution line, including duplicates across amendments.</li>
+            <li><strong>~22M+ contribution records</strong> — every filed contribution line, including duplicates across amendments.</li>
             <li><strong>~880K+ contributor names</strong> — unique normalized names across all records (before deduplication).</li>
-            <li><strong>~336K donor profiles</strong> — unique names that received a deduplication slot; browseable at <Link href="/donors" style={{ color: 'var(--teal)', textDecoration: 'none' }}>/donors</Link>.</li>
-            <li><strong>~85K donors in the default directory view</strong> — a filtered subset of donors with ≥$1K in total contributions, to keep the directory usable. Smaller donors exist in the index; search for them directly.</li>
+            <li><strong>~883K donor profiles</strong> — unique names that received a deduplication slot; browseable at <Link href="/donors" style={{ color: 'var(--teal)', textDecoration: 'none' }}>/donors</Link>.</li>
+            <li><strong>~94K donors in the default directory view</strong> — a filtered subset of donors with ≥$1K in total contributions, to keep the directory usable. Smaller donors exist in the index; search for them directly.</li>
           </ul>
         </div>
       </Section>
@@ -115,7 +115,7 @@ export default function MethodologyPage() {
 
       <Section title="Known Limits">
         <ul style={{ paddingLeft: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-          <li>Lobbyist compensation is disclosed in ranges, not exact figures. Totals shown are midpoint estimates.</li>
+          <li>Lobbyist compensation below $50K is disclosed in $10K bands — we use midpoint estimates. Amounts of $50K+ are exact figures as reported to the state.</li>
           <li>Race-level candidate comparisons (same office, same year) are not yet built.</li>
           <li>Data freshness varies — some committees may lag by weeks or months depending on filing schedules.</li>
           <li>Name deduplication is exact-match only — contributions from the same person with differently-spelled names are not merged.</li>
