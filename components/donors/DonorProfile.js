@@ -1,12 +1,14 @@
 // components/donors/DonorProfile.js
 import dynamic from 'next/dynamic';
 import BackLinks from '@/components/BackLinks';
+import IndustryPeers from './IndustryPeers';
 import TabbedProfile from '@/components/shared/TabbedProfile';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import EntityHeader from '@/components/shared/EntityHeader';
 import RelationshipsBlock from '@/components/shared/RelationshipsBlock';
 import NewsBlock from '@/components/shared/NewsBlock';
 import SourceLink from '@/components/shared/SourceLink';
+import AnimatedStat from '@/components/shared/AnimatedStat';
 import { slugify } from '@/lib/slugify';
 import { fmtMoneyCompact, fmtMoney, fmtCount } from '@/lib/fmt';
 import { getPoliticianSlugByAcctNum } from '@/lib/loadCandidate';
@@ -14,7 +16,7 @@ import { getPoliticianSlugByAcctNum } from '@/lib/loadCandidate';
 const DonorYearChart      = dynamic(() => import('./DonorYearChart'), { ssr: false });
 const TransactionExplorer = dynamic(() => import('@/components/explorer/TransactionExplorer'), { ssr: false });
 
-function StatBox({ label, value, sub, color }) {
+function StatBox({ label, value, rawValue, sub, color }) {
   return (
     <div style={{
       background: 'var(--bg)', padding: '1rem 1.25rem',
@@ -23,8 +25,11 @@ function StatBox({ label, value, sub, color }) {
       <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
         {label}
       </div>
-      <div style={{ fontSize: '1.3rem', fontFamily: 'var(--font-mono)', color: color || 'var(--orange)', fontWeight: 700 }}>
-        {value}
+      <div style={{ fontSize: '1.3rem', fontFamily: 'var(--font-mono)', fontWeight: 700 }}>
+        {rawValue != null
+          ? <AnimatedStat value={rawValue} format="compact" color={color || 'var(--orange)'} />
+          : <span style={{ color: color || 'var(--orange)' }}>{value}</span>
+        }
       </div>
       {sub && (
         <div style={{ fontSize: '0.62rem', color: 'var(--text-dim)' }}>{sub}</div>
@@ -164,10 +169,10 @@ export default function DonorProfile({ data, annotations = {} }) {
         display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
         gap: '1px', background: 'var(--border)', marginBottom: '2rem',
       }}>
-        <StatBox label="Combined Total" value={fmtMoneyCompact(data.total_combined)} />
-        <StatBox label="PAC / Soft Money" value={fmtMoneyCompact(data.total_soft)}
+        <StatBox label="Combined Total" rawValue={data.total_combined} value={fmtMoneyCompact(data.total_combined)} />
+        <StatBox label="PAC / Soft Money" rawValue={data.total_soft} value={fmtMoneyCompact(data.total_soft)}
           sub={`${data.num_committees || 0} committees`} color="var(--teal)" />
-        <StatBox label="Direct / Hard Money" value={data.total_hard > 0 ? fmtMoneyCompact(data.total_hard) : '—'}
+        <StatBox label="Direct / Hard Money" rawValue={data.total_hard > 0 ? data.total_hard : null} value={data.total_hard > 0 ? fmtMoneyCompact(data.total_hard) : '—'}
           sub={candidates.length > 0 ? `${data.num_candidates} candidates` : 'No direct contributions'}
           color="var(--blue)" />
         <StatBox label="Lobbyist Principals" value={lobbyists.length > 0 ? lobbyists.length : '—'}
@@ -248,7 +253,7 @@ export default function DonorProfile({ data, annotations = {} }) {
         );
       })()}
 
-      {/* Industry cross-reference */}
+      {/* Industry cross-reference + peers */}
       {data.industry && data.industry !== 'Not Employed' && data.industry !== 'Other' && (
         <div style={{ marginBottom: '1rem' }}>
           <a href={`/industry/${slugify(data.industry)}`} style={{
@@ -259,6 +264,7 @@ export default function DonorProfile({ data, annotations = {} }) {
           }}>
             → browse top {data.industry} donors
           </a>
+          <IndustryPeers industry={data.industry} currentSlug={data.slug} />
         </div>
       )}
     </div>
@@ -275,6 +281,11 @@ export default function DonorProfile({ data, annotations = {} }) {
         </a>
       </div>
       <CommitteeTable committees={committees} />
+      <div style={{ marginTop: '1rem', paddingTop: '0.75rem', borderTop: '1px solid var(--border)' }}>
+        <a href="/flow" className="cross-link">
+          Explore money flows across all industries →
+        </a>
+      </div>
     </div>
   );
 

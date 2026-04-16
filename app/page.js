@@ -1,6 +1,7 @@
 import DonorTable from '@/components/donors/DonorTable'
 import FloridaOutline from '@/components/shared/FloridaOutline'
 import HeroCounter from '@/components/home/HeroCounter'
+import AnimatedStat from '@/components/shared/AnimatedStat'
 import { getDb } from '@/lib/db'
 import { FEDERAL_OFFICE_CODES } from '@/lib/officeCodes'
 import { DATA_LAST_UPDATED } from '@/lib/dataLastUpdated'
@@ -190,7 +191,7 @@ export default async function Home() {
           }}>
             → candidates
           </a>
-          <a href="/network" style={{
+          <a href="/flow" style={{
             border: '1px solid rgba(100,140,220,0.2)',
             color: 'var(--text-dim)',
             padding: '0.5rem 1.2rem',
@@ -199,7 +200,7 @@ export default async function Home() {
             textDecoration: 'none',
             fontFamily: 'var(--font-mono)',
           }}>
-            → network
+            → flow
           </a>
           <span style={{ fontSize: '0.58rem', color: 'rgba(90,106,136,0.6)' }}>
             Updated {updatedDate}
@@ -218,14 +219,14 @@ export default async function Home() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '2.5rem' }}>
           <div className="rg-4" style={{ gap: '1.5rem', flex: 1 }}>
             {[
-              { value: formatBillions(meta.grand_totals?.total_political_spending_tracked ?? meta.campaign_finance?.estimated_total_contributions ?? 0), label: 'total political\nspending tracked', color: 'var(--orange)' },
-              { value: (meta.campaign_finance?.total_donors ?? 0).toLocaleString(),               label: 'donor\nprofiles',              color: 'var(--teal)'   },
-              { value: (meta.committees?.total_committees ?? meta.lobbyist_registrations?.total_principals ?? 0).toLocaleString(), label: 'committees\ntracked',  color: 'var(--green)'  },
-              { value: (meta.candidates?.total_candidates ?? 0).toLocaleString(), label: 'candidates\ntracked',       color: 'var(--blue)'   },
-            ].map(({ value, label, color }) => (
+              { rawValue: meta.grand_totals?.total_political_spending_tracked ?? 0, format: 'billions', label: 'total political\nspending tracked', color: 'var(--orange)' },
+              { rawValue: meta.campaign_finance?.total_donors ?? 0,                  format: 'count',    label: 'donor\nprofiles',              color: 'var(--teal)'   },
+              { rawValue: meta.committees?.total_committees ?? 0,                    format: 'count',    label: 'committees\ntracked',          color: 'var(--green)'  },
+              { rawValue: meta.candidates?.total_candidates ?? 0,                    format: 'count',    label: 'candidates\ntracked',          color: 'var(--blue)'   },
+            ].map(({ rawValue, format, label, color }) => (
               <div key={label}>
-                <div style={{ fontSize: '1.5rem', color, fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1 }}>
-                  {value}
+                <div style={{ fontSize: '1.5rem', fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1 }}>
+                  <AnimatedStat value={rawValue} format={format} color={color} />
                 </div>
                 <div style={{ fontSize: '0.55rem', color: 'var(--text-dim)', marginTop: '0.35rem', lineHeight: 1.6, whiteSpace: 'pre-line' }}>
                   {label}
@@ -310,7 +311,7 @@ export default async function Home() {
               How money moved
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <CardLink href="/network/graph" color="var(--teal)" accent="rgba(77,216,240,0.2)" title="→ network graph" desc="Visualize the full donor-committee network. Filter by industry to map special interest influence." />
+              <CardLink href="/flow" color="var(--teal)" accent="rgba(77,216,240,0.2)" title="→ flow explorer" desc="Click through donors, committees, candidates, and industries. Follow money in any direction." />
               <CardLink href="/flow" color="var(--teal)" accent="rgba(77,216,240,0.15)" title="→ money flow" desc="Sankey diagram of the largest donor-to-committee flows. Filter by election cycle, industry, or party." />
               <CardLink href="/ie" color="var(--orange)" accent="rgba(255,176,96,0.15)" title="→ independent expenditures" desc="$70.9M in IE/EC spending — committees advocating for and against candidates." />
               <CardLink href="/connections" color="var(--orange)" accent="rgba(255,176,96,0.12)" title="→ committee connections" desc="56K+ committee pairs sharing treasurers, addresses, donors, or money flows." />

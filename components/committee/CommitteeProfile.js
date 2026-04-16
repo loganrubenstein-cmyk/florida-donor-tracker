@@ -1,5 +1,6 @@
 // components/committee/CommitteeProfile.js
 
+import EgoGraph from '@/components/shared/EgoGraph';
 import { getPartyFromName } from '@/lib/partyUtils';
 import BackLinks from '@/components/BackLinks';
 import { fmtArticleDate } from '@/lib/dateUtils';
@@ -440,6 +441,7 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
     { id: 'payees',        label: 'Payees',        description: 'Vendors and consultants paid by this committee',           content: payeesContent },
     { id: 'transactions',  label: 'Transactions',  description: 'Search individual contribution records',                    content: transactionsContent },
     { id: 'connections',   label: 'Connections',   description: 'Committees sharing treasurer, address, or officers',       content: connectionsContent },
+    { id: 'network',       label: 'Network',       description: 'Visual ego-network of structural committee connections',    content: <EgoGraph acctNum={data.acct_num} centerLabel={data.committee_name} centerType="committee" /> },
     { id: 'sources',       label: 'Sources',       description: 'Research links, data sources, and methodology',            content: sourcesContent },
   ];
 
@@ -459,6 +461,12 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
       >
         <SourceLink type="committee" id={data.acct_num} />
       </EntityHeader>
+
+      <div style={{ marginBottom: '1.25rem' }}>
+        <a href={`/compare?a=${data.acct_num}`} className="cross-link">
+          Find shared donors →
+        </a>
+      </div>
 
       <TabbedProfile tabs={tabs} defaultTab="overview" />
     </main>

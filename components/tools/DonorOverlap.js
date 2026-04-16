@@ -4,16 +4,23 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { fmtMoney, fmtMoneyCompact } from '@/lib/fmt';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import CandidateCompareResult from '@/components/tools/CandidateCompareResult';
 
 const TYPE_COLOR = { individual: 'var(--green)', corporate: 'var(--blue)', committee: 'var(--orange)', unknown: 'var(--text-dim)' };
 const TYPE_LABEL = { individual: 'Individual', corporate: 'Corporate', committee: 'Committee/PAC', unknown: 'Other' };
 
-export default function DonorOverlap() {
-  const [entityA, setEntityA] = useState(null);
+export default function DonorOverlap({ initialEntityA = null }) {
+  const [entityA, setEntityA] = useState(initialEntityA);
   const [entityB, setEntityB] = useState(null);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [mode, setMode] = useState('overlap');
+
+  function switchMode(m) {
+    setMode(m);
+    setResult(null);
+  }
 
   async function handleCompare() {
     if (!entityA || !entityB) return;
@@ -21,7 +28,10 @@ export default function DonorOverlap() {
     setError(null);
     setResult(null);
     try {
-      const res = await fetch(`/api/overlap?a=${entityA.acct_num}&b=${entityB.acct_num}`);
+      const url = mode === 'candidate_compare'
+        ? `/api/overlap?a=${entityA.acct_num}&b=${entityB.acct_num}&mode=candidate_compare`
+        : `/api/overlap?a=${entityA.acct_num}&b=${entityB.acct_num}`;
+      const res = await fetch(url);
       const json = await res.json();
       if (!res.ok) { setError(json.error || 'Comparison failed'); return; }
       setResult(json);
@@ -32,19 +42,42 @@ export default function DonorOverlap() {
     }
   }
 
+  const btnLabel = loading
+    ? 'Comparing…'
+    : mode === 'candidate_compare' ? 'Compare Candidates' : 'Find Shared Donors';
+
   return (
     <div className="container" style={{ paddingTop: '2rem', paddingBottom: '3rem' }}>
-      <div style={{ marginBottom: '1.5rem' }}>
+      <div style={{ marginBottom: '1.25rem' }}>
         <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.6rem', color: 'var(--orange)', margin: 0 }}>
-          Donor Overlap
+          Compare
         </h1>
         <p style={{ color: 'var(--text-dim)', fontSize: '0.78rem', marginTop: '0.35rem' }}>
-          Pick any two candidates or committees to find their shared donors and overlapping money.
+          Pick any two candidates or committees to compare their donors and funding sources.
         </p>
       </div>
 
+      {/* Mode toggle */}
+      <div style={{ display: 'flex', marginBottom: '1.5rem', border: '1px solid var(--border)', borderRadius: '3px', overflow: 'hidden', width: 'fit-content' }}>
+        {[
+          { key: 'overlap', label: 'Shared Donors' },
+          { key: 'candidate_compare', label: 'Candidate Comparison' },
+        ].map(({ key, label }, i) => (
+          <button key={key} onClick={() => switchMode(key)}
+            style={{
+              padding: '0.38rem 0.9rem', fontSize: '0.72rem', fontFamily: 'var(--font-mono)',
+              background: mode === key ? 'var(--orange)' : 'transparent',
+              color: mode === key ? '#000' : 'var(--text-dim)',
+              border: 'none', borderRight: i === 0 ? '1px solid var(--border)' : 'none',
+              cursor: 'pointer', transition: 'background 0.12s, color 0.12s',
+            }}>
+            {label}
+          </button>
+        ))}
+      </div>
+
       <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: '0.75rem', alignItems: 'end', marginBottom: '1.5rem' }}>
-        <EntityPicker label="Entity A" value={entityA} onChange={setEntityA} />
+        <EntityPicker label="Entity A" value={entityA} onChange={setEntityA} initialValue={initialEntityA} />
         <div style={{ padding: '0.5rem 0', color: 'var(--text-dim)', fontSize: '0.82rem', fontFamily: 'var(--font-mono)' }}>vs</div>
         <EntityPicker label="Entity B" value={entityB} onChange={setEntityB} />
       </div>
@@ -58,7 +91,7 @@ export default function DonorOverlap() {
           cursor: (!entityA || !entityB || loading) ? 'not-allowed' : 'pointer',
           opacity: loading ? 0.7 : 1, marginBottom: '1.5rem',
         }}>
-        {loading ? 'Comparing…' : 'Find Shared Donors'}
+        {btnLabel}
       </button>
 
       {/* Quick-select pairs */}
@@ -92,7 +125,8 @@ export default function DonorOverlap() {
         </div>
       )}
 
-      {result && <OverlapResult data={result} />}
+      {result && mode === 'candidate_compare' && <CandidateCompareResult data={result} />}
+      {result && mode === 'overlap' && <OverlapResult data={result} />}
 
       <div style={{ marginTop: '2rem' }}>
         <DataTrustBlock
@@ -112,8 +146,8 @@ export default function DonorOverlap() {
   );
 }
 
-function EntityPicker({ label, value, onChange }) {
-  const [query, setQuery] = useState('');
+function EntityPicker({ label, value, onChange, initialValue = null }) {
+  const [query, setQuery] = useState(initialValue?.name || '');
   const [results, setResults] = useState([]);
   const [open, setOpen] = useState(false);
   const timerRef = useRef(null);
