@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import useInViewport from '@/lib/useInViewport';
+import { INDUSTRY_COLORS } from '@/lib/industryColors';
 
 function fmt(n) {
   if (!n || n === 0) return '$0';
@@ -9,28 +11,10 @@ function fmt(n) {
   return `$${n.toFixed(0)}`;
 }
 
-// Consistent color per industry bucket
-const INDUSTRY_COLORS = {
-  'Legal':                      '#4dd8f0',
-  'Real Estate':                '#f0a04d',
-  'Healthcare':                 '#7dd87d',
-  'Finance & Insurance':        '#a04df0',
-  'Political / Lobbying':       '#f04d4d',
-  'Agriculture':                '#d8c84d',
-  'Construction':               '#d8884d',
-  'Education':                  '#4d88f0',
-  'Technology / Engineering':   '#4df0d8',
-  'Retail & Hospitality':       '#d84d88',
-  'Business & Consulting':      '#8888cc',
-  'Government & Public Service':'#88cc88',
-  'Retired':                    '#aaaaaa',
-  'Not Employed':               '#666688',
-  'Other':                      '#444466',
-};
-
 export default function IndustryBreakdown({ acctNum, total }) {
   const [data, setData]       = useState(null);
   const [loading, setLoading] = useState(true);
+  const [chartRef, inView]    = useInViewport();
 
   useEffect(() => {
     if (!acctNum) return;
@@ -56,10 +40,11 @@ export default function IndustryBreakdown({ acctNum, total }) {
       </div>
 
       {/* Bar chart */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', marginBottom: '0.75rem' }}>
-        {topRows.map(row => {
+      <div ref={chartRef} style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', marginBottom: '0.75rem' }}>
+        {topRows.map((row, index) => {
           const pct = total > 0 ? (row.total / total) * 100 : 0;
           const color = INDUSTRY_COLORS[row.industry] || '#666688';
+          const delay = `${index * 0.04}s`;
           return (
             <div key={row.industry} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <div style={{
@@ -71,9 +56,10 @@ export default function IndustryBreakdown({ acctNum, total }) {
               </div>
               <div style={{ flex: 1, height: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '2px', overflow: 'hidden' }}>
                 <div style={{
-                  height: '100%', width: `${Math.max(pct, 0.5)}%`,
+                  height: '100%',
+                  width: inView ? `${Math.max(pct, 0.5)}%` : '0%',
                   background: color, borderRadius: '2px',
-                  transition: 'width 0.3s ease',
+                  transition: `width 0.6s ease-out ${delay}`,
                 }} />
               </div>
               <div style={{

@@ -10,6 +10,7 @@ function normalizeType(t) {
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
 
+  // ── Entity search ──────────────────────────────────────────────────────────
   const q = searchParams.get('q') || '';
   if (q.trim()) {
     const db = getDb();
@@ -45,6 +46,8 @@ export async function GET(request) {
 
   const acctA = searchParams.get('a');
   const acctB = searchParams.get('b');
+  const mode  = searchParams.get('mode') || 'overlap';
+
   if (!acctA || !acctB) {
     return NextResponse.json({ error: 'Provide ?a= and ?b= (account numbers) or ?q= to search' }, { status: 400 });
   }
@@ -122,7 +125,7 @@ export async function GET(request) {
     typeBreakdown[t] = (typeBreakdown[t] || 0) + d.total;
   }
 
-  return NextResponse.json({
+  const baseResponse = {
     entity_a: { acct_num: acctA, ...entityA },
     entity_b: { acct_num: acctB, ...entityB },
     summary: {
@@ -135,5 +138,90 @@ export async function GET(request) {
     },
     type_breakdown: typeBreakdown,
     shared_donors: overlap.slice(0, 50),
-  });
+  };
+
+  // ── Candidate Compare mode ─────────────────────────────────────────────────
+  if (mode === 'candidate_compare') {
+    const allSlugs = [...new Set([...mapA.keys(), ...mapB.keys()])].slice(0, 500);
+
+    async function getEntityMeta(acct) {
+      const { data: cand } = await db.from('candidates')
+        .select('total_combined, total_hard, soft_money_total, party_code, office_desc')
+        .eq('acct_num', acct)
+        .maybeSingle();
+      if (cand) return {
+        total_combined: parseFloat(cand.total_combined) || 0,
+        party: cand.party_code,
+        office: cand.office_desc,
+      };
+      const { data: comm } = await db.from('committees')
+        .select('total_received')
+        .eq('acct_num', acct)
+        .maybeSingle();
+      return { total_combined: parseFloat(comm?.total_received) || 0 };
+    }
+
+    const [industryRows, meta_a, meta_b] = await Promise.all([
+      allSlugs.length > 0
+        ? db.from('donors').select('slug, industry').in('slug', allSlugs).then(r => r.data || [])
+        : Promise.resolve([]),
+      getEntityMeta(acctA),
+      getEntityMeta(acctB),
+    ]);
+
+    const industryBySlug = {};
+    for (const r of industryRows) {
+      if (r.industry) industryBySlug[r.slug] = r.industry;
+    }
+
+    function computeIndustries(map) {
+      const grandTotal = [...map.values()].reduce((s, d) => s + (parseFloat(d.total_amount) || 0), 0);
+      const totals = {};
+      for (const [slug, d] of map) {
+        const industry = industryBySlug[slug] || 'Other';
+        totals[industry] = (totals[industry] || 0) + (parseFloat(d.total_amount) || 0);
+      }
+      return Object.entries(totals)
+        .map(([industry, total]) => ({
+          industry,
+          total,
+          pct: grandTotal > 0 ? Math.round((total / grandTotal) * 1000) / 10 : 0,
+        }))
+        .sort((a, b) => b.total - a.total)
+        .slice(0, 10);
+    }
+
+    const unique_a = [...mapA.entries()]
+      .filter(([slug]) => !mapB.has(slug))
+      .map(([slug, d]) => ({
+        name: d.donor_name, slug,
+        amount: parseFloat(d.total_amount) || 0,
+        type: normalizeType(d.type),
+      }))
+      .sort((a, b) => b.amount - a.amount)
+      .slice(0, 10);
+
+    const unique_b = [...mapB.entries()]
+      .filter(([slug]) => !mapA.has(slug))
+      .map(([slug, d]) => ({
+        name: d.donor_name, slug,
+        amount: parseFloat(d.total_amount) || 0,
+        type: normalizeType(d.type),
+      }))
+      .sort((a, b) => b.amount - a.amount)
+      .slice(0, 10);
+
+    return NextResponse.json({
+      ...baseResponse,
+      shared_donors: overlap.slice(0, 25),
+      industries_a: computeIndustries(mapA),
+      industries_b: computeIndustries(mapB),
+      unique_a,
+      unique_b,
+      entity_meta_a: meta_a,
+      entity_meta_b: meta_b,
+    });
+  }
+
+  return NextResponse.json(baseResponse);
 }

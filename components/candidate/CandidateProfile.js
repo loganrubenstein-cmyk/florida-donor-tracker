@@ -2,11 +2,13 @@
 import dynamic from 'next/dynamic';
 import BackLinks from '@/components/BackLinks';
 import TabbedProfile from '@/components/shared/TabbedProfile';
+import EgoGraph from '@/components/shared/EgoGraph';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import NewsBlock from '@/components/shared/NewsBlock';
 import SourceLink from '@/components/shared/SourceLink';
 import EntityHeader from '@/components/shared/EntityHeader';
 import GlossaryTerm from '@/components/shared/GlossaryTerm';
+import AnimatedStat from '@/components/shared/AnimatedStat';
 import { slugify } from '@/lib/slugify';
 import { fmtMoneyCompact, fmtMoney } from '@/lib/fmt';
 import { PARTY_COLOR } from '@/lib/partyUtils';
@@ -184,6 +186,7 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
           {
             label: 'Hard Money (Direct)',
             glossary: 'HARD',
+            rawValue: hm.total,
             value: fmt(hm.total),
             valueColor: 'var(--orange)',
             sub: `${(hm.num_contributions || 0).toLocaleString()} contributions`,
@@ -191,6 +194,7 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
           {
             label: 'Soft Money (Candidate PACs)',
             glossary: 'SOFT',
+            rawValue: hasLinkedPcsButNoSoft ? null : data.soft_money_total,
             value: hasLinkedPcsButNoSoft ? '—' : fmt(data.soft_money_total),
             valueColor: hasLinkedPcsButNoSoft ? 'var(--text-dim)' : 'var(--orange)',
             sub: hasLinkedPcsButNoSoft
@@ -204,16 +208,22 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
           {
             label: 'Combined Total',
             glossary: 'COMBINED',
+            rawValue: data.total_combined,
             value: fmt(data.total_combined),
             valueColor: 'var(--orange)',
             sub: hasLinkedPcsButNoSoft ? 'hard money only' : 'hard + soft',
           },
-        ].map(({ label, glossary, value, valueColor, sub }) => (
+        ].map(({ label, glossary, rawValue, value, valueColor, sub }) => (
           <div key={label} style={{ background: 'var(--bg)', padding: '1rem 1.25rem' }}>
             <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.3rem' }}>
               {glossary ? <GlossaryTerm term={glossary}>{label}</GlossaryTerm> : label}
             </div>
-            <div style={{ fontSize: '1rem', color: valueColor, fontWeight: 700 }}>{value}</div>
+            <div style={{ fontSize: '1rem', fontWeight: 700 }}>
+              {rawValue != null
+                ? <AnimatedStat value={rawValue} format="compact" color={valueColor} />
+                : <span style={{ color: valueColor }}>{value}</span>
+              }
+            </div>
             <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', marginTop: '0.2rem' }}>{sub}</div>
           </div>
         ))}
@@ -541,6 +551,7 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
     { id: 'industries',    label: 'Industries',    description: 'Donor industry breakdown — corporate vs. individual',     content: industriesContent },
     { id: 'expenditures',  label: 'Expenditures',  description: 'Top vendors and consultants paid by this campaign',      content: expendituresContent },
     { id: 'transactions',  label: 'Transactions',  description: 'Search individual contribution records',                  content: transactionsContent },
+    { id: 'network',       label: 'Network',       description: 'Structural connections to other committees — shared staff, addresses, and donors', content: <EgoGraph acctNum={data.acct_num} centerLabel={data.candidate_name} centerType="candidate" /> },
     { id: 'sources',       label: 'Sources',       description: 'Research links, data sources, and methodology',          content: sourcesContent },
   ];
 
@@ -599,6 +610,12 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
           </div>
         </div>
       )}
+
+      <div style={{ marginBottom: '1.25rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+        <a href={`/compare?a=${data.acct_num}`} className="cross-link">
+          Compare with another candidate →
+        </a>
+      </div>
 
       <TabbedProfile tabs={tabs} defaultTab="overview" />
     </main>
