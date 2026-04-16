@@ -93,7 +93,7 @@ export default async function Home() {
       }}>
         <div className="star-field" />
         <div style={{
-          fontSize: '0.6rem',
+          fontSize: '0.65rem',
           letterSpacing: '0.18em',
           color: 'var(--text-dim)',
           textTransform: 'uppercase',
@@ -122,8 +122,8 @@ export default async function Home() {
         </div>
 
         <p style={{
-          fontSize: '0.7rem',
-          color: 'var(--text-dim)',
+          fontSize: '0.84rem',
+          color: 'rgba(200,216,240,0.75)',
           marginBottom: '2rem',
           maxWidth: '520px',
           lineHeight: 1.8,
@@ -192,8 +192,8 @@ export default async function Home() {
             → candidates
           </a>
           <a href="/flow" style={{
-            border: '1px solid rgba(100,140,220,0.2)',
-            color: 'var(--text-dim)',
+            border: '1px solid rgba(77,216,240,0.3)',
+            color: 'var(--teal)',
             padding: '0.5rem 1.2rem',
             fontSize: '0.65rem',
             borderRadius: '3px',
@@ -202,7 +202,7 @@ export default async function Home() {
           }}>
             → flow
           </a>
-          <span style={{ fontSize: '0.58rem', color: 'rgba(90,106,136,0.6)' }}>
+          <span style={{ fontSize: '0.65rem', color: 'var(--text-dim)' }}>
             Updated {updatedDate}
           </span>
         </div>
@@ -225,30 +225,16 @@ export default async function Home() {
               { rawValue: meta.candidates?.total_candidates ?? 0,                    format: 'count',    label: 'candidates\ntracked',          color: 'var(--blue)'   },
             ].map(({ rawValue, format, label, color }) => (
               <div key={label}>
-                <div style={{ fontSize: '1.5rem', fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1 }}>
+                <div style={{ fontSize: '1.65rem', fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1 }}>
                   <AnimatedStat value={rawValue} format={format} color={color} />
                 </div>
-                <div style={{ fontSize: '0.55rem', color: 'var(--text-dim)', marginTop: '0.35rem', lineHeight: 1.6, whiteSpace: 'pre-line' }}>
+                <div style={{ fontSize: '0.67rem', color: 'var(--text-dim)', marginTop: '0.35rem', lineHeight: 1.6, whiteSpace: 'pre-line' }}>
                   {label}
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="hide-mobile" style={{ flexShrink: 0 }}>
-            <a href="/about" style={{
-              fontSize: '0.6rem',
-              color: 'var(--text-dim)',
-              fontFamily: 'var(--font-mono)',
-              textDecoration: 'none',
-              border: '1px solid rgba(100,140,220,0.2)',
-              padding: '0.5rem 1rem',
-              borderRadius: '3px',
-              whiteSpace: 'nowrap',
-            }}>
-              → about this site
-            </a>
-          </div>
         </div>
       </section>
 
@@ -260,7 +246,7 @@ export default async function Home() {
         margin: '0 auto',
       }}>
         <div style={{
-          fontSize: '0.6rem',
+          fontSize: '0.65rem',
           letterSpacing: '0.15em',
           color: 'var(--text-dim)',
           textTransform: 'uppercase',
@@ -274,7 +260,7 @@ export default async function Home() {
 
           {/* Column 1 — Who Gave */}
           <div>
-            <div style={{ fontSize: '0.55rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '0.75rem', borderBottom: '1px solid rgba(100,140,220,0.1)', paddingBottom: '0.4rem' }}>
+            <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '0.75rem', borderBottom: '1px solid rgba(100,140,220,0.1)', paddingBottom: '0.4rem' }}>
               Who gave
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -290,7 +276,7 @@ export default async function Home() {
 
           {/* Column 2 — Who Got Paid */}
           <div>
-            <div style={{ fontSize: '0.55rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '0.75rem', borderBottom: '1px solid rgba(100,140,220,0.1)', paddingBottom: '0.4rem' }}>
+            <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '0.75rem', borderBottom: '1px solid rgba(100,140,220,0.1)', paddingBottom: '0.4rem' }}>
               Who got paid
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -307,7 +293,7 @@ export default async function Home() {
 
           {/* Column 3 — How Money Moved */}
           <div>
-            <div style={{ fontSize: '0.55rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '0.75rem', borderBottom: '1px solid rgba(100,140,220,0.1)', paddingBottom: '0.4rem' }}>
+            <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '0.75rem', borderBottom: '1px solid rgba(100,140,220,0.1)', paddingBottom: '0.4rem' }}>
               How money moved
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -348,7 +334,7 @@ function CardLink({ href, color, accent, title, desc, highlight }) {
         <div style={{ fontSize: '0.7rem', color, fontWeight: 700, marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
           {title}
         </div>
-        <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
+        <div style={{ fontSize: '0.76rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
           {desc}
         </div>
       </div>
