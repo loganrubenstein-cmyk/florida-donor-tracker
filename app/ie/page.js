@@ -31,16 +31,12 @@ const TYPE_COLORS = {
 
 async function loadData() {
   const db = getDb();
-  const [{ data: summaryRows }, { data: ieCommittees }, { data: dbCandidates }, { data: forAgainstRows }] = await Promise.all([
+  const [{ data: summaryRows }, { data: ieCommittees }, { data: dbCandidates }] = await Promise.all([
     db.from('ie_summary').select('total_amount, total_rows, num_committees, date_start, date_end, by_type').limit(1),
     db.from('ie_committees').select('acct_num, committee_name, total_amount, num_transactions, year_min, year_max')
       .order('total_amount', { ascending: false }).limit(50),
     db.from('ie_candidates').select('candidate_acct_num, candidate_name, total_ie_amount, num_expenditures, num_committees, by_year')
       .order('total_ie_amount', { ascending: false }),
-    db.from('independent_expenditures')
-      .select('candidate_name, candidate_slug, support_oppose, amount')
-      .not('candidate_name', 'is', null)
-      .not('support_oppose', 'is', null),
   ]);
 
   // Fill missing committee names from committees table
@@ -82,22 +78,8 @@ async function loadData() {
   const forAmount     = byType.filter(t => t.type_code === 'IES').reduce((s, t) => s + (parseFloat(t.total_amount) || 0), 0);
   const againstAmount = byType.filter(t => t.type_code === 'IEO').reduce((s, t) => s + (parseFloat(t.total_amount) || 0), 0);
 
-  // Aggregate for/against per candidate from independent_expenditures table
-  const forAgainstMap = {};
-  for (const r of forAgainstRows || []) {
-    const key = r.candidate_slug || r.candidate_name;
-    if (!key) continue;
-    if (!forAgainstMap[key]) {
-      forAgainstMap[key] = { name: r.candidate_name, slug: r.candidate_slug, for: 0, against: 0 };
-    }
-    const amt = parseFloat(r.amount) || 0;
-    if (r.support_oppose === 'S') forAgainstMap[key].for += amt;
-    else if (r.support_oppose === 'O') forAgainstMap[key].against += amt;
-  }
-  const forAgainst = Object.values(forAgainstMap)
-    .map(r => ({ ...r, total: r.for + r.against, net: r.for - r.against }))
-    .sort((a, b) => b.total - a.total)
-    .slice(0, 100);
+  // Support/oppose per-candidate data is not available in FL state IE filings
+  const forAgainst = [];
 
   return {
     summary: {
@@ -311,7 +293,15 @@ export default async function IEPage({ searchParams }) {
           <p style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginBottom: '1rem', lineHeight: 1.6 }}>
             Breakdown of independent expenditures by direction (support vs. oppose) for each candidate. Blue = support, red = oppose.
           </p>
-          <IEForAgainstTable rows={forAgainst} />
+          {forAgainst.length > 0
+            ? <IEForAgainstTable rows={forAgainst} />
+            : <div style={{ padding: '1.5rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '4px', fontSize: '0.78rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
+                <div style={{ color: 'var(--text)', marginBottom: '0.4rem', fontWeight: 600 }}>Support/oppose direction not available</div>
+                Florida IE filings do not consistently record whether a given expenditure supported or opposed a specific candidate.
+                The IES/IEO type codes exist in aggregate but are not linked to individual candidates in the state filing data.
+                {' '}<a href="/ie?tab=candidates" style={{ color: 'var(--teal)', textDecoration: 'none' }}>View candidates by total IE spending →</a>
+              </div>
+          }
         </div>
       )}
 

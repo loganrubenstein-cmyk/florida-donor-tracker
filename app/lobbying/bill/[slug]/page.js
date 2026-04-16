@@ -7,9 +7,9 @@ import { fmtCount } from '../../../../lib/fmt';
 import { slugify } from '@/lib/slugify';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import { buildMeta } from '@/lib/seo';
-import dynamic from 'next/dynamic';
+import dynamicImport from 'next/dynamic';
 
-const BillMoneyMap = dynamic(() => import('@/components/lobbying/BillMoneyMap'), { ssr: false });
+const BillMoneyMap = dynamicImport(() => import('@/components/lobbying/BillMoneyMap'), { ssr: false });
 
 export const dynamic = 'force-dynamic';
 

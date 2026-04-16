@@ -10,6 +10,7 @@ import BackToTop from '@/components/shared/BackToTop';
 import { buildMeta } from '@/lib/seo';
 import { fmtMoneyCompact } from '@/lib/fmt';
 import { PARTY_COLOR } from '@/lib/partyUtils';
+import { FEDERAL_OFFICE_CODES } from '@/lib/officeCodes';
 
 let _electionLookup = null;
 function getElectionLookup() {
@@ -67,7 +68,10 @@ export default async function PoliticianPage({ params, searchParams }) {
   const sortedCycles = [...cycles].sort((a, b) => Number(b.year) - Number(a.year));
 
   const { cycle: requestedAcct } = await searchParams;
-  const activeCycle = sortedCycles.find(c => c.acct_num === requestedAcct) ?? sortedCycles[0];
+  // Default to most recent STATE cycle — federal cycles show $0 FL DoE data and link to FEC
+  const activeCycle = sortedCycles.find(c => c.acct_num === requestedAcct)
+    ?? sortedCycles.find(c => !FEDERAL_OFFICE_CODES.has((c.office_code || '').toUpperCase()))
+    ?? sortedCycles[0];
 
   let candidateData = null;
   try {
@@ -135,6 +139,17 @@ export default async function PoliticianPage({ params, searchParams }) {
         ]}
       />
 
+      {activeCycle.office_desc && activeCycle.year && (
+        <div style={{ marginBottom: '0.75rem', marginTop: '-0.25rem' }}>
+          <a
+            href={`/race/${encodeURIComponent(activeCycle.office_desc.toLowerCase().replace(/\s+/g, '-'))}/${activeCycle.year}`}
+            style={{ fontSize: '0.65rem', color: 'var(--teal)', textDecoration: 'none', fontFamily: 'var(--font-mono)' }}
+          >
+            all candidates this race →
+          </a>
+        </div>
+      )}
+
       {/* Cycle comparison table — doubles as cycle selector */}
       {sortedCycles.length > 0 && (
         <div style={{ marginBottom: '1.75rem' }}>
@@ -159,9 +174,12 @@ export default async function PoliticianPage({ params, searchParams }) {
                   const maxCombined = Math.max(...sortedCycles.map(c => cycleFinMap[String(c.acct_num)]?.combined || 0), 1);
                   return sortedCycles.map(c => {
                   const isActive = c.acct_num === activeCycle.acct_num;
+                  const isFederal = FEDERAL_OFFICE_CODES.has((c.office_code || '').toUpperCase());
                   const fin = cycleFinMap[String(c.acct_num)] || {};
                   const officeStr = `${OFFICE_SHORT[c.office_code] || c.office_desc || ''}${c.district ? ` D${c.district}` : ''}`;
                   const barPct = ((fin.combined || 0) / maxCombined * 100).toFixed(1);
+                  const fecOffice = c.office_code === 'USS' ? 'S' : c.office_code === 'USR' ? 'H' : c.office_code === 'PRE' ? 'P' : '';
+                  const fecUrl = `https://www.fec.gov/data/candidates/?q=${encodeURIComponent(display_name)}${fecOffice ? `&office=${fecOffice}` : ''}&state=FL`;
                   return (
                     <tr key={c.acct_num} style={{
                       borderBottom: '1px solid rgba(100,140,220,0.06)',
@@ -179,6 +197,14 @@ export default async function PoliticianPage({ params, searchParams }) {
                       </td>
                       <td style={{ padding: '0.35rem 0.6rem', color: isActive ? 'var(--text)' : 'var(--text-dim)', fontSize: '0.7rem' }}>
                         {officeStr}
+                        {isFederal && (
+                          <span style={{ display: 'block', fontSize: '0.58rem', color: 'var(--text-dim)', marginTop: '0.1rem' }}>
+                            Federal — FL DoE data only.{' '}
+                            <a href={fecUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'rgba(100,140,220,0.6)', textDecoration: 'none' }}>
+                              Full data on FEC.gov ↗
+                            </a>
+                          </span>
+                        )}
                       </td>
                       <td style={{ padding: '0.35rem 0.6rem', textAlign: 'right', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: fin.hard > 0 ? 'var(--orange)' : 'var(--text-dim)', whiteSpace: 'nowrap' }}>
                         {fin.hard > 0 ? fmtMoneyCompact(fin.hard) : '—'}
