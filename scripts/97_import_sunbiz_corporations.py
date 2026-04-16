@@ -548,6 +548,7 @@ def load_corporations(csv_path: Path, cur, dry_run: bool) -> int:
             total += len(rows)
             continue
         execute_values(cur, UPSERT_SQL, rows, page_size=BATCH_SIZE)
+        cur.connection.commit()
         total += len(rows)
         if total % 500_000 == 0:
             print(f"  Upserted {total:,} rows ...", flush=True)
@@ -688,11 +689,13 @@ def enrich_donors(csv_path: Path, cur, dry_run: bool) -> int:
     # ── 4d. Apply ALTER TABLE + UPDATE ────────────────────────────────────────
     if dry_run:
         print(f"  [dry-run] Would write {len(matches):,} donor corp enrichments")
-        # Show a sample
         print("  Sample matches (first 10):")
-        cur.execute("SELECT id, name FROM donors WHERE id = ANY(%s)",
-                    ([m[4] for m in matches[:10]],))
-        id_to_name = {row[0]: row[1] for row in cur.fetchall()}
+        try:
+            cur.execute("SELECT id, name FROM donors WHERE id = ANY(%s)",
+                        ([m[4] for m in matches[:10]],))
+            id_to_name = {row[0]: row[1] for row in cur.fetchall()}
+        except Exception:
+            id_to_name = {}
         for m in matches[:10]:
             print(f"    donor '{id_to_name.get(m[4], m[4])}' → corp {m[0]} ({m[1]}, score={m[3]})")
         return len(matches)
@@ -762,22 +765,38 @@ def main(force: bool = False, dry_run: bool = False) -> int:
     cur = con.cursor()
 
     try:
-        corp_count  = load_corporations(OUTPUT_CSV, cur, dry_run)
-        donor_count = enrich_donors(OUTPUT_CSV, cur, dry_run)
+        corp_count = load_corporations(OUTPUT_CSV, cur, dry_run)
+        # load_corporations commits per batch; close this connection before the
+        # long matching step in enrich_donors to avoid pgbouncer timeout
+        cur.close()
+        con.close()
+
+        con2 = psycopg2.connect(DB_URL)
+        con2.autocommit = False
+        cur2 = con2.cursor()
+        cur2.execute("SET statement_timeout = 0")
+
+        donor_count = enrich_donors(OUTPUT_CSV, cur2, dry_run)
 
         if not dry_run:
-            con.commit()
+            con2.commit()
             print("\n  Committed.", flush=True)
         else:
-            con.rollback()
+            con2.rollback()
 
     except Exception as e:
-        con.rollback()
+        try:
+            con2.rollback()
+        except Exception:
+            pass
         print(f"\nERROR: {e}", file=sys.stderr)
         return 1
     finally:
-        cur.close()
-        con.close()
+        try:
+            cur2.close()
+            con2.close()
+        except Exception:
+            pass
 
     print("\n=== DONE ===")
     print(f"Raw file:  {raw_path}")
