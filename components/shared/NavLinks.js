@@ -2,28 +2,28 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+
+// Direct top-level links (no dropdown)
+const DIRECT = [
+  { href: '/candidates', label: 'Candidates' },
+  { href: '/committees', label: 'Committees' },
+  { href: '/flow',       label: 'Flow' },
+];
 
 const GROUPS = [
   {
     label: 'Explore',
     items: [
-      { href: '/candidates',    label: 'Candidates' },
-      { href: '/committees',    label: 'Committees' },
-      { href: '/donors',        label: 'Donors' },
-      { href: '/explorer',      label: 'Transactions' },
-      { href: '/lobbyists',     label: 'Lobbyists' },
-      { href: '/principals',    label: 'Principals' },
-      { href: '/lobbying-firms',label: 'Lobbying Firms' },
-      { href: '/legislature',   label: 'Legislature' },
-      { href: '/legislators',   label: 'Legislators' },
+      { href: '/donors',         label: 'Donors' },
+      { href: '/explorer',       label: 'Transactions' },
+      { href: '/lobbyists',      label: 'Lobbyists' },
+      { href: '/principals',     label: 'Principals' },
+      { href: '/lobbying-firms', label: 'Lobbying Firms' },
+      { href: '/legislature',    label: 'Legislature' },
+      { href: '/legislators',    label: 'Legislators' },
     ],
-    // additional path prefixes for active detection (dynamic routes)
-    extra: ['/candidate/', '/committee/', '/donor/', '/lobbyist/', '/principal/', '/lobbying-firm/', '/legislator/'],
-  },
-  {
-    label: 'Flow',
-    href: '/flow',
+    extra: ['/donor/', '/lobbyist/', '/principal/', '/lobbying-firm/', '/legislator/'],
   },
   {
     label: 'Analysis',
@@ -42,38 +42,35 @@ const GROUPS = [
   {
     label: 'Tools',
     items: [
-      { href: '/compare',       label: 'Candidate Compare' },
-      { href: '/decode',        label: 'Committee Decoder' },
-      { href: '/district',      label: 'District Lookup' },
-      { href: '/timeline',      label: 'Influence Timeline' },
-      { href: '/transparency',  label: 'Dark Money Score' },
+      { href: '/compare',      label: 'Candidate Compare' },
+      { href: '/decode',       label: 'Committee Decoder' },
+      { href: '/district',     label: 'District Lookup' },
+      { href: '/timeline',     label: 'Influence Timeline' },
+      { href: '/transparency', label: 'Dark Money Score' },
     ],
   },
   {
     label: 'Lobbying',
     items: [
-      { href: '/lobbying',      label: 'Lobbying Hub' },
-      { href: '/lobbying/bills',label: 'Bills' },
-      { href: '/solicitations', label: 'Solicitations' },
+      { href: '/lobbying',       label: 'Lobbying Hub' },
+      { href: '/lobbying/bills', label: 'Bills' },
+      { href: '/solicitations',  label: 'Solicitations' },
     ],
     extra: ['/lobbying/bill/'],
   },
   {
     label: 'Sources',
     items: [
-      { href: '/methodology',      label: 'Methodology' },
-      { href: '/data-dictionary',  label: 'Data Dictionary' },
-      { href: '/coverage',         label: 'Coverage & Limits' },
-      { href: '/about',            label: 'About' },
-      { href: '/data',             label: 'Data Sources' },
+      { href: '/methodology',     label: 'Methodology' },
+      { href: '/data-dictionary', label: 'Data Dictionary' },
+      { href: '/coverage',        label: 'Coverage & Limits' },
+      { href: '/about',           label: 'About' },
+      { href: '/data',            label: 'Data Sources' },
     ],
   },
 ];
 
 function isGroupActive(group, pathname) {
-  if (group.href) {
-    return pathname === group.href || pathname.startsWith(group.href + '/');
-  }
   const fromItems = (group.items || []).some(
     item => pathname === item.href || pathname.startsWith(item.href + '/')
   );
@@ -87,55 +84,94 @@ function isItemActive(href, pathname) {
 
 export default function NavLinks() {
   const pathname = usePathname();
+  const [openGroup, setOpenGroup] = useState(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const navRef = useRef(null);
+
+  // Close dropdown on click-outside or Escape
+  useEffect(() => {
+    function onKey(e) { if (e.key === 'Escape') setOpenGroup(null); }
+    function onOutside(e) {
+      if (navRef.current && !navRef.current.contains(e.target)) setOpenGroup(null);
+    }
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('mousedown', onOutside);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('mousedown', onOutside);
+    };
+  }, []);
+
+  // Close dropdown on route change
+  useEffect(() => { setOpenGroup(null); }, [pathname]);
+
+  function toggle(label) {
+    setOpenGroup(prev => prev === label ? null : label);
+  }
 
   return (
     <>
       {/* ── Desktop nav ───────────────────────────────────────────────── */}
-      <div className="nav-links-desktop">
+      <div className="nav-links-desktop" ref={navRef}>
+
+        {/* Direct links */}
+        {DIRECT.map(({ href, label }) => {
+          const active = pathname === href || pathname.startsWith(href + '/');
+          return (
+            <div key={label} style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center' }}>
+              <Link href={href} style={{
+                color: 'var(--text)',
+                textDecoration: 'none',
+                fontSize: '0.92rem',
+                fontWeight: 700,
+                whiteSpace: 'nowrap',
+                padding: '0.25rem 0',
+                opacity: active ? 1 : 0.75,
+                transition: 'opacity 0.12s',
+              }}>
+                {label}
+              </Link>
+              {active && (
+                <span style={{
+                  display: 'block', height: '1px', width: '100%',
+                  background: 'var(--orange)',
+                  transform: 'skewX(-3deg)', transformOrigin: 'left center',
+                  marginTop: '1px',
+                }} />
+              )}
+            </div>
+          );
+        })}
+
+        {/* Dropdown groups */}
         {GROUPS.map((group) => {
           const active = isGroupActive(group, pathname);
-
-          if (group.href) {
-            return (
-              <div key={group.label} style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center' }}>
-                <Link href={group.href} style={{
-                  color: active ? 'var(--text)' : 'var(--text-dim)',
-                  textDecoration: 'none',
-                  fontSize: '0.82rem',
-                  whiteSpace: 'nowrap',
-                  padding: '0.25rem 0',
-                }}>
-                  {group.label}
-                </Link>
-                {active && (
-                  <span style={{
-                    display: 'block', height: '1px', width: '100%',
-                    background: 'var(--orange)',
-                    transform: 'skewX(-3deg)', transformOrigin: 'left center',
-                    marginTop: '1px',
-                  }} />
-                )}
-              </div>
-            );
-          }
+          const isOpen = openGroup === group.label;
 
           return (
             <div key={group.label} className={`nav-group${active ? ' nav-group-active' : ''}`}>
-              <span className="nav-group-trigger">
+              <button
+                className="nav-group-trigger"
+                onClick={() => toggle(group.label)}
+                aria-expanded={isOpen}
+              >
                 {group.label}
-                <svg width="8" height="5" viewBox="0 0 8 5" fill="none" style={{ marginLeft: '3px', opacity: 0.5, flexShrink: 0 }}>
-                  <path d="M1 1l3 3 3-3" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                <svg width="8" height="5" viewBox="0 0 8 5" fill="none" style={{
+                  marginLeft: '3px', flexShrink: 0,
+                  transform: isOpen ? 'rotate(180deg)' : 'none',
+                  transition: 'transform 0.15s',
+                }}>
+                  <path d="M1 1l3 3 3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-              </span>
-              {active && (
+              </button>
+              {active && !isOpen && (
                 <span style={{
                   position: 'absolute', bottom: 0, left: 0, right: 0,
                   height: '1px', background: 'var(--orange)',
                   transform: 'skewX(-3deg)', transformOrigin: 'left center',
                 }} />
               )}
-              <div className="nav-dropdown">
+              <div className={`nav-dropdown${isOpen ? ' open' : ''}`}>
                 {group.items.map(item => (
                   <Link
                     key={item.href}
@@ -163,31 +199,30 @@ export default function NavLinks() {
       {mobileOpen && (
         <div className="nav-mobile-overlay" onClick={() => setMobileOpen(false)}>
           <div className="nav-mobile-menu" onClick={e => e.stopPropagation()}>
+            {DIRECT.map(({ href, label }) => (
+              <Link
+                key={label}
+                href={href}
+                className="nav-mobile-direct"
+                onClick={() => setMobileOpen(false)}
+              >
+                {label}
+              </Link>
+            ))}
             {GROUPS.map(group => (
-              group.href ? (
-                <Link
-                  key={group.label}
-                  href={group.href}
-                  className="nav-mobile-direct"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  {group.label}
-                </Link>
-              ) : (
-                <div key={group.label} className="nav-mobile-group">
-                  <div className="nav-mobile-group-label">{group.label}</div>
-                  {group.items.map(item => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={`nav-mobile-item${isItemActive(item.href, pathname) ? ' active' : ''}`}
-                      onClick={() => setMobileOpen(false)}
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
-                </div>
-              )
+              <div key={group.label} className="nav-mobile-group">
+                <div className="nav-mobile-group-label">{group.label}</div>
+                {group.items.map(item => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`nav-mobile-item${isItemActive(item.href, pathname) ? ' active' : ''}`}
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
             ))}
           </div>
         </div>
