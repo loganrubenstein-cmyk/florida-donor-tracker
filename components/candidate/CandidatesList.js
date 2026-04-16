@@ -84,7 +84,7 @@ export default function CandidatesList() {
     const params = new URLSearchParams({ q: debouncedQ, party, office, year, sort: sortBy, sort_dir: sortDir, page });
     fetch(`/api/politicians?${params}`)
       .then(r => r.json())
-      .then(json => { setResults(json); setLoading(false); })
+      .then(json => { setResults(json.data ? json : { data: [], total: 0, pages: 0 }); setLoading(false); })
       .catch(() => setLoading(false));
   }, [debouncedQ, party, office, year, sortBy, sortDir, page]);
 

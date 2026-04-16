@@ -43,7 +43,7 @@ export default function CommitteesList() {
     const params = new URLSearchParams({ q: debouncedQ, sort, sort_dir: sortDir, party, page });
     fetch(`/api/committees?${params}`)
       .then(r => r.json())
-      .then(json => { setResults(json); setLoading(false); })
+      .then(json => { setResults(json.data ? json : { data: [], total: 0, pages: 0 }); setLoading(false); })
       .catch(() => setLoading(false));
   }, [debouncedQ, sort, sortDir, party, page]);
 
