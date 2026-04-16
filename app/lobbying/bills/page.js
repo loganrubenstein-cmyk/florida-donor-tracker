@@ -3,6 +3,7 @@ import SectionHeader from '@/components/shared/SectionHeader';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { fmtCount } from '../../../lib/fmt';
+import { slugify } from '@/lib/slugify';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
 export const metadata = {
@@ -144,20 +145,25 @@ export default function LobbyingBillsPage() {
               <span style={{ fontSize: '0.68rem', color: 'var(--text-dim)', fontWeight: 400, marginLeft: '0.4rem' }}>(by filings 2016–2026)</span>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              {topLobbyists.slice(0, 15).map((l, i) => (
-                <div key={l.lobbyist} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontSize: '0.75rem' }}>
-                  <div style={{ display: 'flex', gap: '0.5rem', flex: 1, minWidth: 0 }}>
-                    <span style={{ color: 'var(--text-dim)', width: '16px', flexShrink: 0 }}>{i + 1}.</span>
-                    <div>
-                      <div style={{ color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{l.lobbyist}</div>
-                      {l.firms?.[0] && <div style={{ color: 'var(--text-dim)', fontSize: '0.68rem' }}>{l.firms[0]}</div>}
+              {topLobbyists.slice(0, 15).map((l, i) => {
+                const slug = slugify(l.lobbyist);
+                return (
+                  <div key={l.lobbyist} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontSize: '0.75rem' }}>
+                    <div style={{ display: 'flex', gap: '0.5rem', flex: 1, minWidth: 0 }}>
+                      <span style={{ color: 'var(--text-dim)', width: '16px', flexShrink: 0 }}>{i + 1}.</span>
+                      <div>
+                        <Link href={`/lobbyist/${slug}`} style={{ color: 'var(--text)', textDecoration: 'none', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>
+                          {l.lobbyist}
+                        </Link>
+                        {l.firms?.[0] && <div style={{ color: 'var(--text-dim)', fontSize: '0.68rem' }}>{l.firms[0]}</div>}
+                      </div>
+                    </div>
+                    <div style={{ color: 'var(--teal)', fontFamily: 'var(--font-mono)', fontSize: '0.72rem', flexShrink: 0, marginLeft: '0.5rem' }}>
+                      {fmtCount(l.total_filings)}
                     </div>
                   </div>
-                  <div style={{ color: 'var(--teal)', fontFamily: 'var(--font-mono)', fontSize: '0.72rem', flexShrink: 0, marginLeft: '0.5rem' }}>
-                    {fmtCount(l.total_filings)}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
@@ -190,11 +196,24 @@ function StatBox({ value, label, color = 'var(--teal)' }) {
   );
 }
 
+function billSourceUrl(billStr) {
+  // Extract bill number for FL House search link
+  // e.g. "HB 5101" → https://www.myfloridahouse.gov/...
+  // e.g. "SB 1234" → https://www.flsenate.gov/...
+  const m = billStr.match(/^(HB|SB)\s+(\d+)/i);
+  if (!m) return null;
+  const type = m[1].toUpperCase();
+  const num = m[2];
+  if (type === 'SB') return `https://www.flsenate.gov/Session/Bill/2024/${num}`;
+  return `https://www.myfloridahouse.gov/Sections/Bills/bills.aspx`;
+}
+
 function BillRow({ bill, maxFilings, isBudget = false }) {
   const barPct = (bill.filings / maxFilings * 100).toFixed(1);
   const yearStr = bill.years.length > 1
     ? `${bill.years[0]}–${bill.years[bill.years.length - 1]}`
     : `${bill.years[0]}`;
+  const principals = bill.top_principals || [];
 
   return (
     <div style={{ padding: '0.6rem 0.75rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '4px' }}>
@@ -218,15 +237,24 @@ function BillRow({ bill, maxFilings, isBudget = false }) {
       </div>
 
       {/* Bar */}
-      <div style={{ height: '3px', background: 'var(--border)', borderRadius: '2px', marginBottom: '0.35rem' }}>
+      <div style={{ height: '3px', background: 'var(--border)', borderRadius: '2px', marginBottom: '0.4rem' }}>
         <div style={{ height: '100%', width: `${barPct}%`, background: isBudget ? 'var(--gold)' : 'var(--teal)', borderRadius: '2px', opacity: 0.7 }} />
       </div>
 
-      <div style={{ display: 'flex', gap: '1rem', fontSize: '0.72rem', color: 'var(--text-dim)', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', gap: '1rem', fontSize: '0.72rem', color: 'var(--text-dim)', flexWrap: 'wrap', marginBottom: principals.length > 0 ? '0.45rem' : 0 }}>
         <span><span style={{ color: 'var(--teal)', fontFamily: 'var(--font-mono)' }}>{fmtCount(bill.filings)}</span> filings</span>
         <span><span style={{ color: 'var(--text)', fontFamily: 'var(--font-mono)' }}>{fmtCount(bill.unique_principals)}</span> principals</span>
         <span><span style={{ color: 'var(--text)', fontFamily: 'var(--font-mono)' }}>{fmtCount(bill.unique_lobbyists)}</span> lobbyists</span>
       </div>
+
+      {/* Top principals inline */}
+      {principals.length > 0 && (
+        <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
+          <span style={{ color: 'rgba(200,216,240,0.4)', marginRight: '0.35rem' }}>Top principals:</span>
+          {principals.slice(0, 5).join(' · ')}
+          {principals.length > 5 && <span style={{ opacity: 0.5 }}> +{principals.length - 5} more</span>}
+        </div>
+      )}
     </div>
   );
 }

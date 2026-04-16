@@ -4,6 +4,7 @@ import { join } from 'path';
 import { notFound } from 'next/navigation';
 import { getDb } from '@/lib/db';
 import { fmtCount } from '../../../../lib/fmt';
+import { slugify } from '@/lib/slugify';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import { buildMeta } from '@/lib/seo';
 
@@ -197,7 +198,9 @@ export default async function BillLobbyingPage({ params }) {
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem', maxHeight: '300px', overflowY: 'auto' }}>
               {lobbyists.map(l => (
-                <div key={l} style={{ fontSize: '0.75rem', color: 'var(--text-dim)', padding: '0.1rem 0' }}>{l}</div>
+                <Link key={l} href={`/lobbyist/${slugify(l)}`} style={{ fontSize: '0.75rem', color: 'var(--text-dim)', textDecoration: 'none', padding: '0.1rem 0', display: 'block' }}>
+                  {l}
+                </Link>
               ))}
             </div>
           </div>
