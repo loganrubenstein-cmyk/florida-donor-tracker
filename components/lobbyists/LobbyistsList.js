@@ -38,6 +38,7 @@ export default function LobbyistsList() {
   const [sortBy, setSortBy]         = useState('num_active');
   const [sortDir, setSortDir]       = useState('desc');
   const [page, setPage]             = useState(1);
+  const [exporting, setExporting]   = useState(false);
 
   // Debounce search input
   useEffect(() => {
@@ -57,6 +58,23 @@ export default function LobbyistsList() {
       .then(json => { setResults(json); setLoading(false); })
       .catch(() => setLoading(false));
   }, [debouncedQ, type, sortBy, page]);
+
+  async function handleExportCSV() {
+    setExporting(true);
+    try {
+      const params = new URLSearchParams({ q: debouncedQ, type, sort: sortBy, sort_dir: sortDir, export: '1' });
+      const res = await fetch(`/api/lobbyists?${params}`);
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `fl-lobbyists-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } finally {
+      setExporting(false);
+    }
+  }
 
   const inputStyle = {
     background: 'var(--surface)', border: '1px solid var(--border)',
@@ -96,6 +114,18 @@ export default function LobbyistsList() {
         <select value={sortBy} onChange={e => setSortBy(e.target.value)} style={inputStyle}>
           {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
         </select>
+        <button
+          onClick={handleExportCSV}
+          disabled={exporting || loading}
+          style={{
+            ...inputStyle, background: 'transparent',
+            border: '1px solid rgba(100,140,220,0.3)',
+            color: exporting ? 'var(--text-dim)' : 'var(--teal)',
+            cursor: exporting || loading ? 'default' : 'pointer', whiteSpace: 'nowrap',
+          }}
+        >
+          {exporting ? 'Exporting…' : '↓ CSV'}
+        </button>
       </div>
 
       {/* Result count */}

@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
+import { toCsvResponse } from '@/lib/csv';
 
 const PAGE_SIZE    = 50;
-const EXPORT_LIMIT = 500;
+const EXPORT_LIMIT = 5000;
 const VALID_SORTS  = ['name', 'total_combined', 'total_soft', 'total_hard', 'num_contributions'];
 
 export async function GET(request) {
@@ -41,6 +42,21 @@ export async function GET(request) {
 
   const { data, count, error } = await query;
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  if (isExport) {
+    const rows = (data || []).map(d => ({
+      name:              d.name,
+      slug:              d.slug,
+      total_combined:    d.total_combined,
+      total_hard:        d.total_hard,
+      total_soft:        d.total_soft,
+      num_contributions: d.num_contributions,
+      industry:          d.industry || '',
+      top_location:      d.top_location || '',
+      is_corporate:      d.is_corporate ? 'yes' : 'no',
+    }));
+    return toCsvResponse(rows, 'florida-donors.csv');
+  }
 
   return NextResponse.json({
     data: data || [],

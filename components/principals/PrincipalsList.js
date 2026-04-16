@@ -52,6 +52,7 @@ export default function PrincipalsList() {
   const [sortBy, setSortBy]         = useState('total_comp');
   const [sortDir, setSortDir]       = useState('desc');
   const [page, setPage]             = useState(1);
+  const [exporting, setExporting]   = useState(false);
 
   // Debounce search input
   useEffect(() => {
@@ -78,6 +79,23 @@ export default function PrincipalsList() {
     fontSize: '0.82rem', borderRadius: '3px',
     fontFamily: 'var(--font-mono)', outline: 'none',
   };
+
+  async function handleExportCSV() {
+    setExporting(true);
+    try {
+      const params = new URLSearchParams({ q: debouncedQ, type, industry, sort: sortBy, sort_dir: sortDir, export: '1' });
+      const res = await fetch(`/api/principals?${params}`);
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `fl-principals-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } finally {
+      setExporting(false);
+    }
+  }
 
   const { data: pageItems, total, pages: totalPages } = results;
 
@@ -121,6 +139,18 @@ export default function PrincipalsList() {
         <select value={sortBy} onChange={e => setSortBy(e.target.value)} style={inputStyle}>
           {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
         </select>
+        <button
+          onClick={handleExportCSV}
+          disabled={exporting || loading}
+          style={{
+            ...inputStyle, background: 'transparent',
+            border: '1px solid rgba(100,140,220,0.3)',
+            color: exporting ? 'var(--text-dim)' : 'var(--teal)',
+            cursor: exporting || loading ? 'default' : 'pointer', whiteSpace: 'nowrap',
+          }}
+        >
+          {exporting ? 'Exporting…' : '↓ CSV'}
+        </button>
       </div>
 
       {/* Result count */}

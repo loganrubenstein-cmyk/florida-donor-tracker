@@ -9,6 +9,7 @@ import { getPoliticianSlugByAcctNum } from '@/lib/loadCandidate';
 import CommitteeConnections from './CommitteeConnections';
 import TabbedProfile from '@/components/shared/TabbedProfile';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import FreshnessBadge from '@/components/shared/FreshnessBadge';
 import NewsBlock from '@/components/shared/NewsBlock';
 import SourceLink from '@/components/shared/SourceLink';
 import EntityHeader from '@/components/shared/EntityHeader';
@@ -57,6 +58,9 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
   const overviewContent = (
     <div>
       {/* Stats grid */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+        <FreshnessBadge />
+      </div>
       <div className="rg-4" style={{
         gap: '1px', background: 'var(--border)',
         border: '1px solid var(--border)', borderRadius: '3px',
@@ -194,13 +198,15 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
     </div>
   );
 
+  const filteredDonors = (data.top_donors || []).filter(d => d.total_amount > 0 && d.name);
+
   const donorsContent = (
     <div>
-      {data.top_donors.length > 0 ? (
+      {filteredDonors.length > 0 ? (
         <>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
             <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-              Top Donors — {data.top_donors.length} shown
+              Top Donors — {filteredDonors.length} shown
             </div>
             <a
               href={`/explorer?recipient_acct=${data.acct_num}&recipient_type=committee`}
@@ -224,7 +230,7 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
               </tr>
             </thead>
             <tbody>
-              {data.top_donors.map((donor, i) => (
+              {filteredDonors.map((donor, i) => (
                 <tr key={i} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
                   <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2rem' }}>
                     {i + 1}

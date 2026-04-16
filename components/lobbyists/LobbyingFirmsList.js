@@ -34,8 +34,9 @@ export default function LobbyingFirmsList() {
   const [stats, setStats] = useState(null);
   const [search, setSearch] = useState('');
   const [debouncedQ, setDebouncedQ] = useState('');
-  const [sort, setSort] = useState('comp');
-  const [page, setPage] = useState(1);
+  const [sort, setSort]         = useState('comp');
+  const [page, setPage]         = useState(1);
+  const [exporting, setExporting] = useState(false);
 
   useEffect(() => {
     fetch('/api/lobbying-firms/stats')
@@ -59,6 +60,23 @@ export default function LobbyingFirmsList() {
       .then(json => { setResults(json); setLoading(false); })
       .catch(() => setLoading(false));
   }, [debouncedQ, sort, page]);
+
+  async function handleExportCSV() {
+    setExporting(true);
+    try {
+      const params = new URLSearchParams({ q: debouncedQ, sort, export: '1' });
+      const res = await fetch(`/api/lobbying-firms?${params}`);
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `fl-lobbying-firms-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } finally {
+      setExporting(false);
+    }
+  }
 
   const { data: firms, total, pages: totalPages } = results;
 
@@ -138,6 +156,18 @@ export default function LobbyingFirmsList() {
         <span style={{ fontSize: '0.78rem', color: 'var(--text-dim)', marginLeft: 'auto' }}>
           {loading ? 'Loading…' : `${total.toLocaleString()} firms`}
         </span>
+        <button
+          onClick={handleExportCSV}
+          disabled={exporting || loading}
+          style={{
+            ...inputStyle, background: 'transparent',
+            border: '1px solid rgba(100,140,220,0.3)',
+            color: exporting ? 'var(--text-dim)' : 'var(--teal)',
+            cursor: exporting || loading ? 'default' : 'pointer', whiteSpace: 'nowrap',
+          }}
+        >
+          {exporting ? 'Exporting…' : '↓ CSV'}
+        </button>
       </div>
 
       {/* Table */}
@@ -243,10 +273,11 @@ export default function LobbyingFirmsList() {
           source="Florida Lobbyist Registration Office — Quarterly Compensation Reports"
           sourceUrl="https://www.floridalobbyist.gov"
           direct={['firm name', 'client list', 'quarterly compensation reports (2007–present)']}
-          normalized={['compensation totals (midpoints for amounts under $50K; exact amounts above $50K)']}
+          normalized={['compensation totals (midpoints for amounts under $50K; exact amounts above $50K)', 'firm totals are the sum of per-lobbyist reports — inflated by the number of lobbyists per firm']}
           caveats={[
             'Compensation below $50,000 is reported in ranges — we use midpoints for aggregation.',
             'Amounts of $50,000+ are exact figures reported by the principal.',
+            'FL disclosure records the same firm-level compensation for every registered lobbyist at the firm. Firm totals are therefore overstated by roughly the firm\'s average lobbyist count per client. Rankings are directionally correct; absolute figures are not.',
             'Both legislative and executive branch lobbying are included.',
             '2026 figures are partial-year only.',
           ]}

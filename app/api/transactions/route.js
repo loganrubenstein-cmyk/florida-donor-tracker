@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
+import { toCsvResponse } from '@/lib/csv';
 
 const MAX_PAGE_SIZE = 500;
 const DEFAULT_PAGE_SIZE = 50;
@@ -50,7 +51,8 @@ export async function GET(request) {
   const sort           = searchParams.get('sort')           || 'contribution_date';
   const sort_dir       = searchParams.get('sort_dir')       || 'desc';
   const page           = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
-  const page_size      = Math.min(
+  const isExport       = searchParams.get('export') === '1';
+  const page_size      = isExport ? 5000 : Math.min(
     MAX_PAGE_SIZE,
     Math.max(1, parseInt(searchParams.get('page_size') || String(DEFAULT_PAGE_SIZE), 10))
   );
@@ -136,6 +138,22 @@ export async function GET(request) {
   (cmtes || []).forEach(c => { nameMap[c.acct_num] = c.committee_name; });
   (cands || []).forEach(c => { nameMap[c.acct_num] = c.candidate_name; });
   rows.forEach(r => { r.recipient_name = nameMap[r.recipient_acct] || null; });
+
+  if (isExport) {
+    const csvRows = rows.map(r => ({
+      contributor_name:        r.contributor_name,
+      amount:                  r.amount,
+      contribution_date:       r.contribution_date,
+      recipient_name:          r.recipient_name || '',
+      recipient_type:          r.recipient_type,
+      recipient_acct:          r.recipient_acct,
+      report_year:             r.report_year,
+      type_code:               r.type_code,
+      contributor_address:     r.contributor_address || '',
+      contributor_occupation:  r.contributor_occupation || '',
+    }));
+    return toCsvResponse(csvRows, 'florida-transactions.csv');
+  }
 
   return NextResponse.json({
     data: rows,

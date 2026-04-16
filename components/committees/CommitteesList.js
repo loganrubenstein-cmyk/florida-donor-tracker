@@ -27,6 +27,7 @@ export default function CommitteesList() {
   const [sortDir, setSortDir]       = useState('desc');
   const [party, setParty]           = useState('all');
   const [page, setPage]             = useState(1);
+  const [exporting, setExporting]   = useState(false);
 
   // Debounce search input
   useEffect(() => {
@@ -46,6 +47,23 @@ export default function CommitteesList() {
       .then(json => { setResults(json.data ? json : { data: [], total: 0, pages: 0 }); setLoading(false); })
       .catch(() => setLoading(false));
   }, [debouncedQ, sort, sortDir, party, page]);
+
+  async function handleExportCSV() {
+    setExporting(true);
+    try {
+      const params = new URLSearchParams({ q: debouncedQ, sort, sort_dir: sortDir, party, export: '1' });
+      const res = await fetch(`/api/committees?${params}`);
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `fl-committees-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } finally {
+      setExporting(false);
+    }
+  }
 
   const { data: pageItems, total, pages: totalPages } = results;
 
@@ -142,6 +160,20 @@ export default function CommitteesList() {
         <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)', whiteSpace: 'nowrap' }}>
           {loading ? '…' : `${pageItems.length.toLocaleString()} committees`}
         </span>
+        <button
+          onClick={handleExportCSV}
+          disabled={exporting || loading}
+          style={{
+            padding: '0.4rem 0.85rem', background: 'transparent',
+            border: '1px solid rgba(100,140,220,0.3)',
+            color: exporting ? 'var(--text-dim)' : 'var(--teal)',
+            fontSize: '0.7rem', borderRadius: '3px',
+            fontFamily: 'var(--font-mono)', cursor: exporting || loading ? 'default' : 'pointer',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {exporting ? 'Exporting…' : '↓ CSV'}
+        </button>
       </div>
 
       {/* Table */}

@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
 import { FEDERAL_OFFICE_CODES } from '@/lib/officeCodes';
+import { toCsvResponse } from '@/lib/csv';
 
-const PAGE_SIZE = 50;
+const PAGE_SIZE    = 50;
+const EXPORT_LIMIT = 5000;
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
@@ -11,9 +13,12 @@ export async function GET(request) {
   const office   = searchParams.get('office')   || 'all';
   const year     = searchParams.get('year')     || 'all';
   const district = searchParams.get('district') || '';
-  const sort     = searchParams.get('sort')     || 'total_combined';
+  const ALLOWED_SORTS = new Set(['candidate_name', 'total_combined', 'hard_money_total', 'soft_money_total', 'hard_num_contributions', 'election_year']);
+  const sortRaw  = searchParams.get('sort')     || 'total_combined';
+  const sort     = ALLOWED_SORTS.has(sortRaw) ? sortRaw : 'total_combined';
   const sortDir  = searchParams.get('sort_dir') || '';
   const page     = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
+  const isExport = searchParams.get('export') === '1';
 
   const db = getDb();
   const federalCodes = [...FEDERAL_OFFICE_CODES];
@@ -36,11 +41,28 @@ export async function GET(request) {
   const ascending  = sortDir === 'asc' ? true : sortDir === 'desc' ? false : defaultAsc;
   query = query.order(sort, { ascending });
 
-  const offset = (page - 1) * PAGE_SIZE;
-  query = query.range(offset, offset + PAGE_SIZE - 1);
+  const offset = isExport ? 0 : (page - 1) * PAGE_SIZE;
+  const limit  = isExport ? EXPORT_LIMIT : PAGE_SIZE;
+  query = query.range(offset, offset + limit - 1);
 
   const { data, count, error } = await query;
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  if (isExport) {
+    const rows = (data || []).map(c => ({
+      candidate_name:    c.candidate_name,
+      acct_num:          c.acct_num,
+      election_year:     c.election_year,
+      office_desc:       c.office_desc,
+      party_code:        c.party_code,
+      district:          c.district || '',
+      total_combined:    c.total_combined,
+      hard_money_total:  c.hard_money_total,
+      soft_money_total:  c.soft_money_total,
+      num_contributions: c.hard_num_contributions,
+    }));
+    return toCsvResponse(rows, 'florida-candidates.csv');
+  }
 
   return NextResponse.json({
     data: data || [],

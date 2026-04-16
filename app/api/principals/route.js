@@ -1,7 +1,9 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
+import { toCsvResponse } from '@/lib/csv';
 
-const PAGE_SIZE = 50;
+const PAGE_SIZE    = 50;
+const EXPORT_LIMIT = 5000;
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
@@ -11,6 +13,7 @@ export async function GET(request) {
   const sort     = searchParams.get('sort') || 'donation_total';
   const sortDir  = searchParams.get('sort_dir') || '';
   const page     = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
+  const isExport = searchParams.get('export') === '1';
 
   const db = getDb();
   let query = db
@@ -29,15 +32,31 @@ export async function GET(request) {
 
   const allowedSorts = ['total_lobbyists', 'name', 'donation_total', 'total_comp'];
   const sortCol    = allowedSorts.includes(sort) ? sort : 'total_comp';
-  const defaultAsc = sort === 'name';
+  const defaultAsc = sortCol === 'name';
   const ascending  = sortDir === 'asc' ? true : sortDir === 'desc' ? false : defaultAsc;
   query = query.order(sortCol, { ascending });
 
-  const offset = (page - 1) * PAGE_SIZE;
-  query = query.range(offset, offset + PAGE_SIZE - 1);
+  const offset = isExport ? 0 : (page - 1) * PAGE_SIZE;
+  const limit  = isExport ? EXPORT_LIMIT : PAGE_SIZE;
+  query = query.range(offset, offset + limit - 1);
 
   const { data, count, error } = await query;
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  if (isExport) {
+    const rows = (data || []).map(p => ({
+      name:            p.name,
+      slug:            p.slug,
+      city:            p.city || '',
+      state:           p.state || '',
+      industry:        p.industry || '',
+      total_lobbyists: p.total_lobbyists,
+      num_active:      p.num_active,
+      donation_total:  p.donation_total || '',
+      total_comp:      p.total_comp || '',
+    }));
+    return toCsvResponse(rows, 'florida-principals.csv');
+  }
 
   return NextResponse.json({
     data: data || [],

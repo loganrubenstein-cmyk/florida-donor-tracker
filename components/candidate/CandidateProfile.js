@@ -5,6 +5,7 @@ import TabbedProfile from '@/components/shared/TabbedProfile';
 import BackToTop from '@/components/shared/BackToTop';
 import EgoGraph from '@/components/shared/EgoGraph';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import FreshnessBadge from '@/components/shared/FreshnessBadge';
 import NewsBlock from '@/components/shared/NewsBlock';
 import SourceLink from '@/components/shared/SourceLink';
 import EntityHeader from '@/components/shared/EntityHeader';
@@ -166,7 +167,11 @@ function ElectionContextCard({ results }) {
 
 export default function CandidateProfile({ data, cycles = [], electionResults = [], hideHeader = false }) {
   const hm     = data.hard_money || {};
-  const donors = hm.top_donors  || [];
+  const allTopDonors = hm.top_donors || [];
+  const stateMatchingTotal = allTopDonors
+    .filter(d => d.name === 'STATE OF FLORIDA')
+    .reduce((s, d) => s + (d.total_amount || 0), 0);
+  const donors = allTopDonors.filter(d => d.total_amount > 0 && d.name);
   const pcs         = data.linked_pcs  || [];
   const shadowOrgs  = data.shadow_orgs || [];
   // Split shadow orgs: those that ARE in FL registry vs. genuinely external (IRS-only)
@@ -202,7 +207,10 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
 
   const overviewContent = (
     <div>
-      {/* Combined stats grid */}
+      {/* Freshness + Combined stats grid */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+        <FreshnessBadge />
+      </div>
       <div className="rg-3" style={{
         gap: '1px', background: 'var(--border)',
         border: '1px solid var(--border)', borderRadius: '3px',
@@ -324,30 +332,46 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
               </tr>
             </thead>
             <tbody>
-              {donors.map((donor, i) => (
-                <tr key={i} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2rem' }}>{i + 1}</td>
-                  <td style={{ padding: '0.45rem 0.6rem', wordBreak: 'break-word' }}>
-                    <a href={`/donor/${donor.slug || slugify(donor.name)}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
-                      {donor.name}
-                    </a>
-                  </td>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.68rem', maxWidth: '160px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                    {donor.occupation || '—'}
-                  </td>
-                  <td style={{ padding: '0.45rem 0.6rem', color: TYPE_COLOR[donor.type] || 'var(--text-dim)', fontSize: '0.68rem' }}>
-                    {donor.type}
-                  </td>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--orange)', whiteSpace: 'nowrap' }}>
-                    {fmtMoney(donor.total_amount)}
-                  </td>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center' }}>
-                    {(donor.num_contributions || 0).toLocaleString()}
-                  </td>
-                </tr>
-              ))}
+              {donors.map((donor, i) => {
+                const isStateMatch = donor.name === 'STATE OF FLORIDA';
+                return (
+                  <tr key={i} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)', opacity: isStateMatch ? 0.75 : 1 }}>
+                    <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2rem' }}>{i + 1}</td>
+                    <td style={{ padding: '0.45rem 0.6rem', wordBreak: 'break-word' }}>
+                      {isStateMatch ? (
+                        <span style={{ color: 'var(--text-dim)' }}>STATE OF FLORIDA</span>
+                      ) : (
+                        <a href={`/donor/${donor.slug || slugify(donor.name)}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+                          {donor.name}
+                        </a>
+                      )}
+                    </td>
+                    <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.68rem', maxWidth: '160px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {isStateMatch ? 'Public Campaign Financing' : (donor.occupation || '—')}
+                    </td>
+                    <td style={{ padding: '0.45rem 0.6rem', color: isStateMatch ? 'var(--text-dim)' : (TYPE_COLOR[donor.type] || 'var(--text-dim)'), fontSize: '0.68rem' }}>
+                      {isStateMatch ? 'state matching' : donor.type}
+                    </td>
+                    <td style={{ padding: '0.45rem 0.6rem', color: isStateMatch ? 'var(--text-dim)' : 'var(--orange)', whiteSpace: 'nowrap' }}>
+                      {fmtMoney(donor.total_amount)}
+                    </td>
+                    <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center' }}>
+                      {(donor.num_contributions || 0).toLocaleString()}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
+          {stateMatchingTotal > 0 && (
+            <p style={{ fontSize: '0.65rem', color: 'var(--text-dim)', marginTop: '0.6rem', lineHeight: 1.5 }}>
+              * "STATE OF FLORIDA" entries represent public matching fund disbursements under Florida's{' '}
+              <a href="https://dos.elections.myflorida.com/campaign-finance/public-financing/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-dim)', textDecoration: 'underline' }}>
+                Election Campaign Financing Program
+              </a>
+              , not a private donor.
+            </p>
+          )}
         </>
       ) : (
         <p style={{ color: 'var(--text-dim)', fontSize: '0.82rem' }}>No donor data available.</p>

@@ -1,15 +1,18 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
+import { toCsvResponse } from '@/lib/csv';
 
-const PAGE_SIZE = 50;
+const PAGE_SIZE    = 50;
+const EXPORT_LIMIT = 5000;
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
-  const q       = searchParams.get('q') || '';
-  const type    = searchParams.get('type') || 'all';
-  const sort    = searchParams.get('sort') || 'num_active';
-  const sortDir = searchParams.get('sort_dir') || '';
-  const page    = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
+  const q        = searchParams.get('q') || '';
+  const type     = searchParams.get('type') || 'all';
+  const sort     = searchParams.get('sort') || 'num_active';
+  const sortDir  = searchParams.get('sort_dir') || '';
+  const page     = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
+  const isExport = searchParams.get('export') === '1';
 
   const db = getDb();
   let query = db
@@ -27,15 +30,33 @@ export async function GET(request) {
   if (type === 'matched') query = query.eq('has_donation_match', true);
   if (type === 'active')  query = query.gt('num_active', 0);
 
-  const defaultAsc = sort === 'name';
+  const ALLOWED_SORTS = new Set(['total_comp', 'num_principals', 'num_active', 'total_donation_influence', 'name']);
+  const safeSort = ALLOWED_SORTS.has(sort) ? sort : 'num_active';
+  const defaultAsc = safeSort === 'name';
   const ascending  = sortDir === 'asc' ? true : sortDir === 'desc' ? false : defaultAsc;
-  query = query.order(sort, { ascending });
+  query = query.order(safeSort, { ascending });
 
-  const offset = (page - 1) * PAGE_SIZE;
-  query = query.range(offset, offset + PAGE_SIZE - 1);
+  const offset = isExport ? 0 : (page - 1) * PAGE_SIZE;
+  const limit  = isExport ? EXPORT_LIMIT : PAGE_SIZE;
+  query = query.range(offset, offset + limit - 1);
 
   const { data, count, error } = await query;
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  if (isExport) {
+    const rows = (data || []).map(l => ({
+      name:                     l.name,
+      slug:                     l.slug,
+      firm:                     l.firm || '',
+      city:                     l.city || '',
+      state:                    l.state || '',
+      num_principals:           l.num_principals,
+      num_active:               l.num_active,
+      total_comp:               l.total_comp || '',
+      total_donation_influence: l.total_donation_influence || '',
+    }));
+    return toCsvResponse(rows, 'florida-lobbyists.csv');
+  }
 
   return NextResponse.json({
     data: data || [],

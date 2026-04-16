@@ -1,18 +1,21 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
+import { toCsvResponse } from '@/lib/csv';
 
-const PAGE_SIZE = 50;
+const PAGE_SIZE    = 50;
+const EXPORT_LIMIT = 5000;
 
 const R_KW = ['REPUBLICAN', 'GOP', 'CONSERVATIVES FOR', 'AMERICANS FOR PROSPERITY'];
 const D_KW = ['DEMOCRAT', 'SEIU', 'AFSCME', 'AFL-CIO', 'LABOR ', 'UNION ', 'PROGRESSIVE'];
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
-  const q     = searchParams.get('q') || '';
-  const party = searchParams.get('party') || 'all';
+  const q        = searchParams.get('q') || '';
+  const party    = searchParams.get('party') || 'all';
   const sort     = searchParams.get('sort')     || 'total_received';
   const sortDir  = searchParams.get('sort_dir') || '';
   const page     = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
+  const isExport = searchParams.get('export') === '1';
 
   const db = getDb();
   let query = db
@@ -26,8 +29,9 @@ export async function GET(request) {
   const sortCol    = sort === 'contributions' ? 'num_contributions' : sort === 'name' ? 'committee_name' : 'total_received';
   query = query.order(sortCol, { ascending });
 
-  const offset = (page - 1) * PAGE_SIZE;
-  query = query.range(offset, offset + PAGE_SIZE - 1);
+  const offset = isExport ? 0 : (page - 1) * PAGE_SIZE;
+  const limit  = isExport ? EXPORT_LIMIT : PAGE_SIZE;
+  query = query.range(offset, offset + limit - 1);
 
   const { data, count, error } = await query;
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
@@ -38,6 +42,16 @@ export async function GET(request) {
     filtered = filtered.filter(c => R_KW.some(k => (c.committee_name || '').toUpperCase().includes(k)));
   } else if (party === 'D') {
     filtered = filtered.filter(c => D_KW.some(k => (c.committee_name || '').toUpperCase().includes(k)));
+  }
+
+  if (isExport) {
+    const rows = filtered.map(c => ({
+      committee_name:    c.committee_name,
+      acct_num:          c.acct_num,
+      total_received:    c.total_received,
+      num_contributions: c.num_contributions,
+    }));
+    return toCsvResponse(rows, 'florida-committees.csv');
   }
 
   return NextResponse.json({

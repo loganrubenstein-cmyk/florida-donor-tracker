@@ -1,13 +1,15 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db';
+import { toCsvResponse } from '@/lib/csv';
 
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
-  const q     = (searchParams.get('q') || '').trim();
-  const sort  = searchParams.get('sort') || 'comp';
-  const page  = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
-  const limit = 50;
-  const offset = (page - 1) * limit;
+  const q        = (searchParams.get('q') || '').trim();
+  const sort     = searchParams.get('sort') || 'comp';
+  const page     = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
+  const isExport = searchParams.get('export') === '1';
+  const limit    = isExport ? 5000 : 50;
+  const offset   = isExport ? 0 : (page - 1) * limit;
 
   const db = getDb();
 
@@ -32,6 +34,19 @@ export async function GET(request) {
 
   const { data, count, error } = await query;
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  if (isExport) {
+    const rows = (data || []).map(f => ({
+      firm_name:      f.firm_name,
+      slug:           f.slug,
+      total_comp:     f.total_comp,
+      num_principals: f.num_principals,
+      num_years:      f.num_years,
+      first_year:     f.first_year || '',
+      last_year:      f.last_year || '',
+    }));
+    return toCsvResponse(rows, 'florida-lobbying-firms.csv');
+  }
 
   return NextResponse.json({
     data: data || [],

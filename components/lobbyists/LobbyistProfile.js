@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import BackLinks from '@/components/BackLinks';
 import SourceLink from '@/components/shared/SourceLink';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import FreshnessBadge from '@/components/shared/FreshnessBadge';
 import EntityHeader from '@/components/shared/EntityHeader';
 import TabbedProfile from '@/components/shared/TabbedProfile';
 import { slugify } from '@/lib/slugify';
@@ -82,6 +83,9 @@ export default function LobbyistProfile({ data }) {
 
   const overviewContent = (
     <div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+        <FreshnessBadge />
+      </div>
       <div style={{
         display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
         gap: '1px', background: 'var(--border)', marginBottom: '2rem',
@@ -233,14 +237,14 @@ export default function LobbyistProfile({ data }) {
       ) : (
         <>
           <div style={{ fontSize: '0.7rem', color: 'rgba(90,106,136,0.7)', marginBottom: '1rem', lineHeight: 1.5 }}>
-            Compensation figures are midpoints of FL-mandated disclosure bands for amounts under $50K;
-            exact reported figures for $50K+. Data covers {firstYear}–{lastYear}.
+            Figures show the <strong>firm&apos;s total compensation</strong> for the year across all lobbyists and clients — not this individual lobbyist&apos;s share.
+            Amounts are midpoints of FL-mandated disclosure bands for amounts under $50K; exact figures for $50K+. Data covers {firstYear}–{lastYear}.
           </div>
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                  {['Year', 'Firm', 'Clients', 'Est. Comp'].map((h, j) => (
+                  {['Year', 'Firm', 'Clients', 'Firm Total Comp'].map((h, j) => (
                     <th key={h} style={{
                       padding: '0.35rem 0.6rem', fontSize: '0.6rem', color: 'var(--text-dim)',
                       textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 400,

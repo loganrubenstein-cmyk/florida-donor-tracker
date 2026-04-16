@@ -4,6 +4,7 @@ import BackLinks from '@/components/BackLinks';
 import IndustryPeers from './IndustryPeers';
 import TabbedProfile from '@/components/shared/TabbedProfile';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import FreshnessBadge from '@/components/shared/FreshnessBadge';
 import EntityHeader from '@/components/shared/EntityHeader';
 import RelationshipsBlock from '@/components/shared/RelationshipsBlock';
 import NewsBlock from '@/components/shared/NewsBlock';
@@ -165,6 +166,9 @@ export default function DonorProfile({ data, annotations = {} }) {
 
   const overviewContent = (
     <div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+        <FreshnessBadge />
+      </div>
       {/* Stats grid */}
       <div style={{
         display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
