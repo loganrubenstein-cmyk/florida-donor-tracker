@@ -285,6 +285,11 @@ def scrape_with_playwright(legislators: list[dict], cache: dict, force: bool,
                     first_part = last.split()[0]
                     print(f"         → 0 results; retrying with last={first_part!r} ...", flush=True)
                     filings = _search_one_legislator(page, first, first_part, leg)
+                # Nickname fallback: "Mike" → last-name-only search to catch "Michael" etc.
+                # EFDMS stores legal names; legislators DB has informal/nickname first names.
+                if not filings and first:
+                    print(f"         → 0 results; retrying last-name-only ({last!r}) ...", flush=True)
+                    filings = _search_one_legislator(page, "", last, leg)
                 cache[slug] = {
                     "people_id":    leg["people_id"],
                     "display_name": leg.get("display_name", f"{first} {last}"),
