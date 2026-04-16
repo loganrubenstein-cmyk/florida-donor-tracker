@@ -147,6 +147,7 @@ export default function DonorProfile({ data, annotations = {} }) {
   const byYear     = data.by_year    || [];
   const lobbyists  = data.lobbyist_principals || [];
   const contracts  = data.state_contracts || [];
+  const corpActive = data.corp_status === 'A';
 
   const norm = s => String(s).toUpperCase().replace(/[^A-Z0-9]/g, '');
   const normName = norm(data.name || '');
@@ -406,6 +407,47 @@ export default function DonorProfile({ data, annotations = {} }) {
     <div>
       <NewsBlock articles={data.news || []} />
 
+      {data.corp_number && (
+        <div style={{ marginBottom: '2rem' }}>
+          <SectionLabel>FL Corporate Registration (Sunbiz)</SectionLabel>
+          <div style={{
+            background: 'var(--surface)', border: '1px solid var(--border)',
+            borderLeft: `3px solid ${corpActive ? 'var(--green)' : 'var(--text-dim)'}`,
+            borderRadius: '3px', padding: '0.75rem 1rem',
+            display: 'flex', gap: '1.5rem', flexWrap: 'wrap', alignItems: 'flex-start',
+          }}>
+            <div>
+              <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.2rem' }}>Corp Number</div>
+              <a href={`https://search.sunbiz.org/Inquiry/CorporationSearch/ByDocumentNumber?Id=${data.corp_number}`}
+                target="_blank" rel="noopener noreferrer"
+                style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', color: 'var(--green)', textDecoration: 'none' }}>
+                {data.corp_number} ↗
+              </a>
+            </div>
+            {data.corp_ein && (
+              <div>
+                <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.2rem' }}>EIN</div>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', color: 'var(--text)' }}>{data.corp_ein}</span>
+              </div>
+            )}
+            <div>
+              <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.2rem' }}>Status</div>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', color: corpActive ? 'var(--green)' : 'var(--text-dim)' }}>
+                {corpActive ? 'Active' : 'Inactive'}
+              </span>
+            </div>
+            {data.corp_match_score && (
+              <div>
+                <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.2rem' }}>Name Match</div>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', color: 'var(--text-dim)' }}>
+                  {data.corp_match_score >= 99 ? 'exact' : `${data.corp_match_score}%`}
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       <SectionLabel>Research Links</SectionLabel>
       <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
         {[
@@ -413,6 +455,7 @@ export default function DonorProfile({ data, annotations = {} }) {
           { label: 'FL Elections Search →', href: `https://dos.elections.myflorida.com/campaign-finance/contributions/#${encodeURIComponent(data.name || '')}` },
           { label: 'Google →', href: `https://www.google.com/search?q=${encodeURIComponent((data.name || '') + ' Florida political donation')}` },
           ...(lobbyists.length > 0 ? [{ label: 'FL Lobbyist Registry →', href: 'https://www.leg.state.fl.us/Lobbyist/index.cfm?Tab=lobbyistsearch' }] : []),
+          ...(data.corp_number ? [{ label: 'Sunbiz Corp Search →', href: `https://search.sunbiz.org/Inquiry/CorporationSearch/ByDocumentNumber?Id=${data.corp_number}` }] : [{ label: 'Sunbiz Corp Search →', href: `https://search.sunbiz.org/Inquiry/CorporationSearch/ByName?inquiryType=EntityName&inquiryDirectionType=ForwardList&searchNameOrder=&masterDataFile=&inq_cor_name=${encodeURIComponent(data.name || '')}` }]),
         ].map(({ label, href, internal }) => (
           <a key={label} href={href} {...(!internal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
             style={{
@@ -430,13 +473,16 @@ export default function DonorProfile({ data, annotations = {} }) {
         sourceUrl="https://dos.elections.myflorida.com/campaign-finance/"
         direct={['amount', 'contribution_date', 'contributor_address', 'occupation']}
         normalized={['contributor_name', 'slug']}
-        inferred={['committee_links', 'candidate_links', 'lobbyist_principal_match']}
+        inferred={['committee_links', 'candidate_links', 'lobbyist_principal_match', 'corp_match']}
         classified={['entity_type', 'industry']}
         caveats={[
           'Name deduplication is exact-match only — contributions from the same person filed under different spellings are not merged.',
           'is_corporate flag is a keyword heuristic, not a verified legal classification.',
           lobbyists.length > 0
             ? 'Lobbyist principal link is inferred by name similarity — not confirmed by the Lobbyist Registration Office.'
+            : null,
+          data.corp_number
+            ? `FL corporation match is fuzzy name-based (score: ${data.corp_match_score >= 99 ? 'exact' : data.corp_match_score + '%'}) — verify via Sunbiz before drawing legal conclusions.`
             : null,
         ].filter(Boolean)}
       />
@@ -467,6 +513,7 @@ export default function DonorProfile({ data, annotations = {} }) {
           ...(data.industry && data.industry !== 'Not Employed' && data.industry !== 'Other'
             ? [{ label: data.industry, color: 'rgba(100,140,220,0.5)', href: `/industry/${slugify(data.industry)}` }]
             : []),
+          ...(data.corp_number ? [{ label: corpActive ? 'ACTIVE CORP' : 'INACTIVE CORP', color: corpActive ? 'var(--green)' : 'var(--text-dim)', href: `https://search.sunbiz.org/Inquiry/CorporationSearch/ByDocumentNumber?Id=${data.corp_number}` }] : []),
           ...(annotation ? [{ label: 'INVESTIGATION', color: 'var(--orange)', href: '/investigations' }] : []),
         ]}
         meta={[
