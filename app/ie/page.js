@@ -288,7 +288,7 @@ export default async function IEPage({ searchParams }) {
             color: 'var(--text-dim)', fontWeight: 600,
             marginBottom: '0.6rem', paddingBottom: '0.4rem', borderBottom: '1px solid var(--border)',
           }}>
-            For vs. Against by Candidate — top {forAgainst.length} by total IE spending
+            For vs. Against by Candidate{forAgainst.length > 0 ? ` — top ${forAgainst.length} by total IE spending` : ''}
           </div>
           <p style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginBottom: '1rem', lineHeight: 1.6 }}>
             Breakdown of independent expenditures by direction (support vs. oppose) for each candidate. Blue = support, red = oppose.
