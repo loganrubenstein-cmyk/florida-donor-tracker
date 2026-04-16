@@ -146,6 +146,9 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
   const donors = hm.top_donors  || [];
   const pcs         = data.linked_pcs  || [];
   const shadowOrgs  = data.shadow_orgs || [];
+  // Split shadow orgs: those that ARE in FL registry vs. genuinely external (IRS-only)
+  const flShadowOrgs  = shadowOrgs.filter(o => o.fl_acct_num);
+  const irsShadowOrgs = shadowOrgs.filter(o => !o.fl_acct_num);
   const pcsStubOnly  = pcs.filter(pc => !pc.pc_acct || pc.link_type === 'solicitation_stub' || pc.link_type === 'historical_stub');
   const pcsWithData  = pcs.filter(pc => pc.pc_acct && pc.link_type !== 'solicitation_stub' && pc.link_type !== 'historical_stub');
   const pcsSpecific  = pcsWithData.filter(pc => pc.is_candidate_specific);
@@ -380,9 +383,54 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
         </>
       )}
 
-      {/* ── Shadow PACs / Outside Orgs (IRS-registered, not in FL DoE registry) ── */}
-      {shadowOrgs.length > 0 && (
+      {/* ── FL-registered committees found via solicitation filings (not in linked_pcs) ── */}
+      {flShadowOrgs.length > 0 && (
         <div style={{ marginTop: pcs.length > 0 ? '2.5rem' : 0 }}>
+          <SectionLabel>Additional FL Committees from Solicitation Filings</SectionLabel>
+          <p style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.5, marginBottom: '1rem', maxWidth: '560px' }}>
+            These Florida-registered political committees are listed in public solicitation filings
+            associated with this candidate.
+          </p>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                {['Committee', 'Type'].map((h, j) => (
+                  <th key={h} style={{
+                    padding: '0.4rem 0.6rem', textAlign: 'left',
+                    fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase',
+                    letterSpacing: '0.08em', fontWeight: 400,
+                  }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {flShadowOrgs.map((org, i) => (
+                <tr key={i} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
+                  <td style={{ padding: '0.45rem 0.6rem', wordBreak: 'break-word', maxWidth: '300px' }}>
+                    <a href={`/committee/${org.fl_acct_num}`}
+                      style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+                      {org.org_name}
+                    </a>
+                  </td>
+                  <td style={{ padding: '0.45rem 0.6rem' }}>
+                    <span style={{
+                      fontSize: '0.58rem', padding: '0.1rem 0.35rem', borderRadius: '2px',
+                      background: 'rgba(128,255,160,0.1)', color: 'var(--green)',
+                      fontFamily: 'var(--font-mono)',
+                    }}>
+                      FL political committee
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* ── Shadow PACs / Outside Orgs (IRS-registered, not in FL DoE registry) ── */}
+      {irsShadowOrgs.length > 0 && (
+        <div style={{ marginTop: (pcs.length > 0 || flShadowOrgs.length > 0) ? '2.5rem' : 0 }}>
           <SectionLabel>Organizations Outside FL Registry</SectionLabel>
           <p style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.5, marginBottom: '1rem', maxWidth: '560px' }}>
             These 527 or 501(c)(4) organizations are listed in public solicitation filings
@@ -402,7 +450,7 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
               </tr>
             </thead>
             <tbody>
-              {shadowOrgs.map((org, i) => (
+              {irsShadowOrgs.map((org, i) => (
                 <tr key={i} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
                   <td style={{ padding: '0.45rem 0.6rem', wordBreak: 'break-word', maxWidth: '220px' }}>
                     {org.pp_url ? (

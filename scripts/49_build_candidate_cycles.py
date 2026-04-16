@@ -78,17 +78,13 @@ def main() -> int:
             "party_code": d.get("party_code", ""),
         })
 
-    # Keep only multi-year entries (same name, different election years)
+    # Include all candidates (1+ election year) so single-cycle politicians get a valid slug
     multi: dict[str, list] = {}
     for name, entries in name_groups.items():
-        # Sort by year
         sorted_entries = sorted(entries, key=lambda e: (e["year"], e["acct_num"]))
-        # Only include if there are 2+ distinct election years
-        years = {e["year"] for e in sorted_entries}
-        if len(years) >= 2:
-            multi[name] = sorted_entries
+        multi[name] = sorted_entries
 
-    print(f"Found {len(multi):,} candidates with 2+ election years")
+    print(f"Found {len(multi):,} candidates with 1+ election years")
     if errors:
         print(f"  ({errors} files had parse errors — skipped)")
 

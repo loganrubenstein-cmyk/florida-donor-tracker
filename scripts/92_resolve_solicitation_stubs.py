@@ -86,15 +86,39 @@ def norm_strip_suffix(s: str) -> str:
 
 # ── Step 1: Identify stub orgs ────────────────────────────────────────────────
 
+_NOW_PATTERN = re.compile(r"\(now\s+(.+?)\)\s*$", re.IGNORECASE)
+
+
+def _build_committee_name_sets(committees_csv: Path) -> tuple[set, set]:
+    """
+    Build normalized committee name sets from committees.csv.
+    Also extracts new names from "(now X)" rename patterns so that
+    e.g. "Friends of Ron DeSantis (now Empower Parents PAC)" matches
+    both the old and new names.
+    """
+    com_df = pd.read_csv(committees_csv, dtype=str).fillna("")
+    com_names = set()
+    com_names_stripped = set()
+    for _, r in com_df.iterrows():
+        name = r["committee_name"]
+        com_names.add(norm(name))
+        com_names_stripped.add(norm_strip_suffix(name))
+        # Extract alias from "(now X)" rename pattern
+        m = _NOW_PATTERN.search(name)
+        if m:
+            alias = m.group(1).strip()
+            com_names.add(norm(alias))
+            com_names_stripped.add(norm_strip_suffix(alias))
+    return com_names, com_names_stripped
+
+
 def load_stubs(sol_csv: Path, committees_csv: Path) -> dict:
     """
     Returns dict: normalized_org_name → {org_name, solicitors: set}
     for orgs with NO match in FL DoE committee registry.
     """
-    # Load committee names (normalized)
-    com_df = pd.read_csv(committees_csv, dtype=str).fillna("")
-    com_names = {norm(r["committee_name"]) for _, r in com_df.iterrows()}
-    com_names_stripped = {norm_strip_suffix(r["committee_name"]) for _, r in com_df.iterrows()}
+    # Load committee names (normalized), including "(now X)" rename aliases
+    com_names, com_names_stripped = _build_committee_name_sets(committees_csv)
 
     # Load solicitations
     sol_df = pd.read_csv(sol_csv, dtype=str).fillna("")
