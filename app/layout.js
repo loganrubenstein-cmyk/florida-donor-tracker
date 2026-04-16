@@ -35,7 +35,7 @@ export default function RootLayout({ children }) {
           <Link href="/" style={{
             display: 'flex', alignItems: 'center', gap: '0.45rem',
             color: 'var(--orange)', textDecoration: 'none',
-            fontWeight: 'bold', letterSpacing: '0.05em',
+            fontWeight: 'bold', letterSpacing: '0.05em', fontSize: '0.88rem',
             marginRight: '0.75rem', whiteSpace: 'nowrap',
           }}>
             <FloridaOutline size="wordmark" />
@@ -57,6 +57,7 @@ export default function RootLayout({ children }) {
                 fontFamily: 'var(--font-mono)',
                 width: '240px',
                 outline: 'none',
+                transition: 'border-color 0.15s',
               }}
             />
           </form>
