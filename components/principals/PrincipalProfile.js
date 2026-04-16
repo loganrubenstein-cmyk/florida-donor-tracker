@@ -347,6 +347,7 @@ export default function PrincipalProfile({ data, compData = null }) {
                   <a href={`/donor/${m.donor_slug || slugify(m.contributor_name)}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
                     {m.contributor_name}
                   </a>
+                  <a href={`/follow?donor=${m.donor_slug || slugify(m.contributor_name)}`} style={{ marginLeft: '0.4rem', fontSize: '0.58rem', color: 'var(--teal)', textDecoration: 'none', opacity: 0.6 }}>follow</a>
                 </td>
                 <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--text-dim)' }}>
                   {Number(m.match_score).toFixed(0)}%

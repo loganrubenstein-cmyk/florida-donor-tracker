@@ -356,12 +356,15 @@ function OverlapResult({ data }) {
                     position: 'relative', display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr',
                     gap: '0.5rem', padding: '0.35rem 0.4rem', fontSize: '0.72rem',
                   }}>
-                    <Link href={`/donor/${d.slug}`} style={{
-                      color: 'var(--text)', textDecoration: 'none', overflow: 'hidden',
-                      textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-                    }}>
-                      {d.name}
-                    </Link>
+                    <span style={{ display: 'flex', gap: '0.35rem', alignItems: 'baseline', overflow: 'hidden' }}>
+                      <Link href={`/donor/${d.slug}`} style={{
+                        color: 'var(--text)', textDecoration: 'none', overflow: 'hidden',
+                        textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                      }}>
+                        {d.name}
+                      </Link>
+                      <Link href={`/follow?donor=${d.slug}`} style={{ fontSize: '0.58rem', color: 'var(--teal)', textDecoration: 'none', opacity: 0.6, flexShrink: 0 }}>follow</Link>
+                    </span>
                     <span style={{ textAlign: 'right', color: 'var(--orange)', fontFamily: 'var(--font-mono)', fontSize: '0.68rem' }}>
                       {fmtMoney(d.amount_a)}
                     </span>

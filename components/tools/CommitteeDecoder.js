@@ -309,12 +309,17 @@ function DecodeResult({ data }) {
             return (
               <div key={i} style={{ marginBottom: '0.5rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', marginBottom: '0.15rem' }}>
-                  <a href={d.slug ? `/donor/${d.slug}` : '#'} style={{
-                    color: 'var(--teal)', textDecoration: 'none',
-                    overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '70%',
-                  }}>
-                    {d.name}
-                  </a>
+                  <span style={{ display: 'flex', gap: '0.4rem', alignItems: 'baseline', overflow: 'hidden', maxWidth: '70%' }}>
+                    <a href={d.slug ? `/donor/${d.slug}` : '#'} style={{
+                      color: 'var(--teal)', textDecoration: 'none',
+                      overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+                    }}>
+                      {d.name}
+                    </a>
+                    {d.slug && (
+                      <a href={`/follow?donor=${d.slug}`} style={{ fontSize: '0.58rem', color: 'var(--teal)', textDecoration: 'none', opacity: 0.6, flexShrink: 0 }}>follow</a>
+                    )}
+                  </span>
                   <span style={{ color: 'var(--text)', fontFamily: 'var(--font-mono)', fontSize: '0.65rem' }}>
                     {fmt(d.amount)}
                   </span>

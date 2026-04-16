@@ -39,6 +39,18 @@ export default function MapPage() {
       </p>
 
       <DonationMap />
+
+      <div style={{ marginTop: '1.5rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+        <Link href="/follow" style={{ fontSize: '0.72rem', color: 'var(--teal)', textDecoration: 'none', fontFamily: 'var(--font-mono)' }}>
+          → Follow the Money
+        </Link>
+        <Link href="/donors" style={{ fontSize: '0.72rem', color: 'var(--text-dim)', textDecoration: 'none', fontFamily: 'var(--font-mono)' }}>
+          → Browse all donors
+        </Link>
+        <Link href="/explorer" style={{ fontSize: '0.72rem', color: 'var(--text-dim)', textDecoration: 'none', fontFamily: 'var(--font-mono)' }}>
+          → Transaction explorer
+        </Link>
+      </div>
     </main>
   );
 }

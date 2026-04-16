@@ -203,14 +203,24 @@ function EntityCard({ entity }) {
       <div style={{
         borderTop: '1px solid rgba(100,140,220,0.08)',
         padding: '0.75rem 1.5rem',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem',
       }}>
-        <a href={entity.page_url} style={{
-          fontSize: '0.68rem', color: 'var(--teal)', fontFamily: 'var(--font-mono)',
-          textDecoration: 'none',
-        }}>
-          → view full finance profile
-        </a>
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <a href={entity.page_url} style={{
+            fontSize: '0.68rem', color: 'var(--teal)', fontFamily: 'var(--font-mono)',
+            textDecoration: 'none',
+          }}>
+            → view full finance profile
+          </a>
+          {entity.type !== 'committee' && (
+            <a href={`/follow?donor=${entity.page_url.replace('/donor/', '')}`} style={{
+              fontSize: '0.68rem', color: 'var(--orange)', fontFamily: 'var(--font-mono)',
+              textDecoration: 'none', opacity: 0.85,
+            }}>
+              → follow the money
+            </a>
+          )}
+        </div>
         {entity.stat && (
           <span style={{ fontSize: '0.58rem', color: 'rgba(90,106,136,0.5)', fontFamily: 'var(--font-mono)' }}>
             FL Division of Elections
