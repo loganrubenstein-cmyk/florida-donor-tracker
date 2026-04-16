@@ -3,7 +3,8 @@
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { fmtMoney, fmtMoneyCompact } from '@/lib/fmt';
-import { PARTY_COLOR } from '@/lib/partyUtils';
+import { PARTY_COLOR as PARTY_COLOR_MAP } from '@/lib/partyUtils';
+const PARTY_COLOR = (p) => PARTY_COLOR_MAP[p] || 'var(--text-dim)';
 
 const VOTE_COLOR = { YES: 'var(--republican)', NO: 'var(--democrat)', YEA: 'var(--republican)', NAY: 'var(--democrat)' };
 

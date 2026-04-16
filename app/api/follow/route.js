@@ -60,39 +60,40 @@ export async function GET(req) {
     const acct = searchParams.get('acct');
     if (!acct) return NextResponse.json({ error: 'acct required' }, { status: 400 });
 
-    // Candidates directly linked to this committee via edges
+    // Step 1: get edges from the view (no embedded join — views don't support it)
     const { data: edges } = await db
       .from('candidate_pc_links_v')
-      .select('candidate_acct_num, pc_name, link_type, confidence_tier, candidates(candidate_name, office_desc, party_code, total_combined, election_year)')
+      .select('candidate_acct_num, link_type, confidence_tier')
       .eq('pc_acct_num', acct)
+      .limit(30);
+
+    const acctNums = [...new Set((edges || []).map(e => e.candidate_acct_num).filter(Boolean))];
+
+    if (acctNums.length === 0) return NextResponse.json({ candidates: [] });
+
+    // Step 2: fetch candidate details for those acct_nums
+    const { data: cands } = await db
+      .from('candidates')
+      .select('acct_num, candidate_name, office_desc, party_code, total_combined, election_year')
+      .in('acct_num', acctNums)
+      .order('total_combined', { ascending: false })
       .limit(20);
 
-    // Also check direct contributions from committee to candidate accounts
-    const { data: directContribs } = await db
-      .from('contributions')
-      .select('acct_num, recipient_name, amount, candidates(candidate_name, office_desc, party_code, total_combined, election_year)')
-      .eq('donor_slug', `committee-${acct}`)
-      .not('candidates', 'is', null)
-      .order('amount', { ascending: false })
-      .limit(20);
-
-    const seen = new Set();
-    const candidates = [];
-
+    const edgeMap = {};
     for (const e of edges || []) {
-      if (!e.candidate_acct_num || seen.has(e.candidate_acct_num)) continue;
-      seen.add(e.candidate_acct_num);
-      candidates.push({
-        acct_num:      e.candidate_acct_num,
-        name:          e.candidates?.candidate_name || `Account #${e.candidate_acct_num}`,
-        office:        e.candidates?.office_desc || null,
-        party:         e.candidates?.party_code || null,
-        total_raised:  parseFloat(e.candidates?.total_combined) || 0,
-        year:          e.candidates?.election_year || null,
-        link_type:     e.link_type,
-        confidence:    e.confidence_tier,
-      });
+      if (!edgeMap[e.candidate_acct_num]) edgeMap[e.candidate_acct_num] = e;
     }
+
+    const candidates = (cands || []).map(c => ({
+      acct_num:     c.acct_num,
+      name:         c.candidate_name,
+      office:       c.office_desc || null,
+      party:        c.party_code || null,
+      total_raised: parseFloat(c.total_combined) || 0,
+      year:         c.election_year || null,
+      link_type:    edgeMap[c.acct_num]?.link_type || null,
+      confidence:   edgeMap[c.acct_num]?.confidence_tier || null,
+    }));
 
     return NextResponse.json({ candidates });
   }

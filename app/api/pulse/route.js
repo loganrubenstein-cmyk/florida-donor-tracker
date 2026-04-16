@@ -15,23 +15,31 @@ export async function GET(req) {
       // Recent large contributions
       const { data, error } = await db
         .from('contributions')
-        .select('contributor_name, donor_slug, recipient_name, acct_num, amount, contribution_dt, type')
+        .select('contributor_name, donor_slug, recipient_acct, amount, contribution_date, type_code')
         .gte('amount', 25000)
-        .order('contribution_dt', { ascending: false })
+        .not('contribution_date', 'is', null)
+        .order('contribution_date', { ascending: false })
         .limit(limit);
 
       if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
+      // Fetch committee names for these recipient accounts
+      const accts = [...new Set((data || []).map(r => r.recipient_acct).filter(Boolean))];
+      const { data: committees } = accts.length
+        ? await db.from('committees').select('acct_num, committee_name').in('acct_num', accts)
+        : { data: [] };
+      const nameMap = Object.fromEntries((committees || []).map(c => [c.acct_num, c.committee_name]));
+
       return NextResponse.json({
         type: 'filings',
         items: (data || []).map(r => ({
-          donor_name:    r.contributor_name,
-          donor_slug:    r.donor_slug,
-          recipient_name: r.recipient_name,
-          acct_num:      r.acct_num,
-          amount:        parseFloat(r.amount) || 0,
-          date:          r.contribution_dt,
-          type:          r.type,
+          donor_name:     r.contributor_name,
+          donor_slug:     r.donor_slug,
+          recipient_name: nameMap[r.recipient_acct] || null,
+          acct_num:       r.recipient_acct,
+          amount:         parseFloat(r.amount) || 0,
+          date:           r.contribution_date,
+          type:           r.type_code,
         })),
       });
     }

@@ -43,6 +43,27 @@ const TOOLS = [
     desc: 'Ranked view of Florida candidates and committees by disclosure completeness and contribution diversity.',
     accent: 'var(--republican)',
   },
+  {
+    href: '/follow',
+    title: 'Follow the Money',
+    desc: 'Pick any donor and trace their money through committees to candidates — then see how those candidates voted on legislation.',
+    accent: 'var(--teal)',
+    badge: 'New',
+  },
+  {
+    href: '/pulse',
+    title: 'Pulse',
+    desc: 'Live feed of recent large contributions, newly registered committees, and top donors of the current cycle.',
+    accent: 'var(--green)',
+    badge: 'New',
+  },
+  {
+    href: '/map',
+    title: 'Geographic Map',
+    desc: 'Where does Florida political money come from? Top donor cities, states, and in-state vs. out-of-state breakdown.',
+    accent: 'var(--blue)',
+    badge: 'New',
+  },
 ];
 
 export default function ToolsPage() {
