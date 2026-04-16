@@ -202,11 +202,43 @@ export default function SearchView() {
 
       {/* Empty state */}
       {!query.trim() && !loading && (
-        <div style={{ padding: '2.5rem 0' }}>
-          <div style={{ fontSize: '0.78rem', color: 'var(--text-dim)', marginBottom: '1.5rem', textAlign: 'center' }}>
-            Type any name — donor, candidate, committee, lobbyist, or firm
+        <div style={{ padding: '1.5rem 0 2.5rem' }}>
+          <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.75rem' }}>
+            Notable profiles
           </div>
-          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', background: 'var(--border)', border: '1px solid var(--border)', borderRadius: '3px', overflow: 'hidden', marginBottom: '1.5rem' }}>
+            {[
+              { href: '/politician/ron-desantis', label: 'Ron DeSantis', sub: 'Governor · 2022 · Republican', type: 'candidate', color: 'var(--blue)' },
+              { href: '/donor/florida-power-light-company', label: 'Florida Power & Light', sub: 'Corporate donor', type: 'donor', color: 'var(--orange)' },
+              { href: '/committee/4700', label: 'Republican Party of Florida', sub: 'Committee · party org', type: 'committee', color: 'var(--republican)' },
+              { href: '/principal/florida-medical-association', label: 'Florida Medical Association', sub: 'Lobbying principal · Healthcare', type: 'principal', color: 'var(--green)' },
+              { href: '/lobbyist/rubin-jeff', label: 'Jeff Rubin', sub: 'Lobbyist · top earner', type: 'lobbyist', color: 'var(--purple)' },
+              { href: '/legislator/11', label: 'Daniel Perez', sub: 'FL House Speaker · District 116', type: 'legislator', color: 'var(--teal)' },
+            ].map(({ href, label, sub, type, color }) => (
+              <a key={href} href={href} style={{
+                display: 'flex', alignItems: 'center', gap: '0.75rem',
+                padding: '0.65rem 1rem', background: 'var(--bg)',
+                textDecoration: 'none', transition: 'background 0.1s',
+              }}
+                onMouseEnter={ev => ev.currentTarget.style.background = 'rgba(100,140,220,0.06)'}
+                onMouseLeave={ev => ev.currentTarget.style.background = 'var(--bg)'}
+              >
+                <span style={{
+                  fontSize: '0.62rem', padding: '0.1rem 0.45rem',
+                  border: `1px solid ${color}`, color,
+                  borderRadius: '2px', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap', flexShrink: 0,
+                }}>
+                  {type.toUpperCase()}
+                </span>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontSize: '0.82rem', color: 'var(--text)', lineHeight: 1.3 }}>{label}</div>
+                  <div style={{ fontSize: '0.62rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', marginTop: '0.1rem' }}>{sub}</div>
+                </div>
+                <span style={{ marginLeft: 'auto', fontSize: '0.6rem', color: 'var(--text-dim)', flexShrink: 0 }}>→</span>
+              </a>
+            ))}
+          </div>
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
             {[
               { href: '/candidates', label: 'Browse Candidates', color: 'var(--blue)',   border: 'rgba(160,192,255,0.3)' },
               { href: '/committees', label: 'Browse Committees', color: 'var(--teal)',   border: 'rgba(77,216,240,0.3)'  },

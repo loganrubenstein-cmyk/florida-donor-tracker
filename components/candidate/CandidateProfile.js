@@ -2,6 +2,7 @@
 import dynamic from 'next/dynamic';
 import BackLinks from '@/components/BackLinks';
 import TabbedProfile from '@/components/shared/TabbedProfile';
+import BackToTop from '@/components/shared/BackToTop';
 import EgoGraph from '@/components/shared/EgoGraph';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import NewsBlock from '@/components/shared/NewsBlock';
@@ -59,6 +60,28 @@ const OFFICE_SHORT = {
   USR: 'US Rep', USS: 'US Sen', PRE: 'President',
   STA: 'St. Atty', PUB: 'Pub. Def', CTJ: 'Ct. Judge', SEB: 'St. Exec',
 };
+
+function HardSoftBar({ hard = 0, soft = 0 }) {
+  const total = (hard || 0) + (soft || 0);
+  if (!total) return null;
+  const hardPct = (hard / total) * 100;
+  const softPct = (soft / total) * 100;
+  return (
+    <div style={{ marginBottom: '1.75rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.6rem', color: 'var(--text-dim)', marginBottom: '0.35rem' }}>
+        <span style={{ color: 'var(--orange)' }}>Hard {hardPct.toFixed(0)}%</span>
+        <span style={{ color: 'var(--blue)' }}>{softPct.toFixed(0)}% Soft</span>
+      </div>
+      <div style={{ display: 'flex', height: '5px', borderRadius: '3px', overflow: 'hidden' }}>
+        <div style={{ width: `${hardPct}%`, background: 'var(--orange)' }} />
+        <div style={{ flex: 1, background: 'var(--blue)', opacity: 0.7 }} />
+      </div>
+      <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', marginTop: '0.3rem' }}>
+        Orange = direct hard money · Blue = candidate PAC (soft money)
+      </div>
+    </div>
+  );
+}
 
 function VendorBar({ vendor, maxAmount }) {
   const pct = maxAmount > 0 ? (vendor.total_amount / maxAmount) * 100 : 0;
@@ -141,7 +164,7 @@ function ElectionContextCard({ results }) {
   );
 }
 
-export default function CandidateProfile({ data, cycles = [], electionResults = [] }) {
+export default function CandidateProfile({ data, cycles = [], electionResults = [], hideHeader = false }) {
   const hm     = data.hard_money || {};
   const donors = hm.top_donors  || [];
   const pcs         = data.linked_pcs  || [];
@@ -231,6 +254,9 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
           </div>
         ))}
       </div>
+
+      {/* Hard vs Soft money split bar */}
+      <HardSoftBar hard={hm.total} soft={hasLinkedPcsButNoSoft ? 0 : data.soft_money_total} />
 
       <ElectionContextCard results={electionResults} />
 
@@ -606,22 +632,24 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
   return (
     <main className="m-padx" style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
 
-      <BackLinks links={[{ href: '/', label: 'home' }, { href: '/candidates', label: 'candidates' }]} />
+      {!hideHeader && <BackLinks links={[{ href: '/', label: 'home' }, { href: '/candidates', label: 'candidates' }]} />}
 
-      <EntityHeader
-        name={data.candidate_name || `Account #${data.acct_num}`}
-        typeBadge={{ label: 'CANDIDATE', color: 'var(--teal)' }}
-        badges={[
-          ...(party ? [{ label: party, color: partyColor }] : []),
-          ...(data.election_year ? [{ label: String(data.election_year), color: 'var(--border)' }] : []),
-        ]}
-        meta={[
-          officeLabel || null,
-          `Acct #${data.acct_num}${data.status_desc ? ` · ${data.status_desc}` : ''}`,
-        ]}
-      >
-        <SourceLink type="candidate" id={data.acct_num} />
-      </EntityHeader>
+      {!hideHeader && (
+        <EntityHeader
+          name={data.candidate_name || `Account #${data.acct_num}`}
+          typeBadge={{ label: 'CANDIDATE', color: 'var(--teal)' }}
+          badges={[
+            ...(party ? [{ label: party, color: partyColor }] : []),
+            ...(data.election_year ? [{ label: String(data.election_year), color: 'var(--border)' }] : []),
+          ]}
+          meta={[
+            officeLabel || null,
+            `Acct #${data.acct_num}${data.status_desc ? ` · ${data.status_desc}` : ''}`,
+          ]}
+        >
+          <SourceLink type="candidate" id={data.acct_num} />
+        </EntityHeader>
+      )}
 
       {/* Cycle connector pill bar */}
       {cycles.length > 0 && (
@@ -666,6 +694,7 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
       </div>
 
       <TabbedProfile tabs={tabs} defaultTab="overview" />
+      <BackToTop />
     </main>
   );
 }

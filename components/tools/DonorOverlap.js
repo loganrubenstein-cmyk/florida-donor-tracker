@@ -9,28 +9,37 @@ import CandidateCompareResult from '@/components/tools/CandidateCompareResult';
 const TYPE_COLOR = { individual: 'var(--green)', corporate: 'var(--blue)', committee: 'var(--orange)', unknown: 'var(--text-dim)' };
 const TYPE_LABEL = { individual: 'Individual', corporate: 'Corporate', committee: 'Committee/PAC', unknown: 'Other' };
 
-export default function DonorOverlap({ initialEntityA = null }) {
+export default function DonorOverlap({ initialEntityA = null, initialEntityB = null }) {
   const [entityA, setEntityA] = useState(initialEntityA);
-  const [entityB, setEntityB] = useState(null);
+  const [entityB, setEntityB] = useState(initialEntityB);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [mode, setMode] = useState('overlap');
+  const [mode, setMode] = useState('candidate_compare');
+
+  // Auto-run comparison when both entities are pre-loaded from server
+  useEffect(() => {
+    if (initialEntityA && initialEntityB && !result) {
+      handleCompare(initialEntityA, initialEntityB);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function switchMode(m) {
     setMode(m);
     setResult(null);
   }
 
-  async function handleCompare() {
-    if (!entityA || !entityB) return;
+  async function handleCompare(a, b) {
+    const ea = a || entityA;
+    const eb = b || entityB;
+    if (!ea || !eb) return;
     setLoading(true);
     setError(null);
     setResult(null);
     try {
       const url = mode === 'candidate_compare'
-        ? `/api/overlap?a=${entityA.acct_num}&b=${entityB.acct_num}&mode=candidate_compare`
-        : `/api/overlap?a=${entityA.acct_num}&b=${entityB.acct_num}`;
+        ? `/api/overlap?a=${ea.acct_num}&b=${eb.acct_num}&mode=candidate_compare`
+        : `/api/overlap?a=${ea.acct_num}&b=${eb.acct_num}`;
       const res = await fetch(url);
       const json = await res.json();
       if (!res.ok) { setError(json.error || 'Comparison failed'); return; }
@@ -79,10 +88,10 @@ export default function DonorOverlap({ initialEntityA = null }) {
       <div className="entity-picker-grid">
         <EntityPicker label="Entity A" value={entityA} onChange={setEntityA} initialValue={initialEntityA} />
         <div style={{ padding: '0.5rem 0', color: 'var(--text-dim)', fontSize: '0.82rem', fontFamily: 'var(--font-mono)' }}>vs</div>
-        <EntityPicker label="Entity B" value={entityB} onChange={setEntityB} />
+        <EntityPicker label="Entity B" value={entityB} onChange={setEntityB} initialValue={initialEntityB} />
       </div>
 
-      <button onClick={handleCompare} disabled={loading || !entityA || !entityB}
+      <button onClick={() => handleCompare()} disabled={loading || !entityA || !entityB}
         style={{
           padding: '0.5rem 1.5rem', fontSize: '0.82rem', fontFamily: 'var(--font-mono)',
           background: (!entityA || !entityB) ? 'var(--surface)' : 'var(--orange)',

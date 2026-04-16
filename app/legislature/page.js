@@ -83,7 +83,7 @@ export default async function LegislaturePage() {
       </div>
 
       {/* Hub cards */}
-      <div className="hub-grid">
+      <div className="hub-grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)' }}>
         <Link href="/legislators" className="hub-card">
           <div className="hub-card-title">Member Directory</div>
           <div className="hub-card-desc">All {rows.length} current House and Senate members — voting records, committee assignments, campaign finance, and contact info.</div>

@@ -6,6 +6,7 @@ import { getDb } from '@/lib/db';
 import CandidateProfile from '@/components/candidate/CandidateProfile';
 import BackLinks from '@/components/BackLinks';
 import EntityHeader from '@/components/shared/EntityHeader';
+import BackToTop from '@/components/shared/BackToTop';
 import { buildMeta } from '@/lib/seo';
 import { fmtMoneyCompact } from '@/lib/fmt';
 import { PARTY_COLOR } from '@/lib/partyUtils';
@@ -209,8 +210,8 @@ export default async function PoliticianPage({ params, searchParams }) {
         </div>
       )}
 
-      {/* Full candidate profile for active cycle */}
-      <CandidateProfile data={candidateData} cycles={allCyclesForAcct} electionResults={allElectionResults} />
+      {/* Full candidate profile for active cycle — header suppressed to avoid duplication */}
+      <CandidateProfile data={candidateData} cycles={allCyclesForAcct} electionResults={allElectionResults} hideHeader />
 
       {/* Link to raw acct page */}
       <div style={{
@@ -223,6 +224,7 @@ export default async function PoliticianPage({ params, searchParams }) {
         </a>
         <span>Data: Florida Division of Elections · Not affiliated with the State of Florida.</span>
       </div>
+      <BackToTop />
     </main>
   );
 }

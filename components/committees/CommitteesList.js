@@ -104,7 +104,7 @@ export default function CommitteesList() {
 
       {/* Table */}
       <div style={{ overflowX: 'auto', opacity: loading ? 0.5 : 1, transition: 'opacity 0.15s' }}>
-        <table style={{ width: '100%', minWidth: '400px', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
+        <table className="dir-table" style={{ width: '100%', minWidth: '400px', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid var(--border)' }}>
               {[
