@@ -75,8 +75,9 @@ def main() -> int:
         cur.execute("SET statement_timeout = 0")
 
         # ── candidate_pc_edges ───────────────────────────────────────────────
-        print("\nTruncating candidate_pc_edges...")
-        cur.execute("TRUNCATE TABLE candidate_pc_edges RESTART IDENTITY")
+        # Tables are pre-truncated before this script runs (TRUNCATE via MCP
+        # or direct connection avoids pgbouncer timeout on large tables).
+        print("\nLoading candidate_pc_edges (pre-truncated)...")
 
         # Prep: convert bool columns to bool-compatible string
         edges_load = edges_df.copy()
@@ -101,8 +102,7 @@ def main() -> int:
 
         # ── committee_lineage ────────────────────────────────────────────────
         if len(lineage_df) > 0:
-            print("\nTruncating committee_lineage...")
-            cur.execute("TRUNCATE TABLE committee_lineage RESTART IDENTITY")
+            print("\nLoading committee_lineage (pre-truncated)...")
             n = copy_table(cur, lineage_df, "committee_lineage",
                            ["group_id", "acct_num", "role", "evidence"])
             print(f"Loaded {n:,} rows into committee_lineage")

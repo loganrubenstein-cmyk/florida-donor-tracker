@@ -393,6 +393,11 @@ def main(force: bool = False, sweep_only: bool = False) -> int:
             print(f"  {i}/{len(to_detail)} ...", flush=True)
         try:
             detail = fetch_committee_detail(session, acct)
+            # ComDetail.asp's <h2> is the page title "Committee Tracking System",
+            # not the committee name. Always prefer the name from the search sweep.
+            search_name = all_committees[acct].get("committee_name", "")
+            if search_name and search_name != "Committee Tracking System":
+                detail["committee_name"] = search_name
             new_rows.append(detail)
         except Exception as e:
             print(f"  WARNING: ComDetail failed for {acct}: {e}")
@@ -413,9 +418,18 @@ def main(force: bool = False, sweep_only: bool = False) -> int:
         merged.to_csv(committees_csv, index=False)
         print(f"  Appended {len(new_rows):,} rows → committees.csv ({len(merged):,} total)")
 
-    # Step 3: Scrape contributions for newly discovered inactive committees
-    to_scrape = inactive_new - scraped_accts
-    print(f"\n[Step 3] Scraping contributions for {len(to_scrape):,} inactive committees ...")
+    # Step 3: Scrape contributions for inactive committees without files.
+    # Includes both newly discovered AND committees that were already in the
+    # active registry but have since closed ("active-only registry trap").
+    formerly_active_now_closed = {
+        a for a in existing_accts
+        if a in all_committees
+        and all_committees[a].get("status", "").lower() in INACTIVE_STATUSES
+    }
+    to_scrape = (inactive_new | formerly_active_now_closed) - scraped_accts
+    print(f"\n[Step 3] Scraping contributions for {len(to_scrape):,} inactive committees "
+          f"({len(inactive_new - scraped_accts):,} new + "
+          f"{len(formerly_active_now_closed - scraped_accts):,} formerly-active-now-closed) ...")
     total_rows = 0
     for i, acct in enumerate(sorted(to_scrape, key=int), 1):
         name = all_committees.get(acct, {}).get("committee_name", "")
