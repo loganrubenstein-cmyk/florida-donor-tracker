@@ -231,6 +231,11 @@ export default function IndustryProfile({ data, totalAmount, trendData, topDonor
                     style={{ color: 'var(--teal)', textDecoration: 'none' }}>
                     {d.name}
                   </a>
+                  <a href={`/follow?donor=${d.slug || slugify(d.name)}`}
+                    style={{ marginLeft: '0.4rem', fontSize: '0.58rem', color: 'var(--teal)', textDecoration: 'none', opacity: 0.6 }}
+                    title="Follow this donor's money">
+                    follow
+                  </a>
                   {d.top_location && (
                     <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)' }}>
                       {d.top_location.replace(/,\s*\d{5}(-\d{4})?$/, '').trim()}
@@ -261,6 +266,11 @@ export default function IndustryProfile({ data, totalAmount, trendData, topDonor
                   <a href={`/donor/${d.slug || slugify(d.name)}`}
                     style={{ color: 'var(--teal)', textDecoration: 'none' }}>
                     {d.name}
+                  </a>
+                  <a href={`/follow?donor=${d.slug || slugify(d.name)}`}
+                    style={{ marginLeft: '0.4rem', fontSize: '0.58rem', color: 'var(--teal)', textDecoration: 'none', opacity: 0.6 }}
+                    title="Follow this donor's money">
+                    follow
                   </a>
                 </td>
                 <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--orange)', fontWeight: 700, whiteSpace: 'nowrap', fontFamily: 'var(--font-mono)', fontSize: '0.82rem' }}>

@@ -8,7 +8,10 @@ export const metadata = {
   description: 'Trace any donor\'s money through Florida political committees to candidates and their legislative votes.',
 };
 
-export default function FollowPage() {
+export default async function FollowPage({ searchParams }) {
+  const params = await searchParams;
+  const preloadSlug = params?.donor || null;
+
   return (
     <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
       <div style={{ marginBottom: '0.5rem', fontSize: '0.72rem', color: 'var(--text-dim)' }}>
@@ -38,7 +41,7 @@ export default function FollowPage() {
         The full chain from dollar to decision, in one screen.
       </p>
 
-      <FollowExplorer />
+      <FollowExplorer preloadSlug={preloadSlug} />
     </main>
   );
 }

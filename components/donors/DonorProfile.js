@@ -320,7 +320,7 @@ export default function DonorProfile({ data, annotations = {} }) {
           badge: `${l.match_score}% match`,
           accentColor: 'var(--blue)',
         }))}
-        emptyText="No lobbyist principal connections found. Name-based matching did not link this donor to any registered principal in the Florida Lobbyist Registration Office database."
+        emptyText={<>No lobbyist principal connections found. Name-based matching did not link this donor to any registered principal.{' '}<a href="/principals" style={{ color: 'var(--teal)', textDecoration: 'none' }}>Search principals manually →</a></>}
       />
     </div>
   );
@@ -549,6 +549,23 @@ export default function DonorProfile({ data, annotations = {} }) {
       </EntityHeader>
 
       <InsightStrip insights={data.insights} />
+
+      <div style={{ marginBottom: '1.25rem' }}>
+        <a
+          href={`/follow?donor=${encodeURIComponent(data.slug)}`}
+          style={{
+            display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
+            fontSize: '0.74rem', color: 'var(--teal)', textDecoration: 'none',
+            border: '1px solid rgba(77,216,240,0.3)', borderRadius: '3px',
+            padding: '0.3rem 0.75rem', fontFamily: 'var(--font-mono)',
+            transition: 'border-color 0.12s',
+          }}
+          onMouseOver={e => e.currentTarget.style.borderColor = 'var(--teal)'}
+          onMouseOut={e => e.currentTarget.style.borderColor = 'rgba(77,216,240,0.3)'}
+        >
+          → Follow this donor&apos;s money
+        </a>
+      </div>
 
       <TabbedProfile tabs={tabs} defaultTab="overview" />
     </main>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import BackLinks from '@/components/BackLinks';
 import SectionHeader from '@/components/shared/SectionHeader';
@@ -44,10 +45,11 @@ const chipStyle = (active) => ({
 const fmtCompact = fmtMoney;
 
 export default function LegislatorsList() {
+  const searchParams = useSearchParams();
   const [results, setResults] = useState({ data: [], total: 0, pages: 0 });
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
-  const [debouncedQ, setDebouncedQ] = useState('');
+  const [search, setSearch] = useState(searchParams.get('q') || '');
+  const [debouncedQ, setDebouncedQ] = useState(searchParams.get('q') || '');
   const [chamber, setChamber] = useState('all');
   const [party, setParty] = useState('all');
   const [sortBy, setSortBy] = useState('display_name');

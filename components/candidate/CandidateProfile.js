@@ -760,6 +760,9 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
         <a href={`/compare?a=${data.acct_num}`} className="cross-link">
           Compare with another candidate →
         </a>
+        <a href={`/flow`} className="cross-link">
+          Explore donors in Money Flow →
+        </a>
       </div>
 
       <TabbedProfile tabs={tabs} defaultTab="overview" />

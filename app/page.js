@@ -276,7 +276,7 @@ export default async function Home() {
               How money moved
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <CardLink href="/flow" color="var(--teal)" accent="rgba(77,216,240,0.2)" title="→ flow explorer" desc="Click through donors, committees, candidates, and industries. Follow money in any direction." />
+              <CardLink href="/follow" color="var(--teal)" accent="rgba(77,216,240,0.2)" title="→ follow the money" desc="Pick any donor, trace their money through committees to candidates — then see how those candidates voted." highlight />
               <CardLink href="/flow" color="var(--teal)" accent="rgba(77,216,240,0.15)" title="→ money flow" desc="Sankey of the largest donor-to-committee flows. Filter by cycle, industry, or party." />
               <CardLink href="/ie" color="var(--orange)" accent="rgba(255,176,96,0.15)" title="→ independent expenditures" desc="$70.9M in IE spending — committees that ran ads for and against candidates outside their campaigns." />
               <CardLink href="/connections" color="var(--orange)" accent="rgba(255,176,96,0.12)" title="→ committee connections" desc="56K+ committee pairs sharing treasurers, addresses, donors, or money. Shadow networks mapped." />

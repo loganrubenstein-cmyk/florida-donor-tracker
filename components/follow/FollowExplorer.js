@@ -33,7 +33,7 @@ function ChainArrow() {
   );
 }
 
-export default function FollowExplorer() {
+export default function FollowExplorer({ preloadSlug }) {
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [showDrop, setShowDrop] = useState(false);
@@ -46,6 +46,22 @@ export default function FollowExplorer() {
   const [selectedCandidate, setSelectedCandidate] = useState(null);
   const [votes, setVotes] = useState(null);
   const [loading, setLoading] = useState({});
+
+  useEffect(() => {
+    if (!preloadSlug) return;
+    setLoading(l => ({ ...l, committees: true }));
+    fetch(`/api/follow?step=committees&slug=${encodeURIComponent(preloadSlug)}`)
+      .then(r => r.json())
+      .then(j => {
+        if (j.donor) {
+          setQuery(j.donor.name || preloadSlug);
+          setDonor(j.donor);
+          setCommittees(j.committees || []);
+        }
+        setLoading(l => ({ ...l, committees: false }));
+      })
+      .catch(() => setLoading(l => ({ ...l, committees: false })));
+  }, [preloadSlug]);
 
   // Search donors
   function handleSearch(val) {

@@ -307,6 +307,11 @@ export default function CycleProfile({ year, candidates, topDonors = [], electio
                     style={{ color: 'var(--teal)', textDecoration: 'none' }}>
                     {d.name}
                   </a>
+                  <a href={`/follow?donor=${d.slug || slugify(d.name)}`}
+                    style={{ marginLeft: '0.4rem', fontSize: '0.58rem', color: 'var(--teal)', textDecoration: 'none', opacity: 0.6 }}
+                    title="Follow this donor's money">
+                    follow
+                  </a>
                 </td>
                 <td style={{ padding: '0.4rem 0.6rem', textAlign: 'center' }}>
                   <span style={{

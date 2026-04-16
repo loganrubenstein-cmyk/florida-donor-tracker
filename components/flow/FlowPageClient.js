@@ -69,10 +69,10 @@ export default function FlowPageClient({ flows, flowsByCycle, donorIndustries })
             fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.5rem, 4vw, 2.4rem)',
             fontWeight: 400, color: 'var(--text)', marginBottom: '0.35rem', lineHeight: 1.1,
           }}>
-            Follow the Money
+            Money Flow Explorer
           </h1>
           <p style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>
-            Explore industries, donors, and the committees they fund — column by column.
+            Start from an industry, party, committee, candidate, or specific donor — then drill down column by column to trace the full money chain.
           </p>
         </div>
         {viewToggle}

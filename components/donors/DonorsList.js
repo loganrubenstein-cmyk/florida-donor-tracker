@@ -271,6 +271,13 @@ export default function DonorsList() {
                     >
                       ↗
                     </a>
+                    <a
+                      href={`/follow?donor=${d.slug}`}
+                      style={{ marginLeft: '0.4rem', fontSize: '0.58rem', color: 'var(--teal)', textDecoration: 'none', verticalAlign: 'middle', opacity: 0.75 }}
+                      title="Follow this donor's money"
+                    >
+                      follow
+                    </a>
                     {d.has_lobbyist_link && (
                       <span style={{
                         marginLeft: '0.4rem', fontSize: '0.58rem', color: 'var(--blue)',

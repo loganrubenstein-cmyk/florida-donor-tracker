@@ -102,7 +102,15 @@ function ConnectionRow({ row }) {
             )}
           </div>
         </div>
-        <ScoreBadge score={row.connection_score} />
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.4rem', flexShrink: 0 }}>
+          <ScoreBadge score={row.connection_score} />
+          <a
+            href={`/compare?a=${row.entity_a_acct}&b=${row.entity_b_acct}`}
+            style={{ fontSize: '0.62rem', color: 'var(--teal)', textDecoration: 'none', fontFamily: 'var(--font-mono)', opacity: 0.8, whiteSpace: 'nowrap' }}
+          >
+            compare →
+          </a>
+        </div>
       </div>
 
       {/* Evidence pills */}

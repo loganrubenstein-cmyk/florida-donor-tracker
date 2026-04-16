@@ -248,10 +248,13 @@ export default async function PoliticianPage({ params, searchParams }) {
       <div style={{
         marginTop: '2rem', fontSize: '0.62rem', color: 'var(--text-dim)',
         fontFamily: 'var(--font-mono)', borderTop: '1px solid var(--border)', paddingTop: '1rem',
-        display: 'flex', gap: '1.5rem', flexWrap: 'wrap',
+        display: 'flex', gap: '1.5rem', flexWrap: 'wrap', alignItems: 'center',
       }}>
         <a href={`/candidate/${activeCycle.acct_num}`} style={{ color: 'rgba(100,140,220,0.5)', textDecoration: 'none' }}>
           View raw campaign account #{activeCycle.acct_num} →
+        </a>
+        <a href={`/flow`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+          Explore top donors in Money Flow →
         </a>
         <span>Data: Florida Division of Elections · Not affiliated with the State of Florida.</span>
       </div>

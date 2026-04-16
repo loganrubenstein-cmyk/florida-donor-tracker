@@ -1,6 +1,7 @@
+import { Suspense } from 'react';
 import LegislatorsList from '@/components/legislators/LegislatorsList';
 
-export const dynamic = 'force-static';
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Florida Legislators',
@@ -8,5 +9,9 @@ export const metadata = {
 };
 
 export default function LegislatorsPage() {
-  return <LegislatorsList />;
+  return (
+    <Suspense>
+      <LegislatorsList />
+    </Suspense>
+  );
 }

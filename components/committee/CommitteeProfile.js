@@ -526,9 +526,12 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
 
       <InsightStrip insights={data.insights} />
 
-      <div style={{ marginBottom: '1.25rem' }}>
+      <div style={{ marginBottom: '1.25rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
         <a href={`/compare?a=${data.acct_num}`} className="cross-link">
           Find shared donors →
+        </a>
+        <a href={`/flow`} className="cross-link">
+          Explore in Money Flow →
         </a>
       </div>
 

@@ -51,6 +51,12 @@ const TOOLS = [
     badge: 'New',
   },
   {
+    href: '/flow',
+    title: 'Money Flow Explorer',
+    desc: 'Multi-path drill-down: start from an industry, party, committee, candidate, or donor and explore every link in the money chain.',
+    accent: 'var(--orange)',
+  },
+  {
     href: '/pulse',
     title: 'Pulse',
     desc: 'Live feed of recent large contributions, newly registered committees, and top donors of the current cycle.',

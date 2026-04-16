@@ -8,7 +8,7 @@ import { useState, useEffect, useRef } from 'react';
 const DIRECT = [
   { href: '/candidates', label: 'Candidates' },
   { href: '/committees', label: 'Committees' },
-  { href: '/flow',       label: 'Flow' },
+  { href: '/follow',     label: 'Follow $' },
 ];
 
 const GROUPS = [
@@ -42,6 +42,8 @@ const GROUPS = [
   {
     label: 'Tools',
     items: [
+      { href: '/follow',       label: 'Follow the Money' },
+      { href: '/flow',         label: 'Money Flow Explorer' },
       { href: '/compare',      label: 'Candidate Compare' },
       { href: '/decode',       label: 'Committee Decoder' },
       { href: '/district',     label: 'District Lookup' },

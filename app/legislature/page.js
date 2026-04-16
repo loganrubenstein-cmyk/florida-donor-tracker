@@ -82,6 +82,27 @@ export default async function LegislaturePage() {
         ))}
       </div>
 
+      {/* Quick member search */}
+      <form action="/legislators" method="get" style={{ marginBottom: '1.75rem', display: 'flex', gap: '0.5rem', maxWidth: '400px' }}>
+        <input
+          name="q"
+          type="search"
+          placeholder="Search a member — e.g. DeSantis, Passidomo…"
+          style={{
+            flex: 1, background: 'var(--surface)', border: '1px solid rgba(100,140,220,0.35)',
+            color: 'var(--text)', padding: '0.5rem 0.75rem', fontSize: '0.78rem',
+            borderRadius: '3px', fontFamily: 'var(--font-mono)', outline: 'none',
+          }}
+        />
+        <button type="submit" style={{
+          background: 'transparent', border: '1px solid rgba(100,140,220,0.35)',
+          color: 'var(--text-dim)', padding: '0.5rem 0.75rem', fontSize: '0.72rem',
+          borderRadius: '3px', cursor: 'pointer', fontFamily: 'var(--font-mono)',
+        }}>
+          →
+        </button>
+      </form>
+
       {/* Hub cards */}
       <div className="hub-grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)' }}>
         <Link href="/legislators" className="hub-card">
@@ -106,6 +127,18 @@ export default async function LegislaturePage() {
           <div className="hub-card-title">Lobbied Bills</div>
           <div className="hub-card-desc">14K FL House bills by lobbying activity — see which bills attracted the most principals and lobbyist registrations.</div>
           <div className="hub-card-stat">2017–2026 · FL House disclosures</div>
+        </Link>
+
+        <Link href="/follow" className="hub-card">
+          <div className="hub-card-title">Follow the Money</div>
+          <div className="hub-card-desc">Pick a donor and trace their money through committees to the legislators they funded — then see how those legislators voted.</div>
+          <div className="hub-card-stat">Donor → Committee → Legislator → Vote</div>
+        </Link>
+
+        <Link href="/flow" className="hub-card">
+          <div className="hub-card-title">Money Flow Explorer</div>
+          <div className="hub-card-desc">Browse by industry or party to see which sectors fund which legislators most. Multi-column drill-down.</div>
+          <div className="hub-card-stat">Industry · Party · Committee · Donor</div>
         </Link>
       </div>
 

@@ -23,7 +23,7 @@ function FilingsTable({ items }) {
     <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
       <thead>
         <tr style={{ borderBottom: '1px solid var(--border)' }}>
-          {['Date', 'Donor', 'Recipient', 'Amount'].map(h => (
+          {['Date', 'Donor', 'Recipient', 'Amount', ''].map(h => (
             <th key={h} style={{ textAlign: 'left', padding: '0.4rem 0.6rem', fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 400 }}>{h}</th>
           ))}
         </tr>
@@ -41,6 +41,11 @@ function FilingsTable({ items }) {
               <Link href={`/committee/${item.acct_num}`} style={{ color: 'var(--text-dim)', textDecoration: 'none', fontSize: '0.74rem' }}>{item.recipient_name}</Link>
             </td>
             <td style={{ padding: '0.55rem 0.6rem', color: 'var(--orange)', fontFamily: 'var(--font-mono)', textAlign: 'right', whiteSpace: 'nowrap' }}>{fmtMoney(item.amount)}</td>
+            <td style={{ padding: '0.55rem 0.6rem' }}>
+              {item.donor_slug && (
+                <Link href={`/follow?donor=${item.donor_slug}`} style={{ fontSize: '0.65rem', color: 'var(--teal)', textDecoration: 'none', opacity: 0.8, whiteSpace: 'nowrap' }}>follow →</Link>
+              )}
+            </td>
           </tr>
         ))}
       </tbody>
@@ -82,7 +87,7 @@ function CycleTable({ items, year }) {
     <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
       <thead>
         <tr style={{ borderBottom: '1px solid var(--border)' }}>
-          {['#', 'Donor', 'Type', `Total (${year})`].map(h => (
+          {['#', 'Donor', 'Type', `Total (${year})`, ''].map(h => (
             <th key={h} style={{ textAlign: 'left', padding: '0.4rem 0.6rem', fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 400 }}>{h}</th>
           ))}
         </tr>
@@ -96,6 +101,9 @@ function CycleTable({ items, year }) {
             </td>
             <td style={{ padding: '0.55rem 0.6rem', fontSize: '0.7rem', color: 'var(--text-dim)' }}>{item.is_corporate ? 'Corporate' : 'Individual'}</td>
             <td style={{ padding: '0.55rem 0.6rem', color: 'var(--orange)', fontFamily: 'var(--font-mono)', textAlign: 'right' }}>{fmtMoneyCompact(item.total)}</td>
+            <td style={{ padding: '0.55rem 0.6rem' }}>
+              <Link href={`/follow?donor=${item.donor_slug}`} style={{ fontSize: '0.65rem', color: 'var(--teal)', textDecoration: 'none', opacity: 0.8, whiteSpace: 'nowrap' }}>follow →</Link>
+            </td>
           </tr>
         ))}
       </tbody>

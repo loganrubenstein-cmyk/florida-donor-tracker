@@ -86,6 +86,14 @@ export default function PulseSection() {
                 <Link href={`/committee/${item.acct_num}`} style={{ color: 'var(--text-dim)', textDecoration: 'none', fontSize: '0.72rem' }}>
                   {item.recipient_name}
                 </Link>
+                {item.donor_slug && (
+                  <Link href={`/follow?donor=${item.donor_slug}`} style={{
+                    marginLeft: '0.5rem', fontSize: '0.62rem', color: 'var(--teal)',
+                    textDecoration: 'none', opacity: 0.7,
+                  }}>
+                    follow →
+                  </Link>
+                )}
               </span>
               <span style={{
                 color: 'var(--orange)',
