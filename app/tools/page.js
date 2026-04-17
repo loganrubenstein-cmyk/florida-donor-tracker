@@ -70,6 +70,13 @@ const TOOLS = [
     accent: 'var(--blue)',
     badge: 'New',
   },
+  {
+    href: '/network/graph',
+    title: 'Network Graph',
+    desc: 'Force-directed graph of committee-to-committee money flows. Explore the structural topology of Florida political finance.',
+    accent: 'var(--teal)',
+    badge: 'New',
+  },
 ];
 
 export default function ToolsPage() {

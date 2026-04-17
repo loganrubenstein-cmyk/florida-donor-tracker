@@ -235,7 +235,7 @@ export default function FlowClient({ flows, flowsByCycle = null, donorIndustries
   return (
     <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
 
-      <BackLinks links={[{ href: '/', label: 'home' }]} />
+      <BackLinks links={[{ href: '/', label: 'home' }, { href: '/tools', label: 'tools' }]} />
 
       <div style={{ marginBottom: '1.5rem' }}>
         <div style={{ marginBottom: '0.5rem' }}>

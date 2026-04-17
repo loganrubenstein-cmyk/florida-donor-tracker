@@ -57,6 +57,13 @@ export default function DonorOverlap({ initialEntityA = null, initialEntityB = n
 
   return (
     <div className="container" style={{ paddingTop: '2rem', paddingBottom: '3rem' }}>
+      <div style={{ marginBottom: '0.75rem', fontSize: '0.72rem', color: 'var(--text-dim)' }}>
+        <Link href="/" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Home</Link>
+        {' / '}
+        <Link href="/tools" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Tools</Link>
+        {' / '}
+        <span>Donor Overlap</span>
+      </div>
       <div style={{ marginBottom: '1.25rem' }}>
         <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.6rem', color: 'var(--orange)', margin: 0 }}>
           Compare

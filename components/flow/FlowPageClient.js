@@ -49,7 +49,7 @@ export default function FlowPageClient({ flows, flowsByCycle, donorIndustries })
 
   return (
     <div style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
-      <BackLinks links={[{ href: '/', label: 'home' }]} />
+      <BackLinks links={[{ href: '/', label: 'home' }, { href: '/tools', label: 'tools' }]} />
 
       <div style={{
         display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
