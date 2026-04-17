@@ -44,13 +44,15 @@ const GROUPS = [
   {
     label: 'Tools',
     items: [
-      { href: '/follow',       label: 'Follow the Money' },
-      { href: '/flow',         label: 'Money Flow Explorer' },
-      { href: '/compare',      label: 'Candidate Compare' },
-      { href: '/decode',       label: 'Committee Decoder' },
-      { href: '/district',     label: 'District Lookup' },
-      { href: '/timeline',     label: 'Influence Timeline' },
-      { href: '/transparency', label: 'Dark Money Score' },
+      { href: '/follow',         label: 'Follow the Money' },
+      { href: '/flow',           label: 'Money Flow Explorer' },
+      { href: '/compare',        label: 'Candidate Compare' },
+      { href: '/decode',         label: 'Committee Decoder' },
+      { href: '/district',       label: 'District Lookup' },
+      { href: '/timeline',       label: 'Influence Timeline' },
+      { href: '/transparency',   label: 'Dark Money Score' },
+      { href: '/network/graph',  label: 'Network Graph' },
+      { href: '/map',            label: 'Geographic Map' },
     ],
   },
   {
