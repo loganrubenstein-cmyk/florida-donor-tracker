@@ -71,8 +71,11 @@ export default function FlowPageClient({ flows, flowsByCycle, donorIndustries })
           }}>
             Money Flow Explorer
           </h1>
-          <p style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>
+          <p style={{ fontSize: '0.72rem', color: 'var(--text-dim)', lineHeight: 1.55 }}>
             Start from an industry, party, committee, candidate, or specific donor — then drill down column by column to trace the full money chain.
+            <span style={{ display: 'block', marginTop: '0.35rem', color: 'rgba(90,106,136,0.7)' }}>
+              Example: pick <em>Industries</em> → click <em>Real Estate</em> → see which PACs received money → click a PAC → see which candidates it funded.
+            </span>
           </p>
         </div>
         {viewToggle}
