@@ -6,7 +6,14 @@ export const metadata = {
 
 export default function NetworkGraphPage() {
   return (
-    <main style={{ maxWidth: '700px', margin: '0 auto', padding: '4rem 2rem' }}>
+    <main style={{ maxWidth: '700px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
+      <div style={{ marginBottom: '1.5rem', fontSize: '0.72rem', color: 'var(--text-dim)' }}>
+        <Link href="/" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Home</Link>
+        {' / '}
+        <Link href="/tools" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Tools</Link>
+        {' / '}
+        <span>Network Graph</span>
+      </div>
       <div style={{
         display: 'inline-block', fontSize: '0.65rem', padding: '0.15rem 0.5rem',
         border: '1px solid var(--text-dim)', color: 'var(--text-dim)',

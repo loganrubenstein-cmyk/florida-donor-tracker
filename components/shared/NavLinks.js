@@ -52,7 +52,6 @@ const GROUPS = [
       { href: '/district',       label: 'District Lookup' },
       { href: '/timeline',       label: 'Influence Timeline' },
       { href: '/transparency',   label: 'Dark Money Score' },
-      { href: '/network/graph',  label: 'Network Graph' },
       { href: '/map',            label: 'Geographic Map' },
     ],
   },
