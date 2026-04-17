@@ -261,7 +261,7 @@ export default function ConnectionsView() {
   return (
     <main style={{ maxWidth: '960px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
 
-      <BackLinks links={[{ href: '/', label: 'home' }]} />
+      <BackLinks links={[{ href: '/', label: 'home' }, { href: '/committees', label: 'committees' }]} />
 
       <div style={{ marginBottom: '1.75rem' }}>
         <div style={{ marginBottom: '0.4rem' }}>

@@ -94,7 +94,7 @@ export default function CommitteeDecoder() {
 
   return (
     <main style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
-      <BackLinks links={[{ href: '/', label: 'home' }]} />
+      <BackLinks links={[{ href: '/', label: 'home' }, { href: '/tools', label: 'tools' }]} />
 
       {/* Header */}
       <div style={{ marginBottom: '2rem' }}>

@@ -89,7 +89,7 @@ export default function LegislatorsList() {
 
   return (
     <main style={{ maxWidth: '1040px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
-      <BackLinks links={[{ href: '/', label: 'home' }]} />
+      <BackLinks links={[{ href: '/', label: 'home' }, { href: '/legislature', label: 'legislature' }]} />
 
       <SectionHeader title="Florida Legislature" eyebrow="FL Legislature · 2024–2026 Term" />
       <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', marginTop: '-0.75rem', marginBottom: '1.25rem' }}>

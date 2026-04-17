@@ -455,7 +455,7 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
   return (
     <main className="m-padx" style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
 
-      <BackLinks links={[{ href: '/', label: 'home' }, { href: '/network', label: 'network' }]} />
+      <BackLinks links={[{ href: '/', label: 'home' }, { href: '/committees', label: 'committees' }]} />
 
       <EntityHeader
         name={data.committee_name}

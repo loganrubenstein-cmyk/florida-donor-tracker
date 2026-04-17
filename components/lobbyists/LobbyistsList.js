@@ -88,7 +88,7 @@ export default function LobbyistsList() {
   return (
     <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
 
-      <BackLinks links={[{ href: '/', label: 'home' }]} />
+      <BackLinks links={[{ href: '/', label: 'home' }, { href: '/lobbying', label: 'lobbying' }]} />
 
       <SectionHeader title="Lobbyists" eyebrow="FL Lobbying · 2014–present" />
       <div style={{ fontSize: '0.82rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap', marginTop: '-0.75rem', marginBottom: '1.25rem' }}>

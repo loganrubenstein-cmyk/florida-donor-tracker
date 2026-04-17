@@ -64,7 +64,7 @@ export default function IndustriesList() {
   return (
     <main style={{ maxWidth: '960px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
 
-      <BackLinks links={[{ href: '/', label: 'home' }]} />
+      <BackLinks links={[{ href: '/', label: 'home' }, { href: '/influence', label: 'influence index' }]} />
 
       {/* Header */}
       <div style={{ marginBottom: '1.5rem' }}>

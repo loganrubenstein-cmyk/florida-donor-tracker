@@ -102,7 +102,7 @@ export default function PrincipalsList() {
   return (
     <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
 
-      <BackLinks links={[{ href: '/', label: 'home' }]} />
+      <BackLinks links={[{ href: '/', label: 'home' }, { href: '/lobbying', label: 'lobbying' }]} />
 
       {/* Header */}
       <div style={{ marginBottom: '1.5rem' }}>
