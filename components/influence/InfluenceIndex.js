@@ -100,7 +100,7 @@ export default function InfluenceIndex() {
 
   return (
     <main style={{ maxWidth: '1040px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
-      <BackLinks links={[{ href: '/', label: 'home' }, { href: '/research', label: 'research' }]} />
+      <BackLinks links={[{ href: '/', label: 'home' }]} />
 
       {/* Header */}
       <div style={{ marginBottom: '1.5rem' }}>

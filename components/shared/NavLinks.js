@@ -38,6 +38,7 @@ const GROUPS = [
       { href: '/federal-contracts', label: 'Federal Contracts' },
       { href: '/connections',       label: 'Connections' },
       { href: '/pulse',             label: 'Pulse' },
+      { href: '/investigations',    label: 'Investigations' },
     ],
     extra: ['/industry/', '/cycle/'],
   },
