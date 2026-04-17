@@ -168,5 +168,20 @@ entities:
       - WACKENHUT CORRECTIONS CORPORATION    # pre-2003 name
       - WACKENHUT CORRECTIONS
 
+  - canonical_slug: aggregated-non-itemized
+    canonical_name: Aggregated / Non-itemized Receipts
+    is_corporate: false
+    industry: null
+    aliases: []   # populated dynamically by scripts/09 via GARBAGE_RE filter
+    notes: |
+      Sentinel entity. FL DoE filings allow batch-aggregated receipts in the
+      contributor_name field — strings like "1 MEMBER @ $225,000",
+      "MEMBERSHIP DUES 10,314 MEMBERS", "UNITEMIZED CONTRIBUTIONS $X",
+      "ANONYMOUS $Y", "PAYROLL DEDUCTIONS $Z". These are not individual
+      donors; they are formal aggregation markers. Script 09 detects them
+      via GARBAGE_RE and routes every matching alias_text here with
+      source='dedup_pipeline'. Displayed on the site with an explainer
+      that this is the FL DoE's own aggregation bucket, not a real donor.
+
 # Add new entries below this line. Format is verified by
 # scripts/09b_apply_manual_merges.py — run that after editing.
