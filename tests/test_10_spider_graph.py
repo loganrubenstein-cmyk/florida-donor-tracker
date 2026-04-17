@@ -38,7 +38,7 @@ def test_build_name_lookup_cleans_punctuation():
         "committee_name": ["U.S. Sugar Corp."],
     })
     lookup = build_name_lookup(df)
-    assert "US SUGAR CORP" in lookup
+    assert "U S SUGAR CORP" in lookup
 
 def test_build_name_lookup_skips_blank_acct():
     df = pd.DataFrame({

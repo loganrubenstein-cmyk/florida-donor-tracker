@@ -36,7 +36,7 @@ _spec09 = importlib.util.spec_from_file_location(
 )
 _mod09 = importlib.util.module_from_spec(_spec09)
 _spec09.loader.exec_module(_mod09)
-_clean_name = _mod09.clean_name
+_clean_name = _mod09.normalize
 
 # ── Import is_corporate from 08_export_json.py (digit prefix) ───────────────
 _spec08 = importlib.util.spec_from_file_location(
