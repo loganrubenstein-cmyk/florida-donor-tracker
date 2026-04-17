@@ -54,10 +54,15 @@ export default async function LobbyingFirmPage({ params }) {
 
   if (!firm) notFound();
 
+  // Strip trailing legal suffixes (PA/P.A./LLC/Inc. etc.) so both "GrayRobinson PA"
+  // and "GrayRobinson, P.A." lobbyists appear on the merged firm profile.
+  const firmBase = firm.firm_name
+    .replace(/\s*,?\s*(P\.?A\.?|P\.?L\.?|L\.?L\.?C\.?|LLC|Inc\.?|Incorporated|Corp\.?|Corporation)\s*$/i, '')
+    .trim();
   const { data: lobbyists } = await db
     .from('lobbyists')
     .select('slug, name, num_principals, num_active')
-    .eq('firm', firm.firm_name)
+    .ilike('firm', `${firmBase}%`)
     .order('num_active', { ascending: false })
     .limit(50);
 
