@@ -132,8 +132,19 @@ def apply(cur, doc, dry_run):
                 ))
             alias_rows.append((norm, str(raw), slug))
 
+    # psycopg2 ON CONFLICT DO UPDATE rejects duplicate keys within a single
+    # batch. Dedup on normalized alias_text — last write wins, which is fine
+    # because duplicates here are cosmetic variants of the same alias under
+    # the same canonical_slug (e.g. "U.S. SUGAR" vs "U S SUGAR").
+    seen_alias = {}
+    for row in alias_rows:
+        seen_alias[row[0]] = row
+    dedup_dropped = len(alias_rows) - len(seen_alias)
+    alias_rows = list(seen_alias.values())
+
     print(f"Entities in YAML:             {len(entity_rows):,}")
-    print(f"Aliases to upsert:            {len(alias_rows):,}")
+    print(f"Aliases to upsert:            {len(alias_rows):,}"
+          + (f"  (deduped {dedup_dropped})" if dedup_dropped else ""))
     print(f"Alias reassignments:          {overrides_logged:,}")
 
     if dry_run:

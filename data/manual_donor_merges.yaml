@@ -154,6 +154,25 @@ entities:
       exists as a sentinel to block fuzzy dedup from ever merging Don
       Gaetz with Matt Gaetz (they're father and son).
 
+  - canonical_slug: florida-home-builders-association
+    canonical_name: Florida Home Builders Association
+    is_corporate: true
+    industry: Construction / Real Estate
+    aliases:
+      - FLORIDA HOME BUILDERS ASSOCIATION
+      - FLORIDA HOME BUILDERS ASSN
+      - FLORIDA HOMEBUILDERS ASSOCIATION
+      - FHBA
+      - FHBA PAC
+      - FLORIDA HOME BUILDERS PAC
+      - FLORIDA HOME BUILDERS ASSOCIATION PAC
+    notes: |
+      FHBA files many contributions under aggregated-member formats like
+      "FLORIDA HOME BUILDERS ASSOCIATION 4845.88 MEMBERS @ $30.00 EACH".
+      Seeding the plain name as a canonical alias makes the fuzzy cluster
+      anchor to this clean slug via `pick_canonical`'s existing-alias
+      short-circuit, instead of generating an ugly member-count slug.
+
   - canonical_slug: geo-group-inc
     canonical_name: The GEO Group, Inc.
     is_corporate: true

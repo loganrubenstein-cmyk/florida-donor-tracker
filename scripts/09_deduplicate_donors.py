@@ -68,7 +68,9 @@ GARBAGE_RE = re.compile(
     r"""
       ^\s*\d+\s*MEMBERS?\b                           # "1 MEMBER", "5 MEMBERS"
     | MEMBERSHIP\s+DUES                              # "MEMBERSHIP DUES ..."
-    | ^\s*(AGGREGATE|ANONYMOUS|UNITEMIZED|VARIOUS|MISCELLANEOUS)\b
+    | MEMBERSHIP\s+CONTRIBUTIONS\s+AGGREGATE         # "MEMBERSHIP CONTRIBUTIONS AGGREGATE AMOUNT ..."
+    | ^\s*AGGREGATE\s+(AMOUNT|CONTRIBUTION|OF)       # "AGGREGATE AMOUNT OF ..."
+    | ^\s*(ANONYMOUS|UNITEMIZED|VARIOUS|MISCELLANEOUS)\b
     | PAYROLL\s+DEDUCT
     | INTEREST\s+EARN
     | ^\s*\$?[\d,]+\.?\d*\s*(EACH|EA\.?|@)           # "$100 EACH", "50 @"
