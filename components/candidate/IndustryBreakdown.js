@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import useInViewport from '@/lib/useInViewport';
 import { INDUSTRY_COLORS } from '@/lib/industryColors';
+import { slugify } from '@/lib/slugify';
 
 function fmt(n) {
   if (!n || n === 0) return '$0';
@@ -47,13 +49,14 @@ export default function IndustryBreakdown({ acctNum, total }) {
           const delay = `${index * 0.04}s`;
           return (
             <div key={row.industry} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <div style={{
+              <Link href={`/industry/${slugify(row.industry)}`} style={{
                 fontSize: '0.62rem', color: 'var(--text-dim)',
                 width: '180px', flexShrink: 0,
                 whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                textDecoration: 'none',
               }}>
                 {row.industry}
-              </div>
+              </Link>
               <div style={{ flex: 1, height: '8px', background: 'rgba(255,255,255,0.05)', borderRadius: '2px', overflow: 'hidden' }}>
                 <div style={{
                   height: '100%',

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tagline Options — Florida Donor Tracker</title>
+<style>
+  :root {
+    --bg: #01010d;
+    --surface: #080818;
+    --border: rgba(100,140,220,0.18);
+    --text: #c8d8f0;
+    --text-dim: #5a6a88;
+    --orange: #ffb060;
+    --teal: #4dd8f0;
+    --blue: #a0c0ff;
+    --green: #80ffa0;
+    --gold: #ffd060;
+    --font-mono: "Courier New", Courier, monospace;
+    --font-serif: 'Georgia', serif;
+    --font-sans: system-ui, -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-mono); padding: 2.5rem; }
+
+  h2 { font-family: var(--font-serif); font-size: 0.8rem; font-weight: 400; color: var(--text-dim); margin-bottom: 2.5rem; letter-spacing: 0.04em; }
+
+  .option-block {
+    max-width: 700px;
+    margin-bottom: 3rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .option-label {
+    font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--text-dim); margin-bottom: 1.25rem;
+  }
+
+  /* context: the text above each option */
+  .context {
+    font-size: 0.86rem; color: var(--text); opacity: 0.7;
+    line-height: 1.7; margin-bottom: 1.1rem; max-width: 520px;
+  }
+
+  /* ── OPTION A: Big faded serif statement ── */
+  .tagline-a {
+    font-family: var(--font-serif);
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    color: rgba(200,216,240,0.22);
+    font-style: italic;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin-top: 0.25rem;
+  }
+
+  /* ── OPTION B: Stamp / badge ── */
+  .tagline-b-wrap {
+    display: inline-block;
+    margin-top: 0.5rem;
+  }
+  .tagline-b {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--orange);
+    border: 2px solid var(--orange);
+    padding: 0.35rem 0.8rem;
+    border-radius: 2px;
+    opacity: 0.7;
+    transform: rotate(-1.5deg);
+    display: inline-block;
+    position: relative;
+  }
+  .tagline-b::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: var(--orange);
+    opacity: 0.04;
+    border-radius: 2px;
+  }
+
+  /* ── OPTION C: Ticker / marquee ── */
+  .ticker-wrap {
+    overflow: hidden;
+    border-top: 1px solid rgba(255,176,96,0.2);
+    border-bottom: 1px solid rgba(255,176,96,0.2);
+    padding: 0.5rem 0;
+    margin-top: 0.75rem;
+    white-space: nowrap;
+  }
+  .ticker-inner {
+    display: inline-block;
+    animation: ticker 18s linear infinite;
+  }
+  .ticker-inner span {
+    font-size: 0.7rem;
+    color: var(--orange);
+    opacity: 0.6;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding-right: 4rem;
+  }
+  .ticker-inner span em { font-style: normal; color: rgba(255,176,96,0.35); }
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ── OPTION D: Pull quote / epigraph ── */
+  .tagline-d {
+    margin-top: 1rem;
+    padding-left: 1.1rem;
+    border-left: 2px solid rgba(255,176,96,0.35);
+    max-width: 420px;
+  }
+  .tagline-d .quote {
+    font-family: var(--font-serif);
+    font-size: 1.05rem;
+    font-style: italic;
+    color: rgba(200,216,240,0.45);
+    line-height: 1.4;
+    margin-bottom: 0.3rem;
+  }
+  .tagline-d .attribution {
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+
+  /* ── OPTION E: Redacted reveal ── */
+  .tagline-e {
+    margin-top: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    line-height: 2;
+    letter-spacing: 0.02em;
+  }
+  .tagline-e .redacted {
+    background: rgba(200,216,240,0.12);
+    color: transparent;
+    border-radius: 2px;
+    padding: 0 0.3rem;
+    user-select: none;
+  }
+  .tagline-e .revealed {
+    color: var(--orange);
+    font-style: italic;
+    font-family: var(--font-serif);
+  }
+
+  .note {
+    font-size: 0.63rem; color: var(--text-dim); margin-top: 1rem; line-height: 1.6;
+    opacity: 0.7;
+  }
+</style>
+</head>
+<body>
+
+<h2>Tagline design options — "florida: a sunny place for shady people."</h2>
+
+<!-- ── OPTION A ── -->
+<div class="option-block">
+  <div class="option-label">Option A — Big faded statement</div>
+  <p class="context">Follow the money. Connect the dots. Track every vote, lobbyist, and legislator. From campaign donations to contracts — the most complete picture of Florida political influence, free from public records.</p>
+  <div class="tagline-a">florida: a sunny place<br>for shady people.</div>
+  <p class="note">Large, faded, italic serif — reads as editorial atmosphere, not a UI element. Sits below the subtext like a newspaper pull quote gone dark. Deliberately understated.</p>
+</div>
+
+<!-- ── OPTION B ── -->
+<div class="option-block">
+  <div class="option-label">Option B — Rubber stamp</div>
+  <p class="context">Follow the money. Connect the dots. Track every vote, lobbyist, and legislator. From campaign donations to contracts — the most complete picture of Florida political influence, free from public records.</p>
+  <div class="tagline-b-wrap">
+    <div class="tagline-b">florida: a sunny place for shady people.</div>
+  </div>
+  <p class="note">Monospace, all-caps, slight rotation — feels like a classified document stamp or a warning label. Irreverent but controlled. Matches our mono font identity.</p>
+</div>
+
+<!-- ── OPTION C ── -->
+<div class="option-block">
+  <div class="option-label">Option C — Scrolling ticker</div>
+  <p class="context">Follow the money. Connect the dots. Track every vote, lobbyist, and legislator. From campaign donations to contracts — the most complete picture of Florida political influence, free from public records.</p>
+  <div class="ticker-wrap">
+    <div class="ticker-inner">
+      <span>florida: a sunny place for shady people. <em>·</em></span>
+      <span>florida: a sunny place for shady people. <em>·</em></span>
+      <span>florida: a sunny place for shady people. <em>·</em></span>
+      <span>florida: a sunny place for shady people. <em>·</em></span>
+    </div>
+  </div>
+  <p class="note">Scrolling news ticker — kinetic, irreverent, impossible to miss. Has personality without disrupting the rest of the layout. Could also include rotating real headlines.</p>
+</div>
+
+<!-- ── OPTION D ── -->
+<div class="option-block">
+  <div class="option-label">Option D — Epigraph / pull quote</div>
+  <p class="context">Follow the money. Connect the dots. Track every vote, lobbyist, and legislator. From campaign donations to contracts — the most complete picture of Florida political influence, free from public records.</p>
+  <div class="tagline-d">
+    <div class="quote">"florida: a sunny place for shady people."</div>
+    <div class="attribution">— Marc Reisner, Cadillac Desert, 1986</div>
+  </div>
+  <p class="note">Attributed epigraph with left border — literary, credible, establishes we're serious journalists. The attribution makes clear this is a known phrase, not us being reckless.</p>
+</div>
+
+<!-- ── OPTION E ── -->
+<div class="option-block" style="border-bottom:none">
+  <div class="option-label">Option E — Redacted document reveal</div>
+  <p class="context">Follow the money. Connect the dots. Track every vote, lobbyist, and legislator. From campaign donations to contracts — the most complete picture of Florida political influence, free from public records.</p>
+  <div class="tagline-e">
+    <span class="redacted">██████████</span> is a sunny place for <span class="redacted">█████</span> people.<br>
+    <span style="font-size:0.6rem;opacity:0.5">— declassified. florida public records.</span>
+  </div>
+  <p class="note">Redacted document aesthetic — references our public records angle. Playful and on-theme. The "classified" look fits the transparency mission. Could animate the reveal on load.</p>
+</div>
+
+</body>
+</html>

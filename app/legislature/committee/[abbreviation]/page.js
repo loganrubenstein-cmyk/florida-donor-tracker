@@ -5,6 +5,7 @@ import { fmtMoney, fmtMoneyCompact } from '@/lib/fmt';
 import BackLinks from '@/components/BackLinks';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import { buildMeta } from '@/lib/seo';
+import { slugify } from '@/lib/slugify';
 
 export const dynamic = 'force-dynamic';
 
@@ -243,7 +244,7 @@ export default async function CommitteePage({ params }) {
             {industryBreakdown.slice(0, 8).map(ind => (
               <div key={ind.industry} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                 <div style={{ width: '8px', height: '8px', borderRadius: '2px', background: INDUSTRY_COLORS[ind.industry] || '#444466', flexShrink: 0 }} />
-                <div style={{ fontSize: '0.73rem', color: 'var(--text)', minWidth: '160px' }}>{ind.industry}</div>
+                <Link href={`/industry/${slugify(ind.industry)}`} style={{ fontSize: '0.73rem', color: 'var(--text)', minWidth: '160px', textDecoration: 'none' }}>{ind.industry}</Link>
                 <div style={{ flex: 1, height: '4px', background: 'var(--border)', borderRadius: '2px', overflow: 'hidden' }}>
                   <div style={{ width: `${ind.pct}%`, height: '100%', background: INDUSTRY_COLORS[ind.industry] || '#444466', borderRadius: '2px' }} />
                 </div>

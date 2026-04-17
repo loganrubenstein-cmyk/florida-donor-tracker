@@ -2,10 +2,12 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import BackLinks from '@/components/BackLinks';
 import SectionHeader from '@/components/shared/SectionHeader';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import GlossaryTerm from '@/components/shared/GlossaryTerm';
+import { slugify } from '@/lib/slugify';
 
 function fmt(n) {
   if (!n || n === 0) return '$0';
@@ -295,7 +297,7 @@ export default function DonorsList() {
                       </div>
                     ) : d.industry && d.industry !== 'Not Employed' && d.industry !== 'Other' && (
                       <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', marginTop: '0.1rem' }}>
-                        {d.industry}
+                        <Link href={`/industry/${slugify(d.industry)}`} style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>{d.industry}</Link>
                       </div>
                     )}
                   </td>

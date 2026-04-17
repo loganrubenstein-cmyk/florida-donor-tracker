@@ -85,7 +85,7 @@ export default async function CommitteesPage() {
 
   return (
     <main style={{ maxWidth: '1040px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
-      <BackLinks links={[{ href: '/', label: 'home' }, { href: '/legislators', label: 'legislators' }]} />
+      <BackLinks links={[{ href: '/', label: 'home' }, { href: '/legislature', label: 'legislature' }]} />
 
       <SectionHeader title="Legislative Committees" eyebrow="FL Legislature · 2024–2026 Term" />
       <div style={{ marginBottom: '1.5rem', marginTop: '-0.75rem' }}>

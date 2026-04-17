@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import BackLinks from '@/components/BackLinks';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import { slugify } from '@/lib/slugify';
 
 function fmt(n) {
   if (!n || n === 0) return '—';
@@ -231,7 +233,7 @@ export default function PrincipalsList() {
                   )}
                   {p.industry && p.industry !== 'Other' && (
                     <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', marginTop: '0.1rem' }}>
-                      {p.industry}
+                      <Link href={`/industry/${slugify(p.industry)}`} style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>{p.industry}</Link>
                     </div>
                   )}
                 </td>

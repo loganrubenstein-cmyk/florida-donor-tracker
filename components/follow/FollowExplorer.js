@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { fmtMoney, fmtMoneyCompact } from '@/lib/fmt';
 import { PARTY_COLOR as PARTY_COLOR_MAP } from '@/lib/partyUtils';
+import { slugify } from '@/lib/slugify';
 const PARTY_COLOR = (p) => PARTY_COLOR_MAP[p] || 'var(--text-dim)';
 
 const VOTE_COLOR = { YES: 'var(--republican)', NO: 'var(--democrat)', YEA: 'var(--republican)', NAY: 'var(--democrat)' };
@@ -226,7 +227,7 @@ export default function FollowExplorer({ preloadSlug }) {
             <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', marginBottom: '0.25rem' }}>
               {fmtMoneyCompact(donor.total_combined)} total
             </div>
-            {donor.industry && <div style={{ fontSize: '0.68rem', color: 'var(--gold)' }}>{donor.industry}</div>}
+            {donor.industry && <Link href={`/industry/${slugify(donor.industry)}`} style={{ fontSize: '0.68rem', color: 'var(--gold)', textDecoration: 'none', display: 'block' }}>{donor.industry}</Link>}
             <Link href={`/donor/${donor.slug}`} style={{ fontSize: '0.68rem', color: 'var(--teal)', textDecoration: 'none', display: 'block', marginTop: '0.5rem' }}>
               full profile →
             </Link>

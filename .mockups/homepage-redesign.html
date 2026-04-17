@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Homepage Redesign Mockup — Florida Donor Tracker</title>
+<style>
+  :root {
+    --bg: #01010d;
+    --surface: #080818;
+    --border: rgba(100,140,220,0.18);
+    --text: #c8d8f0;
+    --text-dim: #5a6a88;
+    --orange: #ffb060;
+    --teal: #4dd8f0;
+    --blue: #a0c0ff;
+    --green: #80ffa0;
+    --gold: #ffd060;
+    --republican: #f87171;
+    --democrat: #60a5fa;
+    --font-mono: "Courier New", Courier, monospace;
+    --font-serif: 'Georgia', serif;
+    --font-sans: system-ui, -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-mono); font-size: 14px; }
+  a { color: inherit; text-decoration: none; }
+
+  .container { max-width: 1140px; margin: 0 auto; padding: 0 2.5rem; }
+  .divider { border: none; border-top: 1px solid var(--border); }
+
+  /* NAV */
+  nav {
+    border-bottom: 1px solid var(--border);
+    padding: 0.75rem 2.5rem;
+    display: flex; align-items: center; gap: 1.5rem;
+    font-size: 0.72rem; color: var(--text-dim);
+    max-width: 1140px; margin: 0 auto;
+  }
+  nav .logo { color: var(--orange); font-weight: 700; font-size: 0.8rem; margin-right: auto; }
+  nav a:hover { color: var(--text); }
+
+  /* ── SECTION 1: HERO ── */
+  .hero {
+    padding: 3.5rem 2.5rem 2.75rem;
+    border-bottom: 1px solid rgba(100,140,220,0.1);
+    max-width: 1140px; margin: 0 auto;
+    position: relative;
+  }
+  .hero-label {
+    font-size: 0.66rem; letter-spacing: 0.18em;
+    color: var(--text-dim); text-transform: uppercase; margin-bottom: 1.1rem;
+  }
+  .hero h1 {
+    font-family: var(--font-serif);
+    font-size: clamp(1.9rem, 4.5vw, 3rem);
+    line-height: 1.08; color: var(--text);
+    font-weight: 400; margin-bottom: 1.1rem; max-width: 640px;
+  }
+  .hero h1 span { color: var(--orange); }
+  .hero-sub {
+    font-size: 0.88rem; color: var(--text); opacity: 0.75;
+    max-width: 560px; line-height: 1.75; margin-bottom: 0.5rem;
+  }
+  .hero-differentiators {
+    display: flex; gap: 0.5rem; flex-wrap: wrap;
+    margin: 1.1rem 0 1.5rem;
+  }
+  .diff-pill {
+    font-size: 0.65rem; letter-spacing: 0.06em;
+    border: 1px solid var(--border); border-radius: 2px;
+    padding: 0.3rem 0.65rem; color: var(--text-dim);
+    text-transform: uppercase;
+  }
+  .diff-pill.active { border-color: rgba(200,216,240,0.25); color: var(--text); }
+  .diff-pill.teal   { border-color: rgba(77,216,240,0.35); color: var(--teal); }
+  .diff-pill.blue   { border-color: rgba(160,192,255,0.35); color: var(--blue); }
+  .diff-pill.green  { border-color: rgba(128,255,160,0.35); color: var(--green); }
+  .diff-pill.gold   { border-color: rgba(255,208,96,0.35); color: var(--gold); }
+
+  /* search */
+  .search-row { display: flex; gap: 0.5rem; max-width: 500px; margin-bottom: 1.1rem; }
+  .search-row input {
+    flex: 1; background: rgba(8,8,24,0.8);
+    border: 1px solid rgba(100,140,220,0.35); color: var(--text);
+    padding: 0.6rem 0.9rem; font-size: 0.78rem; border-radius: 3px;
+    font-family: var(--font-mono); outline: none;
+  }
+  .btn-primary {
+    background: var(--orange); color: #01010d; border: none;
+    padding: 0.6rem 1.1rem; font-size: 0.75rem; font-weight: 700;
+    font-family: var(--font-sans); border-radius: 3px; cursor: pointer; white-space: nowrap;
+  }
+
+  /* email capture */
+  .email-capture {
+    background: rgba(255,176,96,0.05);
+    border: 1px solid rgba(255,176,96,0.2);
+    border-radius: 3px; padding: 1rem 1.25rem;
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+    margin-top: 1.25rem; max-width: 560px;
+  }
+  .email-capture-text { flex: 1; min-width: 180px; }
+  .email-capture-text .title { font-size: 0.73rem; color: var(--text); font-weight: 700; margin-bottom: 0.2rem; }
+  .email-capture-text .sub { font-size: 0.66rem; color: var(--text-dim); }
+  .email-capture-form { display: flex; gap: 0.4rem; }
+  .email-capture-form input {
+    background: rgba(8,8,24,0.8); border: 1px solid rgba(100,140,220,0.35);
+    color: var(--text); padding: 0.45rem 0.75rem; font-size: 0.72rem;
+    border-radius: 3px; font-family: var(--font-mono); width: 180px; outline: none;
+  }
+  .email-capture-form button {
+    background: var(--orange); color: #01010d; border: none;
+    padding: 0.45rem 0.85rem; font-size: 0.7rem; font-weight: 700;
+    font-family: var(--font-sans); border-radius: 3px; cursor: pointer; white-space: nowrap;
+  }
+
+  /* cta row */
+  .cta-row { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 1.1rem; }
+  .cta-link {
+    border: 1px solid rgba(160,192,255,0.25); color: var(--blue);
+    padding: 0.45rem 1rem; font-size: 0.7rem; border-radius: 3px;
+  }
+  .cta-link.orange { border-color: rgba(255,176,96,0.3); color: var(--orange); }
+  .cta-link.teal   { border-color: rgba(77,216,240,0.3); color: var(--teal); }
+  .cta-link.green  { border-color: rgba(128,255,160,0.3); color: var(--green); }
+
+  /* stamp */
+  @keyframes stamp-press {
+    0%   { transform: rotate(-1.5deg) scale(1.2); opacity: 0; }
+    55%  { transform: rotate(-1.5deg) scale(0.96); opacity: 1; }
+    75%  { transform: rotate(-1.5deg) scale(1.03); }
+    100% { transform: rotate(-1.5deg) scale(1); opacity: 0.82; }
+  }
+  .stamp-hero {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.82rem; font-weight: 700;
+    letter-spacing: 0.13em; text-transform: uppercase;
+    color: var(--orange);
+    border: 2px solid var(--orange);
+    padding: 0.4rem 1rem;
+    border-radius: 2px;
+    transform: rotate(-1.5deg);
+    opacity: 0.82;
+    animation: stamp-press 0.55s cubic-bezier(0.22,0.61,0.36,1) 0.8s both;
+  }
+
+  /* ── SECTION 2: DEPTH DIFFERENTIATOR ── */
+  .depth-section {
+    max-width: 1140px; margin: 0 auto;
+    padding: 2.25rem 2.5rem;
+    border-bottom: 1px solid rgba(100,140,220,0.1);
+    background: rgba(255,255,255,0.008);
+  }
+  .section-label {
+    font-size: 0.66rem; letter-spacing: 0.14em;
+    color: var(--text-dim); text-transform: uppercase; margin-bottom: 1.25rem;
+  }
+  .depth-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1px; border: 1px solid var(--border); border-radius: 3px; overflow: hidden;
+  }
+  .depth-cell {
+    padding: 1.1rem 1.25rem;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .depth-cell:nth-child(even) { border-right: none; }
+  .depth-cell:nth-last-child(-n+2) { border-bottom: none; }
+  .depth-cell .stat { font-size: 1.55rem; font-weight: 700; letter-spacing: -0.02em; line-height: 1; margin-bottom: 0.35rem; }
+  .depth-cell .stat-label { font-size: 0.68rem; color: var(--text-dim); line-height: 1.5; }
+  .depth-cell .stat-sub { font-size: 0.62rem; color: var(--text-dim); opacity: 0.6; margin-top: 0.2rem; }
+
+  /* vs bar */
+  .vs-bar {
+    margin: 1.5rem 0 0;
+    padding: 0.9rem 1.1rem;
+    border: 1px solid var(--border); border-radius: 3px;
+    background: rgba(8,8,24,0.5);
+    display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap;
+  }
+  .vs-label { font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; }
+  .vs-items { display: flex; gap: 1rem; flex-wrap: wrap; flex: 1; }
+  .vs-item { font-size: 0.68rem; color: var(--text-dim); }
+  .vs-item span { color: var(--green); }
+  .vs-item.miss span { color: rgba(200,216,240,0.25); text-decoration: line-through; }
+
+  /* ── SECTION 3: 2026 CYCLE ── */
+  .cycle-section {
+    max-width: 1140px; margin: 0 auto;
+    padding: 2.25rem 2.5rem;
+    border-bottom: 1px solid rgba(100,140,220,0.1);
+  }
+  .cycle-header { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.5rem; }
+  .cycle-badge {
+    font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase;
+    background: rgba(77,216,240,0.08); border: 1px solid rgba(77,216,240,0.3);
+    color: var(--teal); padding: 0.25rem 0.65rem; border-radius: 2px;
+  }
+  .cycle-header h2 { font-family: var(--font-serif); font-size: 1.3rem; font-weight: 400; color: var(--text); }
+
+  .race-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.25rem;
+  }
+  .race-card {
+    border: 1px solid var(--border); border-radius: 3px; padding: 0.9rem 1rem;
+    background: var(--surface); cursor: pointer;
+    transition: border-color 0.12s;
+  }
+  .race-card:hover { border-color: rgba(100,140,220,0.4); }
+  .race-card .race-name { font-size: 0.68rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem; }
+  .race-card .race-leader { font-size: 0.82rem; color: var(--text); margin-bottom: 0.25rem; }
+  .race-card .race-amount { font-size: 1.05rem; font-weight: 700; color: var(--orange); margin-bottom: 0.2rem; }
+  .race-card .race-sub { font-size: 0.63rem; color: var(--text-dim); }
+  .race-card .race-bar { margin-top: 0.6rem; height: 2px; background: rgba(100,140,220,0.1); border-radius: 1px; }
+  .race-card .race-bar-fill { height: 100%; border-radius: 1px; background: var(--orange); }
+  .race-card .race-bar-fill.blue { background: var(--blue); }
+
+  .cycle-tools { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+  .cycle-tool-link {
+    font-size: 0.69rem; color: var(--teal);
+    border: 1px solid rgba(77,216,240,0.25); border-radius: 3px;
+    padding: 0.4rem 0.85rem;
+  }
+
+  /* ── SECTION 4: TOOLS ── */
+  .tools-section {
+    max-width: 1140px; margin: 0 auto;
+    padding: 2.25rem 2.5rem 3rem;
+  }
+  .tools-tabs { display: flex; gap: 0; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
+  .tools-tab {
+    font-size: 0.7rem; color: var(--text-dim); padding: 0.5rem 1rem 0.55rem;
+    border-bottom: 2px solid transparent; cursor: pointer; margin-bottom: -1px;
+  }
+  .tools-tab.active { color: var(--orange); border-bottom-color: var(--orange); }
+
+  .tool-grid { display: flex; flex-direction: column; gap: 0.45rem; }
+  .tool-card {
+    border: 1px solid var(--border); border-radius: 3px; padding: 0.85rem 1rem;
+    display: flex; align-items: flex-start; gap: 1rem;
+    transition: border-color 0.12s; cursor: pointer;
+  }
+  .tool-card:hover { border-color: rgba(100,140,220,0.4); }
+  .tool-card.highlight { border-color: rgba(255,176,96,0.25); background: rgba(255,176,96,0.02); }
+  .tool-icon { font-size: 1.1rem; margin-top: 0.05rem; flex-shrink: 0; }
+  .tool-info .tool-title { font-size: 0.73rem; font-weight: 700; color: var(--orange); margin-bottom: 0.25rem; font-family: var(--font-mono); }
+  .tool-info .tool-title.teal { color: var(--teal); }
+  .tool-info .tool-title.blue { color: var(--blue); }
+  .tool-info .tool-title.green { color: var(--green); }
+  .tool-info .tool-desc { font-size: 0.76rem; color: rgba(200,216,240,0.6); line-height: 1.55; }
+  .tool-badge { margin-left: auto; font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.08em; background: rgba(255,176,96,0.12); color: var(--orange); padding: 0.2rem 0.5rem; border-radius: 2px; white-space: nowrap; flex-shrink: 0; }
+  .tool-badge.new { background: rgba(128,255,160,0.1); color: var(--green); }
+
+  /* annotation overlay */
+  .annotation {
+    background: rgba(255, 208, 96, 0.08);
+    border: 1px dashed rgba(255,208,96,0.4);
+    border-radius: 3px; padding: 0.5rem 0.75rem;
+    font-size: 0.65rem; color: var(--gold);
+    margin-top: 0.75rem; line-height: 1.5;
+  }
+  .annotation strong { color: #ffd060; }
+
+  @media (max-width: 640px) {
+    .race-grid { grid-template-columns: 1fr 1fr; }
+    .depth-grid { grid-template-columns: 1fr 1fr; }
+    .container, .hero, .depth-section, .cycle-section, .tools-section { padding-left: 1.25rem; padding-right: 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV (unchanged) -->
+<nav>
+  <span class="logo">Florida Donor Tracker</span>
+  <a href="#">candidates</a>
+  <a href="#">lobbyists</a>
+  <a href="#">tools</a>
+  <a href="#">legislature</a>
+  <a href="#">search</a>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     SECTION 1 — HERO (repositioned)
+     Key change: lead with "complete picture"
+     not just campaign finance
+     ══════════════════════════════════════════ -->
+<section class="hero">
+
+  <!-- Two-col: headline left, FL outline + stamp right -->
+  <div style="display:flex;align-items:flex-start;gap:2rem;margin-bottom:1.25rem">
+    <div style="flex:1">
+      <h1>
+        Follow the money<br>
+        <span>and influence</span><br>
+        in Florida politics.
+      </h1>
+      <p class="hero-sub" style="margin-top:1rem">
+        Follow the money. Connect the dots. Track every vote, lobbyist, and legislator.
+        From campaign donations to contracts — the most complete picture of Florida political influence, free from public records.
+      </p>
+    </div>
+    <div style="flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:0.7rem;padding-top:0.2rem">
+      <svg viewBox="0 0 520 430" width="240" height="198" fill="var(--orange)" aria-hidden="true" style="opacity:0.9">
+        <path fill-rule="evenodd" d="M 149,10 L 181,10 L 190,29 L 279,33 L 362,38 L 365,52 L 373,52 L 376,38 L 373,26 L 380,21 L 394,27 L 412,29 L 416,57 L 424,89 L 443,131 L 472,175 L 468,178 L 469,199 L 481,222 L 500,269 L 504,283 L 504,298 L 497,352 L 491,353 L 484,370 L 486,375 L 474,387 L 469,385 L 457,390 L 436,392 L 430,386 L 433,376 L 418,347 L 407,341 L 397,345 L 389,329 L 387,316 L 373,302 L 370,292 L 372,278 L 365,276 L 367,284 L 360,286 L 339,251 L 331,242 L 351,216 L 338,217 L 329,225 L 321,213 L 332,177 L 334,147 L 326,140 L 324,131 L 312,129 L 297,113 L 285,106 L 284,97 L 276,93 L 270,83 L 245,68 L 223,72 L 224,82 L 217,80 L 190,92 L 161,95 L 162,88 L 155,79 L 121,60 L 97,52 L 75,50 L 57,51 L 17,57 L 27,47 L 22,42 L 25,31 L 10,19 L 12,10 Z M 438,398 C 418,410 390,418 362,422 L 340,424 L 350,420 L 378,416 L 408,408 L 432,396 Z"/>
+      </svg>
+      <span class="stamp-hero" style="font-size:0.65rem;margin-top:1.25rem">florida: a sunny place for shady people.</span>
+    </div>
+  </div>
+
+  <!-- Differentiator pills -->
+  <div class="hero-differentiators">
+    <span class="diff-pill active">Campaign Finance</span>
+    <span class="diff-pill teal">$34.9B Lobbying</span>
+    <span class="diff-pill blue">Official Disclosures</span>
+    <span class="diff-pill gold">Shadow PAC Networks</span>
+    <span class="diff-pill">Legislature</span>
+  </div>
+
+  <!-- MoneyClock — live ticker, prominent placement -->
+  <div style="
+    margin-bottom:1.1rem;
+    padding:0.7rem 1rem;
+    background:rgba(255,176,96,0.04);
+    border:1px solid rgba(255,176,96,0.12);
+    border-radius:3px;
+    max-width:520px;
+  ">
+    <div style="font-size:0.6rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:0.3rem">Live · since you opened this page</div>
+    <div style="font-size:0.88rem;color:var(--text);line-height:1.5">
+      FL politicians have raised approximately
+      <span id="clock-val" style="color:var(--orange);font-weight:700;font-size:1rem">$0</span>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="search-row">
+    <input type="text" placeholder="Search donors, candidates, committees, lobbyists…" />
+    <button class="btn-primary">Search</button>
+  </div>
+
+  <!-- CTA row -->
+  <div class="cta-row">
+    <a href="#" class="cta-link orange">→ influence index</a>
+    <a href="#" class="cta-link teal">→ follow the money</a>
+    <a href="#" class="cta-link green">→ 2026 races</a>
+    <a href="#" class="cta-link">→ legislature</a>
+  </div>
+
+  <!-- DidYouKnow -->
+  <div style="border-top:1px solid rgba(100,140,220,0.08);padding-top:1rem;margin-top:1rem;max-width:600px">
+    <div style="font-size:0.66rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.45rem">Did you know</div>
+    <div id="fact-text" style="font-size:0.88rem;color:rgba(200,216,240,0.75);line-height:1.7;min-height:3em;transition:opacity 0.35s ease">
+      Florida Power &amp; Light donated to over 800 FL candidates between 2014–2024.
+    </div>
+  </div>
+
+</section>
+
+<script>
+  const RATE = 3894316430 / (30 * 365.25 * 24 * 3600);
+  const start = Date.now();
+  setInterval(() => {
+    document.getElementById('clock-val').textContent = '$' + Math.floor(((Date.now()-start)/1000)*RATE).toLocaleString();
+  }, 1000);
+  const FACTS = [
+    'Florida Power & Light donated to over 800 FL candidates between 2014–2024.',
+    'Rick Scott\'s 2018 U.S. Senate race cost approximately $17 per vote cast.',
+    'The top 10 FL lobbying principals account for over 40% of all registered lobbyist compensation.',
+    'Ron DeSantis raised more in his 2022 campaign than all other governor candidates combined.',
+    'In 2022, FL political committees collectively spent over $1B — a state record.',
+    'The average FL PAC receives more than 60% of its funds from just 5 donors.',
+    'Sugar industry PACs have donated to candidates in both parties at nearly equal rates.',
+    'Over 2,400 lobbyists are currently registered to represent principals before the FL Legislature.',
+  ];
+  let fi = 0;
+  setInterval(() => {
+    const el = document.getElementById('fact-text');
+    el.style.opacity = '0';
+    setTimeout(() => { el.textContent = FACTS[fi = (fi+1)%FACTS.length]; el.style.opacity = '1'; }, 350);
+  }, 7000);
+</script>
+
+<!-- ══════════════════════════════════════════
+     SECTION 2 — DEPTH DIFFERENTIATOR
+     "While other sites show you donations..."
+     This is new — markets our data advantage
+     ══════════════════════════════════════════ -->
+<section class="depth-section">
+
+  <div class="section-label">Why Florida Donor Tracker is different</div>
+
+  <div class="depth-grid">
+    <div class="depth-cell">
+      <div class="stat" style="color:var(--orange)">$3.9B+</div>
+      <div class="stat-label">campaign contributions tracked</div>
+      <div class="stat-sub">22M transactions · 883K deduped donors · 1996–2026</div>
+    </div>
+    <div class="depth-cell">
+      <div class="stat" style="color:var(--teal)">$34.9B</div>
+      <div class="stat-label">lobbying compensation tracked</div>
+      <div class="stat-sub">4M rows · 2,473 lobbyists · 1,970 firms · 19 years</div>
+    </div>
+    <div class="depth-cell">
+      <div class="stat" style="color:var(--green)">160</div>
+      <div class="stat-label">current FL legislators tracked</div>
+      <div class="stat-sub">Donors · votes · lobbyist connections · official disclosures</div>
+    </div>
+    <div class="depth-cell">
+      <div class="stat" style="color:var(--blue)">431</div>
+      <div class="stat-label">shadow PAC organizations mapped</div>
+      <div class="stat-sub">56K+ committee pairs · treasurers · addresses · donors</div>
+    </div>
+  </div>
+
+
+</section>
+
+<!-- Email capture strip -->
+<section style="max-width:1140px;margin:0 auto;padding:1.5rem 2.5rem;border-bottom:1px solid rgba(100,140,220,0.1);display:flex;align-items:center;gap:2rem;flex-wrap:wrap;background:rgba(255,176,96,0.03)">
+  <div style="flex:1;min-width:220px">
+    <div style="font-size:0.78rem;color:var(--text);font-weight:700;margin-bottom:0.2rem">Get filing alerts</div>
+    <div style="font-size:0.68rem;color:var(--text-dim)">New filings drop · Major donors · Per-candidate alerts available after signup</div>
+  </div>
+  <div style="display:flex;gap:0.5rem">
+    <input type="email" placeholder="you@email.com" style="background:rgba(8,8,24,0.8);border:1px solid rgba(100,140,220,0.35);color:var(--text);padding:0.5rem 0.85rem;font-size:0.75rem;border-radius:3px;font-family:var(--font-mono);width:200px;outline:none" />
+    <button style="background:var(--orange);color:#01010d;border:none;padding:0.5rem 1rem;font-size:0.72rem;font-weight:700;font-family:var(--font-sans);border-radius:3px;cursor:pointer;white-space:nowrap">Subscribe</button>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SECTION 3 — 2026 CYCLE
+     Current-cycle urgency with our unique angle:
+     not just fundraising totals — influence profile
+     ══════════════════════════════════════════ -->
+<section class="cycle-section">
+
+  <div class="cycle-header">
+    <span class="cycle-badge">Live · 2026 Cycle</span>
+    <h2>The races that will decide Florida</h2>
+  </div>
+
+  <div class="race-grid">
+    <div class="race-card">
+      <div class="race-name">Governor</div>
+      <div class="race-leader">Byron Donalds (R)</div>
+      <div class="race-amount">$44.4M</div>
+      <div class="race-sub">raised + affiliated PACs</div>
+      <div class="race-bar"><div class="race-bar-fill" style="width:92%"></div></div>
+    </div>
+    <div class="race-card">
+      <div class="race-name">U.S. Senate</div>
+      <div class="race-leader">Ashley Moody (R)</div>
+      <div class="race-amount">$8.2M</div>
+      <div class="race-sub">raised + affiliated PACs</div>
+      <div class="race-bar"><div class="race-bar-fill blue" style="width:62%"></div></div>
+    </div>
+    <div class="race-card">
+      <div class="race-name">AG</div>
+      <div class="race-leader">James Uthmeier (R)</div>
+      <div class="race-amount">$3.1M</div>
+      <div class="race-sub">raised + affiliated PACs</div>
+      <div class="race-bar"><div class="race-bar-fill" style="width:38%"></div></div>
+    </div>
+  </div>
+
+  <div class="cycle-tools">
+    <a href="#" class="cycle-tool-link">→ all 2026 races</a>
+    <a href="#" class="cycle-tool-link">→ who funds your district</a>
+    <a href="#" class="cycle-tool-link">→ money + lobbying combined</a>
+    <a href="#" class="cycle-tool-link">→ hard vs. soft money</a>
+    <a href="#" class="cycle-tool-link">→ out-of-state donors</a>
+  </div>
+
+  <div class="annotation">
+    <strong>Design note:</strong> 2026 section uses our data advantage — "raised + affiliated PACs" immediately signals we show more than just hard money. The tool links at bottom are entry points to new tools we'd build (district finder, hard/soft split, out-of-state). These don't all exist yet.
+  </div>
+
+</section>
+
+<!-- ══════════════════════════════════════════
+     SECTION 4 — TOOLS (reorganized)
+     Same tools, better organization:
+     tabs instead of 3 equal columns
+     ══════════════════════════════════════════ -->
+<section class="tools-section">
+
+  <div class="section-label">Explore the data</div>
+
+  <div class="tools-tabs">
+    <div class="tools-tab active">Voter tools</div>
+    <div class="tools-tab">Money flow</div>
+    <div class="tools-tab">Deep research</div>
+    <div class="tools-tab">Data</div>
+  </div>
+
+  <!-- Voter tools tab (shown by default) -->
+  <div class="tool-grid">
+    <div class="tool-card highlight">
+      <div class="tool-icon">🗺️</div>
+      <div class="tool-info">
+        <div class="tool-title">→ who funds your district</div>
+        <div class="tool-desc">Enter your zip code. See who donated to your representative — their industry, their lobbyist clients, their contracts.</div>
+      </div>
+      <div class="tool-badge new">New</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon">⚖️</div>
+      <div class="tool-info">
+        <div class="tool-title teal">→ follow the money</div>
+        <div class="tool-desc">Pick any donor — trace their money through committees to candidates, then see how those candidates voted on key bills.</div>
+      </div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon">📊</div>
+      <div class="tool-info">
+        <div class="tool-title blue">→ 2026 money race</div>
+        <div class="tool-desc">Live fundraising rankings for every 2026 race. Hard money, PAC money, out-of-state donors — all broken out.</div>
+      </div>
+      <div class="tool-badge new">New</div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon">🔍</div>
+      <div class="tool-info">
+        <div class="tool-title orange">→ influence index</div>
+        <div class="tool-desc">Orgs ranked by combined lobbying spend + donations. The only tool in FL that shows total political influence, not just donations.</div>
+      </div>
+    </div>
+    <div class="tool-card">
+      <div class="tool-icon">🏛️</div>
+      <div class="tool-info">
+        <div class="tool-title green">→ legislature</div>
+        <div class="tool-desc">All 160 current FL House + Senate members — their donors, their lobbyist connections, their votes, their disclosed assets.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="annotation" style="margin-top:1.25rem">
+    <strong>Design note:</strong> Tools are reorganized into tabs (Voter tools / Money flow / Deep research / Data) instead of 3 equal columns. Voter tools tab surfaces the most accessible entry points first. "New" badges on tools we'd build. Full tool list still accessible via other tabs.
+  </div>
+
+</section>
+
+<div style="max-width:900px;margin:0 auto;padding:1.5rem 2.5rem;border-top:1px solid var(--border);font-size:0.65rem;color:var(--text-dim)">
+  This is a design mockup for review. Colors, typography, and components match the current Florida Donor Tracker design system.
+  Annotations in gold indicate design decisions and what's new vs. existing.
+</div>
+
+</body>
+</html>

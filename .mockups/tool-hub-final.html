@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tool Hub — Final</title>
+<style>
+  :root {
+    --bg: #01010d; --surface: #080818; --border: rgba(100,140,220,0.18);
+    --text: #c8d8f0; --text-dim: #5a6a88; --orange: #ffb060; --teal: #4dd8f0;
+    --blue: #a0c0ff; --green: #80ffa0; --gold: #ffd060;
+    --font-mono: "Courier New", Courier, monospace;
+    --font-serif: 'Georgia', serif;
+    --font-sans: system-ui, -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-mono); }
+
+  .mock-nav {
+    border-bottom: 1px solid var(--border); padding: 0.75rem 2.5rem;
+    display: flex; align-items: center; gap: 1.5rem;
+    font-size: 0.72rem; color: var(--text-dim); max-width: 1140px; margin: 0 auto;
+  }
+  .mock-nav .logo { color: var(--orange); font-weight: 700; font-size: 0.8rem; margin-right: auto; }
+  .mock-nav a { color: var(--text-dim); text-decoration: none; }
+  .mock-nav a.active { color: var(--text); }
+
+  .page { max-width: 1140px; margin: 0 auto; padding: 2.5rem; }
+
+  .bc { font-size: 0.68rem; color: var(--text-dim); margin-bottom: 1.5rem; }
+
+  .ph { margin-bottom: 1.75rem; }
+  .ph h1 { font-family: var(--font-serif); font-size: 1.8rem; font-weight: 400; margin-bottom: 0.4rem; }
+  .ph p { font-size: 0.82rem; color: var(--text-dim); line-height: 1.6; max-width: 520px; }
+
+  /* ── TABS ── */
+  .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 2rem; gap: 0; }
+  .tab {
+    font-size: 0.72rem; color: var(--text-dim); padding: 0.55rem 1.25rem 0.6rem;
+    border-bottom: 2px solid transparent; cursor: pointer; margin-bottom: -1px;
+    display: flex; align-items: center; gap: 0.4rem;
+    transition: color 0.12s;
+  }
+  .tab.active-teal   { color: var(--teal);   border-bottom-color: var(--teal); }
+  .tab.active-orange { color: var(--orange); border-bottom-color: var(--orange); }
+  .tab.active-blue   { color: var(--blue);   border-bottom-color: var(--blue); }
+  .tab:not(.active-teal):not(.active-orange):not(.active-blue):hover { color: var(--text); }
+
+  /* ── PANEL (sidebar + tools) ── */
+  .panel { display: grid; grid-template-columns: 260px 1fr; gap: 2.5rem; margin-bottom: 3rem; }
+
+  .sidebar .hook {
+    font-family: var(--font-serif); font-size: 1.05rem; font-weight: 400;
+    line-height: 1.45; margin-bottom: 0.75rem;
+  }
+  .sidebar p { font-size: 0.77rem; color: var(--text-dim); line-height: 1.7; margin-bottom: 1rem; }
+  .try-label { font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; }
+  .eq-list { display: flex; flex-direction: column; gap: 0.4rem; }
+  .eq {
+    font-size: 0.68rem; color: var(--text-dim); border: 1px solid var(--border);
+    border-radius: 3px; padding: 0.4rem 0.7rem; cursor: pointer; line-height: 1.45;
+    transition: border-color 0.12s, color 0.12s;
+  }
+  .eq:hover { color: var(--text); border-color: rgba(100,140,220,0.4); }
+  .eq-open { color: var(--text-dim); margin-right: 0.2rem; }
+
+  .tool-list { display: flex; flex-direction: column; gap: 0.55rem; }
+  .et {
+    border: 1px solid var(--border); border-radius: 3px; padding: 0.9rem 1rem;
+    display: flex; align-items: flex-start; gap: 0.9rem;
+    transition: border-color 0.12s; cursor: pointer;
+  }
+  .et:hover { border-color: rgba(100,140,220,0.4); }
+  .et-icon { font-size: 1rem; margin-top: 0.05rem; flex-shrink: 0; }
+  .et-title { font-size: 0.73rem; font-weight: 700; margin-bottom: 0.2rem; font-family: var(--font-mono); }
+  .et-desc { font-size: 0.75rem; color: rgba(200,216,240,0.6); line-height: 1.55; }
+  .et-badge { margin-left: auto; font-size: 0.57rem; text-transform: uppercase; background: rgba(128,255,160,0.1); color: var(--green); padding: 0.18rem 0.45rem; border-radius: 2px; flex-shrink: 0; white-space: nowrap; align-self: flex-start; }
+
+  /* ── ALL TOOLS FLAT INDEX ── */
+  .index-label { font-size: 0.62rem; letter-spacing: 0.13em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 1rem; padding-top: 2rem; border-top: 1px solid var(--border); }
+  .flat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; }
+  .fc {
+    border: 1px solid var(--border); border-radius: 3px; padding: 0.75rem 0.85rem;
+    cursor: pointer; transition: border-color 0.12s, background 0.12s;
+  }
+  .fc:hover { border-color: rgba(100,140,220,0.4); background: rgba(255,255,255,0.01); }
+  .fc-title { font-size: 0.71rem; color: var(--text); margin-bottom: 0.2rem; font-weight: 600; }
+  .fc-desc { font-size: 0.64rem; color: var(--text-dim); line-height: 1.5; }
+
+  /* panel colour variants */
+  .teal .hook  { color: var(--teal); }
+  .orange .hook { color: var(--orange); }
+  .blue .hook  { color: var(--blue); }
+  .et.teal-featured   { border-color: rgba(77,216,240,0.22);  background: rgba(77,216,240,0.02); }
+  .et.orange-featured { border-color: rgba(255,176,96,0.22);  background: rgba(255,176,96,0.02); }
+  .et.blue-featured   { border-color: rgba(160,192,255,0.22); background: rgba(160,192,255,0.02); }
+</style>
+</head>
+<body>
+
+<div class="mock-nav">
+  <span class="logo">Florida Donor Tracker</span>
+  <a href="#">candidates</a>
+  <a href="#" class="active">tools</a>
+  <a href="#">legislature</a>
+  <a href="#">search</a>
+</div>
+
+<div class="page">
+  <div class="bc">Home / Tools</div>
+
+  <div class="ph">
+    <h1>Explore the data</h1>
+    <p>Three ways in — pick the one that matches your question, or jump straight to any tool below.</p>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab active-teal" onclick="switchTab('voter')">For voters</div>
+    <div class="tab" onclick="switchTab('journalist')">For journalists</div>
+    <div class="tab" onclick="switchTab('data')">Deep data</div>
+  </div>
+
+  <!-- VOTER PANEL -->
+  <div class="panel teal" id="panel-voter">
+    <div class="sidebar">
+      <div class="hook">"Who's bankrolling the people who represent me?"</div>
+      <p>Start with your district or a specific candidate. See every donor, every lobbyist connection, and how their votes line up with who funds them.</p>
+      <div class="try-label">Try asking</div>
+      <div class="eq-list">
+        <div class="eq"><span class="eq-open">"</span>Who donated to my state rep?"</div>
+        <div class="eq"><span class="eq-open">"</span>Which lobbyists are active in House District 15?"</div>
+        <div class="eq"><span class="eq-open">"</span>How much has my senator raised vs. their opponent?"</div>
+        <div class="eq"><span class="eq-open">"</span>Who are the top donors in the 2026 Governor race?"</div>
+      </div>
+    </div>
+    <div class="tool-list">
+      <div class="et teal-featured">
+        <div><div class="et-title" style="color:var(--teal)">→ who funds your district</div><div class="et-desc">Enter your zip code. See every donor to your rep — their industry, their lobbyist clients, their voting record.</div></div>
+        <div class="et-badge">New</div>
+      </div>
+      <div class="et">
+        <div><div class="et-title" style="color:var(--green)">→ 2026 money race</div><div class="et-desc">Live fundraising for every 2026 race. Hard money, PAC money, and out-of-state donors broken out by candidate.</div></div>
+        <div class="et-badge">New</div>
+      </div>
+      <div class="et">
+        <div><div class="et-title" style="color:var(--blue)">→ legislature</div><div class="et-desc">All 160 current FL House + Senate members — donors, votes, lobbyist connections, and official financial disclosures.</div></div>
+      </div>
+      <div class="et">
+        <div><div class="et-title" style="color:var(--gold)">→ district money map</div><div class="et-desc">How money flows in any FL legislative district — top donors, top recipients, and industry breakdown.</div></div>
+      </div>
+      <div class="et">
+        <div><div class="et-title" style="color:var(--text-dim)">→ pulse</div><div class="et-desc">Live feed of recent large contributions and newly registered committees in the current cycle.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JOURNALIST PANEL (hidden by default) -->
+  <div class="panel orange" id="panel-journalist" style="display:none">
+    <div class="sidebar">
+      <div class="hook">"Follow the money — through PACs, lobbyists, and shadow networks."</div>
+      <p>Trace donations end-to-end, map committee connections, and find the organizations with the most combined lobbying + donation influence in Florida.</p>
+      <div class="try-label">Try asking</div>
+      <div class="eq-list">
+        <div class="eq"><span class="eq-open">"</span>Where does FPL's money go after it enters a PAC?"</div>
+        <div class="eq"><span class="eq-open">"</span>Which committees share treasurers or addresses?"</div>
+        <div class="eq"><span class="eq-open">"</span>What org has the most combined lobbying + donation spend?"</div>
+        <div class="eq"><span class="eq-open">"</span>Who donated to both parties in the same cycle?"</div>
+      </div>
+    </div>
+    <div class="tool-list">
+      <div class="et orange-featured">
+        <div><div class="et-title" style="color:var(--teal)">→ follow the money</div><div class="et-desc">Pick any donor — trace their money through committees to candidates, then see how those candidates voted on legislation.</div></div>
+      </div>
+      <div class="et">
+        <div><div class="et-title" style="color:var(--orange)">→ influence index</div><div class="et-desc">Orgs ranked by combined lobbying compensation + campaign donations. The only index in FL showing total political spend.</div></div>
+      </div>
+      <div class="et">
+        <div><div class="et-title" style="color:var(--orange)">→ committee connections</div><div class="et-desc">56K+ committee pairs sharing treasurers, addresses, donors, or money transfers. Shadow PAC networks mapped.</div></div>
+      </div>
+      <div class="et">
+        <div><div class="et-title" style="color:var(--teal)">→ money flow explorer</div><div class="et-desc">Sankey visualization of the largest donor-to-committee-to-candidate flows. Filter by cycle, industry, or party.</div></div>
+      </div>
+      <div class="et">
+        <div><div class="et-title" style="color:var(--blue)">→ party cross-reference</div><div class="et-desc">Find donors who gave to both Republican and Democratic recipients. Identifies "both sides" strategies.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DATA PANEL (hidden by default) -->
+  <div class="panel blue" id="panel-data" style="display:none">
+    <div class="sidebar">
+      <div class="hook">"Give me the full picture — every transaction, every cycle."</div>
+      <p>Raw access to 22M+ contributions, 4M lobbying comp rows, and every dataset on the site. Filter, slice, and export.</p>
+      <div class="try-label">Try asking</div>
+      <div class="eq-list">
+        <div class="eq"><span class="eq-open">"</span>Show me every contribution over $50K in 2024."</div>
+        <div class="eq"><span class="eq-open">"</span>Which industries gave the most per cycle since 2008?"</div>
+        <div class="eq"><span class="eq-open">"</span>What did lobbying principals spend vs. donate?"</div>
+        <div class="eq"><span class="eq-open">"</span>Which donor gave to the most different candidates?"</div>
+      </div>
+    </div>
+    <div class="tool-list">
+      <div class="et blue-featured">
+        <div><div class="et-title" style="color:var(--blue)">→ transaction explorer</div><div class="et-desc">Every contribution row — filter by name, amount, date, recipient, or source committee. 22M+ rows.</div></div>
+      </div>
+      <div class="et">
+        <div><div class="et-title" style="color:var(--blue)">→ industries</div><div class="et-desc">Which sectors — Legal, Real Estate, Healthcare, Sugar — fund which candidates and how much per cycle.</div></div>
+      </div>
+      <div class="et">
+        <div><div class="et-title" style="color:var(--green)">→ election cycles 2008–2026</div><div class="et-desc">Totals by cycle, top raisers, party splits, office breakdowns. Compare 2022 vs 2026 side by side.</div></div>
+      </div>
+      <div class="et">
+        <div><div class="et-title" style="color:var(--blue)">→ lobbying principals</div><div class="et-desc">Lobbying clients matched to campaign contributions. 1,970 firms, $34.9B tracked, 19 years of comp data.</div></div>
+      </div>
+      <div class="et">
+        <div><div class="et-title" style="color:var(--gold)">→ money timeline</div><div class="et-desc">Contribution activity over time for any candidate or committee. Identify fundraising surges around key votes.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALL TOOLS FLAT INDEX -->
+  <div class="index-label">All tools — quick access</div>
+  <div class="flat-grid">
+    <div class="fc"><div class="fc-title">Follow the Money</div><div class="fc-desc">Donor → committee → candidate trace</div></div>
+    <div class="fc"><div class="fc-title">Influence Index</div><div class="fc-desc">Lobbying + donations combined rank</div></div>
+    <div class="fc"><div class="fc-title">Money Flow Explorer</div><div class="fc-desc">Sankey drill-down by industry/party</div></div>
+    <div class="fc"><div class="fc-title">Committee Connections</div><div class="fc-desc">56K+ shadow PAC network edges</div></div>
+    <div class="fc"><div class="fc-title">Who Funds Your District</div><div class="fc-desc">Zip → rep → donors · New</div></div>
+    <div class="fc"><div class="fc-title">2026 Money Race</div><div class="fc-desc">Live fundraising by race · New</div></div>
+    <div class="fc"><div class="fc-title">Transaction Explorer</div><div class="fc-desc">Every contribution row, filtered</div></div>
+    <div class="fc"><div class="fc-title">District Money Map</div><div class="fc-desc">By FL legislative district</div></div>
+    <div class="fc"><div class="fc-title">Legislature</div><div class="fc-desc">All 160 members + donors + votes</div></div>
+    <div class="fc"><div class="fc-title">Industries</div><div class="fc-desc">Sector-level giving by cycle</div></div>
+    <div class="fc"><div class="fc-title">Lobbying Principals</div><div class="fc-desc">Clients matched to donations</div></div>
+    <div class="fc"><div class="fc-title">Election Cycles</div><div class="fc-desc">2008–2026 historical breakdowns</div></div>
+    <div class="fc"><div class="fc-title">Donor Overlap</div><div class="fc-desc">Compare two candidates' donors</div></div>
+    <div class="fc"><div class="fc-title">Committee Decoder</div><div class="fc-desc">Who controls any PAC</div></div>
+    <div class="fc"><div class="fc-title">Party Cross-Reference</div><div class="fc-desc">Both-sides donors</div></div>
+    <div class="fc"><div class="fc-title">Pulse</div><div class="fc-desc">Live recent filing feed</div></div>
+  </div>
+
+</div>
+
+<script>
+  const TABS = ['voter','journalist','data'];
+  const TAB_CLASSES = ['active-teal','active-orange','active-blue'];
+  function switchTab(name) {
+    TABS.forEach((t, i) => {
+      document.getElementById('panel-' + t).style.display = t === name ? 'grid' : 'none';
+      const tab = document.querySelectorAll('.tab')[i];
+      TAB_CLASSES.forEach(c => tab.classList.remove(c));
+      if (t === name) tab.classList.add(TAB_CLASSES[i]);
+    });
+  }
+</script>
+</body>
+</html>

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { fmtMoney, fmtMoneyCompact } from '@/lib/fmt';
 import { INDUSTRY_COLORS } from '@/lib/industryColors';
 import useInViewport from '@/lib/useInViewport';
+import { slugify } from '@/lib/slugify';
 
 const PARTY_LABEL = { REP: 'Republican', DEM: 'Democrat', NPA: 'No Party', IND: 'Independent', OTH: 'Other' };
 const PARTY_COLOR  = { REP: 'var(--republican)', DEM: 'var(--democrat)' };
@@ -46,9 +47,9 @@ function IndustryColumn({ name, industries, accentColor }) {
           return (
             <div key={row.industry}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '0.18rem' }}>
-                <span style={{ fontSize: '0.62rem', color: 'var(--text-dim)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '65%' }}>
+                <Link href={`/industry/${slugify(row.industry)}`} style={{ fontSize: '0.62rem', color: 'var(--text-dim)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '65%', textDecoration: 'none' }}>
                   {row.industry}
-                </span>
+                </Link>
                 <span style={{ fontSize: '0.6rem', color, fontFamily: 'var(--font-mono)', flexShrink: 0, marginLeft: '0.3rem' }}>
                   {row.pct}%
                 </span>

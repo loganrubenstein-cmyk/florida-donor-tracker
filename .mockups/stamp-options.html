@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stamp Placement Options</title>
+<style>
+  :root {
+    --bg: #01010d; --surface: #080818; --border: rgba(100,140,220,0.18);
+    --text: #c8d8f0; --text-dim: #5a6a88; --orange: #ffb060; --teal: #4dd8f0;
+    --blue: #a0c0ff; --green: #80ffa0; --gold: #ffd060;
+    --font-mono: "Courier New", Courier, monospace;
+    --font-serif: 'Georgia', serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-mono); }
+
+  .page { max-width: 900px; margin: 0 auto; padding: 2.5rem; }
+  .page-label { font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 2rem; }
+
+  .option-block { margin-bottom: 3.5rem; padding-bottom: 3rem; border-bottom: 1px solid var(--border); }
+  .option-label { font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 1.5rem; }
+  .note { font-size: 0.63rem; color: var(--text-dim); margin-top: 1rem; line-height: 1.6; opacity: 0.7; max-width: 540px; }
+
+  /* shared hero shell */
+  .hero-shell {
+    padding: 2.5rem;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    position: relative;
+    background: rgba(8,8,24,0.4);
+  }
+  .h1 {
+    font-family: var(--font-serif);
+    font-size: 2.4rem; line-height: 1.08; font-weight: 400;
+    color: var(--text); margin-bottom: 0.9rem;
+  }
+  .h1 span { color: var(--orange); }
+  .sub {
+    font-size: 0.86rem; color: var(--text); opacity: 0.7;
+    max-width: 480px; line-height: 1.75; margin-bottom: 0;
+  }
+
+  /* FL outline SVG */
+  .fl-outline {
+    position: absolute; right: 2rem; top: 1.5rem;
+    opacity: 0.5; pointer-events: none;
+  }
+
+  /* stamp variants */
+  .stamp {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.68rem; font-weight: 700;
+    letter-spacing: 0.13em; text-transform: uppercase;
+    border: 2px solid currentColor;
+    padding: 0.3rem 0.75rem;
+    border-radius: 2px;
+    transform: rotate(-1.5deg);
+  }
+  .stamp-teal  { color: var(--teal);     opacity: 0.65; }
+  .stamp-dim   { color: var(--text-dim); opacity: 0.8;  }
+  .stamp-green { color: var(--green);    opacity: 0.6;  }
+  .stamp-white { color: rgba(200,216,240,0.35); border-color: rgba(200,216,240,0.2); }
+  .stamp-gold  { color: var(--gold);     opacity: 0.65; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="page-label">Stamp placement + color options — "florida: a sunny place for shady people."</div>
+
+<!-- ── OPTION A: Teal stamp, below subtext ── -->
+<div class="option-block">
+  <div class="option-label">A — Teal · below subtext · current position</div>
+  <div class="hero-shell">
+    <svg class="fl-outline" viewBox="0 0 520 430" width="220" height="182" fill="var(--orange)" aria-hidden="true">
+      <path fill-rule="evenodd" d="M 149,10 L 181,10 L 190,29 L 279,33 L 362,38 L 365,52 L 373,52 L 376,38 L 373,26 L 380,21 L 394,27 L 412,29 L 416,57 L 424,89 L 443,131 L 472,175 L 468,178 L 469,199 L 481,222 L 500,269 L 504,283 L 504,298 L 497,352 L 491,353 L 484,370 L 486,375 L 474,387 L 469,385 L 457,390 L 436,392 L 430,386 L 433,376 L 418,347 L 407,341 L 397,345 L 389,329 L 387,316 L 373,302 L 370,292 L 372,278 L 365,276 L 367,284 L 360,286 L 339,251 L 331,242 L 351,216 L 338,217 L 329,225 L 321,213 L 332,177 L 334,147 L 326,140 L 324,131 L 312,129 L 297,113 L 285,106 L 284,97 L 276,93 L 270,83 L 245,68 L 223,72 L 224,82 L 217,80 L 190,92 L 161,95 L 162,88 L 155,79 L 121,60 L 97,52 L 75,50 L 57,51 L 17,57 L 27,47 L 22,42 L 25,31 L 10,19 L 12,10 Z M 438,398 C 418,410 390,418 362,422 L 340,424 L 350,420 L 378,416 L 408,408 L 432,396 Z"/>
+    </svg>
+    <div class="h1">Follow the money<br>and <span>influence</span><br>in Florida politics.</div>
+    <p class="sub">Follow the money. Connect the dots. Track every vote, lobbyist, and legislator. From campaign donations to contracts — free from public records.</p>
+    <div style="margin-top:1rem">
+      <span class="stamp stamp-teal">florida: a sunny place for shady people.</span>
+    </div>
+  </div>
+  <p class="note">Teal reads as secondary/editorial — doesn't compete with orange headline or orange CTA buttons below.</p>
+</div>
+
+<!-- ── OPTION B: Dim stamp, below subtext, smaller ── -->
+<div class="option-block">
+  <div class="option-label">B — Muted/dim · below subtext · smaller</div>
+  <div class="hero-shell">
+    <svg class="fl-outline" viewBox="0 0 520 430" width="220" height="182" fill="var(--orange)" aria-hidden="true">
+      <path fill-rule="evenodd" d="M 149,10 L 181,10 L 190,29 L 279,33 L 362,38 L 365,52 L 373,52 L 376,38 L 373,26 L 380,21 L 394,27 L 412,29 L 416,57 L 424,89 L 443,131 L 472,175 L 468,178 L 469,199 L 481,222 L 500,269 L 504,283 L 504,298 L 497,352 L 491,353 L 484,370 L 486,375 L 474,387 L 469,385 L 457,390 L 436,392 L 430,386 L 433,376 L 418,347 L 407,341 L 397,345 L 389,329 L 387,316 L 373,302 L 370,292 L 372,278 L 365,276 L 367,284 L 360,286 L 339,251 L 331,242 L 351,216 L 338,217 L 329,225 L 321,213 L 332,177 L 334,147 L 326,140 L 324,131 L 312,129 L 297,113 L 285,106 L 284,97 L 276,93 L 270,83 L 245,68 L 223,72 L 224,82 L 217,80 L 190,92 L 161,95 L 162,88 L 155,79 L 121,60 L 97,52 L 75,50 L 57,51 L 17,57 L 27,47 L 22,42 L 25,31 L 10,19 L 12,10 Z M 438,398 C 418,410 390,418 362,422 L 340,424 L 350,420 L 378,416 L 408,408 L 432,396 Z"/>
+    </svg>
+    <div class="h1">Follow the money<br>and <span>influence</span><br>in Florida politics.</div>
+    <p class="sub">Follow the money. Connect the dots. Track every vote, lobbyist, and legislator. From campaign donations to contracts — free from public records.</p>
+    <div style="margin-top:1rem">
+      <span class="stamp stamp-dim" style="font-size:0.6rem;letter-spacing:0.1em">florida: a sunny place for shady people.</span>
+    </div>
+  </div>
+  <p class="note">Muted — feels like a watermark or fine print. Very subtle. Works if the tagline is more of an easter egg than a statement.</p>
+</div>
+
+<!-- ── OPTION C: Overlaid on FL map, large faded ── -->
+<div class="option-block">
+  <div class="option-label">C — Ghost text · overlaid on FL outline · top right</div>
+  <div class="hero-shell" style="overflow:hidden">
+    <div style="position:absolute;right:1.5rem;top:1.2rem;text-align:right;pointer-events:none">
+      <svg viewBox="0 0 520 430" width="220" height="182" fill="var(--orange)" aria-hidden="true" style="opacity:0.45;display:block">
+        <path fill-rule="evenodd" d="M 149,10 L 181,10 L 190,29 L 279,33 L 362,38 L 365,52 L 373,52 L 376,38 L 373,26 L 380,21 L 394,27 L 412,29 L 416,57 L 424,89 L 443,131 L 472,175 L 468,178 L 469,199 L 481,222 L 500,269 L 504,283 L 504,298 L 497,352 L 491,353 L 484,370 L 486,375 L 474,387 L 469,385 L 457,390 L 436,392 L 430,386 L 433,376 L 418,347 L 407,341 L 397,345 L 389,329 L 387,316 L 373,302 L 370,292 L 372,278 L 365,276 L 367,284 L 360,286 L 339,251 L 331,242 L 351,216 L 338,217 L 329,225 L 321,213 L 332,177 L 334,147 L 326,140 L 324,131 L 312,129 L 297,113 L 285,106 L 284,97 L 276,93 L 270,83 L 245,68 L 223,72 L 224,82 L 217,80 L 190,92 L 161,95 L 162,88 L 155,79 L 121,60 L 97,52 L 75,50 L 57,51 L 17,57 L 27,47 L 22,42 L 25,31 L 10,19 L 12,10 Z M 438,398 C 418,410 390,418 362,422 L 340,424 L 350,420 L 378,416 L 408,408 L 432,396 Z"/>
+      </svg>
+      <div style="font-family:var(--font-mono);font-size:0.58rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);opacity:0.55;border:1.5px solid var(--teal);padding:0.25rem 0.6rem;border-radius:2px;transform:rotate(-1.5deg);display:inline-block;margin-top:0.4rem">a sunny place for shady people.</div>
+    </div>
+    <div class="h1">Follow the money<br>and <span>influence</span><br>in Florida politics.</div>
+    <p class="sub">Follow the money. Connect the dots. Track every vote, lobbyist, and legislator. From campaign donations to contracts — free from public records.</p>
+  </div>
+  <p class="note">Stamp lives in the map cluster (top right) — pairs with the FL outline as a unit. Keeps the left side clean. Slightly shortened to "a sunny place for shady people." since "florida:" is implied by the shape.</p>
+</div>
+
+<!-- ── OPTION D: Stamp at very bottom of hero, full width feel ── -->
+<div class="option-block">
+  <div class="option-label">D — Gold · below search bar + CTAs · anchors the hero</div>
+  <div class="hero-shell">
+    <svg class="fl-outline" viewBox="0 0 520 430" width="220" height="182" fill="var(--orange)" aria-hidden="true">
+      <path fill-rule="evenodd" d="M 149,10 L 181,10 L 190,29 L 279,33 L 362,38 L 365,52 L 373,52 L 376,38 L 373,26 L 380,21 L 394,27 L 412,29 L 416,57 L 424,89 L 443,131 L 472,175 L 468,178 L 469,199 L 481,222 L 500,269 L 504,283 L 504,298 L 497,352 L 491,353 L 484,370 L 486,375 L 474,387 L 469,385 L 457,390 L 436,392 L 430,386 L 433,376 L 418,347 L 407,341 L 397,345 L 389,329 L 387,316 L 373,302 L 370,292 L 372,278 L 365,276 L 367,284 L 360,286 L 339,251 L 331,242 L 351,216 L 338,217 L 329,225 L 321,213 L 332,177 L 334,147 L 326,140 L 324,131 L 312,129 L 297,113 L 285,106 L 284,97 L 276,93 L 270,83 L 245,68 L 223,72 L 224,82 L 217,80 L 190,92 L 161,95 L 162,88 L 155,79 L 121,60 L 97,52 L 75,50 L 57,51 L 17,57 L 27,47 L 22,42 L 25,31 L 10,19 L 12,10 Z M 438,398 C 418,410 390,418 362,422 L 340,424 L 350,420 L 378,416 L 408,408 L 432,396 Z"/>
+    </svg>
+    <div class="h1">Follow the money<br>and <span>influence</span><br>in Florida politics.</div>
+    <p class="sub">Follow the money. Connect the dots. Track every vote, lobbyist, and legislator. From campaign donations to contracts — free from public records.</p>
+    <!-- search + CTAs placeholder -->
+    <div style="margin:1rem 0 0.5rem;display:flex;gap:0.5rem;max-width:500px">
+      <div style="flex:1;height:32px;border:1px solid rgba(100,140,220,0.35);border-radius:3px;background:rgba(8,8,24,0.8)"></div>
+      <div style="width:64px;height:32px;background:var(--orange);border-radius:3px;opacity:0.8"></div>
+    </div>
+    <div style="display:flex;gap:0.5rem;margin-bottom:1.25rem">
+      <div style="height:28px;width:110px;border:1px solid rgba(255,176,96,0.25);border-radius:3px"></div>
+      <div style="height:28px;width:110px;border:1px solid rgba(77,216,240,0.25);border-radius:3px"></div>
+      <div style="height:28px;width:90px;border:1px solid rgba(160,192,255,0.2);border-radius:3px"></div>
+    </div>
+    <div style="border-top:1px solid rgba(100,140,220,0.08);padding-top:0.85rem">
+      <span class="stamp stamp-gold">florida: a sunny place for shady people.</span>
+    </div>
+  </div>
+  <p class="note">Gold stamp anchors the bottom of the hero — acts as a section closer before the stats strip. Gold is warm but distinct from orange. Feels like a sign-off.</p>
+</div>
+
+</div>
+</body>
+</html>

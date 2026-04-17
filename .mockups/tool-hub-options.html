@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tool Hub Options</title>
+<style>
+  :root {
+    --bg: #01010d; --surface: #080818; --border: rgba(100,140,220,0.18);
+    --text: #c8d8f0; --text-dim: #5a6a88; --orange: #ffb060; --teal: #4dd8f0;
+    --blue: #a0c0ff; --green: #80ffa0; --gold: #ffd060;
+    --font-mono: "Courier New", Courier, monospace;
+    --font-serif: 'Georgia', serif;
+    --font-sans: system-ui, -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-mono); }
+
+  .page { max-width: 1140px; margin: 0 auto; padding: 2.5rem; }
+  .option-label { font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 1.5rem; }
+  .divider { border: none; border-top: 1px solid var(--border); margin: 4rem 0; }
+
+  /* shared nav */
+  .mock-nav {
+    border-bottom: 1px solid var(--border); padding: 0.75rem 2.5rem;
+    display: flex; align-items: center; gap: 1.5rem;
+    font-size: 0.72rem; color: var(--text-dim); max-width: 1140px; margin: 0 auto;
+  }
+  .mock-nav .logo { color: var(--orange); font-weight: 700; font-size: 0.8rem; margin-right: auto; }
+  .mock-nav a { color: var(--text-dim); }
+  .mock-nav a.active { color: var(--text); border-bottom: 1px solid var(--text); padding-bottom: 1px; }
+
+  /* breadcrumb */
+  .bc { font-size: 0.68rem; color: var(--text-dim); margin-bottom: 1.5rem; }
+  .bc a { color: var(--text-dim); text-decoration: none; }
+
+  /* page header */
+  .ph { margin-bottom: 2rem; }
+  .ph h1 { font-family: var(--font-serif); font-size: 1.8rem; font-weight: 400; margin-bottom: 0.4rem; }
+  .ph p { font-size: 0.82rem; color: var(--text-dim); line-height: 1.6; max-width: 560px; }
+
+  /* ── OPTION A: /tools becomes 3-lane hub ── */
+  .lane-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; margin-bottom: 2.5rem; }
+  .lane-card {
+    border: 1px solid var(--border); border-radius: 4px;
+    padding: 1.5rem 1.4rem 1.75rem; background: var(--surface);
+    cursor: pointer; transition: border-color 0.12s; position: relative; overflow: hidden;
+  }
+  .lane-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  }
+  .lane-card.voter::before  { background: var(--teal); }
+  .lane-card.story::before  { background: var(--orange); }
+  .lane-card.data::before   { background: var(--blue); }
+  .lane-card:hover { border-color: rgba(100,140,220,0.4); }
+
+  .lane-icon { font-size: 1.6rem; margin-bottom: 0.85rem; }
+  .lane-audience { font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.4rem; }
+  .lane-title { font-family: var(--font-serif); font-size: 1.2rem; font-weight: 400; margin-bottom: 0.55rem; }
+  .lane-card.voter .lane-title  { color: var(--teal); }
+  .lane-card.story .lane-title  { color: var(--orange); }
+  .lane-card.data  .lane-title  { color: var(--blue); }
+  .lane-question { font-size: 0.78rem; color: var(--text); opacity: 0.7; line-height: 1.65; margin-bottom: 1rem; }
+  .lane-tools { display: flex; flex-direction: column; gap: 0.3rem; }
+  .lane-tool { font-size: 0.66rem; color: var(--text-dim); padding: 0.25rem 0; border-top: 1px solid rgba(100,140,220,0.07); }
+  .lane-tool:first-child { border-top: none; }
+  .lane-cta {
+    display: inline-block; margin-top: 1.1rem;
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em;
+    padding: 0.4rem 0.9rem; border-radius: 3px; border: 1px solid;
+    font-family: var(--font-mono);
+  }
+  .lane-card.voter .lane-cta  { color: var(--teal);   border-color: rgba(77,216,240,0.35); }
+  .lane-card.story .lane-cta  { color: var(--orange); border-color: rgba(255,176,96,0.35); }
+  .lane-card.data  .lane-cta  { color: var(--blue);   border-color: rgba(160,192,255,0.35); }
+
+  /* flat index below lanes */
+  .flat-index-label { font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-dim); margin-bottom: 1rem; margin-top: 0.5rem; }
+  .flat-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 0.5rem; }
+  .flat-card {
+    border: 1px solid var(--border); border-radius: 3px; padding: 0.75rem 0.85rem;
+    font-size: 0.7rem; color: var(--text-dim); cursor: pointer; transition: border-color 0.12s;
+  }
+  .flat-card:hover { color: var(--text); border-color: rgba(100,140,220,0.4); }
+  .flat-card .fc-title { font-size: 0.72rem; color: var(--text); margin-bottom: 0.2rem; font-weight: 600; }
+
+  /* ── OPTION B: New /explore hub, /tools stays flat ── */
+  .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1.75rem; }
+  .tab {
+    font-size: 0.72rem; color: var(--text-dim); padding: 0.55rem 1.1rem 0.6rem;
+    border-bottom: 2px solid transparent; cursor: pointer; margin-bottom: -1px;
+  }
+  .tab.active { color: var(--teal); border-bottom-color: var(--teal); }
+  .tab.orange.active { color: var(--orange); border-bottom-color: var(--orange); }
+  .tab.blue.active   { color: var(--blue);   border-bottom-color: var(--blue); }
+
+  .explore-panel { display: grid; grid-template-columns: 280px 1fr; gap: 2rem; }
+  .explore-sidebar { }
+  .explore-sidebar .hook {
+    font-family: var(--font-serif); font-size: 1.1rem; font-weight: 400;
+    color: var(--teal); line-height: 1.4; margin-bottom: 0.75rem;
+  }
+  .explore-sidebar p { font-size: 0.78rem; color: var(--text-dim); line-height: 1.7; margin-bottom: 1rem; }
+  .example-queries { display: flex; flex-direction: column; gap: 0.4rem; }
+  .eq {
+    font-size: 0.68rem; color: var(--text-dim); border: 1px solid var(--border);
+    border-radius: 3px; padding: 0.4rem 0.7rem; cursor: pointer;
+    transition: border-color 0.12s;
+  }
+  .eq:hover { border-color: rgba(77,216,240,0.3); color: var(--text); }
+  .eq::before { content: '"'; color: var(--teal); margin-right: 0.2rem; }
+  .eq::after  { content: '"'; color: var(--teal); margin-left: 0.2rem; }
+
+  .explore-tools { display: flex; flex-direction: column; gap: 0.55rem; }
+  .et {
+    border: 1px solid var(--border); border-radius: 3px; padding: 0.9rem 1rem;
+    display: flex; align-items: flex-start; gap: 0.9rem;
+    transition: border-color 0.12s; cursor: pointer;
+  }
+  .et:hover { border-color: rgba(100,140,220,0.4); }
+  .et.featured { border-color: rgba(77,216,240,0.2); background: rgba(77,216,240,0.02); }
+  .et-icon { font-size: 1rem; margin-top: 0.1rem; flex-shrink: 0; }
+  .et-title { font-size: 0.74rem; font-weight: 700; color: var(--teal); margin-bottom: 0.2rem; font-family: var(--font-mono); }
+  .et-desc { font-size: 0.75rem; color: rgba(200,216,240,0.6); line-height: 1.55; }
+  .et-badge { margin-left: auto; font-size: 0.58rem; text-transform: uppercase; background: rgba(128,255,160,0.1); color: var(--green); padding: 0.18rem 0.45rem; border-radius: 2px; flex-shrink: 0; white-space: nowrap; }
+
+  .note { font-size: 0.65rem; color: var(--gold); margin-top: 1.5rem; line-height: 1.6; padding: 0.5rem 0.75rem; border: 1px dashed rgba(255,208,96,0.35); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     OPTION A: /tools IS the hub
+     3 lanes replace the flat grid
+     ══════════════════════════════════ -->
+<div class="mock-nav">
+  <span class="logo">Florida Donor Tracker</span>
+  <a href="#">candidates</a>
+  <a href="#" class="active">tools</a>
+  <a href="#">legislature</a>
+  <a href="#">search</a>
+</div>
+
+<div class="page">
+  <div class="option-label">Option A — /tools becomes the 3-lane hub (replaces flat grid)</div>
+
+  <div class="bc"><a href="#">Home</a> / Tools</div>
+
+  <div class="ph">
+    <h1>Explore the data</h1>
+    <p>Choose how you want to dig in. Each path is tuned for a different question.</p>
+  </div>
+
+  <div class="lane-grid">
+
+    <div class="lane-card voter">
+      <div class="lane-icon">🗳️</div>
+      <div class="lane-audience">For voters</div>
+      <div class="lane-title">Who funds Florida?</div>
+      <div class="lane-question">Find out who's bankrolling your representative, which lobbyists are active in your district, and what the 2026 candidates are raising.</div>
+      <div class="lane-tools">
+        <div class="lane-tool">→ Who funds your district</div>
+        <div class="lane-tool">→ 2026 money race</div>
+        <div class="lane-tool">→ Legislature — all 160 members</div>
+        <div class="lane-tool">→ District money map</div>
+      </div>
+      <div class="lane-cta">Start here →</div>
+    </div>
+
+    <div class="lane-card story">
+      <div class="lane-icon">🔍</div>
+      <div class="lane-audience">For journalists & researchers</div>
+      <div class="lane-title">Follow the money</div>
+      <div class="lane-question">Trace donations through PAC networks, find shadow organizations, map who has the most combined lobbying and donation influence.</div>
+      <div class="lane-tools">
+        <div class="lane-tool">→ Follow the Money</div>
+        <div class="lane-tool">→ Influence Index</div>
+        <div class="lane-tool">→ Committee Connections</div>
+        <div class="lane-tool">→ Money Flow Explorer</div>
+      </div>
+      <div class="lane-cta">Start here →</div>
+    </div>
+
+    <div class="lane-card data">
+      <div class="lane-icon">📊</div>
+      <div class="lane-audience">For power users</div>
+      <div class="lane-title">Deep data</div>
+      <div class="lane-question">Search every transaction, filter by industry or cycle, pull full donor histories, and cross-reference lobbying comp with campaign donations.</div>
+      <div class="lane-tools">
+        <div class="lane-tool">→ Transaction Explorer</div>
+        <div class="lane-tool">→ Industry breakdowns</div>
+        <div class="lane-tool">→ Lobbying principals</div>
+        <div class="lane-tool">→ Historical cycles 2008–2026</div>
+      </div>
+      <div class="lane-cta">Start here →</div>
+    </div>
+
+  </div>
+
+  <!-- flat index still available below -->
+  <div class="flat-index-label">All tools</div>
+  <div class="flat-grid">
+    <div class="flat-card"><div class="fc-title">Follow the Money</div>Trace donor → committee → candidate</div>
+    <div class="flat-card"><div class="fc-title">Influence Index</div>Lobbying + donations combined</div>
+    <div class="flat-card"><div class="fc-title">Money Flow Explorer</div>Sankey drill-down</div>
+    <div class="flat-card"><div class="fc-title">Committee Connections</div>Shadow network map</div>
+    <div class="flat-card"><div class="fc-title">District Money Map</div>By FL legislative district</div>
+    <div class="flat-card"><div class="fc-title">Donor Overlap</div>Compare two candidates</div>
+    <div class="flat-card"><div class="fc-title">Committee Decoder</div>Who controls any PAC</div>
+    <div class="flat-card"><div class="fc-title">Transaction Explorer</div>Every contribution row</div>
+    <div class="flat-card"><div class="fc-title">Money Timeline</div>Contribution activity over time</div>
+    <div class="flat-card"><div class="fc-title">Party Cross-Reference</div>Both-sides donors</div>
+    <div class="flat-card"><div class="fc-title">Transparency Index</div>Disclosure completeness</div>
+    <div class="flat-card"><div class="fc-title">Pulse</div>Live recent filings</div>
+  </div>
+
+  <div class="note"><strong>Option A note:</strong> /tools is the single destination. 3 lane cards at top for funneling, flat "all tools" index below for power users who know what they want. One URL to share, one place to update.</div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════════════════════════════════
+     OPTION B: /explore is new hub
+     /tools stays as flat reference
+     ══════════════════════════════════ -->
+<div class="mock-nav" style="margin-top:0">
+  <span class="logo">Florida Donor Tracker</span>
+  <a href="#">candidates</a>
+  <a href="#" class="active">explore</a>
+  <a href="#">tools</a>
+  <a href="#">legislature</a>
+  <a href="#">search</a>
+</div>
+
+<div class="page">
+  <div class="option-label">Option B — New /explore hub with tabs, /tools stays as flat reference</div>
+
+  <div class="bc"><a href="#">Home</a> / Explore</div>
+
+  <div class="ph">
+    <h1>Explore Florida politics</h1>
+    <p>Three ways in. Pick the one that matches your question.</p>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active">🗳️ For voters</div>
+    <div class="tab orange">🔍 For journalists</div>
+    <div class="tab blue">📊 Deep data</div>
+  </div>
+
+  <!-- Voter tab shown -->
+  <div class="explore-panel">
+
+    <div class="explore-sidebar">
+      <div class="hook">"Who's funding the people who represent me?"</div>
+      <p>Start with your district or a specific candidate. We'll show you every donor, every lobbyist connection, and how their votes line up with who funds them.</p>
+      <div style="font-size:0.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.5rem">Try asking</div>
+      <div class="example-queries">
+        <div class="eq">Who donated to my state rep?</div>
+        <div class="eq">Which lobbyists are active in House District 15?</div>
+        <div class="eq">How much has my senator raised vs. their opponent?</div>
+        <div class="eq">Who are the top donors in the 2026 Governor race?</div>
+      </div>
+    </div>
+
+    <div class="explore-tools">
+      <div class="et featured">
+        <div class="et-icon">🗺️</div>
+        <div>
+          <div class="et-title">→ who funds your district</div>
+          <div class="et-desc">Enter your zip code. See every donor to your rep — their industry, their lobbyist clients, their voting record.</div>
+        </div>
+        <div class="et-badge">New</div>
+      </div>
+      <div class="et">
+        <div class="et-icon">📊</div>
+        <div>
+          <div class="et-title" style="color:var(--green)">→ 2026 money race</div>
+          <div class="et-desc">Live fundraising for every 2026 race — hard money, PAC money, and out-of-state donors broken out.</div>
+        </div>
+        <div class="et-badge">New</div>
+      </div>
+      <div class="et">
+        <div class="et-icon">🏛️</div>
+        <div>
+          <div class="et-title" style="color:var(--blue)">→ legislature</div>
+          <div class="et-desc">All 160 current FL House + Senate members — donors, votes, lobbyist connections, and official disclosures.</div>
+        </div>
+      </div>
+      <div class="et">
+        <div class="et-icon">⚡</div>
+        <div>
+          <div class="et-title" style="color:var(--gold)">→ district money map</div>
+          <div class="et-desc">How money flows in any FL legislative district — top donors, top recipients, industry breakdown.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="note"><strong>Option B note:</strong> /explore is a new narrative-first hub with tabs. /tools stays as the "give me the full list" reference page. Nav gains an "explore" link. Slightly more surface area to maintain, but cleaner separation of "help me find something" vs. "I know what I want."</div>
+</div>
+
+</body>
+</html>

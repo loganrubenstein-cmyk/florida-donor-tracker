@@ -2,6 +2,7 @@ import Link from 'next/link';
 import BackLinks from '@/components/BackLinks';
 import { getDb } from '@/lib/db';
 import SectionHeader from '@/components/shared/SectionHeader';
+import { slugify } from '@/lib/slugify';
 
 export const dynamic = 'force-dynamic';
 
@@ -163,9 +164,9 @@ export default async function LegislaturePage() {
             {industryFunding.map(ind => (
               <div key={ind.industry} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <div style={{ width: '8px', height: '8px', borderRadius: '2px', background: INDUSTRY_COLORS[ind.industry] || '#444466', flexShrink: 0 }} />
-                <div style={{ fontSize: '0.73rem', color: 'var(--text)', flex: 1, minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                <Link href={`/industry/${slugify(ind.industry)}`} style={{ fontSize: '0.73rem', color: 'var(--text)', flex: 1, minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textDecoration: 'none' }}>
                   {ind.industry}
-                </div>
+                </Link>
                 <div style={{ fontSize: '0.68rem', fontFamily: 'var(--font-mono)', color: 'var(--text-dim)', whiteSpace: 'nowrap' }}>
                   {fmtCompact(ind.total)} <span style={{ color: 'rgba(100,140,220,0.4)' }}>({ind.pct.toFixed(1)}%)</span>
                 </div>

@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
 import BackLinks from '@/components/BackLinks';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import { slugify } from '@/lib/slugify';
 
 function fmt(n) {
   if (!n || n === 0) return '$0';
@@ -356,7 +358,7 @@ function DecodeResult({ data }) {
               return (
                 <div key={i} style={{ marginBottom: '0.5rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', marginBottom: '0.15rem' }}>
-                    <span style={{ color: 'var(--text)' }}>{ind.industry}</span>
+                    <Link href={`/industry/${slugify(ind.industry)}`} style={{ color: 'var(--text)', textDecoration: 'none' }}>{ind.industry}</Link>
                     <span style={{ color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.65rem' }}>
                       {fmt(ind.total)}
                     </span>
