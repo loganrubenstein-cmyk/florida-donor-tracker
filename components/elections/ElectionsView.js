@@ -340,14 +340,18 @@ export default function ElectionsView({ cycles, districtMap = {} }) {
       {cycle && (
         <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', padding: '0.75rem 1rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '4px', marginBottom: '1.25rem' }}>
           {[
-            { label: 'Year', value: `${resolvedYear} ${electionType.charAt(0).toUpperCase() + electionType.slice(1)}`, color: 'var(--text)' },
+            { label: 'Year', value: `${resolvedYear} ${electionType.charAt(0).toUpperCase() + electionType.slice(1)}`, color: 'var(--text)', href: `/cycle/${resolvedYear}` },
             { label: 'Total Contests', value: cycle.total_contests?.toLocaleString(), color: 'var(--text)' },
             { label: 'Finance Matched', value: cycle.contests_with_finance?.toLocaleString(), color: 'var(--green)' },
             flatStats && { label: 'Candidates', value: flatStats.total.toLocaleString(), color: 'var(--text-dim)' },
-          ].filter(Boolean).map(({ label, value, color }) => (
+          ].filter(Boolean).map(({ label, value, color, href }) => (
             <div key={label}>
               <div style={{ fontSize: '0.55rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.15rem' }}>{label}</div>
-              <div style={{ fontSize: '0.92rem', fontWeight: 700, color, fontFamily: 'var(--font-mono)' }}>{value || '—'}</div>
+              {href ? (
+                <Link href={href} style={{ fontSize: '0.92rem', fontWeight: 700, color, fontFamily: 'var(--font-mono)', textDecoration: 'none' }}>{value || '—'}</Link>
+              ) : (
+                <div style={{ fontSize: '0.92rem', fontWeight: 700, color, fontFamily: 'var(--font-mono)' }}>{value || '—'}</div>
+              )}
             </div>
           ))}
         </div>

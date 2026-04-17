@@ -41,7 +41,7 @@ export default function CyclesList() {
   return (
     <main style={{ maxWidth: '960px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
 
-      <BackLinks links={[{ href: '/', label: 'home' }]} />
+      <BackLinks links={[{ href: '/', label: 'home' }, { href: '/elections', label: 'elections' }, { href: '/party-finance', label: 'party finance' }]} />
 
       <SectionHeader title="Election Cycles" eyebrow="Florida · 2008–present" />
       <div style={{ fontSize: '0.82rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap', marginTop: '-0.75rem', marginBottom: '1.25rem' }}>

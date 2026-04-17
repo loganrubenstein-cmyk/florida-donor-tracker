@@ -38,7 +38,7 @@ export default function ElectionsPage() {
 
   return (
     <main style={{ maxWidth: '960px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
-      <BackLinks links={[{ href: '/', label: 'home' }]} />
+      <BackLinks links={[{ href: '/', label: 'home' }, { href: '/cycles', label: 'cycles' }, { href: '/party-finance', label: 'party finance' }]} />
 
       <SectionHeader title="Election Results" eyebrow="Florida · 2012–2024" />
       <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginTop: '-0.75rem', marginBottom: '2rem' }}>

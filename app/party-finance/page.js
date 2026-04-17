@@ -66,7 +66,7 @@ export default function PartyFinancePage() {
       <div style={{ marginBottom: '0.5rem', fontSize: '0.75rem', color: 'var(--text-dim)' }}>
         <Link href="/" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Home</Link>
         {' / '}
-        <Link href="/research" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Research</Link>
+        <Link href="/cycles" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Cycles</Link>
         {' / '}
         <span>Party Finance</span>
       </div>
