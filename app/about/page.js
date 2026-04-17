@@ -65,6 +65,7 @@ export default function AboutPage() {
           <li><strong>FL Department of State</strong> — committee metadata (treasurers, addresses, type codes)</li>
           <li><strong>LegiScan</strong> — legislative session data, floor vote records, bill sponsorships</li>
           <li><strong>FL House Lobbyist Disclosure Portal</strong> — bill-level lobbying filings (2016–present)</li>
+          <li><strong>USASpending.gov</strong> — federal contracts and grants awarded to Florida recipients (FY 2020–2025)</li>
           <li><strong>Journalism</strong> — linked annotations on <Link href="/investigations" style={{ color: 'var(--teal)' }}>/investigations</Link></li>
         </ul>
       </section>
@@ -102,31 +103,35 @@ export default function AboutPage() {
             ['/committees', 'Committees'],
             ['/explorer', 'Transaction Explorer'],
             ['/industries', 'Industries'],
+            ['/influence', 'Influence Index'],
             ['/lobbyists', 'Lobbyists'],
             ['/principals', 'Principals'],
             ['/lobbying-firms', 'Lobbying Firms'],
             ['/lobbying', 'Lobbying Hub'],
+            ['/lobbying/bills', 'Lobbied Bills'],
+            ['/solicitations', 'Solicitations'],
             ['/cycles', 'Election Cycles'],
-            ['/ie', 'Independent Expenditures'],
             ['/elections', 'Election Results'],
+            ['/party-finance', 'Party Finance'],
+            ['/ie', 'Independent Expenditures'],
             ['/legislature', 'Legislature Hub'],
             ['/legislators', 'Legislators Directory'],
             ['/legislature/committees', 'Legislative Committees'],
             ['/investigations', 'Investigations'],
-            ['/network', 'Network Hub'],
-            ['/network/graph', 'Network Graph'],
-            ['/flow', 'Money Flow'],
-            ['/party-finance', 'Party Finance'],
             ['/connections', 'Committee Connections'],
-            ['/lobbying/bills', 'Lobbied Bills'],
             ['/contracts', 'State Contracts'],
+            ['/federal-contracts', 'Federal Contracts'],
+            ['/pulse', 'Pulse'],
             ['/search', 'Global Search'],
             ['/tools', 'Investigative Tools'],
+            ['/follow', 'Follow the Money'],
+            ['/flow', 'Money Flow Explorer'],
             ['/decode', 'Committee Decoder'],
             ['/compare', 'Donor Overlap'],
             ['/district', 'Money in Your District'],
             ['/timeline', 'Influence Timeline'],
             ['/transparency', 'Dark Money Scoreboard'],
+            ['/map', 'Geographic Map'],
           ].map(([href, label]) => (
             <Link key={href} href={href} style={{ color: 'var(--teal)', textDecoration: 'none', padding: '0.3rem 0' }}>
               → {label}
