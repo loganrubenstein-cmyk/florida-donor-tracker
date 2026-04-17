@@ -30,7 +30,7 @@ jobs:
       - name: Load committees
         uses: ./.github/actions/run-script
         with:
-          script: 40_load_committees_supabase.py
+          script: 40_load_supabase.py
       - name: Open issue on failure
         if: failure()
         uses: peter-evans/create-issue-from-file@v5

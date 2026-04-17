@@ -25,11 +25,11 @@ jobs:
       - name: Scrape fund transfers
         uses: ./.github/actions/run-script
         with:
-          script: 11_scrape_fund_transfers.py
+          script: 11_scrape_transfers.py
       - name: Open issue on failure
         if: failure()
         uses: peter-evans/create-issue-from-file@v5
         with:
           title: "[pipeline-failure:low] weekly-transfers"
-          content-filepath: data/logs/11_scrape_fund_transfers.py.log
+          content-filepath: data/logs/11_scrape_transfers.py.log
           labels: pipeline-failure,severity:low,data-update

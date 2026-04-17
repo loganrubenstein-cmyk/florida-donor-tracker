@@ -25,15 +25,15 @@ jobs:
       - name: Scrape lobbyist directory
         uses: ./.github/actions/run-script
         with:
-          script: 14_scrape_lobbyists.py
+          script: 14_download_lobbyists.py
       - name: Scrape + load compensation
         uses: ./.github/actions/run-script
         with:
-          script: 47_load_lobbyist_compensation.py
+          script: 47_scrape_lobbyist_compensation.py
       - name: Open issue on failure
         if: failure()
         uses: peter-evans/create-issue-from-file@v5
         with:
           title: "[pipeline-failure:medium] weekly-lobbyists"
-          content-filepath: data/logs/14_scrape_lobbyists.py.log
+          content-filepath: data/logs/14_download_lobbyists.py.log
           labels: pipeline-failure,severity:medium,data-update

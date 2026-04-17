@@ -28,7 +28,7 @@ jobs:
 
       - name: "01 committees directory"
         uses: ./.github/actions/run-script
-        with: { script: 01_scrape_committees.py }
+        with: { script: 01_import_finance.py }
 
       - name: "02 registry + closed discovery"
         uses: ./.github/actions/run-script
@@ -38,9 +38,13 @@ jobs:
         uses: ./.github/actions/run-script
         with: { script: 03_scrape_contributions.py }
 
-      - name: "04 candidate contributions"
+      - name: "20 scrape candidate contributions"
         uses: ./.github/actions/run-script
-        with: { script: 04_scrape_candidate_contributions.py }
+        with: { script: 20_scrape_candidate_contributions.py }
+
+      - name: "21 import candidate contributions"
+        uses: ./.github/actions/run-script
+        with: { script: 21_import_candidate_contributions.py }
 
       - name: "09 canonical donor dedup"
         uses: ./.github/actions/run-script
@@ -50,9 +54,10 @@ jobs:
         uses: ./.github/actions/run-script
         with: { script: 09b_apply_manual_merges.py }
 
-      - name: "10 donor enrichment"
-        uses: ./.github/actions/run-script
-        with: { script: 10_enrich_donors.py }
+      # "10 donor enrichment" — skipped post-donors_mv cutover; enrichment is
+      # now derived from donor_entities + contributions via the materialized
+      # view. If re-enabling, target 97b_enrich_donors_from_corps.py but note
+      # it writes to the donors view (rewrite required for MV path).
 
       - name: "25 export donor profiles"
         uses: ./.github/actions/run-script
@@ -60,7 +65,7 @@ jobs:
 
       - name: "40 load committees"
         uses: ./.github/actions/run-script
-        with: { script: 40_load_committees_supabase.py }
+        with: { script: 40_load_supabase.py }
 
       - name: "41 load contributions"
         uses: ./.github/actions/run-script
