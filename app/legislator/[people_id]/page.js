@@ -449,7 +449,7 @@ export default async function LegislatorPage({ params }) {
 
       <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
         Financial disclosures are self-reported and filed annually with the Florida Commission on Ethics.
-        {' '}<a href="https://public.ethics.state.fl.us/index.html" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+        {' '}<a href="https://disclosure.floridaethics.gov/PublicSearch/Filings" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)', textDecoration: 'none' }}>
           Search all FL Ethics disclosures ↗
         </a>
       </div>
@@ -457,7 +457,7 @@ export default async function LegislatorPage({ params }) {
   ) : (
     <div style={{ padding: '1.25rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '6px', fontSize: '0.78rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
       No financial disclosure found for this legislator. Disclosures are filed annually with the Florida Commission on Ethics.{' '}
-      <a href="https://public.ethics.state.fl.us/index.html" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+      <a href="https://disclosure.floridaethics.gov/PublicSearch/Filings" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)', textDecoration: 'none' }}>
         Search manually ↗
       </a>
     </div>
