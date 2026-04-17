@@ -1,5 +1,6 @@
 // components/cycles/CycleProfile.js
 // Server component
+import Link from 'next/link';
 import BackLinks from '@/components/BackLinks';
 import { slugify } from '@/lib/slugify';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
@@ -185,10 +186,14 @@ export default function CycleProfile({ year, candidates, topDonors = [], electio
         <SectionLabel>By Office — Top Races</SectionLabel>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.75rem' }}>
           <tbody>
-            {topOffices.map(([office, data]) => (
+            {topOffices.map(([office, data]) => {
+              const raceSlug = encodeURIComponent(office.toLowerCase().replace(/\s+/g, '-'));
+              return (
               <tr key={office} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
-                <td style={{ padding: '0.35rem 0.5rem', color: 'var(--text-dim)', fontSize: '0.68rem', maxWidth: '160px', wordBreak: 'break-word' }}>
-                  {office}
+                <td style={{ padding: '0.35rem 0.5rem', fontSize: '0.68rem', maxWidth: '160px', wordBreak: 'break-word' }}>
+                  <Link href={`/race/${raceSlug}/${year}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+                    {office}
+                  </Link>
                 </td>
                 <td style={{ padding: '0.35rem 0.5rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.72rem' }}>
                   {data.count}
@@ -197,7 +202,8 @@ export default function CycleProfile({ year, candidates, topDonors = [], electio
                   {fmt(data.total)}
                 </td>
               </tr>
-            ))}
+              );
+            })}
           </tbody>
         </table>
       </div>

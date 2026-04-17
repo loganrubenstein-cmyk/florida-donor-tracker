@@ -318,6 +318,11 @@ def main():
     # the script with partial progress persisted.
     conn.autocommit = True
 
+    # Supabase pools impose an 8-min default statement_timeout. The full 22M-row
+    # scan in load_name_totals() blows through that. Lift it for this session.
+    with conn.cursor() as _c0:
+        _c0.execute("SET statement_timeout = '3600s'")  # 1h cap per statement
+
     CHUNK = 5000  # rows per execute_values call (also the commit boundary)
 
     def upsert_entities(cur, rows):
