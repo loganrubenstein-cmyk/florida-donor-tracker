@@ -82,7 +82,7 @@ export default function CoveragePage() {
           <li>Name deduplication is exact-match only. The same real-world donor may appear under multiple profiles if their name was filed differently across reports.</li>
           <li>Industry and entity type classifications are rules-based — not verified against any external registry.</li>
           <li>Lobbyist compensation below $50K is disclosed in $10K bands ($1–$9,999, $10K–$19,999 … $40K–$49,999) — we use band midpoints. Amounts of $50K+ are exact figures reported to the state.</li>
-          <li>Race-level comparisons (candidates running for the same seat in the same year) are not yet supported.</li>
+          <li>Race-level comparisons are available via the Race Tracker (<code style={{ fontSize: '0.78em' }}>/race/[office]/[year]</code>) — linked from each candidate profile. Multi-candidate district breakdowns are not yet included.</li>
           <li>This site reflects <em>reported</em> campaign finance — late, amended, or unfiled reports will not appear.</li>
           <li>Federal PAC contributions to Florida candidates or committees are not included — only state-level filings.</li>
         </ul>
