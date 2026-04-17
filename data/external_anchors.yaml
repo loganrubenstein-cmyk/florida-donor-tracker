@@ -43,37 +43,45 @@ anchors:
       (drift bug, now tracked as Check B FAIL until migration 016 applied).
 
   - entity_type: donor
-    entity_slug: the-walt-disney-company
+    entity_slug: disney-worldwide-services-inc
     anchor_metric: total_contributions
-    anchor_value: 6000000
+    anchor_value: 40000000
     anchor_year: null
     tolerance_pct: 20.00
     source_citation: |
-      Aggregated Disney + subsidiaries (Disney Worldwide Services, Walt
-      Disney Parks & Resorts) + Reedy Creek Improvement District state
-      contributions per FL DoE. Wider tolerance: RCID treatment pre-2023
-      is an editorial call and reasonable estimates vary.
+      Disney Worldwide Services, Inc. — the primary FL-registered Disney
+      entity for state-level political contributions per FL DoE. Other
+      Disney subsidiaries (Walt Disney Parks & Resorts, Walt Disney World
+      Co., Disney Destinations LLC) add ~$10M combined. The-walt-disney-
+      company slug resolves to the parent holding entity, which has
+      minimal direct state filings. Wider tolerance: entity treatment and
+      RCID pre-2023 classification vary by source.
 
   - entity_type: donor
-    entity_slug: publix-super-markets
+    entity_slug: publix-super-markets-inc
     anchor_metric: total_contributions
-    anchor_value: 12000000
+    anchor_value: 22000000
     anchor_year: null
     tolerance_pct: 15.00
     source_citation: |
-      Publix Super Markets + Publix Super Markets Charities state-level
-      political contributions per FL DoE + 990 filings (Charities arm).
+      Publix Super Markets, Inc. (slug: publix-super-markets-inc) per FL
+      DoE contributions table. Prior anchor used slug publix-super-markets
+      which does not exist in donors table. Publix Supermarkets Inc and
+      Publix (alt slugs) add ~$1M. $22M live sum as of 2026-04-17.
 
   - entity_type: donor
-    entity_slug: us-sugar-corporation
+    entity_slug: united-states-sugar-corporation
     anchor_metric: total_contributions
-    anchor_value: 25000000
+    anchor_value: 38000000
     anchor_year: null
     tolerance_pct: 15.00
     source_citation: |
-      U.S. Sugar Corp + United States Sugar Corp state political
-      contributions (FL DoE). Known heavy-hitter in agriculture /
-      water-policy lobbying.
+      United States Sugar Corporation (slug: united-states-sugar-
+      corporation) — the primary registered entity in FL DoE. $38.7M
+      live sum as of 2026-04-17. U.S. Sugar Corporation (slug:
+      us-sugar-corporation) is a separate entry ($16.7M); combined
+      total across both entities ~$55M. Prior anchor pointed at the
+      smaller us-sugar-corporation slug.
 
   # ── Committees (per-account) ────────────────────────────────────────────────
   - entity_type: committee
