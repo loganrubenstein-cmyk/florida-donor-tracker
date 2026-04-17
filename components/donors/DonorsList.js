@@ -264,20 +264,24 @@ export default function DonorsList() {
                     <a href={`/donor/${d.slug}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
                       {d.name}
                     </a>
-                    <a
-                      href={`/explorer?donor_slug=${d.slug}`}
-                      style={{ marginLeft: '0.4rem', fontSize: '0.58rem', color: 'var(--text-dim)', textDecoration: 'none', verticalAlign: 'middle' }}
-                      title="View contributions in explorer"
-                    >
-                      ↗
-                    </a>
-                    <a
-                      href={`/follow?donor=${d.slug}`}
-                      style={{ marginLeft: '0.4rem', fontSize: '0.58rem', color: 'var(--teal)', textDecoration: 'none', verticalAlign: 'middle', opacity: 0.75 }}
-                      title="Follow this donor's money"
-                    >
-                      follow
-                    </a>
+                    {d.name !== 'STATE OF FLORIDA' && (
+                      <>
+                        <a
+                          href={`/explorer?donor_slug=${d.slug}`}
+                          style={{ marginLeft: '0.4rem', fontSize: '0.58rem', color: 'var(--text-dim)', textDecoration: 'none', verticalAlign: 'middle' }}
+                          title="View contributions in explorer"
+                        >
+                          ↗
+                        </a>
+                        <a
+                          href={`/follow?donor=${d.slug}`}
+                          style={{ marginLeft: '0.4rem', fontSize: '0.58rem', color: 'var(--teal)', textDecoration: 'none', verticalAlign: 'middle', opacity: 0.75 }}
+                          title="Follow this donor's money"
+                        >
+                          follow
+                        </a>
+                      </>
+                    )}
                     {d.has_lobbyist_link && (
                       <span style={{
                         marginLeft: '0.4rem', fontSize: '0.58rem', color: 'var(--blue)',
@@ -285,7 +289,11 @@ export default function DonorsList() {
                         padding: '0.05rem 0.25rem', verticalAlign: 'middle',
                       }}>LOBBY</span>
                     )}
-                    {d.industry && d.industry !== 'Not Employed' && d.industry !== 'Other' && (
+                    {d.name === 'STATE OF FLORIDA' ? (
+                      <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', marginTop: '0.1rem' }}>
+                        Public campaign matching funds — not a private donor
+                      </div>
+                    ) : d.industry && d.industry !== 'Not Employed' && d.industry !== 'Other' && (
                       <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', marginTop: '0.1rem' }}>
                         {d.industry}
                       </div>
