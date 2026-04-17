@@ -141,6 +141,12 @@ export default async function LegislaturePage() {
           <div className="hub-card-desc">Browse by industry or party to see which sectors fund which legislators most. Multi-column drill-down.</div>
           <div className="hub-card-stat">Industry · Party · Committee · Donor</div>
         </Link>
+
+        <Link href="/solicitations" className="hub-card">
+          <div className="hub-card-title">Public Solicitations</div>
+          <div className="hub-card-desc">Organizations registered to solicit political contributions in Florida — cross-reference donors and committees.</div>
+          <div className="hub-card-stat">FL Division of Elections registry</div>
+        </Link>
       </div>
 
       {/* Industry funding breakdown */}
