@@ -10,19 +10,6 @@ import { fmtMoney, fmtMoneyCompact, fmtCount } from '@/lib/fmt';
 
 const SpendTrendChart = dynamic(() => import('@/components/candidate/QuarterlyChart'), { ssr: false });
 
-const INDUSTRY_SLUG = {
-  'Healthcare':                 'healthcare',
-  'Finance & Insurance':        'finance-insurance',
-  'Legal':                      'legal',
-  'Real Estate':                'real-estate',
-  'Education':                  'education',
-  'Construction':               'construction',
-  'Agriculture':                'agriculture',
-  'Retail & Hospitality':       'retail-hospitality',
-  'Business & Consulting':      'business-consulting',
-  'Government & Public Service':'government-public-service',
-  'Political / Lobbying':       'political-lobbying',
-};
 
 function StatBox({ label, value, sub, color }) {
   return (
@@ -74,7 +61,7 @@ export default function PrincipalProfile({ data, compData = null }) {
 
   const location     = [data.city, data.state].filter(Boolean).join(', ');
   const industry     = data.industry && data.industry !== 'Other' ? data.industry : null;
-  const industrySlug = industry ? INDUSTRY_SLUG[industry] : null;
+  const industrySlug = industry ? slugify(industry) : null;
 
   // Aggregate quarterly comp data by year for trend chart
   const annualSpend = compData?.by_quarter?.length > 0

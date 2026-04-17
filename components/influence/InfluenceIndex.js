@@ -6,6 +6,7 @@ import BackLinks from '@/components/BackLinks';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import MoneyLens from '@/components/shared/MoneyLens';
 import { fmtMoneyCompact as fmtCompact } from '@/lib/fmt';
+import { slugify } from '@/lib/slugify';
 
 const SORT_OPTIONS = [
   { value: 'total',  label: 'Total Influence' },
@@ -243,7 +244,10 @@ export default function InfluenceIndex() {
                     </Link>
                   </td>
                   <td style={{ padding: '0.5rem 0.75rem' }}>
-                    <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>{org.industry || '—'}</span>
+                    {org.industry
+                      ? <Link href={`/industry/${slugify(org.industry)}`} style={{ fontSize: '0.72rem', color: 'var(--text-dim)', textDecoration: 'none' }}>{org.industry}</Link>
+                      : <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>—</span>
+                    }
                   </td>
                   <td style={{ padding: '0.5rem 0.75rem', textAlign: 'center' }}>
                     <SplitBar donate={donate} lobby={lobby} />
