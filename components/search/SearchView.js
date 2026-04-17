@@ -59,7 +59,7 @@ export default function SearchView() {
   useEffect(() => {
     fetch('/data/search_index_meta.json')
       .then(r => r.json())
-      .then(data => { setMetaIndex(data); })
+      .then(data => { setMetaIndex(data.filter(e => e.n)); })
       .catch(() => setMetaIndex([]));
   }, []);
 

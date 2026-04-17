@@ -345,6 +345,7 @@ export default function IndustryProfile({ data, totalAmount, trendData, topDonor
     <div style={{ paddingTop: '1.25rem' }}>
       <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
         {[
+          { label: 'Influence Index →', href: `/influence?industry=${encodeURIComponent(data.industry)}` },
           { label: 'Dark Money Scoreboard →', href: '/transparency' },
           { label: 'Find Donor Overlap →', href: '/compare' },
           { label: 'All Industries →', href: '/industries' },

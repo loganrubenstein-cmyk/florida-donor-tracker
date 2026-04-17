@@ -134,6 +134,8 @@ export default async function IEPage({ searchParams }) {
       <div style={{ marginBottom: '0.5rem', fontSize: '0.72rem', color: 'var(--text-dim)' }}>
         <Link href="/" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Home</Link>
         {' / '}
+        <Link href="/committees" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Committees</Link>
+        {' / '}
         <span>Independent Expenditures</span>
       </div>
 
