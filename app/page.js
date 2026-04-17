@@ -314,6 +314,7 @@ export default async function Home() {
               <CardLink href="/lobbyists" color="var(--blue)" accent="rgba(160,192,255,0.15)" title="→ lobbyists" desc="2,473 registered FL lobbyists, their clients, their bills, and their campaign donations." />
               <CardLink href="/principals" color="var(--green)" accent="rgba(128,255,160,0.2)" title="→ principals" desc="Lobbying clients matched to their campaign contributions — see the full spend." />
               <CardLink href="/lobbying/bills" color="var(--blue)" accent="rgba(160,192,255,0.1)" title="→ lobbied bills" desc="14K FL House bills tagged by lobbying activity 2017–2026. Who pushed what." />
+              <CardLink href="/solicitations" color="var(--teal)" accent="rgba(77,216,240,0.1)" title="→ solicitations" desc="Organizations registered to solicit political contributions in Florida. Cross-reference donors and committees." />
               <CardLink href="/influence" color="var(--orange)" accent="rgba(255,176,96,0.2)" title="→ influence index" desc="Orgs ranked by combined lobbying + donations. The most comprehensive political spending index in FL." highlight />
             </div>
           </div>
