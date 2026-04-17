@@ -27,10 +27,34 @@ if not DB_URL:
 
 QUARTER_LABELS = {1: "Jan–Mar", 2: "Apr–Jun", 3: "Jul–Sep", 4: "Oct–Dec"}
 
+# Legal-suffix suffixes stripped before slug comparison so punctuation
+# variants ("Colodny Fass" vs "Colodny Fass, P.A.") share the same slug.
+_LEGAL_SUFFIXES = r'\s*,?\s*(P\.?A\.?|P\.?L\.?|P\.?L\.?L\.?C\.?|L\.?L\.?C\.?|Inc\.?|Incorporated|Corp\.?|Corporation)\s*$'
 
-def slugify(s):
-    s = s.lower().strip()
-    s = re.sub(r'[^a-z0-9]+', '-', s)
+# SQL expression: normalizes firm_name → comparable slug
+# 1. strip trailing legal suffixes (case-insensitive)
+# 2. strip all dots
+# 3. replace non-alphanum runs with '-'
+# 4. trim leading/trailing '-'
+_FIRM_SLUG_EXPR = (
+    "TRIM('-' FROM LOWER(REGEXP_REPLACE("
+    "REGEXP_REPLACE("
+    "REGEXP_REPLACE(TRIM({col}), '{suf}', '', 'gi'),"
+    "'\\.', '', 'g'),"
+    "'[^a-zA-Z0-9]+', '-', 'g')))"
+).format(col="{col}", suf=_LEGAL_SUFFIXES.replace("'", "''"))
+
+
+def _slug_expr(col: str) -> str:
+    """Return a SQL slug expression for the given column reference."""
+    return _FIRM_SLUG_EXPR.replace("{col}", col)
+
+
+def slugify(s: str) -> str:
+    s = s.strip()
+    s = re.sub(_LEGAL_SUFFIXES, '', s, flags=re.IGNORECASE)
+    s = re.sub(r'\.', '', s)
+    s = re.sub(r'[^a-z0-9]+', '-', s.lower())
     return s.strip('-')[:120]
 
 
@@ -66,10 +90,10 @@ def main() -> int:
             num_years SMALLINT DEFAULT 0
         )
     """)
-    cur.execute("""
+    cur.execute(f"""
         WITH firm_agg AS (
             SELECT
-                LOWER(REGEXP_REPLACE(TRIM(firm_name), '[^a-zA-Z0-9]+', '-', 'g')) AS slug,
+                {_slug_expr('firm_name')} AS slug,
                 firm_name,
                 SUM(comp_midpoint) AS total_comp,
                 COUNT(DISTINCT principal_name) AS num_principals,
@@ -117,10 +141,10 @@ def main() -> int:
             total_comp NUMERIC(14,2) DEFAULT 0
         )
     """)
-    cur.execute("""
+    cur.execute(f"""
         INSERT INTO lobbying_firm_quarters (firm_slug, year, quarter, period, branch, total_comp)
         SELECT
-            LOWER(REGEXP_REPLACE(TRIM(firm_name), '[^a-zA-Z0-9]+', '-', 'g')),
+            {_slug_expr('firm_name')},
             year,
             quarter,
             year || ' Q' || quarter,
@@ -150,12 +174,12 @@ def main() -> int:
             last_year SMALLINT
         )
     """)
-    cur.execute("""
+    cur.execute(f"""
         INSERT INTO lobbying_firm_clients (firm_slug, principal_name, principal_slug, total_comp, first_year, last_year)
         SELECT
-            LOWER(REGEXP_REPLACE(TRIM(firm_name), '[^a-zA-Z0-9]+', '-', 'g')),
+            {_slug_expr('firm_name')},
             principal_name,
-            LOWER(REGEXP_REPLACE(TRIM(principal_name), '[^a-zA-Z0-9]+', '-', 'g')),
+            {_slug_expr('principal_name')},
             SUM(comp_midpoint),
             MIN(year),
             MAX(year)
