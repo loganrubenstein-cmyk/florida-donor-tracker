@@ -131,7 +131,7 @@ export default async function Home() {
           maxWidth: '540px',
           lineHeight: 1.75,
         }}>
-          22 million transactions. 883,000 donors. Billions in PAC money.
+          22 million transactions. 883,000 deduped donors. Billions in PAC money.
           The most complete picture of Florida political finance — free, searchable, and built from public records.
         </p>
 
@@ -235,7 +235,7 @@ export default async function Home() {
         <div className="rg-4" style={{ gap: '1.5rem' }}>
           {[
             { rawValue: meta.grand_totals?.total_political_spending_tracked ?? 0, format: 'billions', label: 'total political spending tracked', color: 'var(--orange)', lens: true },
-            { rawValue: meta.campaign_finance?.total_donors ?? 0,                  format: 'count',    label: 'donor profiles',                color: 'var(--teal)'   },
+            { rawValue: meta.campaign_finance?.total_donors ?? 0,                  format: 'count',    label: 'deduped donor profiles',        color: 'var(--teal)'   },
             { rawValue: meta.committees?.total_committees ?? 0,                    format: 'count',    label: 'committees tracked',            color: 'var(--green)'  },
             { rawValue: meta.candidates?.total_candidates ?? 0,                    format: 'count',    label: 'candidates tracked',            color: 'var(--blue)'   },
           ].map(({ rawValue, format, label, color, lens }) => (
@@ -308,7 +308,7 @@ export default async function Home() {
               Who gave
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <CardLink href="/donors" color="var(--orange)" accent="rgba(255,176,96,0.2)" title="→ donors" desc="883K deduped donor profiles. Search by name, see total giving across all committees and candidates." />
+              <CardLink href="/donors" color="var(--orange)" accent="rgba(255,176,96,0.2)" title="→ donors" desc="883K deduped donor profiles — all-time FL campaign contributors. Directory shows donors with ≥$1K total." />
               <CardLink href="/explorer" color="var(--orange)" accent="rgba(255,176,96,0.35)" title="→ transaction explorer" desc="Every contribution row — filter by name, amount, date, or recipient." highlight />
               <CardLink href="/industries" color="var(--blue)" accent="rgba(160,192,255,0.15)" title="→ industries" desc="Which sectors — Legal, Real Estate, Healthcare — fund which candidates and how much." />
               <CardLink href="/lobbyists" color="var(--blue)" accent="rgba(160,192,255,0.15)" title="→ lobbyists" desc="2,473 registered FL lobbyists, their clients, their bills, and their campaign donations." />
