@@ -190,7 +190,7 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
 
   const researchLinks = [
     { label: 'Fundraising Timeline →', href: `/timeline?acct=${data.acct_num}`, internal: true },
-    { label: 'Find Donor Overlap →', href: `/compare`, internal: true },
+    { label: 'Find Donor Overlap →', href: `/compare?a=${data.acct_num}`, internal: true },
     { label: 'FL DOE Candidate Page →', href: `https://dos.elections.myflorida.com/candidates/CanDetail.asp?account=${data.acct_num}` },
     { label: 'Campaign Finance Activity →', href: `https://dos.elections.myflorida.com/cgi-bin/TreSel.exe?account=${data.acct_num}` },
     { label: 'Google News →', href: `https://news.google.com/search?q=${encodeURIComponent((data.candidate_name || '') + ' Florida')}` },
