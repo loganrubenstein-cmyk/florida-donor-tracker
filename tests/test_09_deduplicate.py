@@ -80,27 +80,27 @@ def _stats(*names):
 
 def test_fuzzy_cluster_does_not_merge_different_individuals():
     stats = _stats("JOHN SMITH", "JOHN DOE")
-    auto, _ = fuzzy_cluster(stats, {}, set())
+    auto, *_ = fuzzy_cluster(stats, {}, set())
     assert auto == []
 
 def test_fuzzy_cluster_does_not_merge_long_vs_short_individual():
     stats = _stats("JOHN SMITH", "JOHN WILLIAM SMITH")
-    auto, _ = fuzzy_cluster(stats, {}, set())
+    auto, *_ = fuzzy_cluster(stats, {}, set())
     assert auto == []
 
 def test_fuzzy_cluster_merges_corporate_punctuation_variants():
     stats = _stats("TECO ENERGY INC", "TECO ENERGY INC.")
-    auto, _ = fuzzy_cluster(stats, {}, set())
+    auto, *_ = fuzzy_cluster(stats, {}, set())
     assert len(auto) == 1
     assert set(auto[0]) == {"TECO ENERGY INC", "TECO ENERGY INC."}
 
 def test_fuzzy_cluster_merges_exact_duplicate_with_trailing_period():
     stats = _stats("SMITH JOHN A", "SMITH JOHN A.")
-    auto, _ = fuzzy_cluster(stats, {}, set())
+    auto, *_ = fuzzy_cluster(stats, {}, set())
     assert len(auto) == 1
 
 def test_fuzzy_cluster_skips_pre_assigned():
     stats = _stats("TECO ENERGY INC", "TECO ENERGY INC.")
-    auto, _ = fuzzy_cluster(stats, {}, {"TECO ENERGY INC"})
+    auto, *_ = fuzzy_cluster(stats, {}, {"TECO ENERGY INC"})
     # pre_assigned names are excluded from clustering
     assert auto == []
