@@ -20,7 +20,7 @@ const TOOLS = [
     badge: 'New',
   },
   {
-    href: '/decoder',
+    href: '/decode',
     title: 'Committee Decoder',
     desc: 'Decode any Florida political committee: who controls it, who funds it, and how it connects to candidates.',
     accent: 'var(--blue)',
