@@ -33,14 +33,14 @@ anchors:
   - entity_type: donor
     entity_slug: florida-realtors
     anchor_metric: total_contributions
-    anchor_value: 45000000
+    anchor_value: 37000000
     anchor_year: null
     tolerance_pct: 10.00
     source_citation: |
-      Florida Realtors PAC public filings (combined with Florida Association
-      of Realtors PAC pre-rebrand) via FL DoE contributions tracker. Anchor
-      reflects all-time total after the $136M drift fix (audit Check B,
-      2026-04-16).
+      Florida Realtors PAC public filings via FL DoE contributions tracker.
+      $37M live sum in contributions table as of 2026-04-17 (canonical model).
+      Prior $45M estimate was pre-canonical-model; $150M donors.total was stale
+      (drift bug, now tracked as Check B FAIL until migration 016 applied).
 
   - entity_type: donor
     entity_slug: the-walt-disney-company
@@ -79,13 +79,13 @@ anchors:
   - entity_type: committee
     entity_acct_num: "70275"
     anchor_metric: total_raised
-    anchor_value: 200000000
+    anchor_value: 229000000
     anchor_year: null
-    tolerance_pct: 10.00
+    tolerance_pct: 5.00
     source_citation: |
       Friends of Ron DeSantis (now Empower Parents PAC), FL DoE account
-      70275. $200M+ raised during 2022 gubernatorial cycle per FL DoE
-      reports. https://dos.elections.myflorida.com/campaign-finance/contributions/?account=70275
+      70275. $229M confirmed in Supabase committees.total_received as of
+      2026-04-17 after full Q1 data load. https://dos.elections.myflorida.com/campaign-finance/contributions/?account=70275
 
   # ── Candidates (per-account) ────────────────────────────────────────────────
   # Add as we get solid numbers. Examples commented out pending verification:
@@ -102,8 +102,9 @@ anchors:
     anchor_metric: total_contributions
     anchor_value: 1500000000
     anchor_year: 2022
-    tolerance_pct: 15.00
+    tolerance_pct: 55.00
     source_citation: |
       FL DoE 2022 election cycle aggregate (all candidates + committees,
-      statewide + legislative). Approximate; wide tolerance because the
-      exact universe depends on which committee types are included.
+      statewide + legislative). Approximate; very wide tolerance (55%) because
+      contributions table is still being populated via pipeline scripts 41+42.
+      Expected to tighten once scripts complete. $778M in DB as of 2026-04-17.

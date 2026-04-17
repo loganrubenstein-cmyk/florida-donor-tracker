@@ -345,22 +345,24 @@ def check_k_former_name_coverage(cur):
 
 
 def check_l_solicitation_unmatched(cur):
-    """L — solicitation orgs that didn't match any committee name."""
-    _header("L", "Solicitation orgs with no matching committee")
-    if not _table_exists(cur, "committee_solicitations"):
-        return CheckResult("L_solicitation_unmatched", "PASS", "no solicitations table", {})
+    """L — solicitation edges that produced a stub (no committee match found)."""
+    _header("L", "Solicitation stubs: edges with no matched committee acct_num")
+    if not _table_exists(cur, "candidate_pc_edges"):
+        return CheckResult("L_solicitation_unmatched", "PASS", "no edges table", {})
     cur.execute("""
-        SELECT DISTINCT organization
-        FROM committee_solicitations
-        WHERE acct_num IS NULL
-          AND organization IS NOT NULL
-          AND organization <> ''
+        SELECT pc_name, COUNT(*) AS n_stubs
+        FROM candidate_pc_edges
+        WHERE source_type IN ('solicitation_index', 'solicitation_csv')
+          AND (pc_acct_num IS NULL OR pc_acct_num = '')
+          AND is_publishable = true
+        GROUP BY pc_name
+        ORDER BY n_stubs DESC
         LIMIT 100
     """)
     rows = [dict(r) for r in cur.fetchall()]
     status = "WARN" if rows else "PASS"
     return CheckResult("L_solicitation_unmatched", status,
-                       f"{len(rows)} solicitations have no matched committee",
+                       f"{len(rows)} solicitation orgs produced stubs (no committee match)",
                        {"rows": rows[:30]})
 
 
