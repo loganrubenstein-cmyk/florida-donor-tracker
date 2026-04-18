@@ -26,8 +26,12 @@ export default function CommitteeConnections({ acctNum }) {
     </div>
   );
   if (connections.length === 0) return (
-    <div style={{ color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.75rem', padding: '1rem 0' }}>
-      No coordination signals found for this committee.
+    <div style={{ color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.75rem', padding: '1rem 0', lineHeight: 1.6, maxWidth: '640px' }}>
+      No coordination signals found.
+      <br />
+      <span style={{ fontSize: '0.68rem', opacity: 0.8 }}>
+        Connections are detected by matching shared treasurers, chairs, or registered addresses across committees. Party committees, statewide PACs, and committees with generic filers (e.g. national treasurer services) rarely show these signals. Try the <a href="/connections" style={{ color: 'var(--teal)', textDecoration: 'none' }}>Committee Connections explorer</a> for the full graph.
+      </span>
     </div>
   );
 

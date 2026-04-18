@@ -1,5 +1,6 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { notFound } from 'next/navigation';
 import IndustryProfile from '@/components/industries/IndustryProfile';
 import { slugify } from '@/lib/slugify';
 import { getDb } from '@/lib/db';
@@ -51,6 +52,8 @@ export default async function IndustryPage({ params }) {
   const trends = loadTrends();
   const topDonors = loadIndustryDonors(slug);
   const ind = summary.industries.find(i => slugify(i.industry) === slug);
+
+  if (!ind) notFound();
 
   let topLegislators = [];
   if (ind?.industry) {
