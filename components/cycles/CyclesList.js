@@ -44,7 +44,10 @@ export default function CyclesList() {
       <BackLinks links={[{ href: '/', label: 'home' }, { href: '/elections', label: 'elections' }, { href: '/party-finance', label: 'party finance' }]} />
 
       <SectionHeader title="Election Cycles" eyebrow="Florida · 2008–present" />
-      <div style={{ fontSize: '0.82rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap', marginTop: '-0.75rem', marginBottom: '1.25rem' }}>
+      <p style={{ fontSize: '0.78rem', color: 'var(--text-dim)', lineHeight: 1.6, maxWidth: '520px', marginTop: '-0.5rem', marginBottom: '0.75rem' }}>
+        Compare campaign finance across every Florida election cycle since 2008. See which cycles had the most spending, which candidates dominated, and how the money has shifted over time.
+      </p>
+      <div style={{ fontSize: '0.82rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap', marginBottom: '1.25rem' }}>
         <span>{cycles.length} election cycles tracked</span>
         <span style={{ color: 'var(--orange)', fontWeight: 700 }}>{fmt(grandTotal)} total</span>
         <span>Florida candidates · 2008–present</span>

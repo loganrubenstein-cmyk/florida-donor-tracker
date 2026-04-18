@@ -31,15 +31,22 @@ export default function DidYouKnow() {
   }, []);
 
   return (
-    <div style={{ borderTop: '1px solid rgba(100,140,220,0.08)', paddingTop: '0.85rem', marginTop: '0.85rem' }}>
-      <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.3rem' }}>
+    <div style={{
+      borderTop: '1px solid rgba(100,140,220,0.08)',
+      paddingTop: '1rem', marginTop: '0.5rem',
+      maxWidth: '600px',
+    }}>
+      <div style={{
+        fontSize: '0.66rem', color: 'var(--text-dim)',
+        textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.4rem',
+      }}>
         Did you know
       </div>
       <div style={{
-        fontSize: '0.72rem', color: 'rgba(200,216,240,0.65)', lineHeight: 1.65,
+        fontSize: '0.88rem', color: 'rgba(200,216,240,0.75)', lineHeight: 1.7,
         opacity: visible ? 1 : 0,
         transition: 'opacity 0.35s ease',
-        minHeight: '2.4em',
+        minHeight: '3rem',
       }}>
         {FACTS[idx]}
       </div>

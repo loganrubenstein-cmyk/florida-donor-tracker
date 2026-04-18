@@ -3,7 +3,7 @@ import SectionHeader from '@/components/shared/SectionHeader';
 
 export const metadata = {
   title: 'Methodology',
-  description: 'How Florida Donor Tracker collects, normalizes, classifies, and presents campaign finance data.',
+  description: 'How Florida Influence collects, normalizes, classifies, and presents campaign finance data.',
 };
 
 const Section = ({ title, children }) => (
@@ -28,9 +28,9 @@ export default function MethodologyPage() {
         <span>Methodology</span>
       </div>
 
-      <SectionHeader title="Methodology" eyebrow="Florida Donor Tracker · Data Methods" />
+      <SectionHeader title="Methodology" eyebrow="Florida Influence · Data Methods" />
       <p style={{ color: 'var(--text-dim)', fontSize: '0.85rem', lineHeight: 1.6, marginBottom: '2.5rem' }}>
-        Florida Donor Tracker ingests public records from the Florida Division of Elections and Lobbyist Registration Office,
+        Florida Influence ingests public records from the Florida Division of Elections and Lobbyist Registration Office,
         normalizes them, and builds a unified index of donors, candidates, committees, and lobbyist relationships.
         This page documents every transformation applied to that data and its confidence level.
       </p>

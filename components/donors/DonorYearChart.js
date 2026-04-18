@@ -43,12 +43,12 @@ export default function DonorYearChart({ data }) {
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.06)" />
           <XAxis
             dataKey="year"
-            tick={{ fill: 'var(--text-dim)', fontSize: 10, fontFamily: 'var(--font-mono)' }}
+            tick={{ fill: '#5a6a88', fontSize: 10, fontFamily: 'var(--font-mono)' }}
             axisLine={false} tickLine={false}
           />
           <YAxis
             tickFormatter={fmtAxis}
-            tick={{ fill: 'var(--text-dim)', fontSize: 10, fontFamily: 'var(--font-mono)' }}
+            tick={{ fill: '#5a6a88', fontSize: 10, fontFamily: 'var(--font-mono)' }}
             axisLine={false} tickLine={false} width={52}
           />
           <Tooltip content={<CustomTooltip />} />

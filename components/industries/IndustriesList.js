@@ -68,12 +68,23 @@ export default function IndustriesList() {
 
       {/* Header */}
       <div style={{ marginBottom: '1.5rem' }}>
-        <h1 style={{
-          fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.4rem, 3vw, 2rem)',
-          fontWeight: 400, color: 'var(--text)', marginBottom: '0.4rem',
+        <div style={{
+          display: 'inline-block', fontSize: '0.6rem', textTransform: 'uppercase',
+          letterSpacing: '0.13em', padding: '0.28rem 0.7rem', borderRadius: '2px',
+          marginBottom: '0.75rem', border: '1px solid rgba(160,192,255,0.3)',
+          background: 'rgba(160,192,255,0.06)', color: 'var(--blue)',
         }}>
           Industries
+        </div>
+        <h1 style={{
+          fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.4rem, 3vw, 2rem)',
+          fontWeight: 400, color: 'var(--text)', marginBottom: '0.3rem',
+        }}>
+          Which industries own Florida politics?
         </h1>
+        <p style={{ fontSize: '0.78rem', color: 'var(--text-dim)', lineHeight: 1.6, maxWidth: '520px', marginBottom: '0.75rem' }}>
+          Campaign contributions broken down by sector — real estate, healthcare, agriculture, energy, and more. See which industries give the most, which candidates they fund, and how spending has shifted over 30 years.
+        </p>
         <div style={{ fontSize: '0.82rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
           <span style={{ color: 'var(--orange)', fontWeight: 700 }}>{fmt(total_amount)}</span>
           <span>in direct (hard money) contributions</span>

@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
-export const alt = 'Florida Donor Tracker';
+export const alt = 'Florida Influence';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -15,7 +15,7 @@ export default function Image() {
         borderTop: '6px solid #ffb060',
       }}>
         <div style={{ color: '#ffb060', fontSize: 64, fontWeight: 700, letterSpacing: '0.02em' }}>
-          Florida Donor Tracker
+          Florida Influence
         </div>
         <div style={{ color: '#5a6a88', fontSize: 32, marginTop: 24 }}>
           Follow the money in Florida politics

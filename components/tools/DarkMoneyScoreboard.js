@@ -29,11 +29,14 @@ export default function DarkMoneyScoreboard() {
         <span>Dark Money Scoreboard</span>
       </div>
       <div style={{ marginBottom: '1.5rem' }}>
-        <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.6rem', color: 'var(--orange)', margin: 0 }}>
+        <div style={{ fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.13em', color: 'var(--gold)', marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
+          Dark Money
+        </div>
+        <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.6rem', color: 'var(--text)', margin: 0 }}>
           Dark Money Scoreboard
         </h1>
-        <p style={{ color: 'var(--text-dim)', fontSize: '0.78rem', marginTop: '0.35rem' }}>
-          Ranking Florida political committees by transparency — the ratio of identifiable individual donors vs. corporate and PAC money.
+        <p style={{ color: 'var(--text-dim)', fontSize: '0.78rem', marginTop: '0.35rem', maxWidth: '520px', lineHeight: 1.6 }}>
+          Florida political committees ranked by transparency. The lower the score, the more their funding comes from PACs and corporations rather than identifiable individuals — a signal of coordinated dark money networks.
         </p>
       </div>
 
@@ -151,7 +154,7 @@ function ScoreRow({ committee: c, rank, sortMode }) {
       <span style={{ color: 'var(--text-dim)', fontSize: '0.65rem', fontFamily: 'var(--font-mono)' }}>{rank}</span>
       <div style={{ overflow: 'hidden' }}>
         <Link href={`/committee/${c.acct_num}`} style={{
-          color: 'var(--text)', textDecoration: 'none', fontSize: '0.72rem',
+          color: 'var(--teal)', textDecoration: 'none', fontSize: '0.72rem',
           display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
         }}>
           {c.name}

@@ -358,7 +358,7 @@ function DecodeResult({ data }) {
               return (
                 <div key={i} style={{ marginBottom: '0.5rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', marginBottom: '0.15rem' }}>
-                    <Link href={`/industry/${slugify(ind.industry)}`} style={{ color: 'var(--text)', textDecoration: 'none' }}>{ind.industry}</Link>
+                    <Link href={`/industry/${slugify(ind.industry)}`} style={{ color: 'var(--blue)', textDecoration: 'none' }}>{ind.industry}</Link>
                     <span style={{ color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.65rem' }}>
                       {fmt(ind.total)}
                     </span>

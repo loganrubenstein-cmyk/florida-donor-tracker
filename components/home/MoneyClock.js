@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 
-// $3.894B tracked over 30 years (1996–2026) ≈ $1.50/sec
 const RATE = 3_894_316_430 / (30 * 365.25 * 24 * 3600);
 
 export default function MoneyClock() {
@@ -18,13 +17,25 @@ export default function MoneyClock() {
 
   return (
     <div style={{
-      fontSize: '0.62rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)',
-      marginTop: '0.6rem', letterSpacing: '0.01em',
+      border: '1px solid rgba(255,176,96,0.18)',
+      background: 'rgba(255,176,96,0.03)',
+      borderRadius: '3px',
+      padding: '0.75rem 1rem',
+      marginBottom: '1.5rem',
+      maxWidth: '520px',
     }}>
-      Since you opened this page, FL politicians have raised approximately{' '}
-      <span style={{ color: 'var(--orange)', fontWeight: 700 }}>
-        ${dollars.toLocaleString()}
-      </span>
+      <div style={{
+        fontSize: '0.6rem', color: 'var(--text-dim)',
+        textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.4rem',
+      }}>
+        Live · Since you opened this page
+      </div>
+      <div style={{ fontSize: '0.88rem', lineHeight: 1.5, color: 'var(--text)' }}>
+        FL politicians have raised approximately{' '}
+        <span style={{ color: 'var(--orange)', fontWeight: 700, fontSize: '1rem' }}>
+          ${dollars.toLocaleString()}
+        </span>
+      </div>
     </div>
   );
 }

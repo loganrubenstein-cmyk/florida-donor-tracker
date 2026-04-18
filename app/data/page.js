@@ -3,7 +3,7 @@ import SectionHeader from '@/components/shared/SectionHeader';
 
 export const metadata = {
   title: 'Data',
-  description: 'Data dictionary, coverage notes, sources, and methodology for Florida Donor Tracker.',
+  description: 'Data dictionary, coverage notes, sources, and methodology for Florida Influence.',
 };
 
 export default function DataHub() {
@@ -15,7 +15,7 @@ export default function DataHub() {
         <span>Data</span>
       </div>
 
-      <SectionHeader title="Data" eyebrow="Florida Donor Tracker · Sources & Coverage" />
+      <SectionHeader title="Data" eyebrow="Florida Influence · Sources & Coverage" />
       <p style={{ color: 'var(--text-dim)', fontSize: '0.88rem', lineHeight: 1.6, marginBottom: '0.25rem' }}>
         Everything you need to understand what this site shows, where it comes from, and what it doesn&apos;t cover.
       </p>

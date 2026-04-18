@@ -45,6 +45,10 @@ const GROUPS = [
   {
     label: 'Tools',
     items: [
+      { href: '/tools',          label: '→ Tools Hub' },
+      { href: '/who-funds',      label: 'Who Funds Your District', badge: 'New' },
+      { href: '/races',          label: 'Races' },
+      { href: '/races/2026',     label: '2026 Money Race',         badge: 'New' },
       { href: '/follow',         label: 'Follow the Money' },
       { href: '/flow',           label: 'Money Flow Explorer' },
       { href: '/compare',        label: 'Candidate Compare' },
@@ -54,6 +58,7 @@ const GROUPS = [
       { href: '/transparency',   label: 'Dark Money Score' },
       { href: '/map',            label: 'Geographic Map' },
     ],
+    extra: ['/who-funds', '/races/'],
   },
   {
     label: 'Lobbying',
@@ -183,8 +188,14 @@ export default function NavLinks() {
                     key={item.href}
                     href={item.href}
                     className={isItemActive(item.href, pathname) ? 'nav-dropdown-item active' : 'nav-dropdown-item'}
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem' }}
                   >
-                    {item.label}
+                    <span>{item.label}</span>
+                    {item.badge && (
+                      <span style={{ fontSize: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.06em', background: 'rgba(128,255,160,0.12)', color: 'var(--green)', padding: '0.1rem 0.35rem', borderRadius: '2px', flexShrink: 0 }}>
+                        {item.badge}
+                      </span>
+                    )}
                   </Link>
                 ))}
               </div>

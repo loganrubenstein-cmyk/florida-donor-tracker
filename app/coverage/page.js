@@ -3,7 +3,7 @@ import SectionHeader from '@/components/shared/SectionHeader';
 
 export const metadata = {
   title: 'Coverage & Limits',
-  description: 'What data is included in Florida Donor Tracker, what years are covered, and what is missing.',
+  description: 'What data is included in Florida Influence, what years are covered, and what is missing.',
 };
 
 const StatusBadge = ({ status }) => {
@@ -42,7 +42,7 @@ export default function CoveragePage() {
         <span>Coverage</span>
       </div>
 
-      <SectionHeader title="Coverage & Limits" eyebrow="Florida Donor Tracker · Scope & Caveats" />
+      <SectionHeader title="Coverage & Limits" eyebrow="Florida Influence · Scope & Caveats" />
       <p style={{ color: 'var(--text-dim)', fontSize: '0.85rem', lineHeight: 1.6, marginBottom: '2.5rem' }}>
         What this site covers, what years are included, and what is known to be missing or incomplete.
       </p>

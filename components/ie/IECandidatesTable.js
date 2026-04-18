@@ -150,7 +150,7 @@ export default function IECandidatesTable({ candidates }) {
                     {c.spending_committees.map(sc => (
                       <div key={sc.acct_num} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
                         <Link href={`/committee/${sc.acct_num}`} style={{
-                          fontSize: '0.75rem', color: 'var(--text)', textDecoration: 'none',
+                          fontSize: '0.75rem', color: 'var(--orange)', textDecoration: 'none',
                           overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                         }}>
                           {sc.name}

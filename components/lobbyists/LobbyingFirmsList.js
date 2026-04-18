@@ -214,7 +214,7 @@ export default function LobbyingFirmsList() {
                     {rank}
                   </td>
                   <td style={{ padding: '0.5rem 0.75rem' }}>
-                    <Link href={`/lobbying-firm/${f.slug}`} style={{ color: 'var(--text)', textDecoration: 'none', fontWeight: 500 }}>
+                    <Link href={`/lobbying-firm/${f.slug}`} style={{ color: 'var(--teal)', textDecoration: 'none', fontWeight: 500 }}>
                       {f.firm_name}
                     </Link>
                   </td>

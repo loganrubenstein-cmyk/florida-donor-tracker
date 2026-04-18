@@ -309,7 +309,7 @@ export default function IndustryProfile({ data, totalAmount, trendData, topDonor
             {topLegislators.map(leg => (
               <tr key={leg.people_id} style={{ borderBottom: '1px solid rgba(100,140,220,0.07)' }}>
                 <td style={{ padding: '0.45rem 0.6rem' }}>
-                  <a href={`/legislator/${leg.people_id}`} style={{ color: 'var(--text)', textDecoration: 'none', fontWeight: 500 }}>
+                  <a href={`/legislator/${leg.people_id}`} style={{ color: 'var(--teal)', textDecoration: 'none', fontWeight: 500 }}>
                     {leg.display_name}
                   </a>
                   {leg.acct_num && (

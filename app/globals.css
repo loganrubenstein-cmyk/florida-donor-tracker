@@ -503,6 +503,63 @@ body {
   .tab { padding: 0.6rem 0.85rem; font-size: 0.78rem; }
 }
 
+/* ── Stamp press animation ──────────────────────────────────────────────────── */
+@keyframes stamp-press {
+  0%   { transform: rotate(-1.5deg) scale(1.2); opacity: 0; }
+  55%  { transform: rotate(-1.5deg) scale(0.96); opacity: 1; }
+  80%  { transform: rotate(-1.5deg) scale(1.03); }
+  100% { transform: rotate(-1.5deg) scale(1); opacity: 0.82; }
+}
+
+/* ── Tools hub panel grid (sidebar + list) — collapses on mobile ─────────── */
+.tools-panel {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 2.5rem;
+  margin-bottom: 3rem;
+}
+@media (max-width: 768px) {
+  .tools-panel { grid-template-columns: 1fr; gap: 1.5rem; }
+}
+
+/* ── All-tools flat index ─────────────────────────────────────────────────── */
+.tools-index-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.6rem;
+}
+@media (max-width: 900px) { .tools-index-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .tools-index-grid { grid-template-columns: 1fr 1fr; } }
+
+/* ── Homepage tool tabs ───────────────────────────────────────────────────── */
+.home-tab-bar {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.home-tab-bar::-webkit-scrollbar { display: none; }
+.home-tab-btn {
+  background: none; border: none;
+  font-family: var(--font-mono); font-size: 0.72rem;
+  color: var(--text-dim); padding: 0.55rem 1.25rem 0.6rem;
+  border-bottom: 2px solid transparent; cursor: pointer;
+  margin-bottom: -1px; white-space: nowrap;
+  transition: color 0.12s;
+}
+.home-tab-btn:hover { color: var(--text); }
+.home-tab-btn.ht-active { color: var(--orange); border-bottom-color: var(--orange); }
+
+/* ── Homepage hero 2-col grid ─────────────────────────────────────────────── */
+.hero-2col {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 3.5rem;
+  align-items: start;
+}
+@media (max-width: 860px) { .hero-2col { grid-template-columns: 1fr; } }
+
 /* ── Back-to-top button ─────────────────────────────────────────────────────── */
 .back-to-top {
   position: fixed;

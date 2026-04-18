@@ -1,4 +1,5 @@
 // components/candidate/CandidateProfile.js
+import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import BackLinks from '@/components/BackLinks';
 import TabbedProfile from '@/components/shared/TabbedProfile';

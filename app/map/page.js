@@ -4,7 +4,7 @@ import Link from 'next/link';
 const DonationMap = dynamic(() => import('@/components/map/DonationMap'), { ssr: false });
 
 export const metadata = {
-  title: 'Geographic Donation Map — Florida Donor Tracker',
+  title: 'Geographic Donation Map — Florida Influence',
   description: 'See where Florida political money comes from — top donor cities, states, and in-state vs. out-of-state breakdown.',
 };
 

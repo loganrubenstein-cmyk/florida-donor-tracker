@@ -34,11 +34,11 @@ function FilingsTable({ items }) {
             <td style={{ padding: '0.55rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.72rem', whiteSpace: 'nowrap' }}>{fmtDate(item.date)}</td>
             <td style={{ padding: '0.55rem 0.6rem' }}>
               {item.donor_slug ? (
-                <Link href={`/donor/${item.donor_slug}`} style={{ color: 'var(--text)', textDecoration: 'none' }}>{item.donor_name}</Link>
-              ) : <span style={{ color: 'var(--text-dim)' }}>{item.donor_name}</span>}
+                <Link href={`/donor/${item.donor_slug}`} style={{ color: 'var(--orange)', textDecoration: 'none', fontWeight: 500 }}>{item.donor_name}</Link>
+              ) : <span style={{ color: 'var(--text)' }}>{item.donor_name}</span>}
             </td>
             <td style={{ padding: '0.55rem 0.6rem' }}>
-              <Link href={`/committee/${item.acct_num}`} style={{ color: 'var(--text-dim)', textDecoration: 'none', fontSize: '0.74rem' }}>{item.recipient_name}</Link>
+              <Link href={`/committee/${item.acct_num}`} style={{ color: 'var(--teal)', textDecoration: 'none', fontSize: '0.74rem' }}>{item.recipient_name}</Link>
             </td>
             <td style={{ padding: '0.55rem 0.6rem', color: 'var(--orange)', fontFamily: 'var(--font-mono)', textAlign: 'right', whiteSpace: 'nowrap' }}>{fmtMoney(item.amount)}</td>
             <td style={{ padding: '0.55rem 0.6rem' }}>
@@ -97,7 +97,7 @@ function CycleTable({ items, year }) {
           <tr key={i} style={{ borderBottom: '1px solid var(--border)' }}>
             <td style={{ padding: '0.55rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.72rem' }}>{i + 1}</td>
             <td style={{ padding: '0.55rem 0.6rem' }}>
-              <Link href={`/donor/${item.donor_slug}`} style={{ color: 'var(--text)', textDecoration: 'none' }}>{item.name}</Link>
+              <Link href={`/donor/${item.donor_slug}`} style={{ color: 'var(--orange)', textDecoration: 'none', fontWeight: 500 }}>{item.name}</Link>
             </td>
             <td style={{ padding: '0.55rem 0.6rem', fontSize: '0.7rem', color: 'var(--text-dim)' }}>{item.is_corporate ? 'Corporate' : 'Individual'}</td>
             <td style={{ padding: '0.55rem 0.6rem', color: 'var(--orange)', fontFamily: 'var(--font-mono)', textAlign: 'right' }}>{fmtMoneyCompact(item.total)}</td>

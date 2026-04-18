@@ -239,7 +239,7 @@ export default function InfluenceIndex() {
                     {rank}
                   </td>
                   <td style={{ padding: '0.5rem 0.75rem' }}>
-                    <Link href={`/principal/${org.slug}`} style={{ color: 'var(--text)', textDecoration: 'none', fontWeight: 500 }}>
+                    <Link href={`/principal/${org.slug}`} style={{ color: 'var(--orange)', textDecoration: 'none', fontWeight: 500 }}>
                       {org.name}
                     </Link>
                   </td>

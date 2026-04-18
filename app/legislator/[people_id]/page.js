@@ -70,7 +70,7 @@ export default async function LegislatorPage({ params }) {
                 const roleColor = ROLE_COLOR[m.role];
                 return (
                   <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.4rem 0', borderBottom: i < memberships.length - 1 ? '1px solid rgba(100,140,220,0.07)' : 'none' }}>
-                    <Link href={`/legislature/committee/${encodeURIComponent(m.abbreviation)}`} style={{ color: 'var(--text)', textDecoration: 'none', fontSize: '0.78rem' }}>
+                    <Link href={`/legislature/committee/${encodeURIComponent(m.abbreviation)}`} style={{ color: 'var(--teal)', textDecoration: 'none', fontSize: '0.78rem' }}>
                       {m.legislative_committees?.name || m.abbreviation}
                     </Link>
                     {m.role !== 'Member' && (

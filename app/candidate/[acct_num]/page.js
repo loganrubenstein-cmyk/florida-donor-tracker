@@ -30,7 +30,7 @@ export async function generateMetadata({ params }) {
     const polSlug = slugify(name);
     const hasPoliticianPage = getPoliticianBySlug(polSlug) !== null;
     const canonical = hasPoliticianPage
-      ? `https://florida-donor-tracker.vercel.app/politician/${polSlug}?cycle=${acct_num}`
+      ? `https://floridainfluence.com/politician/${polSlug}?cycle=${acct_num}`
       : undefined;
     const { fmtMoneyCompact } = await import('@/lib/fmt');
     const party = data.party || '';

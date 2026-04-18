@@ -30,7 +30,7 @@ export default async function IndustryPeers({ industry, currentSlug }) {
             padding: '0.3rem 0.5rem', borderRadius: '3px',
           }}>
             <Link href={`/donor/${d.slug}`} style={{
-              fontSize: '0.72rem', color: 'var(--text)', textDecoration: 'none',
+              fontSize: '0.72rem', color: 'var(--orange)', textDecoration: 'none',
               overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1,
             }}>
               {d.name}

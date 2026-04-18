@@ -88,7 +88,7 @@ export default async function LobbyingHub() {
                         {i + 1}
                       </td>
                       <td style={{ padding: '0.5rem 0.75rem' }}>
-                        <Link href={`/lobbying-firm/${firm.slug}`} style={{ color: 'var(--text)', textDecoration: 'none', fontSize: '0.78rem', fontWeight: 500 }}>
+                        <Link href={`/lobbying-firm/${firm.slug}`} style={{ color: 'var(--teal)', textDecoration: 'none', fontSize: '0.78rem', fontWeight: 500 }}>
                           {firm.firm_name}
                         </Link>
                       </td>

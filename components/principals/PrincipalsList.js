@@ -108,12 +108,23 @@ export default function PrincipalsList() {
 
       {/* Header */}
       <div style={{ marginBottom: '1.5rem' }}>
+        <div style={{
+          display: 'inline-block', fontSize: '0.6rem', textTransform: 'uppercase',
+          letterSpacing: '0.13em', padding: '0.28rem 0.7rem', borderRadius: '2px',
+          marginBottom: '0.75rem', border: '1px solid rgba(77,216,240,0.3)',
+          background: 'rgba(77,216,240,0.06)', color: 'var(--teal)',
+        }}>
+          Lobbying
+        </div>
         <h1 style={{
           fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.4rem, 3vw, 2rem)',
-          fontWeight: 400, color: 'var(--text)', marginBottom: '0.4rem',
+          fontWeight: 400, color: 'var(--text)', marginBottom: '0.3rem',
         }}>
           Lobbying Principals
         </h1>
+        <p style={{ fontSize: '0.78rem', color: 'var(--text-dim)', lineHeight: 1.6, maxWidth: '520px', marginBottom: '0.75rem' }}>
+          Every organization that hired a lobbyist to work the Florida Legislature — ranked by total compensation paid. From one-session clients to corporations with decade-long lobbying histories.
+        </p>
         <div style={{ fontSize: '0.82rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
           <span>{loading ? '…' : total.toLocaleString()} registered principals</span>
           <span>FL Legislature · 2014–present</span>

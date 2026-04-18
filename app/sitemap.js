@@ -1,7 +1,7 @@
 import { getDb } from '@/lib/db';
 import { listPoliticianSlugs } from '@/lib/loadCandidate';
 
-const BASE = 'https://florida-donor-tracker.vercel.app';
+const BASE = 'https://floridainfluence.com';
 
 const STATIC_PAGES = [
   { path: '/', changeFrequency: 'weekly', priority: 1.0 },

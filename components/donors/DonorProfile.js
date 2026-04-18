@@ -560,8 +560,6 @@ export default function DonorProfile({ data, annotations = {} }) {
             padding: '0.3rem 0.75rem', fontFamily: 'var(--font-mono)',
             transition: 'border-color 0.12s',
           }}
-          onMouseOver={e => e.currentTarget.style.borderColor = 'var(--teal)'}
-          onMouseOut={e => e.currentTarget.style.borderColor = 'rgba(77,216,240,0.3)'}
         >
           → Follow this donor&apos;s money
         </a>

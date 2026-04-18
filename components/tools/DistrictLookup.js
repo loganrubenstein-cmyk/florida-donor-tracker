@@ -186,7 +186,7 @@ function DistrictResult({ data }) {
               {leg.chamber} District {leg.district}
             </div>
             <h2 style={{ margin: 0, fontFamily: 'var(--font-serif)', fontSize: '1.3rem', color: 'var(--text)' }}>
-              <Link href={`/legislator/${leg.people_id}`} style={{ color: 'var(--text)', textDecoration: 'none', borderBottom: '1px solid var(--border)' }}>
+              <Link href={`/legislator/${leg.people_id}`} style={{ color: 'var(--teal)', textDecoration: 'none', borderBottom: '1px solid var(--border)' }}>
                 {leg.name}
               </Link>
             </h2>
@@ -260,7 +260,7 @@ function DistrictResult({ data }) {
                     borderRadius: '2px',
                   }} />
                   <div style={{ position: 'relative', display: 'flex', justifyContent: 'space-between', padding: '0.3rem 0.4rem', fontSize: '0.72rem' }}>
-                    <Link href={`/donor/${d.slug}`} style={{ color: 'var(--text)', textDecoration: 'none', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '65%' }}>
+                    <Link href={`/donor/${d.slug}`} style={{ color: 'var(--orange)', textDecoration: 'none', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '65%' }}>
                       {d.name}
                     </Link>
                     <span style={{ color: TYPE_COLOR[d.type] || 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.68rem' }}>

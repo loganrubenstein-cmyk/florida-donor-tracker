@@ -76,14 +76,14 @@ export default function PulseSection() {
               </span>
               <span style={{ lineHeight: 1.4 }}>
                 {item.donor_slug ? (
-                  <Link href={`/donor/${item.donor_slug}`} style={{ color: 'var(--text)', textDecoration: 'none' }}>
+                  <Link href={`/donor/${item.donor_slug}`} style={{ color: 'var(--orange)', textDecoration: 'none' }}>
                     {item.donor_name}
                   </Link>
                 ) : (
                   <span style={{ color: 'var(--text-dim)' }}>{item.donor_name}</span>
                 )}
                 <span style={{ color: 'var(--text-dim)', fontSize: '0.7rem' }}> → </span>
-                <Link href={`/committee/${item.acct_num}`} style={{ color: 'var(--text-dim)', textDecoration: 'none', fontSize: '0.72rem' }}>
+                <Link href={`/committee/${item.acct_num}`} style={{ color: 'var(--teal)', textDecoration: 'none', fontSize: '0.72rem' }}>
                   {item.recipient_name}
                 </Link>
                 {item.donor_slug && (

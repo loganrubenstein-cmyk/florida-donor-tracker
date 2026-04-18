@@ -99,7 +99,7 @@ function UniqueDonors({ donors, label, accentColor }) {
               alignItems: 'center', padding: '0.25rem 0.35rem', gap: '0.5rem',
             }}>
               <Link href={`/donor/${d.slug}`} style={{
-                fontSize: '0.72rem', color: 'var(--text)', textDecoration: 'none',
+                fontSize: '0.72rem', color: 'var(--orange)', textDecoration: 'none',
                 overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
               }}>
                 {d.name}
@@ -256,7 +256,7 @@ export default function CandidateCompareResult({ data }) {
                 gap: '0.5rem', padding: '0.3rem 0.4rem', fontSize: '0.72rem',
               }}>
                 <Link href={`/donor/${d.slug}`} style={{
-                  color: 'var(--text)', textDecoration: 'none',
+                  color: 'var(--orange)', textDecoration: 'none',
                   overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                 }}>
                   {d.name}

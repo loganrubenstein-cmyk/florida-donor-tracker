@@ -3,7 +3,7 @@ import SectionHeader from '@/components/shared/SectionHeader';
 
 export const metadata = {
   title: 'Data Dictionary',
-  description: 'Field-by-field reference for every value in Florida Donor Tracker profiles.',
+  description: 'Field-by-field reference for every value in Florida Influence profiles.',
 };
 
 const Field = ({ name, source, confidence, children }) => (
@@ -37,7 +37,7 @@ export default function DataDictionary() {
         <span>Data Dictionary</span>
       </div>
 
-      <SectionHeader title="Data Dictionary" eyebrow="Florida Donor Tracker · Field Reference" />
+      <SectionHeader title="Data Dictionary" eyebrow="Florida Influence · Field Reference" />
       <p style={{ color: 'var(--text-dim)', fontSize: '0.85rem', lineHeight: 1.6, marginBottom: '2.5rem' }}>
         Every field shown on this site, where it comes from, and what it means.
         Confidence labels: <span className="confidence-badge confidence-direct">direct</span> = verbatim from filing,{' '}

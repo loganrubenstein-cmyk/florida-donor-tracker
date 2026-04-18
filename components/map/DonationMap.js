@@ -29,25 +29,26 @@ function CustomTooltip({ active, payload, label, labelKey }) {
 }
 
 function CityChart({ items }) {
-  const max = Math.max(...items.map(i => i.total));
+  const top = items.slice(0, 20);
+  const max = Math.max(...top.map(i => i.total));
   return (
     <div>
-      <div style={{ height: 420 }}>
+      <div style={{ height: 500 }}>
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={items} layout="vertical" margin={{ left: 20, right: 40, top: 8, bottom: 8 }}>
-            <XAxis type="number" tickFormatter={v => fmtMoneyCompact(v)} tick={{ fontSize: 10, fill: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }} axisLine={false} tickLine={false} />
-            <YAxis type="category" dataKey="city" width={120} tick={{ fontSize: 10, fill: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }} axisLine={false} tickLine={false} />
+          <BarChart data={top} layout="vertical" margin={{ left: 20, right: 40, top: 16, bottom: 8 }}>
+            <XAxis type="number" tickFormatter={v => fmtMoneyCompact(v)} tick={{ fontSize: 10, fill: '#5a6a88', fontFamily: 'var(--font-mono)' }} axisLine={false} tickLine={false} />
+            <YAxis type="category" dataKey="city" width={120} interval={0} tick={{ fontSize: 10, fill: '#5a6a88', fontFamily: 'var(--font-mono)' }} axisLine={false} tickLine={false} />
             <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(100,140,220,0.06)' }} />
             <Bar dataKey="total" radius={[0, 2, 2, 0]}>
-              {items.map((entry, i) => (
-                <Cell key={i} fill={i === 0 ? 'var(--orange)' : i < 5 ? 'var(--teal)' : 'rgba(100,140,220,0.45)'} />
+              {top.map((entry, i) => (
+                <Cell key={i} fill={i === 0 ? '#ffb060' : i < 5 ? '#4dd8f0' : 'rgba(100,140,220,0.45)'} />
               ))}
             </Bar>
           </BarChart>
         </ResponsiveContainer>
       </div>
       <p style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginTop: '0.5rem', lineHeight: 1.5 }}>
-        Based on donors' reported home city. Tallahassee leads because lobbyists, political consultants, and government-affiliated donors are disproportionately concentrated in the capital.
+        Top 20 cities by tracked political contributions. Tallahassee leads because lobbyists, political consultants, and government-affiliated donors are disproportionately concentrated in the capital.
       </p>
     </div>
   );
@@ -58,13 +59,13 @@ function StateChart({ items }) {
     <div>
       <div style={{ height: 380 }}>
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={items} layout="vertical" margin={{ left: 8, right: 40, top: 8, bottom: 8 }}>
-            <XAxis type="number" tickFormatter={v => fmtMoneyCompact(v)} tick={{ fontSize: 10, fill: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }} axisLine={false} tickLine={false} />
-            <YAxis type="category" dataKey="state" width={36} tick={{ fontSize: 10, fill: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }} axisLine={false} tickLine={false} />
+          <BarChart data={items} layout="vertical" margin={{ left: 8, right: 40, top: 16, bottom: 8 }}>
+            <XAxis type="number" tickFormatter={v => fmtMoneyCompact(v)} tick={{ fontSize: 10, fill: '#5a6a88', fontFamily: 'var(--font-mono)' }} axisLine={false} tickLine={false} />
+            <YAxis type="category" dataKey="state" width={36} interval={0} tick={{ fontSize: 10, fill: '#5a6a88', fontFamily: 'var(--font-mono)' }} axisLine={false} tickLine={false} />
             <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(100,140,220,0.06)' }} />
             <Bar dataKey="total" radius={[0, 2, 2, 0]}>
               {items.map((entry, i) => (
-                <Cell key={i} fill={entry.state === 'FL' ? 'var(--orange)' : entry.state === 'DC' ? 'var(--gold)' : 'rgba(100,140,220,0.45)'} />
+                <Cell key={i} fill={entry.state === 'FL' ? '#ffb060' : entry.state === 'DC' ? '#ffd060' : 'rgba(100,140,220,0.45)'} />
               ))}
             </Bar>
           </BarChart>

@@ -5,14 +5,14 @@ import NavLinks from '@/components/shared/NavLinks';
 import KonamiCode from '@/components/shared/KonamiCode';
 
 export const metadata = {
-  metadataBase: new URL('https://florida-donor-tracker.vercel.app'),
+  metadataBase: new URL('https://floridainfluence.com'),
   title: {
-    default: 'Florida Donor Tracker',
-    template: '%s | Florida Donor Tracker',
+    default: 'Florida Influence',
+    template: '%s | Florida Influence',
   },
   description: 'Follow the money in Florida politics — campaign contributions, donors, committees, lobbyists, and legislative finance tracked from 1996 to 2026.',
   openGraph: {
-    siteName: 'Florida Donor Tracker',
+    siteName: 'Florida Influence',
     type: 'website',
     locale: 'en_US',
   },
@@ -40,7 +40,7 @@ export default function RootLayout({ children }) {
             marginRight: '0.75rem', whiteSpace: 'nowrap',
           }}>
             <FloridaOutline size="wordmark" />
-            FL DONOR TRACKER
+            FL INFLUENCE
           </Link>
           <NavLinks />
           <form action="/search" method="get" style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center' }}>

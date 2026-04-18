@@ -82,7 +82,11 @@ function BallotRaceCard({ title, subtitle, candidates, useWinnerFlag = false }) 
                   overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                 }}>
                   {won && <span style={{ color: 'var(--green)', marginRight: '0.3rem', fontSize: '0.75rem' }}>✓</span>}
-                  {c.candidate_name}
+                  {c.finance_acct_num ? (
+                    <a href={`/candidate/${c.finance_acct_num}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+                      {c.candidate_name}
+                    </a>
+                  ) : c.candidate_name}
                   <span style={{ marginLeft: '0.35rem', fontSize: '0.68rem', color: pColor, fontWeight: 400 }}>
                     ({PARTY_LABEL[c.party] || c.party || '?'})
                   </span>
@@ -126,39 +130,7 @@ function BallotRaceCard({ title, subtitle, candidates, useWinnerFlag = false }) 
   );
 }
 
-function MoneyWinsBanner({ cycle }) {
-  const stat = useMemo(() => {
-    const races = cycle?.finance_races_top50 || [];
-    let total = 0, wins = 0;
-    for (const race of races) {
-      const financed = race.candidates.filter(c =>
-        c.finance_acct_num && !SKIP_NAMES.has(c.candidate_name) && (c.total_raised || 0) > 0
-      );
-      if (financed.length < 2) continue;
-      const sorted = [...financed].sort((a, b) => (b.total_raised || 0) - (a.total_raised || 0));
-      const top = sorted[0];
-      if (top.winner !== undefined) { total++; if (top.winner) wins++; }
-    }
-    return total >= 3 ? { wins, total, pct: Math.round(wins / total * 100) } : null;
-  }, [cycle]);
-
-  if (!stat) return null;
-
-  return (
-    <div style={{
-      display: 'flex', alignItems: 'center', gap: '0.75rem',
-      padding: '0.65rem 1rem', background: 'var(--surface)', border: '1px solid var(--border)',
-      borderLeft: '3px solid var(--orange)', borderRadius: '3px', marginBottom: '1.5rem',
-    }}>
-      <span style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--orange)', fontFamily: 'var(--font-mono)' }}>
-        {stat.pct}%
-      </span>
-      <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)', lineHeight: 1.5 }}>
-        of the time, the top-funded candidate won — in {stat.wins} of {stat.total} finance-matched races this cycle
-      </span>
-    </div>
-  );
-}
+function MoneyWinsBanner() { return null; }
 
 function SkeletonRace() {
   return (

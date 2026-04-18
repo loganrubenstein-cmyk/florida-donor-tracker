@@ -65,11 +65,11 @@ export default function DonorOverlap({ initialEntityA = null, initialEntityB = n
         <span>Donor Overlap</span>
       </div>
       <div style={{ marginBottom: '1.25rem' }}>
-        <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.6rem', color: 'var(--orange)', margin: 0 }}>
-          Compare
+        <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.6rem', color: 'var(--text)', margin: 0 }}>
+          Who funds <span style={{ color: 'var(--orange)' }}>both sides</span> of a race?
         </h1>
-        <p style={{ color: 'var(--text-dim)', fontSize: '0.78rem', marginTop: '0.35rem' }}>
-          Pick any two candidates or committees to compare their donors and funding sources.
+        <p style={{ color: 'var(--text-dim)', fontSize: '0.78rem', marginTop: '0.35rem', maxWidth: '520px', lineHeight: 1.6 }}>
+          Pick any two candidates or committees. See which donors gave to both — and which picked a side. Find the corporations, PACs, and individuals hedging across party lines.
         </p>
       </div>
 
@@ -365,7 +365,7 @@ function OverlapResult({ data }) {
                   }}>
                     <span style={{ display: 'flex', gap: '0.35rem', alignItems: 'baseline', overflow: 'hidden' }}>
                       <Link href={`/donor/${d.slug}`} style={{
-                        color: 'var(--text)', textDecoration: 'none', overflow: 'hidden',
+                        color: 'var(--orange)', textDecoration: 'none', overflow: 'hidden',
                         textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                       }}>
                         {d.name}

@@ -63,22 +63,7 @@ export default function InfluenceTimeline() {
   ];
 
   return (
-    <div className="container" style={{ paddingTop: '2rem', paddingBottom: '3rem' }}>
-      <div style={{ marginBottom: '0.75rem', fontSize: '0.72rem', color: 'var(--text-dim)' }}>
-        <Link href="/" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Home</Link>
-        {' / '}
-        <Link href="/tools" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Tools</Link>
-        {' / '}
-        <span>Influence Timeline</span>
-      </div>
-      <div style={{ marginBottom: '1.5rem' }}>
-        <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.6rem', color: 'var(--orange)', margin: 0 }}>
-          Influence Timeline
-        </h1>
-        <p style={{ color: 'var(--text-dim)', fontSize: '0.78rem', marginTop: '0.35rem' }}>
-          Visualize any candidate's fundraising over time — spot pre-election surges, PAC formations, and donation spikes.
-        </p>
-      </div>
+    <div style={{ paddingBottom: '3rem' }}>
 
       {/* Search */}
       <div style={{ position: 'relative', maxWidth: '500px', marginBottom: '1rem' }}>
@@ -171,7 +156,7 @@ function TimelineView({ data }) {
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem',
       }}>
         <div>
-          <Link href={`/candidate/${candidate.acct_num}`} style={{ color: 'var(--text)', textDecoration: 'none', fontSize: '1.1rem', fontFamily: 'var(--font-serif)' }}>
+          <Link href={`/candidate/${candidate.acct_num}`} style={{ color: 'var(--orange)', textDecoration: 'none', fontSize: '1.1rem', fontFamily: 'var(--font-serif)' }}>
             {candidate.name}
           </Link>
           <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', marginTop: '0.2rem' }}>
@@ -276,7 +261,7 @@ function TimelineView({ data }) {
             {pacs.sort((a, b) => b.total - a.total).map((p, i) => (
               <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.35rem 0', borderBottom: i < pacs.length - 1 ? '1px solid rgba(100,140,220,0.08)' : 'none' }}>
                 <div>
-                  <Link href={`/committee/${p.acct_num}`} style={{ color: 'var(--text)', textDecoration: 'none', fontSize: '0.75rem' }}>
+                  <Link href={`/committee/${p.acct_num}`} style={{ color: 'var(--teal)', textDecoration: 'none', fontSize: '0.75rem' }}>
                     {p.name || p.acct_num}
                   </Link>
                   {p.formed && <span style={{ color: 'var(--text-dim)', fontSize: '0.62rem', marginLeft: '0.5rem' }}>formed {p.formed}</span>}
