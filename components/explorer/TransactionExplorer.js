@@ -355,7 +355,7 @@ export default function TransactionExplorer({
                 </td>
                 <td style={{ padding: '0.4rem 0.6rem', maxWidth: '220px' }}>
                   {row.donor_slug ? (
-                    <a href={`/donor/${row.donor_slug}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+                    <a href={`/donor/${row.donor_slug}`} style={{ color: 'var(--orange)', textDecoration: 'none' }}>
                       {row.contributor_name || '—'}
                     </a>
                   ) : (
@@ -370,7 +370,7 @@ export default function TransactionExplorer({
                 </td>
                 <td style={{ padding: '0.4rem 0.6rem', maxWidth: '200px' }}>
                   {row.recipient_type === 'committee' ? (
-                    <a href={`/committee/${row.recipient_acct}`} style={{ color: 'var(--blue)', textDecoration: 'none', fontSize: '0.7rem', display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    <a href={`/committee/${row.recipient_acct}`} style={{ color: 'var(--teal)', textDecoration: 'none', fontSize: '0.7rem', display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {row.recipient_name || `Cmte #${row.recipient_acct}`}
                     </a>
                   ) : row.recipient_type === 'candidate' ? (

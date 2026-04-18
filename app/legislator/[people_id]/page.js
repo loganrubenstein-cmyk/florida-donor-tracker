@@ -232,10 +232,10 @@ export default async function LegislatorPage({ params }) {
             )}
             {votes.map((v, i) => (
               <tr key={i} style={{ borderBottom: '1px solid rgba(100,140,220,0.07)' }}>
-                <td style={{ padding: '0.35rem 0.6rem', color: 'var(--teal)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', whiteSpace: 'nowrap' }}>
+                <td style={{ padding: '0.35rem 0.6rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.68rem', whiteSpace: 'nowrap' }}>
                   {v.bill_number || `#${v.bill_id}`}
                 </td>
-                <td style={{ padding: '0.35rem 0.6rem', color: 'var(--text-dim)', maxWidth: '320px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <td style={{ padding: '0.35rem 0.6rem', color: 'var(--text)', maxWidth: '360px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {v.bill_title || '—'}
                 </td>
                 <td style={{ padding: '0.35rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.7rem', whiteSpace: 'nowrap' }}>
@@ -276,10 +276,10 @@ export default async function LegislatorPage({ params }) {
             <tbody>
               {sponsorships.map((s, i) => (
                 <tr key={i} style={{ borderBottom: '1px solid rgba(100,140,220,0.07)' }}>
-                  <td style={{ padding: '0.35rem 0.6rem', color: 'var(--teal)', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', whiteSpace: 'nowrap' }}>
+                  <td style={{ padding: '0.35rem 0.6rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.68rem', whiteSpace: 'nowrap' }}>
                     {s.bill_number || `#${s.bill_id}`}
                   </td>
-                  <td style={{ padding: '0.35rem 0.6rem', color: 'var(--text-dim)', maxWidth: '380px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <td style={{ padding: '0.35rem 0.6rem', color: 'var(--text)', maxWidth: '420px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {s.bill_title || '—'}
                   </td>
                   <td style={{ padding: '0.35rem 0.6rem', fontSize: '0.68rem', color: s.sponsor_type === 'Primary' ? 'var(--orange)' : 'var(--text-dim)', whiteSpace: 'nowrap' }}>
