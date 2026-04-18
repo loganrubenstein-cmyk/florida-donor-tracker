@@ -68,7 +68,7 @@ function LeaderCard({ member }) {
       <div style={{ fontSize: '0.6rem', color: ROLE_COLOR[member.role] || 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.3rem' }}>
         {member.role}
       </div>
-      <Link href={`/legislator/${leg.people_id}`} style={{ color: 'var(--text)', textDecoration: 'none', fontWeight: 600, fontSize: '0.88rem' }}>
+      <Link href={`/legislator/${leg.people_id}`} style={{ color: 'var(--teal)', textDecoration: 'none', fontWeight: 600, fontSize: '0.88rem' }}>
         {leg.display_name}
       </Link>
       <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginTop: '0.2rem' }}>
@@ -197,7 +197,7 @@ export default async function CommitteePage({ params }) {
                 return (
                   <tr key={i} style={{ borderBottom: '1px solid rgba(100,140,220,0.07)' }}>
                     <td style={{ padding: '0.5rem 0.75rem' }}>
-                      <Link href={`/legislator/${leg.people_id}`} style={{ color: 'var(--text)', textDecoration: 'none', fontWeight: 500 }}>
+                      <Link href={`/legislator/${leg.people_id}`} style={{ color: 'var(--teal)', textDecoration: 'none', fontWeight: 500 }}>
                         {leg.display_name}
                       </Link>
                     </td>
@@ -283,7 +283,7 @@ export default async function CommitteePage({ params }) {
                   <tr key={i} style={{ borderBottom: '1px solid rgba(100,140,220,0.07)' }}>
                     <td style={{ padding: '0.5rem 0.75rem' }}>
                       {d.donor_slug ? (
-                        <Link href={`/donor/${d.donor_slug}`} style={{ color: 'var(--text)', textDecoration: 'none', fontWeight: 500 }}>
+                        <Link href={`/donor/${d.donor_slug}`} style={{ color: 'var(--orange)', textDecoration: 'none', fontWeight: 500 }}>
                           {d.donor_name}
                         </Link>
                       ) : (

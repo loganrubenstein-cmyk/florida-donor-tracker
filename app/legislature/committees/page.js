@@ -43,7 +43,7 @@ function ChamberSection({ title, committees }) {
             {committees.map(c => (
               <tr key={c.abbreviation} style={{ borderBottom: '1px solid rgba(100,140,220,0.07)' }}>
                 <td style={{ padding: '0.5rem 0.75rem' }}>
-                  <Link href={`/legislature/committee/${c.abbreviation}`} style={{ color: 'var(--text)', textDecoration: 'none', fontWeight: 500 }}>
+                  <Link href={`/legislature/committee/${c.abbreviation}`} style={{ color: 'var(--teal)', textDecoration: 'none', fontWeight: 500 }}>
                     {c.name}
                   </Link>
                 </td>

@@ -210,7 +210,7 @@ function WhoFundsResult({ data }) {
               FL {leg.chamber} · District {leg.district}
             </div>
             <h2 style={{ margin: '0 0 0.4rem', fontFamily: 'var(--font-serif)', fontSize: '1.4rem', color: 'var(--text)' }}>
-              <Link href={`/legislator/${leg.people_id}`} style={{ color: 'var(--text)', textDecoration: 'none', borderBottom: `1px solid ${partyColor}55` }}>
+              <Link href={`/legislator/${leg.people_id}`} style={{ color: 'var(--teal)', textDecoration: 'none', borderBottom: `1px solid ${partyColor}55` }}>
                 {leg.name}
               </Link>
             </h2>
@@ -255,7 +255,7 @@ function WhoFundsResult({ data }) {
                     background: TYPE_COLOR[d.type] || '#888', opacity: 0.08, borderRadius: '2px',
                   }} />
                   <div style={{ position: 'relative', display: 'flex', justifyContent: 'space-between', padding: '0.28rem 0.4rem', fontSize: '0.71rem' }}>
-                    <Link href={`/donor/${d.slug}`} style={{ color: 'var(--text)', textDecoration: 'none', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '60%' }}>
+                    <Link href={`/donor/${d.slug}`} style={{ color: 'var(--orange)', textDecoration: 'none', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '60%' }}>
                       {d.name}
                     </Link>
                     <span style={{ color: TYPE_COLOR[d.type] || 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.68rem', flexShrink: 0 }}>

@@ -152,7 +152,7 @@ export default function LobbyingBillsPage() {
                     <div style={{ display: 'flex', gap: '0.5rem', flex: 1, minWidth: 0 }}>
                       <span style={{ color: 'var(--text-dim)', width: '16px', flexShrink: 0 }}>{i + 1}.</span>
                       <div>
-                        <Link href={`/lobbyist/${slug}`} style={{ color: 'var(--text)', textDecoration: 'none', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>
+                        <Link href={`/lobbyist/${slug}`} style={{ color: 'var(--teal)', textDecoration: 'none', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block' }}>
                           {l.lobbyist}
                         </Link>
                         {l.firms?.[0] && <div style={{ color: 'var(--text-dim)', fontSize: '0.68rem' }}>{l.firms[0]}</div>}

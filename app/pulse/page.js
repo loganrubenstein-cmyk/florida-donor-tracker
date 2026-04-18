@@ -69,7 +69,7 @@ function CommitteesTable({ items }) {
           <tr key={i} style={{ borderBottom: '1px solid var(--border)' }}>
             <td style={{ padding: '0.55rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.72rem', whiteSpace: 'nowrap' }}>{fmtDate(item.date_start)}</td>
             <td style={{ padding: '0.55rem 0.6rem' }}>
-              <Link href={`/committee/${item.acct_num}`} style={{ color: 'var(--text)', textDecoration: 'none' }}>{item.name}</Link>
+              <Link href={`/committee/${item.acct_num}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>{item.name}</Link>
             </td>
             <td style={{ padding: '0.55rem 0.6rem', color: 'var(--orange)', fontFamily: 'var(--font-mono)', textAlign: 'right' }}>
               {item.total_received > 0 ? fmtMoneyCompact(item.total_received) : '—'}

@@ -335,7 +335,7 @@ function CommitteeRow({ committee: c, rank, maxAmount }) {
         <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'baseline', flex: 1, minWidth: 0 }}>
           <span style={{ fontSize: '0.65rem', color: 'var(--text-dim)', width: '20px', flexShrink: 0 }}>{rank}.</span>
           <Link href={`/committee/${c.acct_num}`} style={{
-            fontSize: '0.78rem', fontWeight: 500, color: 'var(--text)', textDecoration: 'none',
+            fontSize: '0.78rem', fontWeight: 500, color: 'var(--teal)', textDecoration: 'none',
             overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
           }}>
             {c.committee_name}
