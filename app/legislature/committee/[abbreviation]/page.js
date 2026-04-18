@@ -173,7 +173,31 @@ export default async function CommitteePage({ params }) {
         </div>
       )}
 
+      {/* Missing-data banner when the roster is empty */}
+      {totalMembers === 0 && (
+        <div style={{
+          padding: '1rem 1.25rem', border: '1px solid rgba(255,208,96,0.25)',
+          background: 'rgba(255,208,96,0.05)', borderLeft: '3px solid var(--gold)',
+          borderRadius: '3px', marginBottom: '2rem',
+          fontSize: '0.78rem', color: 'var(--text)', lineHeight: 1.6,
+        }}>
+          <div style={{ color: 'var(--gold)', fontSize: '0.62rem', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.4rem' }}>
+            Membership data pending
+          </div>
+          Committee rosters are being indexed from the Florida House and Senate websites. This committee's membership has not been captured yet.
+          {committee.url && (
+            <>
+              {' '}
+              <a href={committee.url} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+                View the official roster ↗
+              </a>
+            </>
+          )}
+        </div>
+      )}
+
       {/* All members table */}
+      {totalMembers > 0 && (
       <div style={{ marginBottom: '2.5rem' }}>
         <SectionHeader>All Members ({totalMembers})</SectionHeader>
         <div style={{ overflowX: 'auto' }}>
@@ -226,6 +250,7 @@ export default async function CommitteePage({ params }) {
           </table>
         </div>
       </div>
+      )}
 
       {/* Industry breakdown */}
       {industryBreakdown.length > 0 && (
