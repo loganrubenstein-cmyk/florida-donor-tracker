@@ -8,9 +8,31 @@ export const dynamic = 'force-dynamic';
 
 const PARTY_COLOR = { REP: 'var(--republican)', DEM: 'var(--democrat)', NPA: 'var(--text-dim)' };
 
+const OFFICE_LABELS = {
+  gov: 'Governor',
+  governor: 'Governor',
+  ag: 'Attorney General',
+  'attorney-general': 'Attorney General',
+  cfo: 'Chief Financial Officer',
+  'chief-financial-officer': 'Chief Financial Officer',
+  'commissioner-of-agriculture': 'Commissioner of Agriculture',
+  sen: 'State Senate',
+  senate: 'State Senate',
+  'state-senate': 'State Senate',
+  rep: 'State House',
+  house: 'State House',
+  'state-house': 'State House',
+};
+
+function prettifyOffice(slug) {
+  const key = slug.toLowerCase();
+  if (OFFICE_LABELS[key]) return OFFICE_LABELS[key];
+  return slug.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+}
+
 export async function generateMetadata({ params }) {
   const { office, year } = await params;
-  const label = decodeURIComponent(office).replace(/-/g, ' ');
+  const label = prettifyOffice(decodeURIComponent(office));
   return {
     title: `${label} ${year} — Race Tracker`,
     description: `All candidates for ${label} in ${year} with campaign finance data.`,
@@ -19,7 +41,8 @@ export async function generateMetadata({ params }) {
 
 export default async function RacePage({ params }) {
   const { office, year } = await params;
-  const officeLabel = decodeURIComponent(office).replace(/-/g, ' ');
+  const rawOffice   = decodeURIComponent(office);
+  const officeLabel = prettifyOffice(rawOffice);
   const yearNum     = parseInt(year, 10);
 
   if (!yearNum || yearNum < 2000 || yearNum > 2030) notFound();

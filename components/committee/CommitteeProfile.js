@@ -264,8 +264,8 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
   const candidatesContent = (
     <RelationshipsBlock
       label={`Linked Candidates (${linkedCandidates.length})`}
-      description="Candidates connected to this committee via solicitation filings, direct contributions, or administrative records."
-      emptyText="No linked candidates found."
+      description="Candidates formally linked to this committee via solicitation filings or administrative records. Party committees, ECOs, and general PACs often have few or no formal candidate links even when they fund candidates through contributions — check the Payees tab for money out."
+      emptyText="No formal candidate links on file. This is normal for party committees, ECOs, and general-purpose PACs. See the Payees tab for direct expenditures to candidates and other committees."
       items={linkedCandidates.map(c => {
         const polSlug = c.acct_num ? getPoliticianSlugByAcctNum(c.acct_num) : null;
         return {
