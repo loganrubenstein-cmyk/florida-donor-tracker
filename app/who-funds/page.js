@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { fmtMoney, fmtMoneyCompact } from '@/lib/fmt';
 
@@ -18,12 +18,47 @@ export default function WhoFundsPage() {
 
   const maxDistrict = chamber === 'Senate' ? 40 : 120;
 
+  // Auto-load from URL params (e.g. /who-funds?chamber=House&district=117)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const urlChamber  = params.get('chamber');
+    const urlDistrict = params.get('district');
+    if (urlChamber === 'House' || urlChamber === 'Senate') setChamber(urlChamber);
+    if (urlDistrict) {
+      setDistrict(urlDistrict);
+      const max = (urlChamber === 'Senate') ? 40 : 120;
+      const num = parseInt(urlDistrict, 10);
+      if (num && num >= 1 && num <= max) {
+        (async () => {
+          setLoading(true);
+          try {
+            const res = await fetch(`/api/district?chamber=${urlChamber || 'House'}&district=${num}`);
+            const json = await res.json();
+            if (res.ok) setData(json);
+            else setError(json.error || 'Not found');
+          } catch {
+            setError('Network error — try again');
+          } finally {
+            setLoading(false);
+          }
+        })();
+      }
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   async function handleLookup() {
     const num = parseInt(district, 10);
     if (!num || num < 1 || num > maxDistrict) {
       setError(`Enter a district number between 1 and ${maxDistrict}`);
       return;
     }
+    // Sync to URL so the lookup can be bookmarked/shared
+    try {
+      const url = new URL(window.location);
+      url.searchParams.set('chamber', chamber);
+      url.searchParams.set('district', String(num));
+      window.history.replaceState(null, '', url.toString());
+    } catch {}
     setLoading(true);
     setError(null);
     setData(null);
