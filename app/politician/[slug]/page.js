@@ -12,6 +12,49 @@ import { fmtMoneyCompact } from '@/lib/fmt';
 import { PARTY_COLOR } from '@/lib/partyUtils';
 import { FEDERAL_OFFICE_CODES } from '@/lib/officeCodes';
 
+// Surnames with non-standard internal capitalization that get mangled by
+// simple title-casing. Add more as needed.
+const NAME_CASING_OVERRIDES = {
+  'desantis':   'DeSantis',
+  'degroot':    'DeGroot',
+  'lagrone':    'LaGrone',
+  'laceirra':   'LaCeirra',
+  'lamarca':    'LaMarca',
+  'larose':     'LaRose',
+  'lasala':     'LaSala',
+  'madonna':    'Madonna',
+  'mccarthy':   'McCarthy',
+  'mcclain':    'McClain',
+  'mcconnell':  'McConnell',
+  'mcdonough':  'McDonough',
+  'mcfarland':  'McFarland',
+  'mckenzie':   'McKenzie',
+  'obrien':     "O'Brien",
+  'oconnell':   "O'Connell",
+  'oconnor':    "O'Connor",
+};
+
+// Title-case a FL DoE display_name while preserving internal capitals
+// (McDonough, DeSantis, O'Brien, LaRose, etc.). Applies the override map for
+// known camelCase surnames. Only transforms all-caps or all-lowercase words;
+// leaves existing mixed-case words as-is.
+function prettyName(name) {
+  if (!name) return name;
+  return name.split(' ').map(word => {
+    if (!word) return word;
+    // Known override (matched case-insensitively)
+    const override = NAME_CASING_OVERRIDES[word.toLowerCase()];
+    if (override) return override;
+    // Mixed case already — trust it (the data was good)
+    if (/[A-Z]/.test(word) && /[a-z]/.test(word)) return word;
+    // All lowercase or all uppercase — title-case it
+    return word.split(/([-'])/).map(part => {
+      if (part === '-' || part === "'") return part;
+      return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
+    }).join('');
+  }).join(' ');
+}
+
 let _electionLookup = null;
 function getElectionLookup() {
   if (!_electionLookup) {
@@ -128,7 +171,7 @@ export default async function PoliticianPage({ params, searchParams }) {
       ]} />
 
       <EntityHeader
-        name={display_name.split(' ').map(w => w.charAt(0) + w.slice(1).toLowerCase()).join(' ')}
+        name={prettyName(display_name)}
         badges={[
           ...(party ? [{ label: PARTY_LABEL[party] || party, color: partyColor || 'var(--border)' }] : []),
           ...(matchedLeg ? [{ label: `Currently serving · FL ${matchedLeg.chamber} D${matchedLeg.district} →`, color: 'var(--teal)', href: `/legislator/${matchedLeg.people_id}` }] : []),
