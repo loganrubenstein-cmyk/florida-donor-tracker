@@ -108,14 +108,17 @@ def scrape_house_member_committees(session, member_id, term_id):
     html = fetch_cached(session, url, cache)
     soup = BeautifulSoup(html, "html.parser")
 
-    # Extract member name from page
+    # Extract member name from <title>: "First Last - 2024 - 2026 (Speaker X) | Florida House..."
     member_name = None
-    # Try the rep-detail-name-plate or similar
-    for h in soup.find_all(["h1", "h2"]):
-        text = h.get_text(strip=True)
-        if text and "District" not in text and "Committee" not in text and len(text) > 3:
-            member_name = text
-            break
+    if soup.title:
+        t = soup.title.get_text(strip=True)
+        if " | " in t:
+            t = t.split(" | ")[0]
+        if " - " in t:
+            t = t.split(" - ")[0]
+        t = t.strip()
+        if t and "not" not in t.lower():
+            member_name = t
 
     # Find committee assignments
     committees = []
