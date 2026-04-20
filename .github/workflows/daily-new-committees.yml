@@ -27,10 +27,14 @@ jobs:
         uses: ./.github/actions/run-script
         with:
           script: 02_download_registry.py
-      - name: Load committees
+      - name: Convert registry to processed CSV
         uses: ./.github/actions/run-script
         with:
-          script: 40_load_supabase.py
+          script: 05_import_registry.py
+      - name: Upsert committees into Supabase
+        uses: ./.github/actions/run-script
+        with:
+          script: 05b_upsert_committees_supabase.py
       - name: Open issue on failure
         if: failure()
         uses: peter-evans/create-issue-from-file@v5
