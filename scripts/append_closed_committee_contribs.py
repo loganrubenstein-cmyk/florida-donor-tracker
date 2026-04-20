@@ -130,10 +130,26 @@ def load_one_file(path: Path) -> pd.DataFrame:
     return df[OUTPUT_COLS]
 
 
+def _already_loaded_source_files() -> set[str]:
+    """Read just the source_file column from contributions.csv to detect
+    which Contrib_*.txt files are already represented."""
+    if not OUTPUT_FILE.exists():
+        return set()
+    try:
+        col = pd.read_csv(OUTPUT_FILE, usecols=["source_file"], dtype=str)["source_file"]
+        return set(col.dropna().unique().tolist())
+    except Exception as e:
+        print(f"  [warn] could not read source_file column: {e}")
+        return set()
+
+
 def main() -> int:
     if not OUTPUT_FILE.exists():
         print(f"ERROR: {OUTPUT_FILE} not found. Run script 01 first.", file=sys.stderr)
         return 1
+
+    already = _already_loaded_source_files()
+    print(f"  {len(already):,} distinct source_file values already in contributions.csv")
 
     total_appended = 0
     for acct in ACCTS_TO_APPEND:
@@ -147,10 +163,14 @@ def main() -> int:
             print(f"SKIP {acct}: file is empty (header only, {size} bytes)")
             continue
 
+        if raw_path.name in already:
+            print(f"SKIP {acct}: {raw_path.name} already in contributions.csv "
+                  f"(run script 01 for a full rebuild instead)")
+            continue
+
         df = load_one_file(raw_path)
         print(f"  → {len(df):,} rows parsed", flush=True)
 
-        # Append without header
         df.to_csv(OUTPUT_FILE, mode="a", index=False, header=False)
         print(f"  → Appended to {OUTPUT_FILE.name}", flush=True)
         total_appended += len(df)

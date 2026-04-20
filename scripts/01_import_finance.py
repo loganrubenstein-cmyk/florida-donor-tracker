@@ -132,7 +132,19 @@ def main() -> int:
     frames = [load_one_file(f) for f in files]
     df = pd.concat(frames, ignore_index=True)
 
-    # Write cleaned output
+    # Dedup: guards against double-ingest when append_closed_committee_contribs.py
+    # has been run and then 01 is re-executed (raw files are now in RAW_DIR too).
+    before = len(df)
+    dedup_keys = [c for c in ["source_file", "contribution_date", "amount",
+                              "contributor_name", "contributor_address",
+                              "contributor_occupation"] if c in df.columns]
+    if dedup_keys:
+        df = df.drop_duplicates(subset=dedup_keys, keep="first").reset_index(drop=True)
+        removed = before - len(df)
+        if removed:
+            print(f"  Deduplicated: removed {removed:,} duplicate rows "
+                  f"(key: {', '.join(dedup_keys)})")
+
     PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
     df.to_csv(OUTPUT_FILE, index=False)
     print(f"\nWrote {len(df):,} rows to {OUTPUT_FILE}")

@@ -26,6 +26,8 @@ from pathlib import Path
 
 import requests
 
+CRITICAL_FILES = {"cn", "cm", "ccl"}  # absence => hard failure
+
 PROJECT = Path(__file__).resolve().parent.parent
 DEST_ROOT = PROJECT / "public" / "data" / "fec"
 DEST_ROOT.mkdir(parents=True, exist_ok=True)
@@ -72,6 +74,17 @@ def fetch(cycle: int, prefix: str) -> Path | None:
                 for block in r.iter_content(CHUNK):
                     f.write(block)
                     written += len(block)
+            if total and written != total:
+                print(f"  [err]   {fname} short read: got {written} / expected {total}", flush=True)
+                tmp.unlink(missing_ok=True)
+                return None
+            try:
+                with zipfile.ZipFile(tmp) as _zf:
+                    _zf.testzip()
+            except (zipfile.BadZipFile, Exception) as e:
+                print(f"  [err]   {fname} invalid zip after download: {e}", flush=True)
+                tmp.unlink(missing_ok=True)
+                return None
             tmp.replace(dest)
             if lm:
                 meta.write_text(lm)
@@ -103,14 +116,31 @@ def main():
     print("=" * 72)
     t0 = time.time()
 
+    missing_critical = []
+    per_cycle_counts = {}
+
     for cycle in CYCLES:
         print(f"\n--- cycle {cycle} ---", flush=True)
+        ok = 0
         for prefix in SMALL_FILES + LARGE_FILES:
             p = fetch(cycle, prefix)
             if p and p.exists():
                 unzip(p)
+                ok += 1
+            else:
+                if prefix in CRITICAL_FILES:
+                    missing_critical.append(f"{prefix}{str(cycle)[-2:]}.zip")
+        per_cycle_counts[cycle] = ok
 
     print(f"\nTotal: {time.time()-t0:.0f}s")
+    print("\nPer-cycle file counts:")
+    for cycle, n in per_cycle_counts.items():
+        print(f"  {cycle}: {n} / {len(SMALL_FILES) + len(LARGE_FILES)} files")
+
+    if missing_critical:
+        print(f"\nERROR: missing critical files: {', '.join(missing_critical)}", flush=True)
+        sys.exit(1)
+    print("\nAll critical files present.")
 
 
 if __name__ == "__main__":
