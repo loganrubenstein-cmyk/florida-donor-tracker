@@ -149,6 +149,7 @@ export default function DonorProfile({ data, annotations = {} }) {
   const byYear     = data.by_year    || [];
   const lobbyists  = data.lobbyist_principals || [];
   const contracts  = data.state_contracts || [];
+  const federal    = data.federal || null;
   const corpActive = data.corp_status === 'A';
 
   const norm = s => String(s).toUpperCase().replace(/[^A-Z0-9]/g, '');
@@ -190,6 +191,14 @@ export default function DonorProfile({ data, annotations = {} }) {
             value={fmtMoneyCompact(contracts.reduce((s, c) => s + c.total_contract_amount, 0))}
             sub={`${contracts.length} vendor match${contracts.length > 1 ? 'es' : ''}`}
             color="var(--gold)"
+          />
+        )}
+        {federal && (
+          <StatBox
+            label="Federal Giving"
+            value={fmtMoneyCompact(federal.total_amount)}
+            sub={`${federal.num_contributions.toLocaleString()} FEC gifts`}
+            color="var(--blue)"
           />
         )}
       </div>
@@ -258,6 +267,29 @@ export default function DonorProfile({ data, annotations = {} }) {
           </div>
         );
       })()}
+
+      {federal && (
+        <div style={{
+          marginBottom: '1.25rem',
+          padding: '0.85rem 1rem',
+          border: '1px solid rgba(160,192,255,0.25)',
+          borderRadius: '3px',
+          background: 'rgba(160,192,255,0.04)',
+          fontSize: '0.78rem',
+          color: 'var(--text)',
+        }}>
+          <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.35rem' }}>
+            Federal giving (FEC)
+          </div>
+          <div>
+            {fmtMoneyCompact(federal.total_amount)} across {federal.num_contributions.toLocaleString()} contributions
+            {Array.isArray(federal.cycles) && federal.cycles.length > 0 ? ` · cycles ${federal.cycles.join(', ')}` : ''}.
+          </div>
+          <a href="/federal/donors" style={{ color: 'var(--blue)', textDecoration: 'none', fontSize: '0.72rem' }}>
+            View FL federal donors →
+          </a>
+        </div>
+      )}
 
       {/* Industry cross-reference + peers */}
       {data.industry && data.industry !== 'Not Employed' && data.industry !== 'Other' && (
