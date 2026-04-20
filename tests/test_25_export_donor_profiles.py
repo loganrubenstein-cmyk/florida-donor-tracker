@@ -150,50 +150,50 @@ def candidate_info():
 
 def test_build_returns_index_and_profiles(soft_df, hard_df, committee_names, candidate_info):
     index_rows, profiles = build_donor_records(
-        soft_df, hard_df, committee_names, candidate_info, {}
+        soft_df, hard_df, committee_names, candidate_info, {}, {},
     )
     assert len(index_rows) == 2  # ACME LLC + JOHN SMITH
 
 def test_build_index_sorted_by_combined(soft_df, hard_df, committee_names, candidate_info):
-    index_rows, _ = build_donor_records(soft_df, hard_df, committee_names, candidate_info, {})
+    index_rows, _ = build_donor_records(soft_df, hard_df, committee_names, candidate_info, {}, {})
     # ACME LLC has 75K soft + 1K hard = 76K combined; JOHN SMITH has 500 — ACME first
     assert index_rows[0]["name"] == "ACME LLC"
 
 def test_build_soft_total(soft_df, hard_df, committee_names, candidate_info):
-    index_rows, _ = build_donor_records(soft_df, hard_df, committee_names, candidate_info, {})
+    index_rows, _ = build_donor_records(soft_df, hard_df, committee_names, candidate_info, {}, {})
     acme = next(r for r in index_rows if r["name"] == "ACME LLC")
     assert acme["total_soft"] == pytest.approx(75_000.0)
 
 def test_build_hard_total(soft_df, hard_df, committee_names, candidate_info):
-    index_rows, _ = build_donor_records(soft_df, hard_df, committee_names, candidate_info, {})
+    index_rows, _ = build_donor_records(soft_df, hard_df, committee_names, candidate_info, {}, {})
     acme = next(r for r in index_rows if r["name"] == "ACME LLC")
     assert acme["total_hard"] == pytest.approx(1_000.0)
 
 def test_build_combined_total(soft_df, hard_df, committee_names, candidate_info):
-    index_rows, _ = build_donor_records(soft_df, hard_df, committee_names, candidate_info, {})
+    index_rows, _ = build_donor_records(soft_df, hard_df, committee_names, candidate_info, {}, {})
     acme = next(r for r in index_rows if r["name"] == "ACME LLC")
     assert acme["total_combined"] == pytest.approx(76_000.0)
 
 def test_build_is_corporate(soft_df, hard_df, committee_names, candidate_info):
-    index_rows, _ = build_donor_records(soft_df, hard_df, committee_names, candidate_info, {})
+    index_rows, _ = build_donor_records(soft_df, hard_df, committee_names, candidate_info, {}, {})
     acme  = next(r for r in index_rows if r["name"] == "ACME LLC")
     smith = next(r for r in index_rows if r["name"] == "JOHN SMITH")
     assert acme["is_corporate"] is True
     assert smith["is_corporate"] is False
 
 def test_build_profile_only_above_min(soft_df, hard_df, committee_names, candidate_info):
-    index_rows, profiles = build_donor_records(soft_df, hard_df, committee_names, candidate_info, {})
+    index_rows, profiles = build_donor_records(soft_df, hard_df, committee_names, candidate_info, {}, {})
     # JOHN SMITH has $500 combined — below MIN_TOTAL ($1,000) — no profile file
     smith_slug = slugify("JOHN SMITH")
     assert smith_slug not in profiles
 
 def test_build_profile_exists_for_corporate(soft_df, hard_df, committee_names, candidate_info):
-    _, profiles = build_donor_records(soft_df, hard_df, committee_names, candidate_info, {})
+    _, profiles = build_donor_records(soft_df, hard_df, committee_names, candidate_info, {}, {})
     acme_slug = slugify("ACME LLC")
     assert acme_slug in profiles
 
 def test_build_profile_committees(soft_df, hard_df, committee_names, candidate_info):
-    _, profiles = build_donor_records(soft_df, hard_df, committee_names, candidate_info, {})
+    _, profiles = build_donor_records(soft_df, hard_df, committee_names, candidate_info, {}, {})
     acme_slug = slugify("ACME LLC")
     profile = profiles[acme_slug]
     assert len(profile["committees"]) == 2
@@ -202,7 +202,7 @@ def test_build_profile_committees(soft_df, hard_df, committee_names, candidate_i
     assert profile["committees"][0]["total"] == pytest.approx(50_000.0)
 
 def test_build_profile_candidates(soft_df, hard_df, committee_names, candidate_info):
-    _, profiles = build_donor_records(soft_df, hard_df, committee_names, candidate_info, {})
+    _, profiles = build_donor_records(soft_df, hard_df, committee_names, candidate_info, {}, {})
     acme_slug = slugify("ACME LLC")
     cands = profiles[acme_slug]["candidates"]
     assert len(cands) == 1
@@ -210,7 +210,7 @@ def test_build_profile_candidates(soft_df, hard_df, committee_names, candidate_i
     assert cands[0]["total"] == pytest.approx(1_000.0)
 
 def test_build_profile_by_year(soft_df, hard_df, committee_names, candidate_info):
-    _, profiles = build_donor_records(soft_df, hard_df, committee_names, candidate_info, {})
+    _, profiles = build_donor_records(soft_df, hard_df, committee_names, candidate_info, {}, {})
     acme_slug = slugify("ACME LLC")
     by_year = profiles[acme_slug]["by_year"]
     years = [r["year"] for r in by_year]
@@ -218,7 +218,7 @@ def test_build_profile_by_year(soft_df, hard_df, committee_names, candidate_info
 
 def test_build_lobbyist_cross_ref(soft_df, hard_df, committee_names, candidate_info):
     principal_matches = {"ACME LLC": [{"principal_name": "Acme Inc", "match_score": 95.0}]}
-    _, profiles = build_donor_records(soft_df, hard_df, committee_names, candidate_info, principal_matches)
+    _, profiles = build_donor_records(soft_df, hard_df, committee_names, candidate_info, principal_matches, {})
     acme_slug = slugify("ACME LLC")
     assert len(profiles[acme_slug]["lobbyist_principals"]) == 1
     assert profiles[acme_slug]["lobbyist_principals"][0]["principal_name"] == "Acme Inc"
@@ -226,20 +226,20 @@ def test_build_lobbyist_cross_ref(soft_df, hard_df, committee_names, candidate_i
 def test_build_no_hard_money(soft_df, committee_names, candidate_info):
     empty_hard = pd.DataFrame(columns=["canonical_name", "acct_num", "amount", "report_year"])
     index_rows, profiles = build_donor_records(
-        soft_df, empty_hard, committee_names, candidate_info, {}
+        soft_df, empty_hard, committee_names, candidate_info, {}, {},
     )
     acme = next(r for r in index_rows if r["name"] == "ACME LLC")
     assert acme["total_hard"] == 0.0
     assert acme["num_candidates"] == 0
 
 def test_build_num_committees(soft_df, hard_df, committee_names, candidate_info):
-    index_rows, _ = build_donor_records(soft_df, hard_df, committee_names, candidate_info, {})
+    index_rows, _ = build_donor_records(soft_df, hard_df, committee_names, candidate_info, {}, {})
     acme = next(r for r in index_rows if r["name"] == "ACME LLC")
     assert acme["num_committees"] == 2  # gave to 4700 and 4800
 
 def test_build_has_lobbyist_link_flag(soft_df, hard_df, committee_names, candidate_info):
     principal_matches = {"ACME LLC": [{"principal_name": "Acme", "match_score": 90.0}]}
-    index_rows, _ = build_donor_records(soft_df, hard_df, committee_names, candidate_info, principal_matches)
+    index_rows, _ = build_donor_records(soft_df, hard_df, committee_names, candidate_info, principal_matches, {})
     acme = next(r for r in index_rows if r["name"] == "ACME LLC")
     smith = next(r for r in index_rows if r["name"] == "JOHN SMITH")
     assert acme["has_lobbyist_link"] is True

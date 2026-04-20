@@ -20,6 +20,7 @@ public/data/principals/
 public/data/connections_pages/
 public/data/entity_connections_full.json
 public/data/lobbyist_comp/
+public/data/irs_bmf/
 # lobbyist_disclosures — commit top-level summary files only, exclude large per-entity subdirs
 public/data/lobbyist_disclosures/by_bill/
 public/data/lobbyist_disclosures/by_lobbyist/
