@@ -171,30 +171,86 @@ def load_candidate_finance(data_dir: Path) -> dict[str, dict]:
     return lookup
 
 
+def _build_race_clusters(df: pd.DataFrame) -> dict:
+    """Cluster candidates into real races via union-find on precinct co-occurrence.
+
+    FL precinct data labels many contests ambiguously (e.g. *all* 28 US House
+    races are labeled just "Representative in Congress" — no district number).
+    Grouping by contest_name alone merges distinct races and picks only one
+    winner across all of them.
+
+    Fix: two candidates are in the same race iff they appear together in the
+    same (county_code, precinct_id, contest_name) group. Union-find those
+    pairings to get connected components = real races.
+
+    Returns: {(contest_name, candidate_name, party) -> race_id (int)}
+    """
+    parent = {}
+    def find(x):
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+    def union(a, b):
+        ra, rb = find(a), find(b)
+        if ra != rb:
+            parent[ra] = rb
+
+    # Candidate key = (contest_name, candidate_name, party). init each to itself.
+    keys = df[["contest_name", "candidate_name", "party"]].drop_duplicates()
+    for _, r in keys.iterrows():
+        k = (r["contest_name"], r["candidate_name"], r["party"])
+        parent[k] = k
+
+    # Group by precinct+contest; within each group, union all candidates together.
+    for _, sub in df.groupby(["county_code", "precinct_id", "contest_name"], sort=False):
+        cands = sub[["contest_name", "candidate_name", "party"]].drop_duplicates()
+        if len(cands) < 2:
+            continue
+        first = (cands.iloc[0]["contest_name"], cands.iloc[0]["candidate_name"], cands.iloc[0]["party"])
+        for _, r in cands.iloc[1:].iterrows():
+            union(first, (r["contest_name"], r["candidate_name"], r["party"]))
+
+    # Assign sequential race ids to connected components.
+    roots = {}
+    race_id = {}
+    next_id = 0
+    for k in parent:
+        root = find(k)
+        if root not in roots:
+            roots[root] = next_id
+            next_id += 1
+        race_id[k] = roots[root]
+    return race_id
+
+
 def process_election(df: pd.DataFrame, year: int, cand_finance: dict) -> dict:
     """Aggregate to candidate-level totals and cross-reference with finance."""
     print(f"  Processing {year} results: {len(df):,} rows")
 
-    # Clean encoding issues in string columns
     for col in ["contest_name", "candidate_name", "party"]:
         df[col] = df[col].fillna("").astype(str).str.strip()
 
-    # Aggregate to state-wide candidate totals per contest.
-    # IMPORTANT: contest_code is county-specific (not statewide), so we group by
-    # contest_name + candidate_name + party to get correct statewide totals.
+    race_id = _build_race_clusters(df)
+
     deduped = (
         df.groupby(["contest_name", "candidate_name", "party"])["candidate_precinct_total"]
         .sum()
         .reset_index()
         .rename(columns={"candidate_precinct_total": "total_votes"})
     )
+    deduped["race_id"] = deduped.apply(
+        lambda r: race_id.get((r["contest_name"], r["candidate_name"], r["party"]), -1),
+        axis=1,
+    )
 
-    # Determine winner per contest (most votes)
     deduped["rank"] = (
-        deduped.groupby("contest_name")["total_votes"]
+        deduped.groupby("race_id")["total_votes"]
         .rank(method="first", ascending=False)
     )
     deduped["winner"] = deduped["rank"] == 1.0
+    print(f"  clustered into {deduped['race_id'].nunique()} distinct races "
+          f"(prior method: {deduped['contest_name'].nunique()} contest_names)")
 
     # Cross-reference with campaign finance
     results = []
@@ -216,6 +272,7 @@ def process_election(df: pd.DataFrame, year: int, cand_finance: dict) -> dict:
 
         entry: dict = {
             "contest_name":   str(row["contest_name"]),
+            "race_id":        int(row["race_id"]),
             "candidate_name": raw_name,
             "party":          str(row["party"]),
             "total_votes":    int(row["total_votes"]),
@@ -269,12 +326,13 @@ def main() -> int:
         # Build a "races with finance data" summary for this election
         # Find races where at least one candidate has finance data
         candidates = result["candidates"]
-        races: dict[str, dict] = {}
+        races: dict[int, dict] = {}
         for c in candidates:
-            cc = c["contest_name"]  # use contest_name as key (statewide)
+            cc = c["race_id"]  # key by clustered race id, not contest_name
             if cc not in races:
                 races[cc] = {
                     "contest_name": c["contest_name"],
+                    "race_id":      c["race_id"],
                     "candidates":   [],
                     "has_finance":  False,
                 }
