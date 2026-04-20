@@ -1,0 +1,44 @@
+name: FEC Indiv — Load FL Individual Contributions
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: fec-indiv-load
+  cancel-in-progress: false
+
+env:
+  SUPABASE_DB_URL:               ${{ secrets.SUPABASE_DB_URL }}
+  SUPABASE_SERVICE_ROLE_KEY:     ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+  NEXT_PUBLIC_SUPABASE_URL:      ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+
+jobs:
+  load:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    permissions:
+      issues: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Free disk space
+        run: |
+          df -h /
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc || true
+          df -h /
+
+      - name: Load FEC indiv (FL only, streaming)
+        uses: ./.github/actions/run-script
+        with:
+          script: 105_load_fec_indiv_fl.py
+          args: --cycles 2016,2018,2020,2022,2024,2026 --stream
+
+      - name: Open issue on failure
+        if: failure()
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: "[pipeline-failure:medium] fec-indiv-load"
+          content-filepath: data/logs/105_load_fec_indiv_fl.py.log
+          labels: pipeline-failure,severity:medium,data-update
