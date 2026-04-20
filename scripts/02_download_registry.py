@@ -211,8 +211,10 @@ def main(force: bool = False, skip_closed: bool = False) -> int:
             spec.loader.exec_module(mod)
             rc = mod.main(force=force) if hasattr(mod, "main") else 0
             if rc:
-                print(f"  Closed-committee discovery exited {rc}", file=sys.stderr)
-                return rc
+                # Non-fatal: 02b requires committees.csv which is only available
+                # after script 05 has run. In fresh CI runners, 02 runs before
+                # 05, so 02b will exit 1 on the first 02 invocation — that's OK.
+                print(f"  Closed-committee discovery exited {rc} (non-fatal)", file=sys.stderr)
         except Exception as e:
             print(f"  WARNING: closed-committee discovery failed — {e}", file=sys.stderr)
             # Not fatal — active-registry data is still usable.
