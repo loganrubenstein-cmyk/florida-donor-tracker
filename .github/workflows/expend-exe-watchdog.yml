@@ -23,8 +23,10 @@ jobs:
         id: probe
         run: |
           set +e
-          CODE=$(curl -s -o /tmp/body.html -w "%{http_code}" \
-            "https://dos.elections.myflorida.com/cgi-bin/expend.exe" \
+          # Probe the landing-page form, not the CGI. expend.exe is POST-only
+          # and returns 404 to any GET, even when the service is healthy.
+          CODE=$(curl -s -A "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36" -o /tmp/body.html -w "%{http_code}" \
+            "https://dos.elections.myflorida.com/campaign-finance/expenditures/" \
             --max-time 15)
           echo "http_code=$CODE" >> "$GITHUB_OUTPUT"
           if [ "$CODE" = "200" ]; then
