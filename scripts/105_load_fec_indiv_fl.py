@@ -216,6 +216,7 @@ def main():
         if not args.dry_run:
             print("\nRefreshing fec_indiv_donor_totals_mv …")
             with conn.cursor() as cur:
+                cur.execute("set statement_timeout = 0")
                 cur.execute("refresh materialized view concurrently fec_indiv_donor_totals_mv")
         print(f"\nTOTAL FL rows inserted across cycles: {grand_total:,}")
     finally:
