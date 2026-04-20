@@ -37,6 +37,10 @@ jobs:
         with:
           script: 03_scrape_contributions.py
           args: --since-last-manifest
+      - name: Consolidate raw contributions into CSV
+        uses: ./.github/actions/run-script
+        with:
+          script: 01_import_finance.py
       - name: Load contributions
         uses: ./.github/actions/run-script
         with:
