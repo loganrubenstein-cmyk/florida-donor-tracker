@@ -1,0 +1,101 @@
+name: Daily — Expenditures Scrape
+
+on:
+  schedule:
+    - cron: '0 12 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: daily-expenditures
+  cancel-in-progress: false
+
+env:
+  SUPABASE_DB_URL:               ${{ secrets.SUPABASE_DB_URL }}
+  SUPABASE_SERVICE_ROLE_KEY:     ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+  NEXT_PUBLIC_SUPABASE_URL:      ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    permissions:
+      issues: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Probe expend.exe
+        id: probe
+        run: |
+          set +e
+          CODE=$(curl -s -o /dev/null -w "%{http_code}" \
+            "https://dos.elections.myflorida.com/cgi-bin/expend.exe" \
+            --max-time 15)
+          if [ "$CODE" = "200" ]; then
+            echo "up=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "up=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Skip if endpoint down
+        if: steps.probe.outputs.up != 'true'
+        run: |
+          echo "::warning::expend.exe is down — hourly watchdog will alert. Skipping."
+          exit 0
+
+      - name: Download committee registry
+        if: steps.probe.outputs.up == 'true'
+        uses: ./.github/actions/run-script
+        with:
+          script: 02_download_registry.py
+
+      - name: Import committee registry
+        if: steps.probe.outputs.up == 'true'
+        uses: ./.github/actions/run-script
+        with:
+          script: 05_import_registry.py
+
+      - name: Scrape committee expenditures
+        if: steps.probe.outputs.up == 'true'
+        uses: ./.github/actions/run-script
+        with:
+          script: 04_scrape_expenditures.py
+
+      - name: Import committee expenditures
+        if: steps.probe.outputs.up == 'true'
+        uses: ./.github/actions/run-script
+        with:
+          script: 07_import_expenditures.py
+
+      - name: Load committee expenditures
+        if: steps.probe.outputs.up == 'true'
+        uses: ./.github/actions/run-script
+        with:
+          script: 43_load_expenditures.py
+
+      - name: Scrape candidate expenditures
+        if: steps.probe.outputs.up == 'true'
+        uses: ./.github/actions/run-script
+        with:
+          script: 35_scrape_candidate_expenditures.py
+
+      - name: Import candidate expenditures
+        if: steps.probe.outputs.up == 'true'
+        uses: ./.github/actions/run-script
+        with:
+          script: 36_import_candidate_expenditures.py
+
+      - name: Load candidate expenditures
+        if: steps.probe.outputs.up == 'true'
+        uses: ./.github/actions/run-script
+        with:
+          script: 44_load_candidate_expenditures.py
+
+      - name: Open issue on failure
+        if: failure()
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: "[pipeline-failure:medium] daily-expenditures"
+          content-filepath: data/logs/04_scrape_expenditures.py.log
+          labels: pipeline-failure,severity:medium,data-update
