@@ -17,16 +17,50 @@ Usage:
 """
 
 import json
+import os
+import re
 import sys
+import time
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 
 import pandas as pd
+import psycopg2
 
 sys.path.insert(0, str(Path(__file__).parent))
 from config import PROCESSED_DIR, PROJECT_ROOT
 from industry_classifier import classify_occupation, bucket_names
+
+
+def normalize_name(name) -> str:
+    if not isinstance(name, str):
+        return ""
+    return re.sub(r"\s+", " ", name.strip().upper())
+
+
+def load_db_industry_map():
+    dsn = os.getenv("SUPABASE_DB_URL") or os.getenv("DATABASE_URL")
+    if not dsn:
+        print("  [warn] SUPABASE_DB_URL not set — skipping NAICS map, occupation fallback only")
+        return {}
+    t0 = time.time()
+    print("Loading donor industry map from Supabase…")
+    conn = psycopg2.connect(dsn, keepalives=1, keepalives_idle=30, keepalives_interval=10, keepalives_count=5)
+    conn.autocommit = True
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT name, industry FROM donors WHERE industry IS NOT NULL AND industry <> ''")
+            rows = cur.fetchall()
+    finally:
+        conn.close()
+    m = {}
+    for name, ind in rows:
+        k = normalize_name(name)
+        if k:
+            m[k] = ind
+    print(f"  {len(m):,} donors with DB industry  ({time.time() - t0:.1f}s)")
+    return m
 
 PUBLIC_DIR      = PROJECT_ROOT / "public" / "data"
 SUMMARY_FILE    = PUBLIC_DIR / "industry_summary.json"
@@ -68,9 +102,23 @@ def main(force: bool = False) -> int:
     df = df[df["amount"] > 0]
     print(f"  {len(df):,} contributions loaded")
 
-    print("Classifying occupations…")
-    df["industry"] = df["contributor_occupation"].apply(classify_occupation)
-    print("  Done")
+    db_map = load_db_industry_map()
+
+    print("Classifying contributions (NAICS preferred, occupation fallback)…")
+    df["_norm"] = df["contributor_name"].apply(normalize_name)
+    db_hits = 0
+    occ_hits = 0
+    def classify_row(norm, occ):
+        nonlocal db_hits, occ_hits
+        ind = db_map.get(norm) if norm else None
+        if ind:
+            db_hits += 1
+            return ind
+        occ_hits += 1
+        return classify_occupation(occ or "")
+    df["industry"] = [classify_row(n, o) for n, o in zip(df["_norm"], df["contributor_occupation"])]
+    df.drop(columns=["_norm"], inplace=True)
+    print(f"  db={db_hits:,}  occupation_fallback={occ_hits:,}")
 
     # ── Global summary ────────────────────────────────────────────────────────
     print("Building global summary…")
