@@ -81,7 +81,7 @@ def parse_file(path: Path) -> list[dict]:
     branch = "legislative" if "Legislative" in path.name else "executive"
 
     with open(path, encoding="utf-8", errors="replace") as f:
-        reader = csv.DictReader(f, delimiter="\t")
+        reader = csv.DictReader(f, delimiter="\t", quoting=csv.QUOTE_NONE)
         for row in reader:
             rtype = (row.get("RECORD_TYPE") or "").strip()
             firm = (row.get("FIRM_NAME") or "").strip()
@@ -162,9 +162,9 @@ def main() -> int:
     buf = io.StringIO()
     for r in all_rows:
         vals = [
-            r["firm_name"].replace("\t", " ").replace("\n", " "),
-            r["lobbyist_name"].replace("\t", " ").replace("\n", " "),
-            r["principal_name"].replace("\t", " ").replace("\n", " "),
+            r["firm_name"].replace("\t", " ").replace("\n", " ")[:200],
+            r["lobbyist_name"].replace("\t", " ").replace("\n", " ")[:200],
+            r["principal_name"].replace("\t", " ").replace("\n", " ")[:200],
             r["comp_range"].replace("\t", " "),
             str(r["comp_midpoint"]),
             str(r["quarter"]),
