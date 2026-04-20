@@ -60,6 +60,35 @@ jobs:
         with:
           script: 91_rebuild_principal_comp.py
 
+      - name: Download registration PDFs (conditional GET)
+        uses: ./.github/actions/run-script
+        with:
+          script: 14b_download_registration_pdfs.py
+
+      - name: Detect whether any registration PDF changed
+        id: detect_reg
+        shell: bash
+        run: |
+          if [ -f /tmp/registration_changed ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::Registration PDFs changed — parser + loader will run"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::No registration PDFs changed — skipping parse/load"
+          fi
+
+      - name: Parse registration PDFs
+        if: steps.detect_reg.outputs.changed == 'true'
+        uses: ./.github/actions/run-script
+        with:
+          script: 14c_parse_registration_pdfs.py
+
+      - name: Load lobbyist_registrations to Supabase
+        if: steps.detect_reg.outputs.changed == 'true'
+        uses: ./.github/actions/run-script
+        with:
+          script: 45_load_lobbyist_registrations.py
+
       - name: Open issue on failure
         if: failure()
         uses: peter-evans/create-issue-from-file@v5
