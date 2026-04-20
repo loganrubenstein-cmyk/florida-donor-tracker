@@ -1,0 +1,69 @@
+name: Daily — FL Lobbyist Comp (conditional GET)
+
+on:
+  schedule:
+    - cron: '30 11 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: daily-fl-lobbyist
+  cancel-in-progress: false
+
+env:
+  SUPABASE_DB_URL:               ${{ secrets.SUPABASE_DB_URL }}
+  SUPABASE_SERVICE_ROLE_KEY:     ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      issues: write
+      contents: read
+    outputs:
+      changed: ${{ steps.detect.outputs.changed }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Refresh quarterly comp files (conditional GET)
+        uses: ./.github/actions/run-script
+        with:
+          script: 47b_refresh_lobbyist_comp.py
+
+      - name: Detect whether any file changed
+        id: detect
+        shell: bash
+        run: |
+          if [ -f /tmp/lobbyist_changed ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::Lobbyist comp files changed — downstream reload will run"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::No lobbyist comp files changed — skipping downstream"
+          fi
+
+      - name: Import comp detail to Supabase
+        if: steps.detect.outputs.changed == 'true'
+        uses: ./.github/actions/run-script
+        with:
+          script: 88_import_lobbyist_comp.py
+
+      - name: Rebuild firm tables
+        if: steps.detect.outputs.changed == 'true'
+        uses: ./.github/actions/run-script
+        with:
+          script: 90_rebuild_lobby_firm_tables.py
+
+      - name: Rebuild principal comp
+        if: steps.detect.outputs.changed == 'true'
+        uses: ./.github/actions/run-script
+        with:
+          script: 91_rebuild_principal_comp.py
+
+      - name: Open issue on failure
+        if: failure()
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: "[pipeline-failure:medium] daily-fl-lobbyist"
+          content-filepath: data/logs/47b_refresh_lobbyist_comp.py.log
+          labels: pipeline-failure,severity:medium,data-update

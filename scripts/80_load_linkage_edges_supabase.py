@@ -1,8 +1,7 @@
 """
 Script 73: Load candidate_pc_edges.csv and committee_lineage.csv into Supabase.
 
-Truncates and reloads both tables, then populates the legacy candidate_pc_links
-table from the new data for backward compatibility until the frontend is updated.
+Truncates and reloads both tables.
 
 Run after scripts 71 + 72.
 

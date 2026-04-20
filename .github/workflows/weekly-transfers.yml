@@ -22,6 +22,14 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v4
+      - name: Download committee registry
+        uses: ./.github/actions/run-script
+        with:
+          script: 02_download_registry.py
+      - name: Import committee registry
+        uses: ./.github/actions/run-script
+        with:
+          script: 05_import_registry.py
       - name: Scrape fund transfers
         uses: ./.github/actions/run-script
         with:
