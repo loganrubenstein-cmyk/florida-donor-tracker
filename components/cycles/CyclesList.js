@@ -132,6 +132,17 @@ export default function CyclesList() {
         </table>
       </div>
 
+      <div style={{
+        marginTop: '2.5rem', padding: '0.85rem 1rem',
+        border: '1px solid rgba(77,216,240,0.25)', borderRadius: '3px',
+        background: 'rgba(77,216,240,0.04)', fontSize: '0.78rem', lineHeight: 1.5,
+      }}>
+        <span style={{ color: 'var(--text-dim)' }}>State-level only. For U.S. Senate, House, and Presidential candidates from Florida, see </span>
+        <a href="/federal?cycle=2026" style={{ color: 'var(--teal)', textDecoration: 'none', fontWeight: 700 }}>
+          FL Federal Candidates →
+        </a>
+      </div>
+
       <div style={{ marginTop: '3rem' }}>
         <DataTrustBlock
           source="Florida Division of Elections — Campaign Finance Filings"

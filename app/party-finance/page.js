@@ -155,6 +155,16 @@ export default function PartyFinancePage() {
         Includes all candidates who filed, not just winners or major-party candidates.
         Year reflects candidate&apos;s election year, not when money was raised.
       </div>
+      <div style={{
+        marginTop: '1rem', padding: '0.85rem 1rem',
+        border: '1px solid rgba(77,216,240,0.25)', borderRadius: '3px',
+        background: 'rgba(77,216,240,0.04)', fontSize: '0.78rem', lineHeight: 1.5,
+      }}>
+        <span style={{ color: 'var(--text-dim)' }}>State races only. For U.S. Senate / House / Presidential candidates from FL and their PAC money, see </span>
+        <Link href="/federal?cycle=2026" style={{ color: 'var(--teal)', textDecoration: 'none', fontWeight: 700 }}>
+          FL Federal Candidates →
+        </Link>
+      </div>
       <DataTrustBlock
         source="Florida Division of Elections — Candidate Finance Records"
         sourceUrl="https://dos.elections.myflorida.com/campaign-finance/"

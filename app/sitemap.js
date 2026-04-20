@@ -8,6 +8,7 @@ const STATIC_PAGES = [
   { path: '/candidates', priority: 0.8 },
   { path: '/committees', priority: 0.8 },
   { path: '/donors', priority: 0.8 },
+  { path: '/vendors', priority: 0.7 },
   { path: '/explorer', priority: 0.7 },
   { path: '/lobbying', priority: 0.8 },
   { path: '/lobbying-firms', priority: 0.7 },
@@ -28,6 +29,7 @@ const STATIC_PAGES = [
   { path: '/solicitations', priority: 0.5 },
   { path: '/contracts', priority: 0.6 },
   { path: '/federal-contracts', priority: 0.5 },
+  { path: '/federal', priority: 0.5 },
   { path: '/research', priority: 0.5 },
   { path: '/investigations', priority: 0.5 },
   { path: '/influence', priority: 0.7 },
@@ -55,6 +57,7 @@ export async function generateSitemaps() {
     { id: 'candidates' },
     { id: 'committees' },
     { id: 'donors' },
+    { id: 'vendors' },
     { id: 'lobbyists' },
     { id: 'principals' },
     { id: 'legislators' },
@@ -110,6 +113,15 @@ export default async function sitemap({ id }) {
       url: `${BASE}/donor/${s}`,
       changeFrequency: 'monthly',
       priority: 0.5,
+    }));
+  }
+
+  if (id === 'vendors') {
+    const slugs = await fetchSlugs('vendor_entities');
+    return slugs.map(s => ({
+      url: `${BASE}/vendor/${s}`,
+      changeFrequency: 'monthly',
+      priority: 0.4,
     }));
   }
 

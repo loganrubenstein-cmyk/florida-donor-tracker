@@ -41,10 +41,12 @@ const ALL_TOOLS = [
   { href: '/donors',           title: 'Donors',                  desc: '883K deduped donor profiles — all-time FL contributors.' },
   { href: '/committees',       title: 'Committees',              desc: '5,974 PACs, ECOs, and party committees.' },
   { href: '/candidates',       title: 'Candidates',              desc: 'Every FL candidate — hard money, soft money, PAC links.' },
+  { href: '/vendors',          title: 'Vendors & Payees',        desc: '205,254 canonical vendors paid by FL committees + candidates — aliases merged.' },
   { href: '/decode',           title: 'Committee Decoder',       desc: 'Who controls and funds any FL PAC.' },
   /* ── Other ── */
   { href: '/contracts',        title: 'State Contracts',         desc: 'FL vendors who got state contracts — matched to donors.' },
   { href: '/federal-contracts',title: 'Federal Contracts',       desc: '$219B in federal awards to FL recipients.' },
+  { href: '/federal?cycle=2026',title: 'FL Federal Candidates',  desc: '2,656 FL U.S. Senate/House/President candidates across five cycles — PAC money totals.' },
   { href: '/solicitations',    title: 'Solicitations',           desc: 'FL organizations registered to solicit political contributions.' },
   { href: '/pulse',            title: 'Pulse',                   desc: 'Live feed of recent filings and large donors.' },
 ];
