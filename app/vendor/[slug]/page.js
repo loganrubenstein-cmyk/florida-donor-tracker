@@ -96,10 +96,13 @@ export default async function VendorPage({ params }) {
 
       {by_year.length > 0 && (
         <Section title="Payments by year">
-          <Table
-            headers={['Year', 'Payments', 'Total']}
-            rows={by_year.map(y => [y.report_year, (y.n || 0).toLocaleString(), fmtMoney(Number(y.total))])}
-          />
+          <YearBars data={by_year} />
+          <div style={{ marginTop: '1rem' }}>
+            <Table
+              headers={['Year', 'Payments', 'Total']}
+              rows={by_year.map(y => [y.report_year, (y.n || 0).toLocaleString(), fmtMoney(Number(y.total))])}
+            />
+          </div>
         </Section>
       )}
 
@@ -133,6 +136,25 @@ function Section({ title, children }) {
     <div style={{ marginBottom: '1.5rem' }}>
       <h2 style={{ fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--text-dim)', marginBottom: '0.6rem' }}>{title}</h2>
       {children}
+    </div>
+  );
+}
+
+function YearBars({ data }) {
+  const rows = [...data].sort((a, b) => Number(a.report_year) - Number(b.report_year));
+  const max = Math.max(...rows.map(r => Number(r.total) || 0), 1);
+  return (
+    <div style={{ display: 'flex', alignItems: 'flex-end', gap: '0.35rem', height: '120px', padding: '0.5rem 0.25rem 0', border: '1px solid var(--border)', borderRadius: '3px', background: 'var(--surface)' }}>
+      {rows.map(r => {
+        const h = (Number(r.total) / max) * 100;
+        return (
+          <div key={r.report_year} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.25rem', minWidth: 0 }}>
+            <div title={`${r.report_year}: ${fmtMoney(Number(r.total))} (${(r.n || 0).toLocaleString()} payments)`}
+              style={{ width: '100%', height: `${Math.max(h, 2)}%`, background: 'var(--teal)', opacity: 0.75, borderRadius: '2px 2px 0 0' }} />
+            <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>{String(r.report_year).slice(-2)}</div>
+          </div>
+        );
+      })}
     </div>
   );
 }
