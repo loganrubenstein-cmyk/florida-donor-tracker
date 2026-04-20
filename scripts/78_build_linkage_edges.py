@@ -65,6 +65,48 @@ _PREFIX    = re.compile(
 )
 _SUFFIX_TOKS = {"JR", "SR", "II", "III", "IV", "ESQ", "PHD", "MD", "CPA"}
 
+# Formal→short first-name variants. Normalizes both sides of a match so that
+# solicitor "DOUGLAS BANKSON" and candidate "Doug Bankson" both become
+# "DOUG BANKSON". Extend here whenever G-check surfaces a new variant.
+FIRST_NAME_VARIANTS = {
+    "DOUGLAS": "DOUG",
+    "CHRISTOPHER": "CHRIS",
+    "JEFFREY": "JEFF",
+    "ROBERT": "BOB",
+    "RICHARD": "RICK",
+    "WILLIAM": "BILL",
+    "JAMES": "JIM",
+    "THOMAS": "TOM",
+    "MICHAEL": "MIKE",
+    "DANIEL": "DAN",
+    "DAVID": "DAVE",
+    "NICHOLAS": "NICK",
+    "ANTHONY": "TONY",
+    "JOSEPH": "JOE",
+    "EDWARD": "ED",
+    "KENNETH": "KEN",
+    "MATTHEW": "MATT",
+    "STEPHEN": "STEVE",
+    "STEVEN": "STEVE",
+    "SAMUEL": "SAM",
+    "BENJAMIN": "BEN",
+    "PATRICK": "PAT",
+    "ELIZABETH": "LIZ",
+    "KATHERINE": "KATE",
+    "DEBORAH": "DEB",
+    "REBECCA": "BECKY",
+}
+
+
+def canon_first(parts: list[str]) -> list[str]:
+    """Map the first token through FIRST_NAME_VARIANTS so formal and short
+    forms compare equal. Middle-name/initial tokens are dropped (max 3 toks)."""
+    if not parts:
+        return parts
+    out = [FIRST_NAME_VARIANTS.get(parts[0], parts[0])] + parts[1:]
+    # Drop single-letter middle initials so "JAMES V MOONEY" → "JIM MOONEY"
+    return [t for t in out if len(t) > 1]
+
 # Legal entity suffixes to strip before name ratio checks.
 # After clean(), punctuation is gone — match space-separated tokens at end.
 _LEGAL_SUFFIX_RE = re.compile(
@@ -138,6 +180,11 @@ def load_candidates() -> pd.DataFrame:
         df["first_name"].str.strip() + " " + df["last_name"].str.strip()
     ).str.strip()
     df["name_clean"]   = df["candidate_name"].apply(clean)
+    # Variant-normalized form: DOUGLAS→DOUG, drop middle initials. Enables
+    # match against formal solicitor names ("DOUGLAS BANKSON").
+    df["name_variant"] = df["name_clean"].apply(
+        lambda s: " ".join(canon_first(s.split()))
+    )
     df["last_initial"] = df["last_name"].str.strip().str.upper().str[:1]
     return df.rename(columns={"acct_num": "candidate_acct"})
 
@@ -203,6 +250,10 @@ def match_candidate(name_str: str, cand_index: dict,
         return None, 0
     init = parts[-1][:1]
     full = " ".join(parts)
+    # Variant-normalized version of the solicitor: DOUGLAS→DOUG, drop middle
+    # initial. Compared against candidate["name_variant"] below so formal
+    # solicitor names still match short-form registered candidates.
+    full_variant = " ".join(canon_first(parts))
 
     best_score = 0
     best       = None
@@ -210,6 +261,11 @@ def match_candidate(name_str: str, cand_index: dict,
         s_sort = fuzz.token_sort_ratio(full, cand["name_clean"])
         s_set  = fuzz.token_set_ratio(full, cand["name_clean"])
         score  = max(s_sort, s_set * 0.95)
+        cv = cand.get("name_variant")
+        if cv and full_variant:
+            v_sort = fuzz.token_sort_ratio(full_variant, cv)
+            v_set  = fuzz.token_set_ratio(full_variant, cv)
+            score  = max(score, v_sort, v_set * 0.95)
         if score >= threshold and score > best_score:
             best_score = score
             best       = cand

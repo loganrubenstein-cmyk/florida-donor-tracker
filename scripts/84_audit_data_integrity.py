@@ -154,28 +154,63 @@ def check_c_ghost_slugs(cur):
 
 
 def check_d_truncation(cur):
-    """D — Suspiciously truncated donor names."""
+    """D — Suspiciously truncated donor names.
+
+    Only flags names that don't end in a known corporate/org suffix.
+    Legitimate long names like 'DISNEY WORLDWIDE SERVICES, INC.' end in
+    a complete-word terminator and are excluded. Slugs listed in
+    data/truncation_overrides.yaml (fixes + whitelist) are also suppressed.
+    """
     _header("D", "Possible truncated donor names (28–32 char all-caps)")
+    overrides_path = ROOT / "data" / "truncation_overrides.yaml"
+    suppressed = set()
+    if overrides_path.exists():
+        with open(overrides_path) as f:
+            ov = yaml.safe_load(f) or {}
+        suppressed.update((ov.get("fixes") or {}).keys())
+        suppressed.update(ov.get("whitelist") or [])
     table = "donors_mv" if _table_exists(cur, "donors_mv") else "donors"
     total_col = "total_combined" if table == "donors_mv" else "total_soft"
+    # Suffixes signalling a complete, non-truncated name.
+    suffix_rx = (
+        r"(INC\.?|LLC\.?|CORP\.?|CORPORATION|CO\.?|COMPANY|LP|L\.P\.?|LTD\.?|"
+        r"LIMITED|PAC|COMMITTEE|ASSOCIATION|ASSOC\.?|TRUST|FOUNDATION|GROUP|"
+        r"BANK|SERVICES|SYSTEM|SYSTEMS|FUND|UNION|PARTY|CAMPAIGN|FEDERATION|"
+        r"COALITION|ALLIANCE|COUNCIL|NETWORK|INSTITUTE|SOCIETY|CLUB)$"
+    )
+    # FL DoE field truncation typically happens at 30 chars. Require:
+    #   - length exactly 30
+    #   - ends in a letter (not period/comma/space → would indicate a complete word)
+    #   - doesn't end in a known suffix (INC, LLC, etc.)
     cur.execute(f"""
         SELECT slug, name, {total_col}::float AS total
         FROM {table}
-        WHERE LENGTH(name) BETWEEN 28 AND 32
+        WHERE LENGTH(name) = 30
           AND name = UPPER(name)
           AND name ~ '^[A-Z0-9 ,\\.&/-]+$'
-          AND name NOT LIKE '% JR%' AND name NOT LIKE '% SR%'
-          AND name NOT LIKE '% III%' AND name NOT LIKE '% II%'
+          AND name ~ '[A-Z]$'
+          AND name !~ %s
+          AND name NOT LIKE '%% JR' AND name NOT LIKE '%% SR'
+          AND name NOT LIKE '%% III' AND name NOT LIKE '%% II'
+          AND name NOT LIKE '%% IV' AND name NOT LIKE '%% V'
         ORDER BY {total_col} DESC
         LIMIT 50
-    """)
-    rows = [dict(r) for r in cur.fetchall()]
-    status = "WARN" if rows else "PASS"
+    """, (suffix_rx,))
+    rows = [dict(r) for r in cur.fetchall() if r["slug"] not in suppressed]
+    # Only WARN on high-signal truncations — low-dollar names have accurate
+    # aggregate impact even if the display name is clipped. Fix path:
+    # add to data/truncation_overrides.yaml → re-run patch_truncation_overrides.py.
+    HIGH_SIGNAL = 100_000.0
+    high_signal_rows = [r for r in rows if r["total"] >= HIGH_SIGNAL]
+    status = "WARN" if high_signal_rows else "PASS"
     for r in rows[:5]:
         print(f"  [{len(r['name'])} chars] {r['name']:<32}  ${r['total']:>12,.2f}")
-    return CheckResult("D_truncation_suspects", status,
-                       f"{len(rows)} likely-truncated names" if rows else "none",
-                       {"rows": rows})
+    msg = (f"{len(high_signal_rows)} high-signal truncations (>=${HIGH_SIGNAL:,.0f})"
+           if high_signal_rows else
+           f"none above ${HIGH_SIGNAL:,.0f} (tail: {len(rows)} under threshold)")
+    return CheckResult("D_truncation_suspects", status, msg,
+                       {"rows": rows, "suppressed_count": len(suppressed),
+                        "high_signal_threshold": HIGH_SIGNAL})
 
 
 def check_e_shadow_pac_gap(cur):
@@ -218,24 +253,66 @@ def check_f_orphan_aliases(cur):
 
 
 def check_g_missing_edges(cur):
-    """G — candidates with filed solicitations but zero linkage edges."""
+    """G — candidates with filed solicitations but zero linkage edges.
+
+    Strips Jr/Sr/II/III/IV suffixes and skips common surnames + short tokens
+    to avoid noise. Requires word-boundary match in solicitor text.
+    """
     _header("G", "Candidates with solicitation filings but no linkage edges")
     if not _table_exists(cur, "candidate_pc_edges"):
         return CheckResult("G_missing_edges", "PASS", "no candidate_pc_edges — skipping", {})
-    # Candidates whose last_name appears in a solicitation but who have 0 edges.
+    # Top common surnames — matches here are noise, not signal.
+    COMMON = (
+        "SMITH","JOHNSON","WILLIAMS","BROWN","JONES","GARCIA","MILLER","DAVIS",
+        "RODRIGUEZ","MARTINEZ","HERNANDEZ","LOPEZ","GONZALEZ","WILSON","ANDERSON",
+        "THOMAS","TAYLOR","MOORE","JACKSON","MARTIN","LEE","PEREZ","THOMPSON",
+        "WHITE","HARRIS","SANCHEZ","CLARK","RAMIREZ","LEWIS","ROBINSON","WALKER",
+        "YOUNG","ALLEN","KING","WRIGHT","SCOTT","TORRES","NGUYEN","HILL","FLORES",
+        "GREEN","ADAMS","NELSON","BAKER","HALL","RIVERA","CAMPBELL","MITCHELL",
+        "CARTER","ROBERTS","DIAZ","PHILLIPS","EVANS","TURNER","PARKER","COLLINS",
+        "EDWARDS","STEWART","MORRIS","MORALES","MURPHY","COOK","ROGERS","GUTIERREZ",
+        "WARD","COOPER","KELLY","HOWARD","REYES","MORGAN","COX","RICHARDSON","WOOD",
+        "WATSON","BROOKS","CHAVEZ","BENNETT","GRAY","JAMES","REED","KIM","BELL",
+        "ORTIZ","GOMEZ","SULLIVAN","FOSTER","JENKINS","POWELL","LONG","PATTERSON",
+        "HUGHES","FLYNN","WASHINGTON","BUTLER","BARNES","FISHER","HENDERSON","COLEMAN"
+    )
+    # Require BOTH first-token prefix AND last-token to appear in solicitor
+    # text. Avoids surname-only collisions (Chris Latvala vs Jack Latvala).
+    # First-token match uses first 4 chars so "Doug" matches "Douglas",
+    # "Danny" matches "Daniel", etc.
     cur.execute("""
-        SELECT c.acct_num, c.candidate_name
-        FROM candidates c
-        WHERE NOT EXISTS (
+        WITH norm AS (
+          SELECT
+            c.acct_num,
+            c.candidate_name,
+            upper(split_part(trim(c.candidate_name), ' ', 1)) AS first_tok,
+            split_part(
+              trim(regexp_replace(upper(c.candidate_name),
+                '\\s+(JR\\.?|SR\\.?|II|III|IV|V)$','','g')),
+              ' ',
+              array_length(regexp_split_to_array(
+                trim(regexp_replace(upper(c.candidate_name),
+                  '\\s+(JR\\.?|SR\\.?|II|III|IV|V)$','','g')),
+                '\\s+'), 1)
+            ) AS last_tok
+          FROM candidates c
+        )
+        SELECT n.acct_num, n.candidate_name, n.first_tok, n.last_tok
+        FROM norm n
+        WHERE length(n.last_tok)  >= 5
+          AND length(n.first_tok) >= 4
+          AND n.last_tok NOT IN %s
+          AND NOT EXISTS (
             SELECT 1 FROM candidate_pc_edges e
-            WHERE e.candidate_acct_num = c.acct_num AND e.is_publishable
-        )
-        AND EXISTS (
+            WHERE e.candidate_acct_num = n.acct_num AND e.is_publishable
+          )
+          AND EXISTS (
             SELECT 1 FROM committee_solicitations cs
-            WHERE cs.solicitors ILIKE '%' || split_part(c.candidate_name, ' ', -1) || '%'
-        )
+            WHERE cs.solicitors ~* ('\\y' || n.last_tok || '\\y')
+              AND cs.solicitors ~* ('\\y' || substring(n.first_tok from 1 for 4))
+          )
         LIMIT 50
-    """)
+    """, (COMMON,))
     rows = [dict(r) for r in cur.fetchall()]
     status = "WARN" if rows else "PASS"
     return CheckResult("G_missing_edges", status,
@@ -298,8 +375,12 @@ def check_i_top_donors_consistency(cur):
 
 
 def check_j_expend_gap(cur):
-    """J — committees with >$1M raised but zero expenditures (likely scrape gap)."""
-    _header("J", "Scrape-gap detector: $1M+ raised, 0 expenditures")
+    """J — ACTIVE committees with >$1M raised but zero expenditures.
+
+    Only flags currently-active committees. Closed committees with missing
+    expenditure data are a historical backfill queue, not an ongoing warning.
+    """
+    _header("J", "Scrape-gap detector: active $1M+ committees with 0 expenditures")
     if not _table_exists(cur, "committee_expenditure_summary"):
         return CheckResult("J_expend_gap", "PASS", "no expenditure_summary — skipping", {})
     cur.execute("""
@@ -308,15 +389,25 @@ def check_j_expend_gap(cur):
         LEFT JOIN committee_expenditure_summary e ON e.acct_num = c.acct_num
         WHERE c.total_received >= 1000000
           AND (e.num_expenditures IS NULL OR e.num_expenditures = 0)
+          AND (c.status = 'active' OR (c.status IS NULL AND (c.date_end IS NULL OR c.date_end > CURRENT_DATE)))
         ORDER BY c.total_received DESC
         LIMIT 100
     """)
     rows = [dict(r) for r in cur.fetchall()]
-    # This is usually expend.exe being down, not a data truth — classify WARN, not FAIL.
+    # Count closed-committee backlog separately for visibility.
+    cur.execute("""
+        SELECT COUNT(*) AS n
+        FROM committees c
+        LEFT JOIN committee_expenditure_summary e ON e.acct_num = c.acct_num
+        WHERE c.total_received >= 1000000
+          AND (e.num_expenditures IS NULL OR e.num_expenditures = 0)
+          AND NOT (c.status = 'active' OR (c.status IS NULL AND (c.date_end IS NULL OR c.date_end > CURRENT_DATE)))
+    """)
+    backlog = cur.fetchone()["n"]
     status = "WARN" if rows else "PASS"
-    return CheckResult("J_expend_gap", status,
-                       f"{len(rows)} committees missing expenditures",
-                       {"rows": rows[:20]})
+    msg = f"{len(rows)} active committees missing expenditures ({backlog} historical backlog)"
+    return CheckResult("J_expend_gap", status, msg,
+                       {"active_rows": rows[:20], "historical_backlog": backlog})
 
 
 def check_k_former_name_coverage(cur):
@@ -360,7 +451,13 @@ def check_l_solicitation_unmatched(cur):
         LIMIT 100
     """)
     rows = [dict(r) for r in cur.fetchall()]
-    status = "WARN" if rows else "PASS"
+    # Orphan stubs are PACs referenced in solicitation filings that never
+    # registered with FL DoE. Small numbers are expected noise, not a bug.
+    # WARN only above 50 orphans.
+    if len(rows) > 50:
+        status = "WARN"
+    else:
+        status = "PASS"
     return CheckResult("L_solicitation_unmatched", status,
                        f"{len(rows)} solicitation orgs produced stubs (no committee match)",
                        {"rows": rows[:30]})

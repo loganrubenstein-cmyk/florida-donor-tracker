@@ -29,9 +29,11 @@ Usage:
     python3 scripts/09_deduplicate_donors.py --limit 5000 # debug, top-N by $
 """
 
+import json
 import os
 import re
 import sys
+import time
 from pathlib import Path
 from collections import defaultdict
 
@@ -39,6 +41,26 @@ import psycopg2
 from psycopg2.extras import execute_values
 from dotenv import load_dotenv
 from thefuzz import fuzz
+
+CACHE_PATH = Path(__file__).resolve().parent.parent / "data" / "logs" / "09_clusters.json"
+
+
+def _open_conn():
+    """Fresh DB connection with keepalives + raised statement timeout.
+    Called once for load phase, once for upsert phase — never held across
+    the in-memory fuzzy pass, which can run for hours and will outlast any
+    pooled-Supabase SSL session."""
+    c = psycopg2.connect(
+        DB_URL,
+        keepalives=1,
+        keepalives_idle=30,
+        keepalives_interval=10,
+        keepalives_count=5,
+    )
+    c.autocommit = True
+    with c.cursor() as _c0:
+        _c0.execute("SET statement_timeout = '3600s'")
+    return c
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 load_dotenv(PROJECT_ROOT / ".env.local")
@@ -59,6 +81,12 @@ BLOCK_PREFIX_LEN     = 5
 #              ≥ COHESION_MIN. Dissolves transitive chains.
 MAX_CLUSTER_SIZE     = 50
 COHESION_MIN         = 88
+
+# Fuzzy-phase resilience: save partial state to CACHE_PATH every N seconds so
+# a mid-fuzzy crash doesn't lose hours of O(N²) work. Log progress every
+# PROGRESS_EVERY blocks (cheap, no disk write).
+CHECKPOINT_INTERVAL_SEC = 1800   # 30 min
+PROGRESS_EVERY          = 500    # blocks
 
 # Garbage / aggregation markers routed to the sentinel entity (Option B).
 # These are FL DoE filing conventions, not individual donors. Seeded in
@@ -214,7 +242,8 @@ def _cluster_diameter(cluster):
     return worst
 
 
-def fuzzy_cluster(name_stats, existing, pre_assigned):
+def fuzzy_cluster(name_stats, existing, pre_assigned,
+                  resume_state=None, checkpoint_cb=None):
     """
     Returns (auto_clusters, gray_pairs, rejected).
 
@@ -225,6 +254,12 @@ def fuzzy_cluster(name_stats, existing, pre_assigned):
     Only operates on names that are NOT already assigned (via manual_merge,
     corp_match, or the aggregation-marker sentinel). Garbage names are skipped
     entirely — script 09's commit step points them at SENTINEL_SLUG directly.
+
+    Resume/checkpoint:
+      resume_state (optional): {"uf_parents", "gray", "next_block_idx"} from
+        a previous partial run. Name-set must match current `names` exactly.
+      checkpoint_cb (optional): fn(uf, gray, next_block_idx, total_blocks) —
+        called every CHECKPOINT_INTERVAL_SEC seconds to persist partial state.
     """
     names = [
         n for n in name_stats
@@ -238,31 +273,58 @@ def fuzzy_cluster(name_stats, existing, pre_assigned):
         key = n[:BLOCK_PREFIX_LEN] if len(n) >= BLOCK_PREFIX_LEN else n
         blocks[key].append(n)
 
-    for block in blocks.values():
-        if len(block) < 2:
+    block_keys = sorted(blocks.keys())   # deterministic across runs
+    total_blocks = len(block_keys)
+    start_idx = 0
+
+    if resume_state is not None:
+        if set(resume_state["uf_parents"].keys()) != set(uf.p.keys()):
+            sys.exit("ERROR: partial cache name-set mismatch — delete cache and rerun fresh")
+        uf.p = dict(resume_state["uf_parents"])
+        gray = [tuple(t) for t in resume_state["gray"]]
+        start_idx = int(resume_state["next_block_idx"])
+        print(f"  [resuming fuzzy from block {start_idx:,}/{total_blocks:,}]",
+              flush=True)
+
+    last_checkpoint = time.time()
+
+    for idx, key in enumerate(block_keys):
+        if idx < start_idx:
             continue
-        for i in range(len(block)):
-            a = block[i]
-            a_corp = is_corporate(a)
-            la = len(a)
-            for j in range(i + 1, len(block)):
-                b = block[j]
-                b_corp = is_corporate(b)
-                either_corp = a_corp or b_corp
+        block = blocks[key]
+        if len(block) >= 2:
+            for i in range(len(block)):
+                a = block[i]
+                a_corp = is_corporate(a)
+                la = len(a)
+                for j in range(i + 1, len(block)):
+                    b = block[j]
+                    b_corp = is_corporate(b)
+                    either_corp = a_corp or b_corp
 
-                if not either_corp:
-                    lb = len(b)
-                    if la and lb and min(la, lb) / max(la, lb) < LENGTH_RATIO_MIN:
-                        continue
+                    if not either_corp:
+                        lb = len(b)
+                        if la and lb and min(la, lb) / max(la, lb) < LENGTH_RATIO_MIN:
+                            continue
 
-                score = fuzz.token_sort_ratio(a, b)
-                if score >= FUZZY_HIGH_SORT:
-                    set_score = fuzz.token_set_ratio(a, b)
-                    if set_score >= FUZZY_HIGH_SET:
-                        uf.union(a, b)
-                        continue
-                if FUZZY_GRAY_FLOOR <= score < FUZZY_HIGH_SORT:
-                    gray.append((a, b, score))
+                    score = fuzz.token_sort_ratio(a, b)
+                    if score >= FUZZY_HIGH_SORT:
+                        set_score = fuzz.token_set_ratio(a, b)
+                        if set_score >= FUZZY_HIGH_SET:
+                            uf.union(a, b)
+                            continue
+                    if FUZZY_GRAY_FLOOR <= score < FUZZY_HIGH_SORT:
+                        gray.append((a, b, score))
+
+        done = idx + 1
+        if done % PROGRESS_EVERY == 0:
+            print(f"  [blocks {done:,}/{total_blocks:,}  gray={len(gray):,}]",
+                  flush=True)
+
+        now = time.time()
+        if checkpoint_cb and (now - last_checkpoint) > CHECKPOINT_INTERVAL_SEC:
+            checkpoint_cb(uf, gray, done, total_blocks)
+            last_checkpoint = now
 
     raw = [c for c in uf.clusters() if len(c) > 1]
     auto, rejected = [], []
@@ -292,8 +354,87 @@ def pick_canonical(cluster, name_stats, existing):
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
+CHUNK = 5000
+
+
+def upsert_entities(cur, rows):
+    for i in range(0, len(rows), CHUNK):
+        execute_values(cur, """
+            INSERT INTO donor_entities
+                (canonical_slug, canonical_name, is_corporate,
+                 corp_ein, corp_number, industry, notes)
+            VALUES %s
+            ON CONFLICT (canonical_slug) DO NOTHING
+        """, rows[i:i + CHUNK], page_size=1000)
+
+
+def upsert_aliases(cur, rows):
+    for i in range(0, len(rows), CHUNK):
+        execute_values(cur, """
+            INSERT INTO donor_aliases
+                (alias_text, alias_text_display, canonical_slug,
+                 source, match_score, review_status, verified_by, verified_at)
+            VALUES %s
+            ON CONFLICT (alias_text) DO UPDATE SET
+                alias_text_display = EXCLUDED.alias_text_display,
+                canonical_slug     = EXCLUDED.canonical_slug,
+                source             = EXCLUDED.source,
+                match_score        = EXCLUDED.match_score
+            WHERE donor_aliases.source = 'self'
+               OR donor_aliases.source = 'dedup_pipeline'
+        """, rows[i:i + CHUNK], page_size=1000)
+
+
+def load_phase(limit):
+    """Open conn, pull totals + existing aliases, close conn.
+    Returns (name_stats, existing, by_ein, by_corp, pre_assigned)."""
+    conn = _open_conn()
+    try:
+        with conn.cursor() as cur:
+            print("Loading contributor totals from contributions…", flush=True)
+            name_stats = load_name_totals(cur, limit=limit)
+            print(f"  distinct normalized names: {len(name_stats):,}")
+            garbage_count = sum(1 for s in name_stats.values() if s.get("garbage"))
+            print(f"  aggregation markers (→ sentinel): {garbage_count:,}")
+
+            print("Loading existing aliases + corp index…", flush=True)
+            existing = load_existing_aliases(cur)
+            by_ein, by_corp = load_entity_corp_index(cur)
+            print(f"  existing aliases: {len(existing):,}")
+            print(f"  entities with EIN: {len(by_ein):,}; with corp_number: {len(by_corp):,}")
+
+            pre_assigned = {
+                n for n, (_slug, src) in existing.items()
+                if src in ("manual_merge", "corp_match", "lobbyist_match")
+            }
+            print(f"  pre-assigned (manual/corp/lobbyist): {len(pre_assigned):,}")
+        return name_stats, existing, by_ein, by_corp, pre_assigned
+    finally:
+        conn.close()
+        print("  [DB conn closed — fuzzy phase runs purely in-memory]", flush=True)
+
+
+def save_cache(payload):
+    CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    tmp = CACHE_PATH.with_suffix(".json.tmp")
+    with open(tmp, "w") as f:
+        json.dump(payload, f)
+    tmp.replace(CACHE_PATH)
+    print(f"  [cache saved → {CACHE_PATH}]", flush=True)
+
+
+def load_cache():
+    with open(CACHE_PATH) as f:
+        p = json.load(f)
+    # JSON demotes tuples to lists; restore the shapes we need.
+    p["existing"] = {k: tuple(v) for k, v in p["existing"].items()}
+    p["gray"] = [tuple(t) for t in p["gray"]]
+    return p
+
+
 def main():
     dry_run = "--dry-run" in sys.argv
+    resume = "--resume-from-cache" in sys.argv
     limit = None
     for i, arg in enumerate(sys.argv):
         if arg == "--limit" and i + 1 < len(sys.argv):
@@ -303,230 +444,265 @@ def main():
         sys.exit("ERROR: SUPABASE_DB_URL not set")
 
     print("=== Script 09: Deduplicate Donors (canonical model) ===\n")
-    # TCP keepalives survive idle SSL sessions — fuzzy pass can take hours, so
-    # a bare psycopg2 connection will timeout mid-upsert without these.
-    conn = psycopg2.connect(
-        DB_URL,
-        keepalives=1,
-        keepalives_idle=30,
-        keepalives_interval=10,
-        keepalives_count=5,
-    )
-    # Chunked commits: autocommit=True lets us flush in batches so a late
-    # error doesn't lose all prior work. Per-chunk retries are not needed —
-    # keepalives handle the SSL layer; any remaining transient failure aborts
-    # the script with partial progress persisted.
-    conn.autocommit = True
 
-    # Supabase pools impose an 8-min default statement_timeout. The full 22M-row
-    # scan in load_name_totals() blows through that. Lift it for this session.
-    with conn.cursor() as _c0:
-        _c0.execute("SET statement_timeout = '3600s'")  # 1h cap per statement
+    def _make_checkpoint_cb(name_stats, existing, pre_assigned, garbage_names):
+        def cb(uf, gray, next_block_idx, total_blocks):
+            save_cache({
+                "complete":       False,
+                "name_stats":     name_stats,
+                "existing":       {k: list(v) for k, v in existing.items()},
+                "pre_assigned":   list(pre_assigned),
+                "garbage_names":  garbage_names,
+                "uf_parents":     dict(uf.p),
+                "gray":           [list(t) for t in gray],
+                "next_block_idx": next_block_idx,
+                "total_blocks":   total_blocks,
+            })
+            print(f"  [checkpoint: {next_block_idx:,}/{total_blocks:,} blocks, "
+                  f"gray={len(gray):,}]", flush=True)
+        return cb
 
-    CHUNK = 5000  # rows per execute_values call (also the commit boundary)
+    def _save_complete_cache(name_stats, existing, pre_assigned,
+                             auto_clusters, gray, rejected, garbage_names):
+        save_cache({
+            "complete":      True,
+            "name_stats":    name_stats,
+            "existing":      {k: list(v) for k, v in existing.items()},
+            "pre_assigned":  list(pre_assigned),
+            "auto_clusters": auto_clusters,
+            "gray":          [list(t) for t in gray],
+            "rejected":      rejected,
+            "garbage_names": garbage_names,
+        })
 
-    def upsert_entities(cur, rows):
-        for i in range(0, len(rows), CHUNK):
-            execute_values(cur, """
-                INSERT INTO donor_entities
-                    (canonical_slug, canonical_name, is_corporate,
-                     corp_ein, corp_number, industry, notes)
-                VALUES %s
-                ON CONFLICT (canonical_slug) DO NOTHING
-            """, rows[i:i + CHUNK], page_size=1000)
+    if resume:
+        if not CACHE_PATH.exists():
+            sys.exit(f"ERROR: --resume-from-cache but {CACHE_PATH} missing")
+        print(f"Resuming from cache: {CACHE_PATH}", flush=True)
+        cached = load_cache()
+        is_partial = cached.get("complete") is False
 
-    def upsert_aliases(cur, rows):
-        for i in range(0, len(rows), CHUNK):
-            execute_values(cur, """
-                INSERT INTO donor_aliases
-                    (alias_text, alias_text_display, canonical_slug,
-                     source, match_score, review_status, verified_by, verified_at)
-                VALUES %s
-                ON CONFLICT (alias_text) DO UPDATE SET
-                    alias_text_display = EXCLUDED.alias_text_display,
-                    canonical_slug     = EXCLUDED.canonical_slug,
-                    source             = EXCLUDED.source,
-                    match_score        = EXCLUDED.match_score
-                WHERE donor_aliases.source = 'self'
-                   OR donor_aliases.source = 'dedup_pipeline'
-            """, rows[i:i + CHUNK], page_size=1000)
+        if is_partial:
+            print(f"  [partial cache — resuming fuzzy from block "
+                  f"{cached.get('next_block_idx', 0):,}/"
+                  f"{cached.get('total_blocks', 0):,}]", flush=True)
+            name_stats    = cached["name_stats"]
+            existing      = cached["existing"]
+            pre_assigned  = set(cached["pre_assigned"])
+            garbage_names = cached["garbage_names"]
 
-    with conn.cursor() as cur:
-        print("Loading contributor totals from contributions…", flush=True)
-        name_stats = load_name_totals(cur, limit=limit)
-        print(f"  distinct normalized names: {len(name_stats):,}")
+            print(f"\nFuzzy clustering (≥{FUZZY_HIGH_SORT}% sort AND "
+                  f"≥{FUZZY_HIGH_SET}% set) — resuming…", flush=True)
+            auto_clusters, gray, rejected = fuzzy_cluster(
+                name_stats, existing, pre_assigned,
+                resume_state={
+                    "uf_parents":     cached["uf_parents"],
+                    "gray":           cached["gray"],
+                    "next_block_idx": cached["next_block_idx"],
+                },
+                checkpoint_cb=_make_checkpoint_cb(
+                    name_stats, existing, pre_assigned, garbage_names),
+            )
+            print(f"  auto-merge clusters (≥2 members): {len(auto_clusters):,}")
+            print(f"  gray-zone pairs (85-91%):         {len(gray):,}")
+            print(f"  rejected clusters (size/cohesion): {len(rejected):,}")
+            _save_complete_cache(name_stats, existing, pre_assigned,
+                                 auto_clusters, gray, rejected, garbage_names)
+        else:
+            name_stats    = cached["name_stats"]
+            existing      = cached["existing"]
+            pre_assigned  = set(cached["pre_assigned"])
+            auto_clusters = cached["auto_clusters"]
+            gray          = cached["gray"]
+            rejected      = cached["rejected"]
+            garbage_names = cached["garbage_names"]
+            print(f"  auto clusters: {len(auto_clusters):,}  "
+                  f"gray: {len(gray):,}  rejected: {len(rejected):,}  "
+                  f"garbage: {len(garbage_names):,}")
+    else:
+        # ── Phase 1: load (short-lived conn) ────────────────────────────────
+        name_stats, existing, by_ein, by_corp, pre_assigned = load_phase(limit)
         garbage_names = [n for n, s in name_stats.items() if s.get("garbage")]
-        print(f"  aggregation markers (→ sentinel): {len(garbage_names):,}")
 
-        print("Loading existing aliases + corp index…", flush=True)
-        existing = load_existing_aliases(cur)
-        by_ein, by_corp = load_entity_corp_index(cur)
-        print(f"  existing aliases: {len(existing):,}")
-        print(f"  entities with EIN: {len(by_ein):,}; with corp_number: {len(by_corp):,}")
-
-        # Pre-assigned set — names that already have a manual_merge or corp_match
-        # row. These are immutable in this pass.
-        pre_assigned = {
-            n for n, (_slug, src) in existing.items()
-            if src in ("manual_merge", "corp_match", "lobbyist_match")
-        }
-        print(f"  pre-assigned (manual/corp/lobbyist): {len(pre_assigned):,}")
-
+        # ── Phase 2: fuzzy clustering (no DB) ───────────────────────────────
         print(f"\nFuzzy clustering (≥{FUZZY_HIGH_SORT}% sort AND ≥{FUZZY_HIGH_SET}% set)…",
               flush=True)
-        auto_clusters, gray, rejected = fuzzy_cluster(name_stats, existing, pre_assigned)
+        auto_clusters, gray, rejected = fuzzy_cluster(
+            name_stats, existing, pre_assigned,
+            checkpoint_cb=_make_checkpoint_cb(
+                name_stats, existing, pre_assigned, garbage_names),
+        )
         print(f"  auto-merge clusters (≥2 members): {len(auto_clusters):,}")
         print(f"  gray-zone pairs (85-91%):         {len(gray):,}")
         print(f"  rejected clusters (size/cohesion): {len(rejected):,}")
 
-        # Emit sample for visibility
-        largest = sorted(auto_clusters, key=len, reverse=True)[:5]
-        if largest:
-            print("\nLargest auto-merge clusters:")
-            for c in largest:
-                slug = pick_canonical(c, name_stats, existing)
-                print(f"  [{len(c)}] → {slug}")
-                for n in sorted(c, key=lambda x: -name_stats[x]["total"])[:4]:
-                    print(f"      ${name_stats[n]['total']:>14,.0f}  {name_stats[n]['display']!r}")
+        # Insurance: persist fuzzy output before touching DB again. If the
+        # upsert phase SSL-timeouts like last time, `--resume-from-cache`
+        # skips the 3h load+fuzzy.
+        _save_complete_cache(name_stats, existing, pre_assigned,
+                             auto_clusters, gray, rejected, garbage_names)
 
-        if rejected:
-            print("\nRejected clusters (by Option D guards — NOT merged):")
-            for c, reason in sorted(rejected, key=lambda x: -len(x[0]))[:5]:
-                anchor = max(c, key=lambda x: name_stats[x]["total"])
-                print(f"  [{len(c)}] {reason}  anchor={name_stats[anchor]['display']!r}")
+    # Emit sample for visibility
+    largest = sorted(auto_clusters, key=len, reverse=True)[:5]
+    if largest:
+        print("\nLargest auto-merge clusters:")
+        for c in largest:
+            slug = pick_canonical(c, name_stats, existing)
+            print(f"  [{len(c)}] → {slug}")
+            for n in sorted(c, key=lambda x: -name_stats[x]["total"])[:4]:
+                print(f"      ${name_stats[n]['total']:>14,.0f}  {name_stats[n]['display']!r}")
 
-        if dry_run:
-            print("\n[dry-run] no writes performed.")
-            return 0
+    if rejected:
+        print("\nRejected clusters (by Option D guards — NOT merged):")
+        for c, reason in sorted(rejected, key=lambda x: -len(x[0]))[:5]:
+            anchor = max(c, key=lambda x: name_stats[x]["total"])
+            print(f"  [{len(c)}] {reason}  anchor={name_stats[anchor]['display']!r}")
 
-        # ── Write auto-merge clusters ───────────────────────────────────────
-        entity_rows = []
-        alias_rows  = []
-        merge_log   = []
+    if dry_run:
+        print("\n[dry-run] no writes performed.")
+        return 0
 
-        for cluster in auto_clusters:
-            slug = pick_canonical(cluster, name_stats, existing)
-            canon_display = max(cluster, key=lambda x: name_stats[x]["total"])
-            entity_rows.append((
+    # ── Phase 3: build rows, then open a FRESH conn for upserts ─────────────
+    entity_rows = []
+    alias_rows  = []
+    merge_log   = []
+
+    for cluster in auto_clusters:
+        slug = pick_canonical(cluster, name_stats, existing)
+        canon_display = max(cluster, key=lambda x: name_stats[x]["total"])
+        entity_rows.append((
+            slug,
+            name_stats[canon_display]["display"],
+            is_corporate(canon_display),
+            None, None, None,
+            "auto-created by dedup_pipeline",
+        ))
+        anchor = max(cluster, key=lambda x: name_stats[x]["total"])
+        for n in cluster:
+            if n in pre_assigned:
+                continue
+            score = 100.0 if n == anchor else float(
+                fuzz.token_sort_ratio(n, anchor)
+            )
+            alias_rows.append((
+                n,
+                name_stats[n]["display"],
                 slug,
-                name_stats[canon_display]["display"],
-                is_corporate(canon_display),
-                None, None, None,
-                "auto-created by dedup_pipeline",
+                "dedup_pipeline",
+                score,
+                "auto",
+                None,
+                None,
             ))
-            anchor = max(cluster, key=lambda x: name_stats[x]["total"])
-            for n in cluster:
-                if n in pre_assigned:
-                    continue
-                score = 100.0 if n == anchor else float(
-                    fuzz.token_sort_ratio(n, anchor)
-                )
-                alias_rows.append((
-                    n,
-                    name_stats[n]["display"],
-                    slug,
-                    "dedup_pipeline",
-                    score,
-                    "auto",
-                    None,
-                    None,
-                ))
-            if len(cluster) > 1:
-                merge_log.append((
-                    "merge",
-                    None,
-                    slug,
-                    None,
-                    sum(name_stats[n]["count"] for n in cluster),
-                    "scripts/09",
-                    f"fuzzy auto-merge, {len(cluster)} variants",
-                ))
-
-        # ── Route garbage names to the sentinel entity ──────────────────────
-        # Sentinel row itself is seeded by scripts/09b via manual_donor_merges.yaml;
-        # we only need to upsert aliases pointing each garbage string at it.
-        if garbage_names:
-            print(f"Routing {len(garbage_names):,} aggregation markers → "
-                  f"{SENTINEL_SLUG!r}…", flush=True)
-            for n in garbage_names:
-                if n in pre_assigned:
-                    continue
-                alias_rows.append((
-                    n,
-                    name_stats[n]["display"],
-                    SENTINEL_SLUG,
-                    "dedup_pipeline",
-                    None,
-                    "auto",
-                    None,
-                    None,
-                ))
+        if len(cluster) > 1:
             merge_log.append((
-                "sentinel_route",
+                "merge",
                 None,
-                SENTINEL_SLUG,
+                slug,
                 None,
-                sum(name_stats[n]["count"] for n in garbage_names),
+                sum(name_stats[n]["count"] for n in cluster),
                 "scripts/09",
-                f"{len(garbage_names)} aggregation markers routed to sentinel",
+                f"fuzzy auto-merge, {len(cluster)} variants",
             ))
 
-        if entity_rows:
-            print(f"\nUpserting {len(entity_rows):,} entities (in chunks of {CHUNK:,})…",
-                  flush=True)
-            upsert_entities(cur, entity_rows)
+    if garbage_names:
+        print(f"Routing {len(garbage_names):,} aggregation markers → "
+              f"{SENTINEL_SLUG!r}…", flush=True)
+        for n in garbage_names:
+            if n in pre_assigned:
+                continue
+            alias_rows.append((
+                n,
+                name_stats[n]["display"],
+                SENTINEL_SLUG,
+                "dedup_pipeline",
+                None,
+                "auto",
+                None,
+                None,
+            ))
+        merge_log.append((
+            "sentinel_route",
+            None,
+            SENTINEL_SLUG,
+            None,
+            sum(name_stats[n]["count"] for n in garbage_names),
+            "scripts/09",
+            f"{len(garbage_names)} aggregation markers routed to sentinel",
+        ))
 
-        if alias_rows:
-            print(f"Upserting {len(alias_rows):,} aliases (in chunks of {CHUNK:,})…",
-                  flush=True)
-            upsert_aliases(cur, alias_rows)
+    # Dedup alias_rows by alias_text — multiple clusters can legitimately
+    # emit the same normalized alias (e.g. a garbage name that also appeared
+    # in a fuzzy cluster). ON CONFLICT DO UPDATE rejects duplicates within
+    # one execute_values call, so fold them here. Last write wins.
+    seen_a = {}
+    for row in alias_rows:
+        seen_a[row[0]] = row
+    if len(seen_a) != len(alias_rows):
+        print(f"  [deduped {len(alias_rows) - len(seen_a):,} duplicate alias_text rows]",
+              flush=True)
+    alias_rows = list(seen_a.values())
 
-        if merge_log:
-            execute_values(cur, """
-                INSERT INTO donor_merge_log
-                    (action, from_slug, to_slug, alias_text,
-                     rows_affected, actor, rationale)
-                VALUES %s
-            """, merge_log, page_size=1000)
+    seen_e = {}
+    for row in entity_rows:
+        seen_e[row[0]] = row
+    entity_rows = list(seen_e.values())
 
-        # ── Write gray-zone pairs to review queue ──────────────────────────
-        if gray:
-            # Dedup pairs: one row per candidate (worst offender), not both directions
-            seen = set()
-            q_rows = []
-            for a, b, score in gray:
-                key = tuple(sorted([a, b]))
-                if key in seen:
-                    continue
-                seen.add(key)
-                # Candidate = lower-$ name; proposed canonical = higher-$ name
-                if name_stats[a]["total"] >= name_stats[b]["total"]:
-                    winner, loser = a, b
-                else:
-                    winner, loser = b, a
-                q_rows.append((
-                    slugify(name_stats[loser]["display"]),
-                    name_stats[loser]["display"],
-                    existing.get(winner, (slugify(name_stats[winner]["display"]),))[0],
-                    name_stats[winner]["display"],
-                    float(score),
-                    "fuzzy_gray",
-                    float(name_stats[loser]["total"]),
-                ))
-            print(f"Enqueuing {len(q_rows):,} pairs for human review…", flush=True)
-            for i in range(0, len(q_rows), CHUNK):
+    conn = _open_conn()
+    try:
+        with conn.cursor() as cur:
+            if entity_rows:
+                print(f"\nUpserting {len(entity_rows):,} entities (in chunks of {CHUNK:,})…",
+                      flush=True)
+                upsert_entities(cur, entity_rows)
+
+            if alias_rows:
+                print(f"Upserting {len(alias_rows):,} aliases (in chunks of {CHUNK:,})…",
+                      flush=True)
+                upsert_aliases(cur, alias_rows)
+
+            if merge_log:
                 execute_values(cur, """
-                    INSERT INTO donor_review_queue
-                        (candidate_slug, candidate_name,
-                         proposed_canonical_slug, proposed_canonical_name,
-                         match_score, method, total_amount)
+                    INSERT INTO donor_merge_log
+                        (action, from_slug, to_slug, alias_text,
+                         rows_affected, actor, rationale)
                     VALUES %s
-                """, q_rows[i:i + CHUNK], page_size=1000)
+                """, merge_log, page_size=1000)
 
-        # autocommit=True, each chunk already persisted — "Committed." is the
-        # orchestrator's completion marker, keep it.
-        print("\nCommitted.")
-    conn.close()
+            if gray:
+                seen = set()
+                q_rows = []
+                for a, b, score in gray:
+                    key = tuple(sorted([a, b]))
+                    if key in seen:
+                        continue
+                    seen.add(key)
+                    if name_stats[a]["total"] >= name_stats[b]["total"]:
+                        winner, loser = a, b
+                    else:
+                        winner, loser = b, a
+                    q_rows.append((
+                        slugify(name_stats[loser]["display"]),
+                        name_stats[loser]["display"],
+                        existing.get(winner, (slugify(name_stats[winner]["display"]),))[0],
+                        name_stats[winner]["display"],
+                        float(score),
+                        "fuzzy_gray",
+                        float(name_stats[loser]["total"]),
+                    ))
+                print(f"Enqueuing {len(q_rows):,} pairs for human review…", flush=True)
+                for i in range(0, len(q_rows), CHUNK):
+                    execute_values(cur, """
+                        INSERT INTO donor_review_queue
+                            (candidate_slug, candidate_name,
+                             proposed_canonical_slug, proposed_canonical_name,
+                             match_score, method, total_amount)
+                        VALUES %s
+                    """, q_rows[i:i + CHUNK], page_size=1000)
+
+            print("\nCommitted.")
+    finally:
+        conn.close()
     return 0
 
 

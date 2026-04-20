@@ -1,0 +1,180 @@
+# FL DoE ingests contributor_name at 30-char max. This file records the
+# canonical full names for entities that were truncated at ingestion, plus a
+# whitelist of names that happen to be exactly 30 chars but are NOT truncated.
+#
+# Consumed by:
+#   - scripts/patch_truncation_overrides.py  (applies fixes to donor_entities)
+#   - scripts/84_audit_data_integrity.py     (check_d_truncation whitelist)
+#
+# Adding a new entry:
+#   1. Add under `fixes:` with slug + truncated + full name
+#   2. Run scripts/patch_truncation_overrides.py --apply
+#   3. Re-run 84 audit — the slug will no longer appear under D
+
+fixes:
+  republican-governors-associati:
+    truncated: "REPUBLICAN GOVERNORS ASSOCIATI"
+    full: "REPUBLICAN GOVERNORS ASSOCIATION"
+  partnership-for-economic-freed:
+    truncated: "PARTNERSHIP FOR ECONOMIC FREED"
+    full: "PARTNERSHIP FOR ECONOMIC FREEDOM"
+  floridians-for-truth-integri:
+    truncated: "FLORIDIANS FOR TRUTH & INTEGRI"
+    full: "FLORIDIANS FOR TRUTH & INTEGRITY"
+  bluecross-blueshield-of-florid:
+    truncated: "BLUECROSS BLUESHIELD OF FLORID"
+    full: "BLUECROSS BLUESHIELD OF FLORIDA"
+  southern-gardens-citrus-proces:
+    truncated: "SOUTHERN GARDENS CITRUS PROCES"
+    full: "SOUTHERN GARDENS CITRUS PROCESSORS"
+  the-new-hollywood-greyhound-tr:
+    truncated: "THE NEW HOLLYWOOD GREYHOUND TR"
+    full: "THE NEW HOLLYWOOD GREYHOUND TRACK"
+  united-healthcare-services-in:
+    truncated: "UNITED HEALTHCARE SERVICES, IN"
+    full: "UNITED HEALTHCARE SERVICES, INC"
+  universal-health-care-group-i:
+    truncated: "UNIVERSAL HEALTH CARE GROUP, I"
+    full: "UNIVERSAL HEALTH CARE GROUP, INC"
+  comm-for-fair-comp-in-telecomm:
+    truncated: "COMM FOR FAIR COMP IN TELECOMM"
+    full: "COMMITTEE FOR FAIR COMPETITION IN TELECOMMUNICATIONS"
+  pharmaceutical-research-manu:
+    truncated: "PHARMACEUTICAL RESEARCH & MANU"
+    full: "PHARMACEUTICAL RESEARCH & MANUFACTURERS OF AMERICA"
+  florida-health-plan-administra:
+    truncated: "FLORIDA HEALTH PLAN ADMINISTRA"
+    full: "FLORIDA HEALTH PLAN ADMINISTRATORS"
+  international-internet-technol:
+    truncated: "INTERNATIONAL INTERNET TECHNOL"
+    full: "INTERNATIONAL INTERNET TECHNOLOGIES"
+  neal-communities-land-developm:
+    truncated: "NEAL COMMUNITIES LAND DEVELOPM"
+    full: "NEAL COMMUNITIES LAND DEVELOPMENT"
+  select-management-resources-l:
+    truncated: "SELECT MANAGEMENT RESOURCES, L"
+    full: "SELECT MANAGEMENT RESOURCES, LLC"
+  transportation-financial-servi:
+    truncated: "TRANSPORTATION FINANCIAL SERVI"
+    full: "TRANSPORTATION FINANCIAL SERVICES"
+  jfk-medical-center-north-campu:
+    truncated: "JFK MEDICAL CENTER NORTH CAMPU"
+    full: "JFK MEDICAL CENTER NORTH CAMPUS"
+  stearns-weaver-miller-weissler:
+    truncated: "STEARNS WEAVER MILLER WEISSLER"
+    full: "STEARNS WEAVER MILLER WEISSLER ALHADEFF & SITTERSON"
+  aequicap-program-administrator:
+    truncated: "AEQUICAP PROGRAM ADMINISTRATOR"
+    full: "AEQUICAP PROGRAM ADMINISTRATORS"
+  bhs-palm-beach-credit-adjustor:
+    truncated: "BHS PALM BEACH CREDIT ADJUSTOR"
+    full: "BHS PALM BEACH CREDIT ADJUSTORS"
+  central-florida-medical-center:
+    truncated: "CENTRAL FLORIDA MEDICAL CENTER"
+    full: "CENTRAL FLORIDA MEDICAL CENTER"  # verify — keeping same for now (could be full)
+  florida-organization-of-agents:
+    truncated: "FLORIDA ORGANIZATION OF AGENTS"
+    full: "FLORIDA ORGANIZATION OF AGENTS & UNDERWRITERS"
+  mortgage-insurance-companies-o:
+    truncated: "MORTGAGE INSURANCE COMPANIES O"
+    full: "MORTGAGE INSURANCE COMPANIES OF AMERICA"
+  association-of-american-publis:
+    truncated: "ASSOCIATION OF AMERICAN PUBLIS"
+    full: "ASSOCIATION OF AMERICAN PUBLISHERS"
+  osi-restaurant-partners-llc-p:
+    truncated: "OSI RESTAURANT PARTNERS, LLC P"
+    full: "OSI RESTAURANT PARTNERS, LLC PAC"
+  hca-florida-fort-walton-destin:
+    truncated: "HCA FLORIDA FORT WALTON-DESTIN"
+    full: "HCA FLORIDA FORT WALTON-DESTIN HOSPITAL"
+  j-d-hicks-and-associates-in:
+    truncated: "J. D. HICKS AND ASSOCIATES, IN"
+    full: "J. D. HICKS AND ASSOCIATES, INC"
+  seminole-indian-casino-brigh:
+    truncated: "SEMINOLE INDIAN CASINO - BRIGH"
+    full: "SEMINOLE INDIAN CASINO - BRIGHTON"
+  seminole-indian-casino-cocon:
+    truncated: "SEMINOLE INDIAN CASINO - COCON"
+    full: "SEMINOLE INDIAN CASINO - COCONUT CREEK"
+  seminole-indian-casino-holly:
+    truncated: "SEMINOLE INDIAN CASINO - HOLLY"
+    full: "SEMINOLE INDIAN CASINO - HOLLYWOOD"
+  seminole-indian-casino-immok:
+    truncated: "SEMINOLE INDIAN CASINO - IMMOK"
+    full: "SEMINOLE INDIAN CASINO - IMMOKALEE"
+  hca-florida-university-hospita:
+    truncated: "HCA FLORIDA UNIVERSITY HOSPITA"
+    full: "HCA FLORIDA UNIVERSITY HOSPITAL"
+  baseball-llc-florida-marlins:
+    truncated: "BASEBALL. LLC, FLORIDA MARLINS"
+    full: "FLORIDA MARLINS BASEBALL, LLC"
+  florida-carpenters-regional-cc:
+    truncated: "FLORIDA CARPENTERS REGIONAL CC"
+    full: "FLORIDA CARPENTERS REGIONAL COUNCIL"
+  university-park-associates-ll:
+    truncated: "UNIVERSITY PARK ASSOCIATES, LL"
+    full: "UNIVERSITY PARK ASSOCIATES, LLC"
+  gibraltar-construction-co-in:
+    truncated: "GIBRALTAR CONSTRUCTION CO., IN"
+    full: "GIBRALTAR CONSTRUCTION CO., INC"
+  little-river-cattle-company-l:
+    truncated: "LITTLE RIVER CATTLE COMPANY, L"
+    full: "LITTLE RIVER CATTLE COMPANY, LLC"
+  hca-florida-bayonet-point-hosp:
+    truncated: "HCA FLORIDA BAYONET POINT HOSP"
+    full: "HCA FLORIDA BAYONET POINT HOSPITAL"
+  national-safety-commission-in:
+    truncated: "NATIONAL SAFETY COMMISSION, IN"
+    full: "NATIONAL SAFETY COMMISSION, INC"
+  bernie-little-dist-eaton-park:
+    truncated: "BERNIE LITTLE DIST.-EATON PARK"
+    full: "BERNIE LITTLE DISTRIBUTORS - EATON PARK"
+  colodny-fass-talenfeld-karlink:
+    truncated: "COLODNY FASS TALENFELD KARLINK"
+    full: "COLODNY FASS TALENFELD KARLINKSY & ABATE"
+  feisco-risk-management-service:
+    truncated: "FEISCO RISK MANAGEMENT SERVICE"
+    full: "FEISCO RISK MANAGEMENT SERVICES"
+
+# Slugs where the 30-char name is the FULL legal name — suppress D warning.
+whitelist:
+  - club-for-growth-action-florida
+  - sugar-cane-growers-cooperative
+  - alliance-for-honest-government
+  - initiative-for-floridas-future
+  - buccaneers-limited-partnership
+  - ranger-construction-industries
+  - citizens-for-a-safer-community
+  - farah-farah-attorneys-at-law
+  - memorial-hospital-jacksonville
+  - west-marion-community-hospital
+  - floridians-for-positive-change
+  - broward-teachers-union-broward
+  - gray-robinson-attorneys-at-law
+  - tom-gallagher-campaign-account
+  - committee-for-fair-competition
+  - florida-chamber-leadership-cce
+  - fl-chamber-free-enterprise-cce
+  - holding-developers-accountable
+  - vision-integrity-for-florida
+  - floridians-for-early-education
+  - buchanan-ingersoll-rooney-pc
+  - people-for-access-to-emergency
+  - land-company-of-osceola-county
+  - hca-florida-poinciana-hospital
+  - four-seasons-resort-palm-beach
+  - democratic-state-party-victory
+  - tampa-chapter-of-credit-unions
+  - hca-florida-englewood-hospital
+  - fowler-white-boggs-banker-pa
+  - global-financial-recordkeeping
+  - hca-florida-raulerson-hospital
+  - hca-florida-northwest-hospital
+  - hca-florida-highlands-hospital
+  - hca-florida-lake-city-hospital
+  - citizens-for-fiscal-leadership
+  - associated-general-contractors
+  - daytona-international-speedway
+  - united-citizens-leading-reform
+  - northeast-florida-conservative
+  - florida-agent-political-action

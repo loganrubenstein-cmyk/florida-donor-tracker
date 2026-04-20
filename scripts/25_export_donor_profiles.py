@@ -33,15 +33,21 @@ Usage (from project root, with .venv activated):
 """
 
 import json
+import os
 import re
 import sys
 from pathlib import Path
 from collections import defaultdict
 
 import pandas as pd
+import psycopg2
+from dotenv import load_dotenv
 
 sys.path.insert(0, str(Path(__file__).parent))
 from config import PROCESSED_DIR, PROJECT_ROOT
+
+load_dotenv(PROJECT_ROOT / ".env.local")
+DB_URL = os.getenv("SUPABASE_DB_URL")
 
 PUBLIC_DIR       = PROJECT_ROOT / "public" / "data"
 COMMITTEES_DIR   = PUBLIC_DIR / "committees"
@@ -84,6 +90,38 @@ def slugify(name) -> str:
     s = re.sub(r"[\s_]+", "-", s).strip("-")
     s = re.sub(r"-{2,}", "-", s)
     return s[:120]  # cap length
+
+
+def _alias_key(name) -> str:
+    if not isinstance(name, str):
+        return ""
+    return re.sub(r"\s+", " ", name.strip().upper())
+
+
+def load_donor_slug_map() -> dict:
+    """Return {alias_text: canonical_slug} from donor_aliases.
+
+    Post-canonical-model, donor_aliases is the source of truth mapping every
+    contributor-name variant → canonical_slug. Script 25 uses this to key
+    donor profiles by the same slug that /donor/[slug] routes expect.
+    """
+    if not DB_URL:
+        print("  [warn] SUPABASE_DB_URL not set — falling back to local slugify only")
+        return {}
+    print("  Loading donor slug map from donor_aliases…")
+    conn = psycopg2.connect(DB_URL)
+    try:
+        cur = conn.cursor()
+        cur.execute("""
+            SELECT alias_text, canonical_slug
+            FROM donor_aliases
+            WHERE review_status IN ('auto','approved')
+        """)
+        m = {a: s for a, s in cur.fetchall() if a and s}
+    finally:
+        conn.close()
+    print(f"  → {len(m):,} aliases")
+    return m
 
 
 def acct_from_source(source_file: str) -> str | None:
@@ -198,134 +236,196 @@ def build_donor_records(
     committee_names: dict,
     candidate_info: dict,
     principal_matches: dict,
+    slug_map: dict,
 ) -> tuple[list, dict]:
     """
     Returns (index_rows, profiles_by_slug).
     index_rows  — lightweight dicts for the directory listing
     profiles_by_slug — full profile dicts keyed by slug
     """
-    print("  Aggregating soft money by donor…")
-    soft_by_donor = soft.groupby("canonical_name")
-    soft_totals = soft_by_donor["amount"].sum().rename("total_soft")
-    soft_counts = soft_by_donor["amount"].count().rename("soft_count")
+    # Rewrite donor_slug on every row via donor_aliases (canonical model).
+    # Multiple canonical_name variants can collapse to one slug (e.g., 43 FPL
+    # variants → florida-power-light-company). Aggregating by donor_slug below
+    # collapses them into a single profile.
+    print("  Mapping contributions to canonical donor slugs…")
+    soft = soft.copy()
+    soft["donor_slug"] = soft["canonical_name"].apply(
+        lambda n: slug_map.get(_alias_key(n)) or slugify(n)
+    )
+    soft = soft[soft["donor_slug"] != ""]
 
-    print("  Aggregating hard money by donor…")
-    hard_by_donor = None
-    hard_names_set = set()
-    hard_totals_map: dict = {}
-    hard_counts_map: dict = {}
     if not hard.empty:
-        hard_by_donor = hard.groupby("canonical_name")
-        hard_names_set = set(hard_by_donor.groups.keys())
-        hard_totals_map = hard_by_donor["amount"].sum().to_dict()
-        hard_counts_map = hard_by_donor["amount"].count().to_dict()
+        hard = hard.copy()
+        hard["donor_slug"] = hard["canonical_name"].apply(
+            lambda n: slug_map.get(_alias_key(n)) or slugify(n)
+        )
+        hard = hard[hard["donor_slug"] != ""]
 
-    # All unique canonical donor names from soft money (primary source)
-    all_names = list(soft_totals.index)
-    total = len(all_names)
+    # Vectorized aggregations: compute each pandas groupby once, then bucket
+    # results into plain Python dicts keyed by donor_slug. The main loop then
+    # performs only O(1) dict lookups per donor — no per-donor pandas calls.
+    print("  Soft totals/counts per slug…")
+    soft_totals = soft.groupby("donor_slug")["amount"].sum().to_dict()
+    soft_counts = soft.groupby("donor_slug")["amount"].count().to_dict()
+
+    print("  Display names per slug (most common canonical_name)…")
+    slug_to_name = (
+        soft.groupby(["donor_slug", "canonical_name"]).size()
+        .reset_index(name="n")
+        .sort_values(["donor_slug", "n"], ascending=[True, False])
+        .drop_duplicates("donor_slug")
+        .set_index("donor_slug")["canonical_name"].to_dict()
+    )
+
+    print("  Top occupation + location per slug…")
+    top_occ_map = (
+        soft.dropna(subset=["contributor_occupation"])
+        .groupby(["donor_slug", "contributor_occupation"]).size()
+        .reset_index(name="n")
+        .sort_values(["donor_slug", "n"], ascending=[True, False])
+        .drop_duplicates("donor_slug")
+        .set_index("donor_slug")["contributor_occupation"].to_dict()
+    )
+    top_loc_map = (
+        soft.dropna(subset=["contributor_city_state_zip"])
+        .groupby(["donor_slug", "contributor_city_state_zip"]).size()
+        .reset_index(name="n")
+        .sort_values(["donor_slug", "n"], ascending=[True, False])
+        .drop_duplicates("donor_slug")
+        .set_index("donor_slug")["contributor_city_state_zip"].to_dict()
+    )
+
+    print("  Soft committee breakdown (top %d per slug)…" % TOP_COMMITTEES)
+    soft_acct = (
+        soft.groupby(["donor_slug", "acct_num"])["amount"]
+        .agg(total="sum", num_contributions="count").reset_index()
+    )
+    num_committees_map = soft_acct.groupby("donor_slug")["acct_num"].nunique().to_dict()
+    soft_acct_top = (
+        soft_acct.sort_values(["donor_slug", "total"], ascending=[True, False])
+        .groupby("donor_slug").head(TOP_COMMITTEES)
+    )
+    soft_acct_top_by_slug: dict[str, list] = defaultdict(list)
+    for r in soft_acct_top.itertuples(index=False):
+        soft_acct_top_by_slug[r.donor_slug].append(
+            (str(r.acct_num), float(r.total), int(r.num_contributions))
+        )
+
+    print("  Soft year breakdown per slug…")
+    soft_year = (
+        soft.dropna(subset=["report_year"])
+        .groupby(["donor_slug", "report_year"])["amount"].sum().reset_index()
+    )
+    soft_year_by_slug: dict[str, dict] = defaultdict(dict)
+    for r in soft_year.itertuples(index=False):
+        soft_year_by_slug[r.donor_slug][int(r.report_year)] = float(r.amount)
+
+    # ── Hard-money (may be empty) ──
+    hard_totals: dict = {}
+    hard_counts: dict = {}
+    hard_slugs_set: set = set()
+    num_candidates_map: dict = {}
+    hard_acct_top_by_slug: dict[str, list] = defaultdict(list)
+    hard_acct_year_mode: dict = {}
+    hard_year_by_slug: dict[str, dict] = defaultdict(dict)
+    if not hard.empty:
+        print("  Hard totals/counts per slug…")
+        hard_totals = hard.groupby("donor_slug")["amount"].sum().to_dict()
+        hard_counts = hard.groupby("donor_slug")["amount"].count().to_dict()
+        hard_slugs_set = set(hard_totals.keys())
+
+        print("  Hard candidate breakdown (top %d per slug)…" % TOP_CANDIDATES)
+        hard_acct = (
+            hard.groupby(["donor_slug", "acct_num"])["amount"]
+            .agg(total="sum", num="count").reset_index()
+        )
+        num_candidates_map = hard_acct.groupby("donor_slug")["acct_num"].nunique().to_dict()
+        hard_acct_top = (
+            hard_acct.sort_values(["donor_slug", "total"], ascending=[True, False])
+            .groupby("donor_slug").head(TOP_CANDIDATES)
+        )
+        for r in hard_acct_top.itertuples(index=False):
+            hard_acct_top_by_slug[r.donor_slug].append(
+                (str(r.acct_num), float(r.total))
+            )
+
+        print("  Hard per-(slug,acct) modal year…")
+        hard_ym = (
+            hard.dropna(subset=["report_year"])
+            .groupby(["donor_slug", "acct_num", "report_year"]).size()
+            .reset_index(name="n")
+            .sort_values(["donor_slug", "acct_num", "n"], ascending=[True, True, False])
+            .drop_duplicates(["donor_slug", "acct_num"])
+        )
+        for r in hard_ym.itertuples(index=False):
+            hard_acct_year_mode[(r.donor_slug, str(r.acct_num))] = int(r.report_year)
+
+        print("  Hard year breakdown per slug…")
+        hard_year = (
+            hard.dropna(subset=["report_year"])
+            .groupby(["donor_slug", "report_year"])["amount"].sum().reset_index()
+        )
+        for r in hard_year.itertuples(index=False):
+            hard_year_by_slug[r.donor_slug][int(r.report_year)] = float(r.amount)
+
+    # ── Build records (dict-lookup loop — fast) ──
+    all_slugs = list(soft_totals.keys())
+    total = len(all_slugs)
     print(f"  Building profiles for {total:,} unique donors…")
 
     index_rows = []
     profiles = {}
 
-    for i, name in enumerate(all_names):
-        if i % 10_000 == 0 and i > 0:
+    for i, slug in enumerate(all_slugs):
+        if i and i % 100_000 == 0:
             print(f"    {i:,}/{total:,}…")
-
-        slug = slugify(name)
-        if not slug:  # skip donors whose name produces an empty slug (e.g. bare backtick)
+        if not slug:
             continue
-        s_total = float(soft_totals.get(name, 0))
-        s_count = int(soft_counts.get(name, 0))
 
-        # Hard money for same donor (match by uppercased name)
-        h_total = float(hard_totals_map.get(name, 0))
-        h_count = int(hard_counts_map.get(name, 0))
-
+        name = slug_to_name.get(slug) or slug
+        s_total = float(soft_totals.get(slug, 0))
+        s_count = int(soft_counts.get(slug, 0))
+        h_total = float(hard_totals.get(slug, 0))
+        h_count = int(hard_counts.get(slug, 0))
         combined = s_total + h_total
         corp = is_corporate(name)
+        top_occ = top_occ_map.get(slug)
+        top_loc = top_loc_map.get(slug)
+        num_committees = int(num_committees_map.get(slug, 0))
+        num_candidates = int(num_candidates_map.get(slug, 0))
 
-        # Per-donor soft rows
-        donor_soft = soft_by_donor.get_group(name)
-
-        top_occ = top_value(donor_soft["contributor_occupation"])
-        top_loc = top_value(donor_soft["contributor_city_state_zip"])
-
-        # Committee breakdown (top N by amount)
-        comm_grp = (
-            donor_soft.groupby("acct_num")["amount"]
-            .agg(total="sum", num_contributions="count")
-            .reset_index()
-            .sort_values("total", ascending=False)
-            .head(TOP_COMMITTEES)
-        )
-        num_committees = len(donor_soft["acct_num"].unique())
-
-        # Candidate breakdown from hard money
-        num_candidates = 0
+        # Candidates (hard)
         cand_rows = []
-        if hard_by_donor and name in hard_names_set:
-            hg = hard_by_donor.get_group(name)
-            cg = (
-                hg.groupby("acct_num")["amount"]
-                .agg(total="sum", num="count")
-                .reset_index()
-                .sort_values("total", ascending=False)
-                .head(TOP_CANDIDATES)
-            )
-            num_candidates = len(hg["acct_num"].unique())
-            hg_by_acct = hg.groupby("acct_num")
-            for _, cr in cg.iterrows():
-                acct = str(cr["acct_num"])
+        if slug in hard_slugs_set:
+            for acct, cr_total in hard_acct_top_by_slug.get(slug, []):
                 info = candidate_info.get(acct, {})
-                yr_series = hg_by_acct.get_group(cr["acct_num"])["report_year"].dropna()
-                year = int(yr_series.mode().iloc[0]) if not yr_series.empty else None
+                yr = hard_acct_year_mode.get((slug, acct))
                 cand_rows.append({
                     "acct_num": acct,
                     "candidate_name": info.get("name", ""),
                     "office": info.get("office", ""),
                     "party": info.get("party", ""),
-                    "total": round(float(cr["total"]), 2),
-                    "year": year,
+                    "total": round(cr_total, 2),
+                    "year": yr,
                 })
 
-        # Year-by-year soft breakdown
-        year_soft = (
-            donor_soft.groupby("report_year")["amount"].sum()
-            .reset_index()
-            .rename(columns={"amount": "soft"})
-        )
+        # Year merge
+        years_soft = soft_year_by_slug.get(slug, {})
+        years_hard = hard_year_by_slug.get(slug, {})
+        year_keys = sorted(set(years_soft) | set(years_hard))
+        by_year = []
+        for y in year_keys:
+            s = years_soft.get(y, 0.0)
+            h = years_hard.get(y, 0.0)
+            by_year.append({
+                "year": y,
+                "soft": round(s, 2),
+                "hard": round(h, 2),
+                "total": round(s + h, 2),
+            })
 
-        # Merge hard by year if available
-        if hard_by_donor and name in hard_names_set:
-            hg = hard_by_donor.get_group(name)
-            year_hard = (
-                hg.groupby("report_year")["amount"].sum()
-                .reset_index()
-                .rename(columns={"amount": "hard"})
-            )
-            year_df = pd.merge(year_soft, year_hard, on="report_year", how="outer").fillna(0)
-        else:
-            year_df = year_soft.copy()
-            year_df["hard"] = 0.0
-
-        year_df["total"] = year_df["soft"] + year_df["hard"]
-        year_df = year_df.sort_values("report_year")
-        by_year = [
-            {
-                "year": int(row["report_year"]),
-                "soft": round(float(row["soft"]), 2),
-                "hard": round(float(row.get("hard", 0)), 2),
-                "total": round(float(row["total"]), 2),
-            }
-            for _, row in year_df.iterrows()
-            if not pd.isna(row["report_year"])
-        ]
-
-        # Lobbyist principal cross-reference
         lobbyist_principals = principal_matches.get(name, [])
 
-        # Index entry (lightweight — always written)
         index_rows.append({
             "slug": slug,
             "name": name,
@@ -341,16 +441,15 @@ def build_donor_records(
             "has_lobbyist_link": len(lobbyist_principals) > 0,
         })
 
-        # Full profile (only for donors above MIN_TOTAL)
         if combined >= MIN_TOTAL:
             comm_list = [
                 {
-                    "acct_num": str(row["acct_num"]),
-                    "committee_name": committee_names.get(str(row["acct_num"]), ""),
-                    "total": round(float(row["total"]), 2),
-                    "num_contributions": int(row["num_contributions"]),
+                    "acct_num": acct,
+                    "committee_name": committee_names.get(acct, ""),
+                    "total": round(total_amt, 2),
+                    "num_contributions": n,
                 }
-                for _, row in comm_grp.iterrows()
+                for acct, total_amt, n in soft_acct_top_by_slug.get(slug, [])
             ]
             profiles[slug] = {
                 "slug": slug,
@@ -398,8 +497,10 @@ def main(force: bool = False) -> int:
     hard = load_hard_money()
     print(f"  {len(hard):,} hard-money rows")
 
+    slug_map = load_donor_slug_map()
+
     index_rows, profiles = build_donor_records(
-        soft, hard, committee_names, candidate_info, principal_matches
+        soft, hard, committee_names, candidate_info, principal_matches, slug_map
     )
 
     # Sort index by combined total descending
