@@ -1,0 +1,150 @@
+label,name_a,name_b,category,merge_policy,rationale
+match,FACEBOOK,"FACEBOOK, INC.",suffix,auto,trivial suffix strip
+match,FACEBOOK,FACEBOOK INC,suffix,auto,trivial suffix strip
+match,FACEBOOK,FACEBOOK INC.,suffix,auto,trivial suffix strip
+match,FACEBOOK,"FACEBOOK, INC",suffix,auto,trivial suffix strip
+match,"FACEBOOK, INC.",FACEBOOK INC,suffix,auto,both suffix variants
+match,FACEBOOK,FACEBOOK.COM,web,auto,web domain appended
+match,FACEBOOK,FACEBOOK ADS,product,manual,ad product is same parent entity in spend context
+match,FACEBOOK,FACEBOOK FACEBOOK,parser,auto,parser duplicate artifact
+match,FACEBOOK.COM,FACEBOOK.COM*ADS,product,manual,same domain plus ads tag
+no_match,FACEBOOK VIA PAYPAL,FACEBOOK,routing,auto,payment routed via paypal ≠ facebook direct
+match,ANEDOT,"ANEDOT, INC.",suffix,auto,trivial suffix strip
+match,ANEDOT,ANEDOT INC,suffix,auto,trivial suffix strip
+match,ANEDOT,ANEDOT INC.,suffix,auto,trivial suffix strip
+match,ANEDOT,ANEDOT.COM,web,auto,web domain
+match,ANEDOT,ANEDOT CREDIT CARD,product,manual,same payment processor
+match,ANEDOT,INC ANEDOT,parser,auto,flipped parse artifact
+match,ANEDOT,INC. ANEDOT,parser,auto,flipped parse artifact
+match,ANEDOT,ANEDOT INC. ANEDOT,parser,auto,duplicated token artifact
+match,ANEDOT,ANEDOT PROCESSING SERVICE,product,manual,processor service tag
+match,ANEDOT,ANEDOT ONLINE DONATION SYSTEMS,product,manual,same processor
+match,ACTBLUE,ACT BLUE,spacing,auto,compact-form match
+match,ACTBLUE,"ACTBLUE, INC.",suffix,auto,trivial suffix strip
+match,ACTBLUE,ACTBLUE LLC,suffix,auto,trivial suffix strip
+match,ACTBLUE,"ACT BLUE, LLC",both,auto,spacing + suffix
+match,ACTBLUE,ACTBLUE DONATE,product,manual,same processor product
+match,ACTBLUE,ACTBLUE PROCESSING FEE,product,manual,same processor fee
+match,ACTBLUE,ACTBLUE TECHNICAL SERVICES,product,manual,actblue legal sub-unit used interchangeably in filings
+match,ACTBLUE,"ACTBLUE TECHNICAL SERVICES, INC.",product,manual,actblue legal sub-unit used interchangeably in filings
+match,ACTBLUE,ACTBLUE CIVICS,legal,manual,separate 501c4 but treated as same spend entity in FL filings
+match,ACTBLUE,ACTBLUE/VANTIV LLC,processor,manual,vantiv is payment backend
+match,PAYPAL,PAY PAL,spacing,auto,compact-form match
+match,PAYPAL,"PAYPAL, INC.",suffix,auto,trivial suffix strip
+match,PAYPAL,PAYPAL INC,suffix,auto,trivial suffix strip
+match,PAYPAL,INC. PAYPAL,parser,auto,flipped parse artifact
+match,STRIPE,"STRIPE, INC.",suffix,auto,trivial suffix strip
+match,STRIPE,INC STRIPE,parser,auto,flipped parse artifact
+match,GOOGLE,GOOGLE LLC,suffix,auto,trivial suffix strip
+match,GOOGLE,"GOOGLE, LLC",suffix,auto,trivial suffix strip
+match,GOOGLE,"GOOGLE, INC.",suffix,auto,trivial suffix strip
+match,GOOGLE,GOOGLE INC,suffix,auto,trivial suffix strip
+match,GOOGLE,GOOGLE INC.,suffix,auto,trivial suffix strip
+match,GOOGLE ADS,GOOGLE ADWORDS,product,manual,adwords was renamed to google ads
+no_match,GOOGLE,GOOGLE WORKSPACE,product,auto,workspace is saas not ads — distinct spend line
+no_match,GOOGLE,GOOGLE G SUITE,product,auto,saas product distinct from ads spend
+match,GOOGLE G SUITE,GOOGLE GSUITE,spacing,auto,compact-form match
+match,GOOGLE G SUITE,GOOGLE SUITE,token,manual,dropped G prefix
+match,GOOGLE G SUITE,GOOGLE WORKSPACE,product,manual,gsuite was renamed to workspace
+match,AMAZON,AMAZON.COM,web,auto,web domain
+match,AMAZON,"AMAZON.COM, INC.",both,auto,suffix + web
+match,AMAZON,AMAZON.COM INC,both,auto,suffix + web
+match,AMAZON,AMAZON LLC,suffix,auto,trivial suffix strip
+match,AMAZON,AMAZON MARKETPLACE,product,manual,same parent entity in spend context
+match,AMAZON,.COM AMAZON,parser,manual,parser artifact with dot prefix
+no_match,AMAZON,AMAZON WEB SERVICES,product,auto,AWS is separate spend category (infra vs retail)
+no_match,AMAZON,AMAZON PRIME,product,auto,prime is separate subscription spend line
+match,USPS,UNITED STATES POSTAL SERVICE,acronym,manual,same entity abbreviated
+match,USPS,U.S. POSTAL SERVICE,acronym,manual,same entity
+match,USPS,POSTMASTER,alias,manual,generic usps payee
+match,USPS,US POSTMASTER,alias,manual,generic usps payee
+match,UNITED STATES POSTAL SERVICE,U.S. POSTAL SERVICE,alias,auto,punctuation variant
+match,FEDEX,FEDERAL EXPRESS,alias,manual,fedex long-form
+match,FEDEX,FEDEX CORPORATION,suffix,auto,trivial suffix
+match,FEDEX,FEDEX OFFICE,product,manual,same parent
+match,FEDEX,FEDEX KINKOS,product,manual,acquired brand
+match,FEDEX,FEDEX KINKO'S,product,manual,acquired brand
+match,FEDEX,FEDEX KINKO,product,manual,acquired brand
+match,FEDEX,FEDEXX,typo,manual,double-x typo
+match,FEDEX,FEDEX - CORPORATE,punctuation,auto,same entity with dash
+match,FEDEX,CORPORATION FEDERAL EXPRESS,parser,manual,flipped parse of corporation suffix
+match,AT&T,AT & T,spacing,auto,compact-form match
+match,AT&T,ATT,acronym,manual,common at&t acronym
+match,AT&T,AT&T WIRELESS,product,manual,telecom + wireless are same parent
+match,AT&T,AT&T MOBILITY,subsidiary,manual,treat mobility as same in campaign spend context
+match,AT&T,AT&T GOPHONE,product,manual,at&t prepaid product
+match,AT&T,AT&T DATA PLAN,product,manual,at&t service
+match,AT&T,AT&T PHONE COMPANY,product,manual,at&t service
+match,AT&T MOBILITY,ATT MOBILITY,punctuation,manual,ampersand removed
+match,SUNTRUST,SUNTRUST BANK,token,manual,same bank + token
+match,SUNTRUST,BANK SUNTRUST,parser,manual,flipped token
+match,SUNTRUST,TRUIST BANK,merger,manual,suntrust→truist merger 2019
+match,BANK OF AMERICA,BANK OF AMERICA CORPORATION,suffix,auto,trivial suffix
+match,BANK OF AMERICA,BANK OF AMERICA INC.,suffix,auto,trivial suffix
+match,BANK OF AMERICA,"BANK OF AMERICA, N.A.",suffix,auto,NA is legal suffix
+match,BANK OF AMERICA,BANK OF AMERICA NA,suffix,auto,NA is legal suffix
+match,BANK OF AMERICA,BANK OF AMERICA BANK,artifact,auto,trailing bank token
+no_match,BANK OF AMERICA,BANK OF AMERICA MERCHANT SERVICES,product,auto,merchant services is distinct subsidiary
+match,WELLS FARGO,WELLS FARGO BANK,token,manual,trailing bank token
+match,CARROLL AND COMPANY,"CARROLL AND COMPANY, CPAS",suffix,auto,CPAS is credential suffix
+match,CARROLL AND COMPANY,CARROLL AND COMPANY CPAS,token,manual,without comma — same as prev but trigram sensitive
+match,CARROLL AND COMPANY,"CARROLL AND COMPANY, CPA'S",suffix,auto,apostrophe variant
+match,CARROLL AND COMPANY,CARROLL AND COMPANY CPA'S,apostrophe,manual,apostrophe variant
+match,CARROLL AND COMPANY,CARROLL & COMPANY,ampersand,auto,and↔&
+match,CARROLL AND COMPANY,"CARROLL & COMPANY, CPA'S",both,auto,ampersand + suffix
+match,COATES LAW FIRM,"COATES LAW FIRM, PL",suffix,auto,PL is legal suffix
+match,COATES LAW FIRM,COATES LAW FIRM PL,suffix,auto,PL is legal suffix
+match,COATES LAW FIRM,"COATES LAW FIRM, P.L.",suffix,auto,PL is legal suffix with punctuation
+match,DATA TARGETING,"DATA TARGETING, INC.",suffix,auto,trivial suffix
+match,DATA TARGETING,"DATA TARGETING, INC",suffix,auto,trivial suffix
+match,DATA TARGETING,DATA TARGETING INC,suffix,auto,trivial suffix
+match,DATA TARGETING,DATA TARGETING INC.,suffix,auto,trivial suffix
+match,DATA TARGETING,DATA TARGETING RESEARCH,product,manual,same firm with service tag
+match,DATA TARGETING,"DATA TARGETING RESEARCH, LLC",both,manual,service tag + suffix
+match,DATA TARGETING,DATA TARGETING RESEARCH LLC,both,manual,service tag + suffix
+match,DIRECT MAIL SYSTEMS,DIRECT MAIL SYSTEM,typo,manual,singular/plural
+match,DIRECT MAIL SYSTEMS,"DIRECT MAIL SYSTEMS, INC.",suffix,auto,trivial suffix
+match,DIRECT MAIL SYSTEMS,DIRECT MAIL SYSTEMS INC,suffix,auto,trivial suffix
+match,DIRECT MAIL SYSTEMS,"DIRECT MAIL SYSTEMS, INC",suffix,auto,trivial suffix
+no_match,DIRECT MAIL SYSTEMS,DIRECT MAIL EXPRESS,brand,auto,different brand
+no_match,DIRECT MAIL SYSTEMS,BRAMLETT DIRECT MAIL SERVICES,brand,auto,different vendor entirely
+match,BRAMLETT DIRECT MAIL SERVICES,"BRAMLETT DIRECT MAIL SERVICES,INC.",suffix,auto,missing space after comma
+match,K. BALLARD CONSULTING,K BALLARD CONSULTING,punctuation,auto,period removed
+match,K. BALLARD CONSULTING,K. BALLARD CONSULTING LLC,suffix,auto,trivial suffix
+match,EXXON,EXXON MOBIL,brand,manual,same oil company
+match,EXXON,EXXONMOBIL,spacing,manual,compact form
+match,EXXON,EXXON MOBILE,typo,manual,mobil→mobile misspelling
+match,EXXON,EXXON MOBIL CORPORATION,suffix,manual,trivial suffix
+match,CHEVRON,CHEVRON GAS,artifact,manual,trailing category token
+match,CHEVRON,CHEVRON GAS STATION,artifact,manual,trailing category
+match,COMCAST,COMCAST CABLE,artifact,manual,trailing category token
+match,COMCAST,COMCAST CORPORATION,suffix,auto,trivial suffix
+match,COMCAST,COMCAST CABLEVISION,product,manual,same parent
+match,COMCAST,COMCAST CABLE VISION,spacing,manual,compact form
+match,COMCAST,COMCAST BUSINESS,product,manual,same parent
+no_match,COMCAST,COMCAST SPOTLIGHT,product,auto,spotlight was sold off as a separate ad unit in 2020
+no_match,COMCAST,COMCAST OF TALLAHASSEE,franchise,auto,city-specific franchise stays separate
+match,HILTON,HILTON HOTELS,token,manual,trailing category
+match,HILTON,HILTON HOTEL,token,manual,trailing category
+match,HILTON,HILTON HOTELS CORPORATE,token,manual,trailing category
+no_match,HILTON,HILTON GARDEN INN,franchise,auto,sub-brand distinct
+no_match,HILTON,DOUBLETREE BY HILTON,franchise,auto,sub-brand distinct
+match,HYATT HOTELS,HYATT REGENCY,franchise,manual,sub-brand of hyatt parent (edge)
+no_match,HYATT HOTELS,HYATT PLACE,franchise,auto,sub-brand distinct in spend
+no_match,HYATT HOTELS,HYATT HOTELS CORAL GABLES,franchise,auto,city-specific
+no_match,MARRIOTT,COURTYARD BY MARRIOTT,franchise,auto,sub-brand distinct
+no_match,MARRIOTT,JW MARRIOTT,franchise,auto,sub-brand distinct
+match,COURTYARD BY MARRIOTT,COURTYARD MARRIOTT,token,manual,dropped BY
+no_match,AMERICAN EXPRESS,AMERICAN AIRLINES,brand,auto,different brands share first token
+no_match,BANK OF AMERICA,BANK OF FLORIDA,brand,auto,different banks share prefix
+no_match,CALDWELL MATT,CARROLL AND COMPANY,brand,auto,unrelated
+no_match,COATES LAW FIRM,COATES RICHARD E.,brand,auto,firm vs individual
+no_match,CARROLL AND COMPANY,CARROLL KIM,brand,auto,firm vs individual
+no_match,CARROLL AND COMPANY,CARROLLWOOD COPY CENTER,brand,auto,same prefix different entity
+no_match,CARROLL AND COMPANY,CARROLLWOOD AREA BUSINESS ASSOCIATION,brand,auto,same prefix different entity
+no_match,BALLARD KATIE,K. BALLARD CONSULTING,brand,auto,individual vs firm
+no_match,GAETZ MATT,GAETZ MATTHEW,individual,auto,different-people check; people-norm out of scope
+no_match,CALDWELL MATT,CALDWELL MATTHEW,individual,auto,same person but people-normalization out of scope
+no_match,BUSATTA DEMI,BUSATTA CABRERA DEMI,individual,auto,same person name reordered; people-normalization out of scope
+no_match,FRIENDS OF MATT CALDWELL,CALDWELL MATT,committee_vs_person,auto,distinct entity types
+no_match,DEMI BUSATTA CABRERA CAMPAIGN,BUSATTA DEMI,committee_vs_person,auto,campaign committee ≠ individual

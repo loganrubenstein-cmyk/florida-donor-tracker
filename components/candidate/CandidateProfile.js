@@ -93,7 +93,9 @@ function VendorBar({ vendor, maxAmount }) {
     <div style={{ marginBottom: '0.6rem' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', marginBottom: '0.2rem' }}>
         <span style={{ color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '60%' }}>
-          {vendor.vendor_name}
+          {vendor.vendor_canonical_slug
+            ? <Link href={`/vendor/${vendor.vendor_canonical_slug}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>{vendor.vendor_name}</Link>
+            : vendor.vendor_name}
         </span>
         <span style={{ color: 'var(--orange)', whiteSpace: 'nowrap', marginLeft: '0.5rem' }}>
           {fmtMoney(vendor.total_amount)}

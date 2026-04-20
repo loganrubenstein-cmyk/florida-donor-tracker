@@ -1,5 +1,6 @@
 // components/committee/CommitteeProfile.js
 
+import Link from 'next/link';
 import EgoGraph from '@/components/shared/EgoGraph';
 import { getPartyFromName } from '@/lib/partyUtils';
 import BackLinks from '@/components/BackLinks';
@@ -324,7 +325,9 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
                 <tr key={i} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
                   <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2rem' }}>{i + 1}</td>
                   <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text)', maxWidth: '280px', wordBreak: 'break-word' }}>
-                    {v.vendor_name}
+                    {v.vendor_canonical_slug
+                      ? <Link href={`/vendor/${v.vendor_canonical_slug}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>{v.vendor_name}</Link>
+                      : v.vendor_name}
                   </td>
                   <td style={{ padding: '0.4rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontSize: '0.7rem' }}>
                     {(v.num_payments || 0).toLocaleString()}

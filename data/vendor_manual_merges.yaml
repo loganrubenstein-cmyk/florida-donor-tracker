@@ -1,0 +1,221 @@
+# Hand-curated vendor clusters for cases the automated clusterer can't catch.
+# Loaded by 46b_build_vendor_entities.py as source='manual_merge'.
+#
+# Format:
+#   - canonical_name: "Human-readable canonical name"
+#     canonical_slug: unique-slug-no-spaces      (defaults to slugified name)
+#     is_government: true|false                  (default false)
+#     aliases:
+#       - "ALIAS 1"
+#       - "ALIAS 2"
+#
+# Aliases are normalized by _vendor_norm.normalize() before insert.
+# Each alias that's already in vendor_aliases with a different canonical_slug
+# gets REASSIGNED (logged in vendor_merge_log).
+
+clusters:
+  - canonical_name: "USPS"
+    canonical_slug: usps
+    is_government: true
+    aliases:
+      - USPS
+      - UNITED STATES POSTAL SERVICE
+      - U.S. POSTAL SERVICE
+      - US POSTAL SERVICE
+      - POSTMASTER
+      - US POSTMASTER
+      - U.S. POSTMASTER
+      - USPS.COM
+
+  - canonical_name: "FedEx"
+    canonical_slug: fedex
+    aliases:
+      - FEDEX
+      - FEDERAL EXPRESS
+      - FEDEX CORPORATION
+      - FEDERAL EXPRESS CORPORATION
+      - FEDEX OFFICE
+      - "FEDEX OFFICE & PRINT CENTER"
+      - FEDEX KINKO
+      - FEDEX KINKOS
+      - FEDEX KINKO'S
+      - FEDEXX
+      - FEDEX - CORPORATE
+      - CORPORATION FEDERAL EXPRESS
+
+  - canonical_name: "AT&T"
+    canonical_slug: att
+    aliases:
+      - AT&T
+      - ATT
+      - AT & T
+      - AT AND T
+      - AT&T MOBILITY
+      - ATT MOBILITY
+      - AT&T WIRELESS
+      - AT&T WIRELESS SERVICE
+      - AT&T GOPHONE
+      - AT&T DATA PLAN
+      - AT&T PHONE COMPANY
+
+  - canonical_name: "SunTrust / Truist Bank"
+    canonical_slug: suntrust-truist
+    aliases:
+      - SUNTRUST
+      - SUNTRUST BANK
+      - BANK SUNTRUST
+      - TRUIST
+      - TRUIST BANK
+
+  - canonical_name: "Wells Fargo"
+    canonical_slug: wells-fargo
+    aliases:
+      - WELLS FARGO
+      - WELLS FARGO BANK
+      - WELLS FARGO NA
+      - "WELLS FARGO, N.A."
+
+  - canonical_name: "ExxonMobil"
+    canonical_slug: exxonmobil
+    aliases:
+      - EXXON
+      - EXXONMOBIL
+      - EXXON MOBIL
+      - EXXON MOBILE
+      - EXXON MOBIL CORPORATION
+      - EXXON MOBILE GAS STATION
+
+  - canonical_name: "Chevron"
+    canonical_slug: chevron
+    aliases:
+      - CHEVRON
+      - CHEVRON GAS
+      - CHEVRON GAS STATION
+
+  - canonical_name: "Comcast"
+    canonical_slug: comcast
+    notes: "Excludes Comcast Spotlight (sold 2020) and city-specific franchises (handled separately)"
+    aliases:
+      - COMCAST
+      - COMCAST CABLE
+      - COMCAST CABLEVISION
+      - COMCAST CABLE VISION
+      - COMCAST BUSINESS
+      - COMCAST CORPORATION
+
+  - canonical_name: "Hilton Hotels"
+    canonical_slug: hilton
+    notes: "Excludes Hilton Garden Inn and DoubleTree — distinct sub-brands"
+    aliases:
+      - HILTON
+      - HILTON HOTEL
+      - HILTON HOTELS
+      - HILTON HOTELS CORPORATE
+
+  - canonical_name: "Hyatt"
+    canonical_slug: hyatt
+    notes: "Excludes Hyatt Place — distinct sub-brand"
+    aliases:
+      - HYATT
+      - HYATT HOTELS
+      - HYATT REGENCY
+
+  - canonical_name: "ActBlue"
+    canonical_slug: actblue
+    notes: "Includes ActBlue Civics (501c4) — treated as same spend entity in FL filings"
+    aliases:
+      - ACTBLUE
+      - ACT BLUE
+      - "ACT BLUE DONATE"
+      - "ACTBLUE DONATE"
+      - "ACTBLUE CIVICS"
+      - "ACTBLUE CIVICS, INC."
+      - "ACTBLUE INC."
+      - "ACTBLUE LLC"
+      - "ACTBLUE, INC."
+      - "ACTBLUE, LLC"
+      - "ACT BLUE, LLC"
+      - "ACTBLUE TECHNICAL SERVICES"
+      - "ACTBLUE TECHNICAL SERVICE"
+      - "ACTBLUE TECHNICAL SERVICES, INC."
+      - "ACTBLUE PROCESSING FEE"
+      - "ACTBLUE/VANTIV LLC"
+
+  - canonical_name: "Anedot"
+    canonical_slug: anedot
+    aliases:
+      - ANEDOT
+      - "ANEDOT, INC."
+      - ANEDOT INC
+      - "ANEDOT, INC"
+      - ANEDOT INC.
+      - ANEDOT.COM
+      - INC ANEDOT
+      - INC. ANEDOT
+      - ANEDOT INC. ANEDOT
+      - ANEDOT CREDIT CARD
+      - ANEDOT PROCESSING SERVICE
+      - ANEDOT ONLINE DONATION SYSTEMS
+
+  - canonical_name: "PayPal"
+    canonical_slug: paypal
+    aliases:
+      - PAYPAL
+      - PAY PAL
+      - "PAYPAL, INC."
+      - PAYPAL INC
+      - INC. PAYPAL
+
+  - canonical_name: "Stripe"
+    canonical_slug: stripe
+    aliases:
+      - STRIPE
+      - "STRIPE, INC."
+      - INC STRIPE
+
+  - canonical_name: "Amazon (retail/marketplace)"
+    canonical_slug: amazon
+    notes: "AWS and Amazon Prime are SEPARATE entities — distinct spend categories"
+    aliases:
+      - AMAZON
+      - AMAZON.COM
+      - "AMAZON.COM, INC."
+      - AMAZON.COM INC
+      - AMAZON LLC
+      - AMAZON MARKETPLACE
+      - .COM AMAZON
+
+  - canonical_name: "Amazon Web Services"
+    canonical_slug: amazon-web-services
+    aliases:
+      - AMAZON WEB SERVICES
+      - AWS
+
+  - canonical_name: "Amazon Prime"
+    canonical_slug: amazon-prime
+    aliases:
+      - AMAZON PRIME
+
+  - canonical_name: "Google Ads"
+    canonical_slug: google-ads
+    aliases:
+      - GOOGLE ADS
+      - GOOGLE ADWORDS
+
+  - canonical_name: "Google Workspace"
+    canonical_slug: google-workspace
+    notes: "Formerly G Suite (rebranded 2020)"
+    aliases:
+      - GOOGLE WORKSPACE
+      - GOOGLE G SUITE
+      - GOOGLE GSUITE
+      - GOOGLE SUITE
+
+  - canonical_name: "Florida Department of State"
+    canonical_slug: fl-dept-of-state
+    is_government: true
+    aliases:
+      - FLORIDA DEPARTMENT OF STATE
+      - DEPARTMENT OF STATE
+      - FLORIDA DIVISION OF ELECTIONS
+      - DIVISION OF ELECTIONS
