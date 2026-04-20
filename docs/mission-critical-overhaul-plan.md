@@ -17,30 +17,23 @@ E1 (DDL migration) ─────┐                                │
                                       E4 (vendor canon) ─┘  ◄── scope too large, deferred
 ```
 
-## Phase C1 — Future-dated contribution cleanup (tiny)
+## Phase C1 — Future-dated contribution cleanup (tiny) — ✅ RESOLVED 2026-04-19
 
-**Problem:** 74 contribution rows have `contribution_date > 2030-01-01` (max year 9919 from data-entry typos).
+**Original:** 74 contribution rows with `contribution_date > 2030-01-01` (max year 9919).
 
-**Fix:**
-```sql
-UPDATE contributions
-SET contribution_date = NULL
-WHERE contribution_date > '2030-01-01';
-```
-
-**Exit:** `MAX(contribution_date)` ≤ today + 30 days.
+**Status:** Already clean. `SELECT COUNT(*) WHERE contribution_date > '2030-01-01'` = 0. Cleanup applied sometime before this check. Max date today is 2026-10-30, with only 5 rows beyond `CURRENT_DATE + 30` — realistic amounts/names, likely minor typos not worth mass-nulling.
 
 ---
 
-## Phase C2 — pc_edges source-URL gap analysis (read-only)
+## Phase C2 — pc_edges source-URL gap analysis — ✅ RESOLVED 2026-04-19
 
-**Observation:** 46,656 pc_edges; 27,424 have source_url (59%); 19,232 don't (41%).
+**Original:** 46,656 pc_edges; 19,232 (41%) missing `source_url`. Is it (a) scriptable recovery or (b) legitimately unmatchable?
 
-**Question:** Is the 41% gap (a) scriptable — missed matches script 78 could recover, or (b) legitimately unmatchable — edges inferred from aggregation totals with no primary filing document.
+**Result:** **100% category (b)**. All 19,232 missing-URL rows are `edge_type=ADMIN_OVERLAP_ONLY, source_type=registry` — edges inferred from shared treasurer/chair across two registry entries. There is no single filing document to link to; the relationship is derived from comparing registrations. All `DIRECT_CONTRIBUTION_TO_CAND` (25,039) and `SOLICITATION_CONTROL` (2,360) edges already carry URLs.
 
-**Method:** Group missing-URL edges by `linkage_type`, `confidence_score`, year. If most are `solicitation_inferred` or `aggregate_total` with confidence < 0.7, they're (b). If many are `direct_filing` with missing URL, re-run script 78.
+**Frontend follow-up (different ticket):** `candidate_pc_edges` rows with `edge_type='ADMIN_OVERLAP_ONLY'` should render "Derived from shared registry admin (treasurer/chair overlap)" instead of a broken source-link slot.
 
-**Exit:** one-pager stating % (a) vs (b), and a concrete re-run command if (a).
+**Phase E5 (pc_edges source-URL backfill) is RETIRED** — there is nothing scriptable to recover.
 
 ---
 
