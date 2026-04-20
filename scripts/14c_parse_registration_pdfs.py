@@ -37,7 +37,8 @@ RE_LOB_HEADER = re.compile(
     r"^(?P<name>[A-Z][A-Za-z'\-\.\s,\"]+?)\s*\.{3,}\s*(?P<phone>\(?\d{3}\)?\s*[-\s]?\d{3}[-\s]?\d{4})\s*$"
 )
 RE_INDUSTRY = re.compile(r"^Industry Code:\s*(\d{4,6})\s*$")
-RE_EFFECTIVE = re.compile(r"^Effective:\s*(\d{2}/\d{2}/\d{4})\s*$")
+RE_EFFECTIVE = re.compile(r"^Effective:\s*(\d{2}/\d{2}/\d{4})")
+RE_CANCELED = re.compile(r"-Canceled-\s*(\d{2}/\d{2}/\d{4})")
 RE_CHAMBER = re.compile(r"^\((House|Senate|PSCNC)(?:,\s*(House|Senate|PSCNC))*(?:,\s*(House|Senate|PSCNC))?\)\s*$")
 RE_PAGE_HEADER = re.compile(r"FLORIDA (LEGISLATURE|EXECUTIVE)")
 
@@ -118,6 +119,8 @@ def parse_stream(lines: list[str], branch: str, year: int, source_url: str) -> l
                 if prev == SECTION_PRINCIPALS:
                     break
                 if RE_EFFECTIVE.match(prev):
+                    break
+                if RE_INDUSTRY.match(prev):
                     break
                 if RE_LOB_HEADER.match(prev):
                     break
