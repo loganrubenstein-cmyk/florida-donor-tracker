@@ -42,6 +42,12 @@ export default async function FederalPage({ searchParams }) {
         </div>
       </div>
 
+      <div style={{ marginBottom: '1.25rem' }}>
+        <Link href="/federal/donors" style={{ fontSize: '0.78rem', color: 'var(--teal)', textDecoration: 'none' }}>
+          View FL individual donors →
+        </Link>
+      </div>
+
       <div style={{ marginBottom: '1.5rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
         {cycles.map(c => (
           <Link

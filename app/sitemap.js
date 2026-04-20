@@ -30,6 +30,7 @@ const STATIC_PAGES = [
   { path: '/contracts', priority: 0.6 },
   { path: '/federal-contracts', priority: 0.5 },
   { path: '/federal', priority: 0.5 },
+  { path: '/federal/donors', priority: 0.5 },
   { path: '/research', priority: 0.5 },
   { path: '/investigations', priority: 0.5 },
   { path: '/influence', priority: 0.7 },
