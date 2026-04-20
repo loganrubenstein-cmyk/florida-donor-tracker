@@ -2,91 +2,91 @@
   {
     "industry": "Not Employed",
     "slug": "not-employed",
-    "total_donors": 176515,
-    "top_total": 13211362.66
-  },
-  {
-    "industry": "Real Estate",
-    "slug": "real-estate",
-    "total_donors": 44637,
-    "top_total": 2796673.87
-  },
-  {
-    "industry": "Healthcare",
-    "slug": "healthcare",
-    "total_donors": 27921,
-    "top_total": 200967022.32
+    "total_donors": 784363,
+    "top_total": 5103755.1
   },
   {
     "industry": "Other",
     "slug": "other",
-    "total_donors": 27306,
-    "top_total": 10262453.85
+    "total_donors": 249871,
+    "top_total": 25098857.89
   },
   {
-    "industry": "Retired",
-    "slug": "retired",
-    "total_donors": 9557,
-    "top_total": 1218937.5
+    "industry": "Real Estate",
+    "slug": "real-estate",
+    "total_donors": 226327,
+    "top_total": 6509971.25
   },
   {
-    "industry": "Government & Public Service",
-    "slug": "government-public-service",
-    "total_donors": 9178,
-    "top_total": 36324070.45
+    "industry": "Healthcare",
+    "slug": "healthcare",
+    "total_donors": 79151,
+    "top_total": 11441733.94
   },
   {
     "industry": "Business & Consulting",
     "slug": "business-consulting",
-    "total_donors": 8406,
-    "top_total": 16533331.21
+    "total_donors": 73273,
+    "top_total": 323361640.81
   },
   {
-    "industry": "Finance & Insurance",
-    "slug": "finance-insurance",
-    "total_donors": 7488,
-    "top_total": 28350575.85
-  },
-  {
-    "industry": "Legal",
-    "slug": "legal",
-    "total_donors": 6107,
-    "top_total": 27969053.63
-  },
-  {
-    "industry": "Construction",
-    "slug": "construction",
-    "total_donors": 6075,
-    "top_total": 1959692.26
-  },
-  {
-    "industry": "Political / Lobbying",
-    "slug": "political-lobbying",
-    "total_donors": 4425,
-    "top_total": 330985212.7
+    "industry": "Retired",
+    "slug": "retired",
+    "total_donors": 48282,
+    "top_total": 13411691.94
   },
   {
     "industry": "Education",
     "slug": "education",
-    "total_donors": 2800,
-    "top_total": 2340687.04
+    "total_donors": 44718,
+    "top_total": 3711830.51
+  },
+  {
+    "industry": "Finance & Insurance",
+    "slug": "finance-insurance",
+    "total_donors": 40430,
+    "top_total": 37571818.35
+  },
+  {
+    "industry": "Government & Public Service",
+    "slug": "government-public-service",
+    "total_donors": 31158,
+    "top_total": 30453779.24
+  },
+  {
+    "industry": "Legal",
+    "slug": "legal",
+    "total_donors": 28234,
+    "top_total": 10898088.04
+  },
+  {
+    "industry": "Construction",
+    "slug": "construction",
+    "total_donors": 17358,
+    "top_total": 5917563.91
   },
   {
     "industry": "Technology / Engineering",
     "slug": "technology-engineering",
-    "total_donors": 2382,
-    "top_total": 5776231.66
+    "total_donors": 15755,
+    "top_total": 7225054.85
+  },
+  {
+    "industry": "Political / Lobbying",
+    "slug": "political-lobbying",
+    "total_donors": 13555,
+    "top_total": 115615993.2
   },
   {
     "industry": "Retail & Hospitality",
     "slug": "retail-hospitality",
-    "total_donors": 2268,
-    "top_total": 73589000.0
+    "total_donors": 6242,
+    "top_total": 83527792.74
   },
   {
     "industry": "Agriculture",
     "slug": "agriculture",
-    "total_donors": 1413,
-    "top_total": 24617278.77
+    "total_donors": 5564,
+    "top_total": 210507255.97
   }
 ]
