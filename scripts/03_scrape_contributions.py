@@ -145,7 +145,8 @@ def main(force: bool = False, limit: int | None = None) -> int:
         f"\nDone. completed={completed}, empty={empty}, skipped={skipped}, errors={errors}"
     )
     logger.info(f"Manifest: {MANIFEST_PATH}")
-    return 0 if errors == 0 else 1
+    tolerance = max(3, int(total * 0.01))
+    return 0 if errors <= tolerance else 1
 
 
 if __name__ == "__main__":

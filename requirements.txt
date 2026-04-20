@@ -1,0 +1,11 @@
+beautifulsoup4
+feedparser
+pandas
+pdfplumber
+psycopg2-binary
+python-dotenv
+PyYAML
+rapidfuzz
+requests
+thefuzz
+urllib3
