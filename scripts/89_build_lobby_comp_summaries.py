@@ -76,7 +76,7 @@ def main() -> int:
 
     # ── 2. lobby_principal_annual ─────────────────────────────────────────────
     print("2. Building lobby_principal_annual...")
-    cur.execute("DROP TABLE IF EXISTS lobby_principal_annual")
+    cur.execute("DROP TABLE IF EXISTS lobby_principal_annual CASCADE")
     cur.execute("""
         CREATE TABLE lobby_principal_annual AS
         WITH deduped AS (
@@ -103,6 +103,31 @@ def main() -> int:
     print(f"   {cur.fetchone()[0]:,} rows")
     cur.execute("CREATE INDEX lpa_principal_idx ON lobby_principal_annual (principal_name)")
     cur.execute("CREATE INDEX lpa_year_idx ON lobby_principal_annual (year)")
+
+    # Recreate the view that was dropped by CASCADE above
+    print("   Recreating principal_influence_index view...")
+    cur.execute("""
+        CREATE OR REPLACE VIEW principal_influence_index AS
+        SELECT
+            p.id,
+            p.slug,
+            p.name,
+            p.industry,
+            COALESCE(p.donation_total, 0) AS donation_total,
+            COALESCE(lpa.total_lobby_comp, 0) AS total_lobby_comp,
+            (COALESCE(p.donation_total, 0) + COALESCE(lpa.total_lobby_comp, 0)) AS total_influence,
+            COALESCE(lpa.active_years, 0) AS active_years,
+            COALESCE(p.num_contributions, 0) AS num_contributions
+        FROM principals p
+        LEFT JOIN (
+            SELECT
+                principal_name,
+                SUM(total_comp) AS total_lobby_comp,
+                COUNT(DISTINCT year) AS active_years
+            FROM lobby_principal_annual
+            GROUP BY principal_name
+        ) lpa ON lpa.principal_name = p.name
+    """)
 
     # ── 3. lobby_firm_top_lobbyists ───────────────────────────────────────────
     print("3. Building lobby_firm_top_lobbyists...")
