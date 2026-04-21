@@ -4,6 +4,7 @@ import FloridaOutline from '@/components/shared/FloridaOutline';
 import NavLinks from '@/components/shared/NavLinks';
 import KonamiCode from '@/components/shared/KonamiCode';
 import TickerRail from '@/components/shared/TickerRail';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export const metadata = {
   metadataBase: new URL('https://floridainfluence.com'),
@@ -67,6 +68,7 @@ export default function RootLayout({ children }) {
         <TickerRail />
         {children}
         <KonamiCode />
+        <SpeedInsights />
         <footer style={{ borderTop: '1px solid var(--border)', background: 'rgba(8,8,24,0.6)', padding: '2.5rem 1.5rem 1.75rem', marginTop: '4rem' }}>
           <div className="footer-grid" style={{ maxWidth: '1100px', margin: '0 auto' }}>
             <div>
