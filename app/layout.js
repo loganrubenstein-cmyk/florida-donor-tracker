@@ -3,6 +3,7 @@ import Link from 'next/link';
 import FloridaOutline from '@/components/shared/FloridaOutline';
 import NavLinks from '@/components/shared/NavLinks';
 import KonamiCode from '@/components/shared/KonamiCode';
+import TickerRail from '@/components/shared/TickerRail';
 
 export const metadata = {
   metadataBase: new URL('https://floridainfluence.com'),
@@ -63,21 +64,77 @@ export default function RootLayout({ children }) {
             />
           </form>
         </nav>
+        <TickerRail />
         {children}
         <KonamiCode />
-        <footer className="site-footer">
-          <div style={{ maxWidth: '900px', margin: '0 auto', display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', gap: '0.5rem' }}>
-            <span>Data source: <a href="https://dos.elections.myflorida.com/campaign-finance/" target="_blank" rel="noopener noreferrer">Florida Division of Elections</a></span>
-            <span>
-              <Link href="/methodology">Methodology</Link>
-              {' · '}
-              <Link href="/data">Sources</Link>
-              {' · '}
-              <Link href="/coverage">Coverage &amp; limits</Link>
-            </span>
-            <span style={{ width: '100%', marginTop: '0.25rem', color: 'rgba(90,106,136,0.7)' }}>
-              Data reflects public records as filed. Classifications and name deduplication are inferred — not verified by the Division of Elections.
-            </span>
+        <footer style={{ borderTop: '1px solid var(--border)', background: 'rgba(8,8,24,0.6)', padding: '2.5rem 1.5rem 1.75rem', marginTop: '4rem' }}>
+          <div className="footer-grid" style={{ maxWidth: '1100px', margin: '0 auto' }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.9rem' }}>
+                <FloridaOutline size="wordmark" style={{ width: '42px', height: '35px', opacity: 0.9 }} />
+                <div>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--text)', letterSpacing: '0.22em', fontWeight: 700 }}>FLORIDA INFLUENCE</div>
+                  <div style={{ fontFamily: 'var(--font-serif)', fontSize: '0.8rem', color: 'var(--text-dim)', fontStyle: 'italic', marginTop: '0.1rem' }}>Florida: a sunny place for shady people.</div>
+                </div>
+              </div>
+              <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.7, maxWidth: '340px', marginBottom: '0.9rem' }}>
+                Built and maintained independently. Free. No ads. No login. The data is public — we just made it legible.
+              </p>
+              <div style={{ display: 'inline-block', fontFamily: 'var(--font-mono)', color: 'var(--orange)', letterSpacing: '0.22em', textTransform: 'uppercase', lineHeight: 1.8 }}>
+                <div style={{ fontSize: '0.6rem' }}>EST. 2026</div>
+                <div style={{ height: '1px', background: 'rgba(255,176,96,0.35)', margin: '3px 0' }} />
+                <div style={{ fontSize: '0.55rem', color: 'var(--text-dim)' }}>BASED IN TALLAHASSEE, FL</div>
+              </div>
+            </div>
+
+            <div>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', color: 'var(--text-dim)', letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: '0.75rem' }}>DATA</div>
+              {[
+                ['Candidates',  '/candidates'],
+                ['Committees',  '/committees'],
+                ['Donors',      '/donors'],
+                ['Lobbyists',   '/lobbyists'],
+                ['Legislators', '/legislature'],
+              ].map(([label, href]) => (
+                <Link key={href} href={href} style={{ display: 'block', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--text-dim)', textDecoration: 'none', marginBottom: '0.4rem' }}>
+                  {label}
+                </Link>
+              ))}
+            </div>
+
+            <div>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', color: 'var(--text-dim)', letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: '0.75rem' }}>TOOLS</div>
+              {[
+                ['Who funds your district', '/district'],
+                ['Candidate compare',       '/compare'],
+                ['Follow the money',        '/follow'],
+                ['Influence index',         '/influence'],
+                ['Money flow',              '/flow'],
+              ].map(([label, href]) => (
+                <Link key={href} href={href} style={{ display: 'block', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--text-dim)', textDecoration: 'none', marginBottom: '0.4rem' }}>
+                  {label}
+                </Link>
+              ))}
+            </div>
+
+            <div>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', color: 'var(--text-dim)', letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: '0.75rem' }}>ABOUT</div>
+              {[
+                ['About',              '/about'],
+                ['Methodology',        '/methodology'],
+                ['Sources',            '/data'],
+                ['Coverage & limits',  '/coverage'],
+              ].map(([label, href]) => (
+                <Link key={href} href={href} style={{ display: 'block', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--text-dim)', textDecoration: 'none', marginBottom: '0.4rem' }}>
+                  {label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ maxWidth: '1100px', margin: '2rem auto 0', paddingTop: '1.25rem', borderTop: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontFamily: 'var(--font-mono)', fontSize: '0.58rem', color: 'var(--text-dim)', letterSpacing: '0.1em' }}>
+            <span>© 2026 · FLORIDA INFLUENCE · PUBLIC RECORD · CC-BY · Data reflects public records as filed.</span>
+            <a href="#" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>↑ BACK TO TOP</a>
           </div>
         </footer>
       </body>

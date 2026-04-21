@@ -5,6 +5,7 @@ import MoneyLens from '@/components/shared/MoneyLens'
 import AnalysisHub from '@/components/home/AnalysisHub'
 import EmailStrip from '@/components/home/EmailStrip'
 import InvestigationSpotlight from '@/components/home/InvestigationSpotlight'
+import RecentContributions from '@/components/home/RecentContributions'
 import { getDb } from '@/lib/db'
 import { FEDERAL_OFFICE_CODES } from '@/lib/officeCodes'
 import { DATA_LAST_UPDATED } from '@/lib/dataLastUpdated'
@@ -59,52 +60,25 @@ const DEPTH_STATS = [
 ];
 
 const RACES_2026 = [
-  { office: 'Governor',         note: 'Open seat — DeSantis term-limited',      raised: '$4.2M+', pacs: 3, color: 'var(--teal)',   href: '/races/2026', pct: 62 },
-  { office: 'U.S. Senate',      note: 'Rubio up for re-election 2028',           raised: '$8.1M+', pacs: 5, color: 'var(--orange)', href: '/races/2026', pct: 78 },
-  { office: 'Attorney General', note: 'Moody vacated for Senate run',            raised: '$2.4M+', pacs: 2, color: 'var(--blue)',   href: '/races/2026', pct: 44 },
+  { office: 'Governor',         note: 'Open seat — DeSantis term-limited',  raised: '$4.2M+', pacs: 3, lead: 'Byron Donalds',   leadAmt: '$2.1M', color: 'var(--teal)',   href: '/races/2026' },
+  { office: 'U.S. Senate',      note: 'Rubio up for re-election 2028',       raised: '$8.1M+', pacs: 5, lead: 'Marco Rubio',     leadAmt: '$5.8M', color: 'var(--orange)', href: '/races/2026' },
+  { office: 'Attorney General', note: 'Moody vacated for Senate run',         raised: '$2.4M+', pacs: 2, lead: 'James Uthmeier', leadAmt: '$980K', color: 'var(--blue)',   href: '/races/2026' },
 ];
 
 export default async function Home() {
   const { topDonors, candidateCount, committeeCount, totalSpending, totalContributions, totalDonors, updatedDate } = await getHomeData();
-  const meta = {
-    grand_totals: { total_political_spending_tracked: totalSpending },
-    campaign_finance: { total_donors: totalDonors },
-    committees: { total_committees: committeeCount },
-    candidates: { total_candidates: candidateCount },
-  };
 
   return (
     <main>
       {/* ── Hero ── */}
       <HeroReveal updatedDate={updatedDate} />
 
+      {/* ── Investigation Spotlight ── */}
+      <InvestigationSpotlight />
+
       {/* ── Pulse ── */}
       <section style={{ maxWidth: '1140px', margin: '0 auto', padding: '1.5rem 2.5rem 0' }}>
         <PulseSection />
-      </section>
-
-      {/* ── Stats Strip ── */}
-      <section style={{ padding: '1.75rem 2.5rem', borderBottom: '1px solid rgba(100,140,220,0.1)', background: 'rgba(255,255,255,0.01)', maxWidth: '1140px', margin: '0 auto' }}>
-        <div className="rg-4" style={{ gap: '1.5rem' }}>
-          {[
-            { rawValue: meta.grand_totals?.total_political_spending_tracked ?? 0, format: 'billions', label: 'total political spending tracked', color: 'var(--orange)', lens: true },
-            { rawValue: meta.campaign_finance?.total_donors ?? 0,                  format: 'count',    label: 'deduped donor profiles',        color: 'var(--teal)'   },
-            { rawValue: meta.committees?.total_committees ?? 0,                    format: 'count',    label: 'committees tracked',            color: 'var(--green)'  },
-            { rawValue: meta.candidates?.total_candidates ?? 0,                    format: 'count',    label: 'candidates tracked',            color: 'var(--blue)'   },
-          ].map(({ rawValue, format, label, color, lens }) => (
-            <div key={label}>
-              <div style={{ fontSize: '1.65rem', fontWeight: 700, letterSpacing: '-0.02em', lineHeight: 1 }}>
-                {lens
-                  ? <MoneyLens value={rawValue}><AnimatedStat value={rawValue} format={format} color={color} /></MoneyLens>
-                  : <AnimatedStat value={rawValue} format={format} color={color} />
-                }
-              </div>
-              <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', marginTop: '0.4rem', lineHeight: 1.5 }}>
-                {label}
-              </div>
-            </div>
-          ))}
-        </div>
       </section>
 
       {/* ── Depth Differentiator ── */}
@@ -125,9 +99,6 @@ export default async function Home() {
           ))}
         </div>
       </section>
-
-      {/* ── Email Alert Strip ── */}
-      <EmailStrip />
 
       {/* ── 2026 Cycle ── */}
       <section style={{ padding: '2.5rem 2.5rem', borderBottom: '1px solid rgba(100,140,220,0.1)', maxWidth: '1140px', margin: '0 auto' }}>
@@ -150,12 +121,12 @@ export default async function Home() {
                 <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', lineHeight: 1.5, marginBottom: '0.75rem' }}>
                   {race.note}
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '0.5rem' }}>
                   <span style={{ fontSize: '1.1rem', fontWeight: 700, color: race.color }}>{race.raised}</span>
                   <span style={{ fontSize: '0.65rem', color: 'var(--text-dim)' }}>{race.pacs} PACs affiliated</span>
                 </div>
-                <div style={{ marginTop: '0.75rem', height: '3px', background: 'var(--border)', borderRadius: '2px', overflow: 'hidden' }}>
-                  <div style={{ width: `${race.pct}%`, height: '100%', background: race.color, opacity: 0.6 }} />
+                <div style={{ fontSize: '0.62rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+                  Leading: <span style={{ color: 'var(--text)' }}>{race.lead}</span> · {race.leadAmt}
                 </div>
               </div>
             </a>
@@ -177,8 +148,8 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ── Investigation Spotlight ── */}
-      <InvestigationSpotlight />
+      {/* ── Recent Contributions ── */}
+      <RecentContributions />
 
       {/* ── Analysis Hub ── */}
       <AnalysisHub />
@@ -187,6 +158,9 @@ export default async function Home() {
       <section id="donors" style={{ padding: '2.5rem 2.5rem 3rem', maxWidth: '1140px', margin: '0 auto' }}>
         <DonorTable donors={topDonors} />
       </section>
+
+      {/* ── Email Alert Strip ── */}
+      <EmailStrip />
     </main>
   )
 }

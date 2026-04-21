@@ -1,5 +1,6 @@
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
+import TrustRibbon from '@/components/shared/TrustRibbon';
 
 const FollowExplorer = dynamic(() => import('@/components/follow/FollowExplorer'), { ssr: false });
 
@@ -71,7 +72,7 @@ export default async function FollowPage({ searchParams }) {
             ))}
           </div>
 
-          <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', marginBottom: '1.25rem' }}>
             <Link href="/tools/journalists" style={{ fontSize: '0.72rem', color: 'var(--text-dim)', border: '1px solid var(--border)', borderRadius: '3px', padding: '0.4rem 0.75rem', textDecoration: 'none' }}>
               → All investigative tools
             </Link>
@@ -79,6 +80,7 @@ export default async function FollowPage({ searchParams }) {
               → Committee connections
             </Link>
           </div>
+          <TrustRibbon source="FL Division of Elections · Linked via shared treasurers" updated="Apr 14, 2026" confidence="normalized" />
         </div>
 
         {/* Notable donors sidebar */}

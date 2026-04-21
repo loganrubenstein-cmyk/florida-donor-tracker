@@ -239,6 +239,15 @@ body {
 .site-footer a { color: var(--text-dim); text-decoration: none; }
 .site-footer a:hover { color: var(--text); }
 
+/* ── Footer 4-col grid ─────────────────────────────────────────────────────── */
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 2.5rem;
+}
+@media (max-width: 768px) { .footer-grid { grid-template-columns: 1fr 1fr; gap: 1.75rem; } }
+@media (max-width: 480px) { .footer-grid { grid-template-columns: 1fr; gap: 1.5rem; } }
+
 /* ── Nav grouped dropdowns ─────────────────────────────────────────────────── */
 .nav-links-desktop {
   display: flex;

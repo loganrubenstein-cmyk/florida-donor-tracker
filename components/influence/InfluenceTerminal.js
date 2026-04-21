@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { fmtMoneyCompact, fmtCountCompact } from '@/lib/fmt'
+import TrustRibbon from '@/components/shared/TrustRibbon'
 
 const SORTS = [
   { value: 'total',  label: 'Total Influence' },
@@ -54,6 +55,10 @@ export default function InfluenceTerminal() {
       <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.82rem', color: 'var(--text-dim)', lineHeight: 1.75, maxWidth: '640px', marginBottom: '1.25rem' }}>
         Click any bar to read the file. Sorted by combined influence — campaign contributions plus lobbying compensation, 1996–2026.
       </p>
+
+      <div style={{ marginBottom: '1.5rem' }}>
+        <TrustRibbon source="FL Division of Elections · Dept. of State Lobbyist Registration" updated="Apr 18, 2026" confidence="normalized" />
+      </div>
 
       {/* Controls */}
       <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center', marginBottom: '1.25rem' }}>

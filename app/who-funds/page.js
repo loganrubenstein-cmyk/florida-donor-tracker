@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { fmtMoney, fmtMoneyCompact } from '@/lib/fmt';
+import TrustRibbon from '@/components/shared/TrustRibbon';
 
 const PARTY_COLOR = { R: 'var(--republican)', D: 'var(--democrat)', I: 'var(--orange)', NPA: 'var(--text-dim)' };
 const PARTY_LABEL = { R: 'Republican', D: 'Democrat', I: 'Independent', NPA: 'No Party Affiliation' };
@@ -150,7 +151,7 @@ export default function WhoFundsPage() {
           </div>
 
           {/* Quick picks */}
-          <div style={{ display: 'flex', gap: '0.3rem', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: '0.3rem', flexWrap: 'wrap', marginBottom: '1.25rem' }}>
             {(chamber === 'House' ? [1,10,20,30,40,60,80,100,120] : [1,5,10,20,30,40]).map(n => (
               <button key={n} onClick={() => setDistrict(String(n))}
                 style={{
@@ -162,6 +163,7 @@ export default function WhoFundsPage() {
               </button>
             ))}
           </div>
+          <TrustRibbon source="FL Division of Elections · LegiScan vote data" updated="Apr 14, 2026" confidence="normalized" />
         </div>
 
         {/* Sidebar */}

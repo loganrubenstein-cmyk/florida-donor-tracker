@@ -5,21 +5,6 @@ import FloridaOutline from '@/components/shared/FloridaOutline'
 import MoneyClock from '@/components/home/MoneyClock'
 import DidYouKnow from '@/components/home/DidYouKnow'
 
-const PILLS = [
-  { label: 'Campaign Finance',     color: 'var(--text)',     bg: 'rgba(200,216,240,0.07)', border: 'rgba(200,216,240,0.15)' },
-  { label: '$34.9B Lobbying',      color: 'var(--teal)',     bg: 'rgba(77,216,240,0.08)',  border: 'rgba(77,216,240,0.2)'   },
-  { label: 'Official Disclosures', color: 'var(--blue)',     bg: 'rgba(160,192,255,0.07)', border: 'rgba(160,192,255,0.18)' },
-  { label: 'Shadow PAC Networks',  color: 'var(--gold)',     bg: 'rgba(255,208,96,0.07)',  border: 'rgba(255,208,96,0.18)'  },
-  { label: 'Legislature',          color: 'var(--text-dim)', bg: 'transparent',            border: 'var(--border)'          },
-]
-
-const CTAS = [
-  { href: '/influence',   label: '→ influence index',   color: 'var(--orange)', border: 'rgba(255,176,96,0.3)'  },
-  { href: '/follow',      label: '→ follow the money',  color: 'var(--teal)',   border: 'rgba(77,216,240,0.3)'  },
-  { href: '/races/2026',  label: '→ 2026 races',        color: 'var(--green)',  border: 'rgba(128,255,160,0.3)' },
-  { href: '/legislature', label: '→ legislature',       color: 'var(--blue)',   border: 'rgba(160,192,255,0.25)' },
-]
-
 export default function HeroReveal({ updatedDate }) {
   const [phase, setPhase] = useState(0)
 
@@ -48,7 +33,14 @@ export default function HeroReveal({ updatedDate }) {
 
       <div className="hero-2col">
         <div>
-          <div style={{ ...ease(1, 6), marginBottom: '1.4rem' }}>
+          {/* Kicker with live dot */}
+          <div style={{ ...ease(1, 6), marginBottom: '1.4rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{
+              width: '6px', height: '6px', borderRadius: '50%',
+              background: 'var(--green)',
+              boxShadow: '0 0 6px var(--green)',
+              flexShrink: 0,
+            }} />
             <span style={{
               fontFamily: 'var(--font-mono)',
               fontSize: '0.62rem',
@@ -86,23 +78,8 @@ export default function HeroReveal({ updatedDate }) {
             Every donor, every PAC, every lobbyist, every vote. A free public record of who pays for Florida politics and who benefits.
           </p>
 
-          <div style={{ ...ease(5, 10), display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
-            {PILLS.map(p => (
-              <span key={p.label} style={{
-                fontSize: '0.65rem', padding: '0.25rem 0.65rem', borderRadius: '2px',
-                color: p.color, background: p.bg, border: `1px solid ${p.border}`,
-                fontFamily: 'var(--font-mono)',
-              }}>
-                {p.label}
-              </span>
-            ))}
-          </div>
-
-          <div style={{ ...ease(6, 10) }}>
-            <MoneyClock />
-          </div>
-
-          <form action="/search" method="GET" style={{ ...ease(5, 10), display: 'flex', gap: '0.5rem', marginBottom: '1.25rem', maxWidth: '500px' }}>
+          {/* Search */}
+          <form action="/search" method="GET" style={{ ...ease(5, 10), display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', maxWidth: '500px' }}>
             <input
               type="text"
               name="q"
@@ -130,20 +107,48 @@ export default function HeroReveal({ updatedDate }) {
             </button>
           </form>
 
-          <div style={{ ...ease(6, 10), display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
-            {CTAS.map(c => (
-              <a key={c.href} href={c.href} style={{
-                border: `1px solid ${c.border}`,
-                color: c.color,
-                padding: '0.5rem 1.2rem',
-                fontSize: '0.72rem',
-                borderRadius: '3px',
-                textDecoration: 'none',
-                fontFamily: 'var(--font-mono)',
-              }}>
-                {c.label}
-              </a>
-            ))}
+          {/* CTAs: 1 primary + 2 ghost */}
+          <div style={{ ...ease(6, 10), display: 'flex', gap: '0.65rem', alignItems: 'center', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
+            <a href="/influence" style={{
+              background: 'var(--orange)', color: '#01010d',
+              padding: '0.6rem 1.4rem',
+              fontSize: '0.72rem', fontWeight: 700,
+              fontFamily: 'var(--font-mono)',
+              letterSpacing: '0.14em',
+              textDecoration: 'none', borderRadius: '3px',
+              whiteSpace: 'nowrap',
+            }}>
+              → INFLUENCE INDEX
+            </a>
+            <a href="/follow" style={{
+              border: '1px solid rgba(77,216,240,0.35)',
+              color: 'var(--teal)',
+              padding: '0.6rem 1.2rem',
+              fontSize: '0.72rem',
+              fontFamily: 'var(--font-mono)',
+              letterSpacing: '0.14em',
+              textDecoration: 'none', borderRadius: '3px',
+              whiteSpace: 'nowrap',
+            }}>
+              → FOLLOW THE MONEY
+            </a>
+            <a href="/district" style={{
+              border: '1px solid rgba(100,140,220,0.25)',
+              color: 'var(--text-dim)',
+              padding: '0.6rem 1.2rem',
+              fontSize: '0.72rem',
+              fontFamily: 'var(--font-mono)',
+              letterSpacing: '0.14em',
+              textDecoration: 'none', borderRadius: '3px',
+              whiteSpace: 'nowrap',
+            }}>
+              → YOUR DISTRICT
+            </a>
+          </div>
+
+          {/* Money clock */}
+          <div style={{ ...ease(6, 10), marginBottom: '1.5rem' }}>
+            <MoneyClock />
           </div>
 
           <div style={{ ...ease(6, 10) }}>

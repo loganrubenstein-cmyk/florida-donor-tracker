@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { fmtMoneyCompact, fmtCountCompact } from '@/lib/fmt'
+import TrustRibbon from '@/components/shared/TrustRibbon'
 
 function partyColor(code) {
   if (code === 'REP' || code === 'R') return 'var(--republican)'
@@ -74,11 +75,15 @@ export default function DiffBars({ a, b }) {
       <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.9rem, 4.5vw, 3rem)', lineHeight: 1.05, letterSpacing: '-0.022em', color: 'var(--text)', fontWeight: 400, marginBottom: '1rem' }}>
         Two candidates. <em style={{ color: 'var(--orange)' }}>One receipt.</em>
       </h1>
-      <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.82rem', color: 'var(--text-dim)', lineHeight: 1.75, maxWidth: '640px', marginBottom: '1.5rem' }}>
+      <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.82rem', color: 'var(--text-dim)', lineHeight: 1.75, maxWidth: '640px', marginBottom: '1.25rem' }}>
         Every number side-by-side, with the differences called out. Hard money, soft money (affiliated PACs), and what the average donor wrote a check for.
       </p>
 
-      <div style={{ margin: '1.75rem 0 2.5rem', display: 'grid', gridTemplateColumns: '1fr 80px 1fr', gap: '1rem', alignItems: 'stretch' }}>
+      <div style={{ marginBottom: '1.75rem' }}>
+        <TrustRibbon source="FL Division of Elections · FEC Form 3" updated="Apr 14, 2026" confidence="direct" />
+      </div>
+
+      <div style={{ margin: '0 0 2.5rem', display: 'grid', gridTemplateColumns: '1fr 80px 1fr', gap: '1rem', alignItems: 'stretch' }}>
         <div style={{ border: `1px solid ${colorA}44`, borderRadius: '3px', padding: '1.1rem 1.35rem', background: `${colorA}05` }}>
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: colorA, letterSpacing: '0.18em', marginBottom: '0.4rem' }}>
             CANDIDATE A{a.party_code ? ` · ${a.party_code}` : ''}
