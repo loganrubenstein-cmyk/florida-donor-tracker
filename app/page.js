@@ -60,9 +60,9 @@ const DEPTH_STATS = [
 ];
 
 const RACES_2026 = [
-  { office: 'Governor',         note: 'Open seat — DeSantis term-limited',  raised: '$4.2M+', pacs: 3, lead: 'Byron Donalds',   leadAmt: '$2.1M', color: 'var(--teal)',   href: '/races/2026' },
-  { office: 'U.S. Senate',      note: 'Rubio up for re-election 2028',       raised: '$8.1M+', pacs: 5, lead: 'Marco Rubio',     leadAmt: '$5.8M', color: 'var(--orange)', href: '/races/2026' },
-  { office: 'Attorney General', note: 'Moody vacated for Senate run',         raised: '$2.4M+', pacs: 2, lead: 'James Uthmeier', leadAmt: '$980K', color: 'var(--blue)',   href: '/races/2026' },
+  { office: 'Governor',         note: 'Open seat — DeSantis term-limited',                              raised: '$8.6M+', pacs: 4, lead: 'Byron Donalds',   leadAmt: '$7.6M', color: 'var(--teal)',   href: '/race/governor/2026' },
+  { office: 'U.S. Senate',      note: 'Special election — Moody appointed after Rubio named Sec. of State', raised: '$3.2M+', pacs: 4, lead: 'Ashley Moody', leadAmt: '$3.2M', color: 'var(--orange)', href: '/federal' },
+  { office: 'Attorney General', note: 'Moody vacated for Senate run',                                   raised: '$1.9M+', pacs: 2, lead: 'James Uthmeier', leadAmt: '$1.4M', color: 'var(--blue)',   href: '/race/attorney-general/2026' },
 ];
 
 export default async function Home() {
@@ -135,11 +135,11 @@ export default async function Home() {
 
         <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
           {[
-            { href: '/races/2026', label: '→ all 2026 races',           color: 'var(--teal)'     },
-            { href: '/district',   label: '→ who funds your district',   color: 'var(--teal)'     },
+            { href: '/races/2026',  label: '→ all 2026 races',           color: 'var(--teal)'     },
+            { href: '/who-funds',  label: '→ who funds your district',   color: 'var(--teal)'     },
             { href: '/flow',       label: '→ money + lobbying combined', color: 'var(--orange)'   },
-            { href: '/follow',     label: '→ hard vs. soft money',       color: 'var(--blue)'     },
-            { href: '/candidates', label: '→ out-of-state donors',       color: 'var(--text-dim)' },
+            { href: '/follow',     label: '→ follow the money trail',    color: 'var(--blue)'     },
+            { href: '/donors',     label: '→ browse all donors',         color: 'var(--text-dim)' },
           ].map(l => (
             <a key={l.label} href={l.href} style={{ fontSize: '0.7rem', color: l.color, textDecoration: 'none', border: `1px solid ${l.color}33`, borderRadius: '3px', padding: '0.35rem 0.75rem' }}>
               {l.label}

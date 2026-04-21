@@ -11,7 +11,7 @@ export const metadata = {
     default: 'Florida Influence',
     template: '%s | Florida Influence',
   },
-  description: 'Follow the money in Florida politics — campaign contributions, donors, committees, lobbyists, and legislative finance tracked from 1996 to 2026.',
+  description: 'Follow the money in Florida politics — campaign contributions, donors, committees, lobbyists, and legislative finance tracked from 1996 to present.',
   openGraph: {
     siteName: 'Florida Influence',
     type: 'website',
@@ -105,7 +105,7 @@ export default function RootLayout({ children }) {
             <div>
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', color: 'var(--text-dim)', letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: '0.75rem' }}>TOOLS</div>
               {[
-                ['Who funds your district', '/district'],
+                ['Who funds your district', '/who-funds'],
                 ['Candidate compare',       '/compare'],
                 ['Follow the money',        '/follow'],
                 ['Influence index',         '/influence'],

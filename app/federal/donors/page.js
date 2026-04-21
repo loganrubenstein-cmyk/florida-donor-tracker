@@ -36,7 +36,7 @@ export default async function FederalDonorsPage({ searchParams }) {
         </h1>
         <div style={{ fontSize: '0.82rem', color: 'var(--text-dim)', marginTop: '0.5rem' }}>
           {not_loaded
-            ? 'FEC individual-contribution data (itcont.txt) is still being loaded. Check back after the next pipeline run.'
+            ? 'Individual contribution data is being processed — check back after the next data update.'
             : `${total.toLocaleString()} Florida-based individuals across cycles 2016–2026.`}
         </div>
       </div>
@@ -60,10 +60,12 @@ export default async function FederalDonorsPage({ searchParams }) {
       )}
 
       {not_loaded ? (
-        <div style={{ padding: '1rem', border: '1px dashed var(--border)', borderRadius: '3px', fontSize: '0.82rem', color: 'var(--text-dim)' }}>
-          The <code>fec_indiv</code> table is empty or the materialized view has not been built yet.
-          The loader (script 105) filters FEC bulk itcont.txt to Florida only and refreshes{' '}
-          <code>fec_indiv_donor_totals_mv</code> at the end. Once the GitHub Actions run completes, this page populates automatically.
+        <div style={{ padding: '1.25rem 1.5rem', border: '1px solid var(--border)', borderRadius: '4px', fontSize: '0.82rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
+          <div style={{ fontWeight: 600, color: 'var(--text)', marginBottom: '0.35rem' }}>Individual donor data is being processed.</div>
+          FEC individual contribution records for Florida are parsed from bulk FEC filings and will appear here after the next data update.
+          PAC-level data on the{' '}
+          <a href="/federal" style={{ color: 'var(--teal)', textDecoration: 'none' }}>FL Federal Candidates</a>
+          {' '}page is already live.
         </div>
       ) : (
         <>

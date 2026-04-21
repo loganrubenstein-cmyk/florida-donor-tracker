@@ -99,7 +99,17 @@ export default function MethodologyPage() {
       <Section title="Industry Classification">
         <p>
           Industry sectors are assigned to donors based on the <strong>contributor_occupation</strong> field in contribution filings.
-          Occupation strings are mapped to ~15 buckets: Real Estate, Healthcare, Finance, Legal, Energy, Agriculture, Technology, Education, and others.
+          Occupation strings are mapped to 15 buckets using deterministic keyword rules:
+        </p>
+        <ul style={{ paddingLeft: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.2rem', fontSize: '0.78rem', color: 'var(--text-dim)', margin: '0.5rem 0 0.75rem' }}>
+          {['Legal', 'Real Estate', 'Healthcare', 'Finance & Insurance', 'Political / Lobbying',
+            'Agriculture', 'Construction', 'Education', 'Technology / Engineering',
+            'Retail & Hospitality', 'Business & Consulting', 'Government & Public Service',
+            'Retired', 'Not Employed', 'Other'].map(b => (
+            <li key={b}>{b}</li>
+          ))}
+        </ul>
+        <p>
           Assignments are <span className="confidence-badge confidence-classified">classified</span> — the raw occupation string is preserved and visible on donor profiles.
           Many occupations are blank or non-standard; those donors appear as &quot;Unclassified&quot;.
         </p>

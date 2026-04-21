@@ -242,8 +242,8 @@ export default function AboutPage() {
           <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', lineHeight: 1.65, marginBottom: '1rem' }}>
             Data errors, missing committees, or story tips about Florida political money — we want to know. Every correction improves the record.
           </div>
-          <a href="mailto:florida@donortracker.org" style={{ fontSize: '0.72rem', color: 'var(--teal)', textDecoration: 'none', border: '1px solid rgba(77,216,240,0.3)', borderRadius: '3px', padding: '0.35rem 0.75rem', display: 'inline-block' }}>
-            → Email us
+          <a href="mailto:press@floridainfluence.com" style={{ fontSize: '0.72rem', color: 'var(--teal)', textDecoration: 'none', border: '1px solid rgba(77,216,240,0.3)', borderRadius: '3px', padding: '0.35rem 0.75rem', display: 'inline-block' }}>
+            → press@floridainfluence.com
           </a>
         </div>
       </div>

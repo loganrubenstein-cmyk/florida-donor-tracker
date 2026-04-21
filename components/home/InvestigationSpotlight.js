@@ -4,7 +4,7 @@ const FEATURED = [
   {
     name: 'Florida Power & Light',
     href: '/donor/florida-power-light-company',
-    amount: '$72M+',
+    amount: '$32M+',
     label: 'in FL political giving',
     issues: ['Energy regulation', 'Rate bills', 'Utility policy'],
     headline: 'The utility that owns Florida politics',
@@ -13,8 +13,8 @@ const FEATURED = [
   {
     name: 'US Sugar Corporation',
     href: '/donor/united-states-sugar-corporation',
-    amount: '$32M+',
-    label: 'in campaign contributions',
+    amount: '$38M+',
+    label: 'in FL political giving',
     issues: ['Water policy', 'Everglades', 'Agriculture'],
     headline: 'The sugar company and the Everglades',
     color: 'var(--teal)',
@@ -22,7 +22,7 @@ const FEATURED = [
   {
     name: 'Trulieve Inc.',
     href: '/donor/trulieve-inc',
-    amount: '$72M+',
+    amount: '$210M+',
     label: 'in FL political giving',
     issues: ['Cannabis licensing', 'Ballot initiatives'],
     headline: 'The cannabis company that funded its own regulation',

@@ -68,25 +68,32 @@ export async function GET(req) {
     }
 
     if (type === 'cycle') {
-      // Top donors this cycle year
+      // Top donors this cycle year — two-step: totals then names
       const year = searchParams.get('year') || new Date().getFullYear();
-      const { data, error } = await db
+      const { data: byYear, error } = await db
         .from('donor_by_year')
-        .select('donor_slug, year, total, donors(name, is_corporate)')
+        .select('donor_slug, total')
         .eq('year', year)
+        .not('donor_slug', 'is', null)
         .order('total', { ascending: false })
         .limit(limit);
 
       if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
+      const slugs = (byYear || []).map(r => r.donor_slug).filter(Boolean);
+      const { data: donorRows } = slugs.length
+        ? await db.from('donors').select('slug, name, is_corporate').in('slug', slugs)
+        : { data: [] };
+      const donorMap = Object.fromEntries((donorRows || []).map(d => [d.slug, d]));
+
       return NextResponse.json({
         type: 'cycle',
         year,
-        items: (data || []).map(r => ({
-          donor_slug: r.donor_slug,
-          name:       r.donors?.name || r.donor_slug,
-          is_corporate: r.donors?.is_corporate || false,
-          total:      parseFloat(r.total) || 0,
+        items: (byYear || []).map(r => ({
+          donor_slug:   r.donor_slug,
+          name:         donorMap[r.donor_slug]?.name || r.donor_slug,
+          is_corporate: donorMap[r.donor_slug]?.is_corporate || false,
+          total:        parseFloat(r.total) || 0,
         })),
       });
     }

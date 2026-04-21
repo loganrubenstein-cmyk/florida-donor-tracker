@@ -363,8 +363,24 @@ export default function ElectionsView({ cycles, districtMap = {} }) {
           {[1, 2, 3].map(i => <SkeletonRace key={i} />)}
         </div>
       ) : !flatData ? (
-        <div style={{ padding: '2rem', border: '1px solid var(--border)', borderRadius: '4px', textAlign: 'center', color: 'var(--text-dim)', fontSize: '0.78rem' }}>
-          No detailed results available for {resolvedYear} {electionType}.
+        <div style={{ padding: '1.75rem 2rem', border: '1px solid var(--border)', borderRadius: '4px', color: 'var(--text-dim)', fontSize: '0.78rem', lineHeight: 1.8 }}>
+          <div style={{ fontWeight: 600, color: 'var(--text)', marginBottom: '0.5rem' }}>
+            Race-by-race detail isn't available for {resolvedYear} {electionType === 'general' ? 'General' : 'Primary'} yet.
+          </div>
+          <div style={{ marginBottom: '0.75rem' }}>
+            Finance data for this cycle is available in the Candidates and Cycles directories, where you can filter by year, office, and party.
+          </div>
+          <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
+            <a href={`/candidates?year=${resolvedYear}`} style={{ color: 'var(--teal)', textDecoration: 'none', border: '1px solid rgba(77,216,240,0.3)', borderRadius: '3px', padding: '0.3rem 0.7rem', fontSize: '0.72rem' }}>
+              → Candidates ({resolvedYear})
+            </a>
+            <a href={`/cycle/${resolvedYear}`} style={{ color: 'var(--orange)', textDecoration: 'none', border: '1px solid rgba(255,176,96,0.3)', borderRadius: '3px', padding: '0.3rem 0.7rem', fontSize: '0.72rem' }}>
+              → {resolvedYear} Cycle overview
+            </a>
+            <a href="/elections?year=2022" style={{ color: 'var(--text-dim)', textDecoration: 'none', border: '1px solid var(--border)', borderRadius: '3px', padding: '0.3rem 0.7rem', fontSize: '0.72rem' }}>
+              → View 2022 results
+            </a>
+          </div>
         </div>
       ) : activeTab === 'statewide' ? (
         <>

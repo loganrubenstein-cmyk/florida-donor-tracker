@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 const ITEMS = [
   { live: true,  text: '$3.9B TRACKED' },
-  { text: 'UPDATED APR 14 2026' },
+  { text: 'DATA: APR 2026' },
   { text: '22M CONTRIBUTIONS' },
   { text: '883K DONORS' },
   { text: '431 SHADOW PACS' },
