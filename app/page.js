@@ -67,9 +67,6 @@ export default async function Home() {
 
       {/* ── Depth Differentiator ── */}
       <section style={{ padding: '2.5rem 2.5rem', borderBottom: '1px solid rgba(100,140,220,0.1)', maxWidth: '1140px', margin: '0 auto' }}>
-        <div style={{ fontSize: '0.7rem', letterSpacing: '0.14em', color: 'var(--text-dim)', textTransform: 'uppercase', marginBottom: '1.5rem' }}>
-          Why Florida Influence is different
-        </div>
         <div className="rg-4" style={{ gap: '1.5rem' }}>
           {DEPTH_STATS.map(s => (
             <div key={s.val} style={{ borderLeft: `2px solid ${s.color}44`, paddingLeft: '1rem' }}>
