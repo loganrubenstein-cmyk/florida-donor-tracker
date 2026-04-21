@@ -24,7 +24,7 @@ export default function EmailStrip() {
   }
 
   return (
-    <section style={{ maxWidth: '1140px', margin: '0 auto', padding: '1.75rem 2.5rem 3rem' }}>
+    <section style={{ maxWidth: '1100px', margin: '0 auto', padding: '1.75rem 2.5rem 3rem' }}>
       <div className="rg-purpose" style={{
         border: '1px solid rgba(255,176,96,0.25)',
         background: 'linear-gradient(135deg, rgba(255,176,96,0.05), transparent 60%)',

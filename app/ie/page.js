@@ -130,7 +130,7 @@ export default async function IEPage({ searchParams }) {
     '–' + (summary.date_range?.end?.slice(0, 4) || '');
 
   return (
-    <main style={{ maxWidth: '960px', margin: '0 auto', padding: '3rem 1.5rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '3rem 1.5rem' }}>
       <div style={{ marginBottom: '0.5rem', fontSize: '0.72rem', color: 'var(--text-dim)' }}>
         <Link href="/" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Home</Link>
         {' / '}
@@ -166,7 +166,7 @@ export default async function IEPage({ searchParams }) {
             padding: '1rem 1.1rem',
             borderRight: i < arr.length - 1 ? '1px solid var(--border)' : 'none',
           }}>
-            <div style={{ fontSize: '1.3rem', fontWeight: 700, color, fontFamily: 'var(--font-mono)', lineHeight: 1 }}>{value}</div>
+            <div style={{ fontSize: '1.3rem', fontWeight: 400, color, fontFamily: 'var(--font-serif)', lineHeight: 1 , fontVariantNumeric: 'tabular-nums' }}>{value}</div>
             <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: '0.35rem' }}>{label}</div>
           </div>
         ))}

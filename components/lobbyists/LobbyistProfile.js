@@ -27,7 +27,7 @@ function StatBox({ label, value, sub, color }) {
       <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
         {label}
       </div>
-      <div style={{ fontSize: '1.3rem', fontFamily: 'var(--font-mono)', color: color || 'var(--orange)', fontWeight: 700 }}>
+      <div style={{ fontFamily: 'var(--font-serif)', fontSize: '1.5rem', color: color || 'var(--orange)', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.02em' }}>
         {value}
       </div>
       {sub && <div style={{ fontSize: '0.62rem', color: 'var(--text-dim)' }}>{sub}</div>}
@@ -362,7 +362,7 @@ export default function LobbyistProfile({ data }) {
   ];
 
   return (
-    <main style={{ maxWidth: '960px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
       <BackLinks links={[{ href: '/', label: 'home' }, { href: '/lobbyists', label: 'lobbyists' }]} />
 
       <EntityHeader

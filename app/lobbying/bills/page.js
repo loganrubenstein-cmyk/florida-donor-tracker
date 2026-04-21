@@ -57,7 +57,7 @@ export default function LobbyingBillsPage() {
   const maxIssueFiling = topIssues[0]?.total_filings || 1;
 
   return (
-    <main style={{ maxWidth: '1040px', margin: '0 auto', padding: '3rem 1.5rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '3rem 1.5rem' }}>
       <div style={{ marginBottom: '0.5rem', fontSize: '0.75rem', color: 'var(--text-dim)' }}>
         <Link href="/" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Home</Link>
         {' / '}
@@ -190,7 +190,7 @@ export default function LobbyingBillsPage() {
 function StatBox({ value, label, color = 'var(--teal)' }) {
   return (
     <div>
-      <div style={{ fontSize: '1.3rem', fontWeight: 700, color, fontFamily: 'var(--font-mono)' }}>{value}</div>
+      <div style={{ fontSize: '1.3rem', fontWeight: 400, color, fontFamily: 'var(--font-serif)' , fontVariantNumeric: 'tabular-nums' }}>{value}</div>
       <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</div>
     </div>
   );

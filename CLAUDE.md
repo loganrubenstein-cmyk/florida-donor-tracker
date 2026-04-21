@@ -4,6 +4,8 @@
 
 Public-facing Florida political finance tracker. Next.js 14+ App Router, plain JavaScript (no TypeScript), Supabase for all data. Dark-themed data-visualization UI.
 
+**Brand & Design System:** `docs/BRAND_GUIDE.md` is the single source of truth for tokens, typography, color, spacing, components, and copy voice. Read it before making any UI changes. The §16 checklist must pass before marking any page update complete.
+
 ---
 
 ## Figma MCP Integration Rules

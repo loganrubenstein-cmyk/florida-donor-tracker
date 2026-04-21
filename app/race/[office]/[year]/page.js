@@ -63,7 +63,7 @@ export default async function RacePage({ params }) {
   const maxRaised = parseFloat(data[0]?.total_combined) || 1;
 
   return (
-    <main style={{ maxWidth: '960px', margin: '0 auto', padding: '3rem 1.5rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '3rem 1.5rem' }}>
       <div style={{ marginBottom: '0.5rem', fontSize: '0.72rem', color: 'var(--text-dim)' }}>
         <Link href="/" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Home</Link>
         {' / '}

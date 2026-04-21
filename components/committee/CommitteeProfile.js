@@ -77,7 +77,7 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
             <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.3rem' }}>
               {label}
             </div>
-            <div style={{ fontSize: '1rem', color: 'var(--orange)', fontWeight: 700 }}>
+            <div style={{ fontFamily: 'var(--font-serif)', fontSize: '1.3rem', color: 'var(--orange)', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.02em' }}>
               {value}
             </div>
           </div>
@@ -455,7 +455,7 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
   ];
 
   return (
-    <main className="m-padx" style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
+    <main className="m-padx" style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
 
       <BackLinks links={[{ href: '/', label: 'home' }, { href: '/committees', label: 'committees' }]} />
 

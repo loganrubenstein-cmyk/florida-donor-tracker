@@ -157,11 +157,11 @@ export default function CandidateCompareResult({ data }) {
       }}>
         {/* Entity A */}
         <div className="slide-from-left" style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '0.95rem', color: 'var(--text)', fontWeight: 700, fontFamily: 'var(--font-mono)', marginBottom: '0.2rem' }}>
+          <div style={{ fontSize: '0.95rem', color: 'var(--text)', fontWeight: 400, fontFamily: 'var(--font-serif)', marginBottom: '0.2rem', fontVariantNumeric: 'tabular-nums' }}>
             {entity_a.name}
           </div>
           {metaA.total_combined > 0 && (
-            <div style={{ fontSize: '1.2rem', color: colorA, fontFamily: 'var(--font-mono)', fontWeight: 700 }}>
+            <div style={{ fontSize: '1.2rem', color: colorA, fontFamily: 'var(--font-serif)', fontWeight: 400, fontVariantNumeric: 'tabular-nums' }}>
               {fmtCompact(metaA.total_combined)}
             </div>
           )}
@@ -174,11 +174,11 @@ export default function CandidateCompareResult({ data }) {
 
         {/* Entity B */}
         <div className="slide-from-right" style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '0.95rem', color: 'var(--text)', fontWeight: 700, fontFamily: 'var(--font-mono)', marginBottom: '0.2rem' }}>
+          <div style={{ fontSize: '0.95rem', color: 'var(--text)', fontWeight: 400, fontFamily: 'var(--font-serif)', marginBottom: '0.2rem', fontVariantNumeric: 'tabular-nums' }}>
             {entity_b.name}
           </div>
           {metaB.total_combined > 0 && (
-            <div style={{ fontSize: '1.2rem', color: colorB, fontFamily: 'var(--font-mono)', fontWeight: 700 }}>
+            <div style={{ fontSize: '1.2rem', color: colorB, fontFamily: 'var(--font-serif)', fontWeight: 400, fontVariantNumeric: 'tabular-nums' }}>
               {fmtCompact(metaB.total_combined)}
             </div>
           )}

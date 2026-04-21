@@ -59,7 +59,7 @@ export default async function LegislaturePage() {
   const avgPart = partRates.length > 0 ? Math.round(partRates.reduce((s, v) => s + v, 0) / partRates.length * 100) : null;
 
   return (
-    <main style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
       <BackLinks links={[{ href: '/', label: 'home' }]} />
 
       <SectionHeader title="Florida Legislature" eyebrow="FL Legislature · 2024–2026 Term" />
@@ -78,7 +78,7 @@ export default async function LegislaturePage() {
         ].map(({ label, value, color }, i, arr) => (
           <div key={label} style={{ flex: '1 1 120px', padding: '0.65rem 0.85rem', borderRight: i < arr.length - 1 ? '1px solid var(--border)' : 'none' }}>
             <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: '0.2rem' }}>{label}</div>
-            <div style={{ fontSize: '0.95rem', fontWeight: 700, color, fontFamily: 'var(--font-mono)' }}>{value}</div>
+            <div style={{ fontSize: '0.95rem', fontWeight: 400, color, fontFamily: 'var(--font-serif)' , fontVariantNumeric: 'tabular-nums' }}>{value}</div>
           </div>
         ))}
       </div>
@@ -170,7 +170,7 @@ export default async function LegislaturePage() {
             {industryFunding.map(ind => (
               <div key={ind.industry} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 <div style={{ width: '8px', height: '8px', borderRadius: '2px', background: INDUSTRY_COLORS[ind.industry] || '#444466', flexShrink: 0 }} />
-                <Link href={`/industry/${slugify(ind.industry)}`} style={{ fontSize: '0.73rem', color: 'var(--text)', flex: 1, minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textDecoration: 'none' }}>
+                <Link href={`/industry/${slugify(ind.industry)}`} style={{ fontSize: '0.73rem', color: 'var(--blue)', flex: 1, minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', textDecoration: 'none' }}>
                   {ind.industry}
                 </Link>
                 <div style={{ fontSize: '0.68rem', fontFamily: 'var(--font-mono)', color: 'var(--text-dim)', whiteSpace: 'nowrap' }}>

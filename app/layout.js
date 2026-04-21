@@ -27,7 +27,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+      <body id="top">
         <nav style={{
           display: 'flex', alignItems: 'center', gap: '0.25rem 1.5rem',
           padding: '0.75rem 1.5rem',
@@ -136,7 +136,7 @@ export default function RootLayout({ children }) {
 
           <div style={{ maxWidth: '1100px', margin: '2rem auto 0', paddingTop: '1.25rem', borderTop: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontFamily: 'var(--font-mono)', fontSize: '0.58rem', color: 'var(--text-dim)', letterSpacing: '0.1em' }}>
             <span>© 2026 · FLORIDA INFLUENCE · PUBLIC RECORD · CC-BY · Data reflects public records as filed.</span>
-            <a href="#" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>↑ BACK TO TOP</a>
+            <a href="#top" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>↑ BACK TO TOP</a>
           </div>
         </footer>
       </body>

@@ -77,7 +77,7 @@ export default function AnalysisHub() {
   const tabs = [{ id: 'all', title: 'All', color: 'var(--text-dim)' }, ...GROUPS]
 
   return (
-    <section style={{ padding: '2.25rem 2.5rem', borderBottom: '1px solid rgba(100,140,220,0.1)', maxWidth: '1140px', margin: '0 auto' }}>
+    <section style={{ padding: '2.25rem 2.5rem', borderBottom: '1px solid rgba(100,140,220,0.1)', maxWidth: '1100px', margin: '0 auto' }}>
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1.25rem' }}>
         <div>
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.62rem', color: 'var(--text-dim)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>

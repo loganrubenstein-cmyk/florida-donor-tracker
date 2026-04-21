@@ -107,7 +107,7 @@ function InOutView({ data }) {
         ].map(stat => (
           <div key={stat.label} style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '3px', padding: '0.85rem 1rem' }}>
             <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.3rem' }}>{stat.label}</div>
-            <div style={{ fontSize: '1.3rem', fontWeight: 700, color: stat.color, fontFamily: 'var(--font-mono)' }}>{stat.value}</div>
+            <div style={{ fontSize: '1.3rem', fontWeight: 400, color: stat.color, fontFamily: 'var(--font-serif)', fontVariantNumeric: 'tabular-nums' }}>{stat.value}</div>
             <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', marginTop: '0.2rem' }}>{stat.sub}</div>
           </div>
         ))}

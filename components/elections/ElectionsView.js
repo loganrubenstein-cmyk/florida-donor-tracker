@@ -58,7 +58,7 @@ function BallotRaceCard({ title, subtitle, candidates, useWinnerFlag = false }) 
         padding: '0.6rem 0.9rem', borderBottom: '1px solid var(--border)',
         display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem',
       }}>
-        <div style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text)', fontFamily: 'var(--font-mono)' }}>
+        <div style={{ fontSize: '0.82rem', fontWeight: 400, color: 'var(--text)', fontFamily: 'var(--font-serif)' }}>
           {title}
         </div>
         {subtitle && (
@@ -320,9 +320,9 @@ export default function ElectionsView({ cycles, districtMap = {} }) {
             <div key={label}>
               <div style={{ fontSize: '0.55rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.15rem' }}>{label}</div>
               {href ? (
-                <Link href={href} style={{ fontSize: '0.92rem', fontWeight: 700, color, fontFamily: 'var(--font-mono)', textDecoration: 'none' }}>{value || '—'}</Link>
+                <Link href={href} style={{ fontSize: '0.92rem', fontWeight: 400, color, fontFamily: 'var(--font-serif)', fontVariantNumeric: 'tabular-nums', textDecoration: 'none' }}>{value || '—'}</Link>
               ) : (
-                <div style={{ fontSize: '0.92rem', fontWeight: 700, color, fontFamily: 'var(--font-mono)' }}>{value || '—'}</div>
+                <div style={{ fontSize: '0.92rem', fontWeight: 400, color, fontFamily: 'var(--font-serif)', fontVariantNumeric: 'tabular-nums' }}>{value || '—'}</div>
               )}
             </div>
           ))}

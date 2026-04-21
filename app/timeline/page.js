@@ -2,7 +2,7 @@ import InfluenceTimeline from '@/components/tools/InfluenceTimeline';
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Influence Timeline — Florida Influence',
+  title: 'Influence Timeline',
   description: 'Visualize any Florida candidate\'s fundraising over time — donation spikes, PAC formations, and pre-election surges.',
 };
 
@@ -23,7 +23,7 @@ const NOTABLE_CANDIDATES = [
 
 export default function TimelinePage() {
   return (
-    <main style={{ maxWidth: '1140px', margin: '0 auto', padding: '2rem 2.5rem 5rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 2.5rem 5rem' }}>
       <div style={{ fontSize: '0.66rem', color: 'var(--text-dim)', marginBottom: '2rem' }}>
         <Link href="/" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Home</Link>
         {' / '}

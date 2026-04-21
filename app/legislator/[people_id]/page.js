@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { loadLegislator } from '@/lib/loadLegislator';
 import { getPoliticianSlugByAcctNum } from '@/lib/loadCandidate';
-import { fmtMoney, fmtCount, fmtDate } from '@/lib/fmt';
+import { fmtMoney, fmtMoneyCompact, fmtCount, fmtDate } from '@/lib/fmt';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import SourceLink from '@/components/shared/SourceLink';
 import TabbedProfile from '@/components/shared/TabbedProfile';
@@ -29,7 +29,7 @@ const ROLE_COLOR  = { Chair: 'var(--orange)', 'Vice Chair': 'var(--teal)', 'Rank
 function StatCard({ label, value, color }) {
   return (
     <div>
-      <div style={{ fontSize: '1.5rem', fontWeight: 700, color: color || 'var(--text)', fontFamily: 'var(--font-mono)' }}>{value}</div>
+      <div style={{ fontSize: '1.5rem', fontWeight: 400, color: color || 'var(--text)', fontFamily: 'var(--font-serif)' , fontVariantNumeric: 'tabular-nums' }}>{value}</div>
       <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em', marginTop: '2px' }}>{label}</div>
     </div>
   );
@@ -149,8 +149,8 @@ export default async function LegislatorPage({ params }) {
           <SectionHeader>Campaign Finance</SectionHeader>
           {leg.total_raised ? (
             <>
-              <div style={{ fontSize: '1.8rem', fontWeight: 700, color: 'var(--orange)', fontFamily: 'var(--font-mono)', marginBottom: '0.25rem' }}>
-                {fmtMoney(leg.total_raised)}
+              <div style={{ fontSize: '1.8rem', fontWeight: 400, color: 'var(--orange)', fontFamily: 'var(--font-serif)', marginBottom: '0.25rem' , fontVariantNumeric: 'tabular-nums' }}>
+                {fmtMoneyCompact(leg.total_raised)}
               </div>
               <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', marginBottom: '0.75rem' }}>raised · FL Division of Elections</div>
               {leg.acct_num && (
@@ -164,10 +164,10 @@ export default async function LegislatorPage({ params }) {
                   {topDonors.slice(0, 5).map((d, i) => (
                     <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.3rem 0', borderBottom: '1px solid rgba(100,140,220,0.07)', fontSize: '0.72rem' }}>
                       {d.donor_slug
-                        ? <Link href={`/donor/${d.donor_slug}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>{d.donor_name}</Link>
+                        ? <Link href={`/donor/${d.donor_slug}`} style={{ color: 'var(--orange)', textDecoration: 'none' }}>{d.donor_name}</Link>
                         : <span style={{ color: 'var(--text-dim)' }}>{d.donor_name}</span>
                       }
-                      <span style={{ color: 'var(--orange)', fontFamily: 'var(--font-mono)', fontWeight: 600 }}>{fmtMoney(d.total_amount)}</span>
+                      <span style={{ color: 'var(--orange)', fontFamily: 'var(--font-mono)', fontWeight: 600 }}>{fmtMoney(d.total_amount, 0)}</span>
                     </div>
                   ))}
                 </div>
@@ -300,8 +300,8 @@ export default async function LegislatorPage({ params }) {
       {leg.acct_num ? (
         <>
           <div style={{ padding: '1.25rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '6px', marginBottom: '1.25rem' }}>
-            <div style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--orange)', fontFamily: 'var(--font-mono)' }}>
-              {fmtMoney(leg.total_raised)}
+            <div style={{ fontSize: '2rem', fontWeight: 400, color: 'var(--orange)', fontFamily: 'var(--font-serif)' , fontVariantNumeric: 'tabular-nums' }}>
+              {fmtMoneyCompact(leg.total_raised)}
             </div>
             <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', marginBottom: '1rem' }}>raised · FL Division of Elections</div>
             <Link href={`/candidate/${leg.acct_num}`} style={{ display: 'inline-block', padding: '0.45rem 1rem', background: 'rgba(255,176,96,0.08)', border: '1px solid rgba(255,176,96,0.25)', borderRadius: '3px', color: 'var(--orange)', textDecoration: 'none', fontSize: '0.75rem' }}>
@@ -324,7 +324,7 @@ export default async function LegislatorPage({ params }) {
                     <tr key={i} style={{ borderBottom: '1px solid rgba(100,140,220,0.07)' }}>
                       <td style={{ padding: '0.35rem 0.6rem' }}>
                         {d.donor_slug
-                          ? <Link href={`/donor/${d.donor_slug}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>{d.donor_name}</Link>
+                          ? <Link href={`/donor/${d.donor_slug}`} style={{ color: 'var(--orange)', textDecoration: 'none' }}>{d.donor_name}</Link>
                           : <span style={{ color: 'var(--text-dim)' }}>{d.donor_name}</span>
                         }
                       </td>
@@ -356,7 +356,7 @@ export default async function LegislatorPage({ params }) {
               {disclosure.filing_type} · {disclosure.filing_year}
             </div>
             {disclosure.net_worth != null && (
-              <div style={{ fontSize: '1.8rem', fontWeight: 700, color: 'var(--teal)', fontFamily: 'var(--font-mono)' }}>
+              <div style={{ fontSize: '1.8rem', fontWeight: 400, color: 'var(--teal)', fontFamily: 'var(--font-serif)' , fontVariantNumeric: 'tabular-nums' }}>
                 {fmtMoney(disclosure.net_worth)}
               </div>
             )}
@@ -472,7 +472,7 @@ export default async function LegislatorPage({ params }) {
   ];
 
   return (
-    <main style={{ maxWidth: '960px', margin: '0 auto', padding: '2.5rem 1.5rem 4rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2.5rem 1.5rem 4rem' }}>
       {/* Breadcrumb */}
       <div style={{ marginBottom: '1rem', fontSize: '0.72rem', color: 'var(--text-dim)' }}>
         <Link href="/" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Home</Link>

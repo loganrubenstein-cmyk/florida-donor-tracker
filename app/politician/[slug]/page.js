@@ -164,7 +164,7 @@ export default async function PoliticianPage({ params, searchParams }) {
   const districtStr = activeCycle.district ? ` · District ${activeCycle.district}` : '';
 
   return (
-    <main style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
 
       <BackLinks links={[
         { href: '/candidates', label: 'candidates' },
@@ -249,13 +249,13 @@ export default async function PoliticianPage({ params, searchParams }) {
                           </span>
                         )}
                       </td>
-                      <td style={{ padding: '0.35rem 0.6rem', textAlign: 'right', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: fin.hard > 0 ? 'var(--orange)' : 'var(--text-dim)', whiteSpace: 'nowrap' }}>
+                      <td style={{ padding: '0.35rem 0.6rem', textAlign: 'right', fontFamily: 'var(--font-serif)', fontVariantNumeric: 'tabular-nums', fontSize: '0.7rem', color: fin.hard > 0 ? 'var(--orange)' : 'var(--text-dim)', whiteSpace: 'nowrap' }}>
                         {fin.hard > 0 ? fmtMoneyCompact(fin.hard) : '—'}
                       </td>
-                      <td style={{ padding: '0.35rem 0.6rem', textAlign: 'right', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: fin.soft > 0 ? 'var(--blue)' : 'var(--text-dim)', whiteSpace: 'nowrap' }}>
+                      <td style={{ padding: '0.35rem 0.6rem', textAlign: 'right', fontFamily: 'var(--font-serif)', fontVariantNumeric: 'tabular-nums', fontSize: '0.7rem', color: fin.soft > 0 ? 'var(--blue)' : 'var(--text-dim)', whiteSpace: 'nowrap' }}>
                         {fin.soft > 0 ? fmtMoneyCompact(fin.soft) : '—'}
                       </td>
-                      <td style={{ padding: '0.35rem 0.6rem', textAlign: 'right', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: isActive ? 'var(--teal)' : 'var(--text-dim)', fontWeight: isActive ? 700 : 400, whiteSpace: 'nowrap' }}>
+                      <td style={{ padding: '0.35rem 0.6rem', textAlign: 'right', fontFamily: 'var(--font-serif)', fontVariantNumeric: 'tabular-nums', fontSize: '0.7rem', color: isActive ? 'var(--teal)' : 'var(--text-dim)', fontWeight: isActive ? 600 : 400, whiteSpace: 'nowrap' }}>
                         {fin.combined > 0 ? fmtMoneyCompact(fin.combined) : '—'}
                       </td>
                     </tr>
@@ -267,13 +267,13 @@ export default async function PoliticianPage({ params, searchParams }) {
                     <td colSpan={2} style={{ padding: '0.35rem 0.6rem', fontSize: '0.58rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
                       Career Total
                     </td>
-                    <td style={{ padding: '0.35rem 0.6rem', textAlign: 'right', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--orange)', fontWeight: 700, whiteSpace: 'nowrap' }}>
+                    <td style={{ padding: '0.35rem 0.6rem', textAlign: 'right', fontFamily: 'var(--font-serif)', fontVariantNumeric: 'tabular-nums', fontSize: '0.7rem', color: 'var(--orange)', fontWeight: 600, whiteSpace: 'nowrap' }}>
                       {careerHard > 0 ? fmtMoneyCompact(careerHard) : '—'}
                     </td>
-                    <td style={{ padding: '0.35rem 0.6rem', textAlign: 'right', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--blue)', fontWeight: 700, whiteSpace: 'nowrap' }}>
+                    <td style={{ padding: '0.35rem 0.6rem', textAlign: 'right', fontFamily: 'var(--font-serif)', fontVariantNumeric: 'tabular-nums', fontSize: '0.7rem', color: 'var(--blue)', fontWeight: 600, whiteSpace: 'nowrap' }}>
                       {careerSoft > 0 ? fmtMoneyCompact(careerSoft) : '—'}
                     </td>
-                    <td style={{ padding: '0.35rem 0.6rem', textAlign: 'right', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--teal)', fontWeight: 700, whiteSpace: 'nowrap' }}>
+                    <td style={{ padding: '0.35rem 0.6rem', textAlign: 'right', fontFamily: 'var(--font-serif)', fontVariantNumeric: 'tabular-nums', fontSize: '0.7rem', color: 'var(--teal)', fontWeight: 600, whiteSpace: 'nowrap' }}>
                       {careerCombined > 0 ? fmtMoneyCompact(careerCombined) : '—'}
                     </td>
                   </tr>

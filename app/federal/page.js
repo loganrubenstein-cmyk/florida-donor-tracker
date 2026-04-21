@@ -80,7 +80,8 @@ export default async function FederalPage({ searchParams }) {
       )}
 
       <div style={{ marginTop: '2rem', padding: '0.9rem', border: '1px solid var(--border)', borderRadius: '3px', fontSize: '0.76rem', color: 'var(--text-dim)' }}>
-        PAC contribution totals reflect FEC Schedule A (pas2) bulk data for the selected cycle. Individual contributions, Schedule B expenditures, and committee disbursements are not yet loaded. Source:{' '}
+        PAC contribution totals reflect FEC Schedule A (pas2) bulk data for the selected cycle. Individual donor contributions are available on the{' '}
+        <Link href="/federal/donors" style={{ color: 'var(--teal)' }}>FL Federal Donors</Link> page. Source:{' '}
         <a href="https://www.fec.gov/data/browse-data/?tab=bulk-data" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)' }}>FEC bulk data</a>.
       </div>
     </div>

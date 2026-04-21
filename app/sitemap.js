@@ -41,6 +41,7 @@ const STATIC_PAGES = [
   { path: '/about', priority: 0.4 },
   { path: '/methodology', priority: 0.5 },
   { path: '/lobbying/bills', priority: 0.6 },
+  { path: '/lobbying/issues', priority: 0.6 },
 ];
 
 export async function generateSitemaps() {

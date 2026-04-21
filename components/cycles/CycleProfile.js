@@ -18,7 +18,7 @@ function StatBox({ label, value, sub, color }) {
       <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
         {label}
       </div>
-      <div style={{ fontSize: '1.3rem', fontFamily: 'var(--font-mono)', color: color || 'var(--orange)', fontWeight: 700 }}>
+      <div style={{ fontSize: '1.3rem', fontFamily: 'var(--font-serif)', color: color || 'var(--orange)', fontWeight: 400 , fontVariantNumeric: 'tabular-nums' }}>
         {value}
       </div>
       {sub && <div style={{ fontSize: '0.62rem', color: 'var(--text-dim)' }}>{sub}</div>}
@@ -37,7 +37,7 @@ function SectionLabel({ children }) {
   );
 }
 
-const PARTY_LABEL  = { REP: 'R', DEM: 'D', NPA: 'I', OTH: 'O' };
+const PARTY_LABEL  = { REP: 'R', DEM: 'D', NPA: 'I', OTH: 'O', NOP: 'NPA', IND: 'Ind', LPF: 'Lib', WRI: 'W-I', ASP: 'ASP', CPF: 'CPF', MGT: 'NPA' };
 
 const STATEWIDE = new Set([
   'Governor', 'GOVERNOR AND  LT.GOVERNOR', 'United States Senator', 'U.S. Senator',
@@ -443,7 +443,7 @@ export default function CycleProfile({ year, candidates, topDonors = [], electio
   ];
 
   return (
-    <main style={{ maxWidth: '960px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
       <BackLinks links={[{ href: '/', label: 'home' }, { href: '/cycles', label: 'cycles' }]} />
 
       <EntityHeader

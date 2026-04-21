@@ -113,7 +113,7 @@ export default function BillMoneyMap({ billSlug, year }) {
 function Stat({ value, label, color = 'var(--text)' }) {
   return (
     <div>
-      <div style={{ fontSize: '1.2rem', fontWeight: 700, color, fontFamily: 'var(--font-mono)' }}>{value}</div>
+      <div style={{ fontSize: '1.2rem', fontWeight: 400, color, fontFamily: 'var(--font-serif)', fontVariantNumeric: 'tabular-nums' }}>{value}</div>
       <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</div>
     </div>
   );

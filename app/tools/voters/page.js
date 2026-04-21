@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'For Voters — Florida Influence',
+  title: 'For Voters',
   description: 'Track who bankrolls your representatives. Connect donations to districts, follow 2026 races, and vote with the full picture of Florida political money.',
 };
 
@@ -33,7 +33,7 @@ const QUERIES = [
 
 export default function VoterLandingPage() {
   return (
-    <main style={{ maxWidth: '1140px', margin: '0 auto', padding: '3rem 2.5rem 5rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '3rem 2.5rem 5rem' }}>
       <div style={{ fontSize: '0.66rem', color: 'var(--text-dim)', marginBottom: '2rem' }}>
         <Link href="/" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Home</Link>
         {' / '}
@@ -131,7 +131,7 @@ export default function VoterLandingPage() {
             <div style={{ fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--teal)', marginBottom: '0.6rem' }}>
               Featured · New
             </div>
-            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--teal)', fontFamily: 'var(--font-mono)', marginBottom: '0.5rem' }}>
+            <div style={{ fontSize: '1.1rem', fontWeight: 400, color: 'var(--teal)', fontFamily: 'var(--font-serif)', marginBottom: '0.5rem' , fontVariantNumeric: 'tabular-nums' }}>
               → who funds your district
             </div>
             <div style={{ fontSize: '0.8rem', color: 'var(--text-dim)', lineHeight: 1.7, maxWidth: '560px' }}>

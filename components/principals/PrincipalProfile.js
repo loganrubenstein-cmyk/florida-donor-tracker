@@ -20,7 +20,7 @@ function StatBox({ label, value, sub, color }) {
       <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
         {label}
       </div>
-      <div style={{ fontSize: '1.3rem', fontFamily: 'var(--font-mono)', color: color || 'var(--orange)', fontWeight: 700 }}>
+      <div style={{ fontSize: '1.3rem', fontFamily: 'var(--font-serif)', color: color || 'var(--orange)', fontWeight: 400, fontVariantNumeric: 'tabular-nums' }}>
         {value}
       </div>
       {sub && <div style={{ fontSize: '0.62rem', color: 'var(--text-dim)' }}>{sub}</div>}
@@ -58,6 +58,7 @@ export default function PrincipalProfile({ data, compData = null }) {
   const donationMatches   = data.donation_matches || [];
   const topCommittees     = data.top_committees || [];
   const stateContracts    = data.state_contracts || [];
+  const issueAreas        = data.issue_areas || [];
 
   const location     = [data.city, data.state].filter(Boolean).join(', ');
   const industry     = data.industry && data.industry !== 'Other' ? data.industry : null;
@@ -170,7 +171,7 @@ export default function PrincipalProfile({ data, compData = null }) {
         <div style={{ marginBottom: '1rem' }}>
           <a href={`/industry/${industrySlug}`} style={{
             display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
-            fontSize: '0.7rem', color: 'var(--text-dim)', textDecoration: 'none',
+            fontSize: '0.7rem', color: 'var(--blue)', textDecoration: 'none',
             padding: '0.4rem 0.75rem', border: '1px solid rgba(100,140,220,0.15)',
             borderRadius: '3px', fontFamily: 'var(--font-mono)',
           }}>
@@ -476,11 +477,49 @@ export default function PrincipalProfile({ data, compData = null }) {
       description: 'Matched FL state contract vendors from FACTS procurement system',
       content: contractsContent,
     }] : []),
+    ...(issueAreas.length > 0 ? [{
+      id: 'issues',
+      label: `Issues (${issueAreas.length})`,
+      description: 'Legislative issue areas this principal lobbied on',
+      content: (
+        <div>
+          <div style={{ fontSize: '0.7rem', color: 'rgba(90,106,136,0.7)', marginBottom: '1rem', lineHeight: 1.5 }}>
+            Issue categories lobbied on behalf of this principal, from FL lobbyist disclosure filings.
+          </div>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                {['Issue Area', 'Disclosures', 'Bills', 'Lobbyists', 'Years'].map((h, j) => (
+                  <th key={h} style={{
+                    padding: '0.35rem 0.6rem', fontSize: '0.6rem', color: 'var(--text-dim)',
+                    textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 400,
+                    textAlign: j === 0 ? 'left' : 'right',
+                  }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {issueAreas.map(iss => (
+                <tr key={iss.issue} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
+                  <td style={{ padding: '0.45rem 0.6rem', fontWeight: 500 }}>{iss.issue}</td>
+                  <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--teal)' }}>{iss.disclosures.toLocaleString()}</td>
+                  <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--text-dim)' }}>{iss.bills.toLocaleString()}</td>
+                  <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--text-dim)' }}>{iss.lobbyists.toLocaleString()}</td>
+                  <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--text-dim)', whiteSpace: 'nowrap' }}>
+                    {iss.earliest_year && iss.latest_year ? `${iss.earliest_year}–${iss.latest_year}` : '—'}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ),
+    }] : []),
     { id: 'sources', label: 'Sources', description: 'Data sources and research links', content: sourcesContent },
   ];
 
   return (
-    <main style={{ maxWidth: '960px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
       <BackLinks links={[{ href: '/', label: 'home' }, { href: '/principals', label: 'principals' }]} />
 
       <EntityHeader

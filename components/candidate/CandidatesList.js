@@ -131,7 +131,7 @@ export default function CandidatesList() {
   const { data: pageItems, total, pages: totalPages } = results;
 
   return (
-    <main className="m-padx" style={{ maxWidth: '1000px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
+    <main className="m-padx" style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
 
       <BackLinks links={[{ href: '/', label: 'home' }]} />
 
@@ -309,7 +309,7 @@ export default function CandidatesList() {
                     {(page - 1) * PAGE_SIZE + i + 1}
                   </td>
                   <td style={{ padding: '0.45rem 0.6rem' }}>
-                    <a href={href} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+                    <a href={href} style={{ color: 'var(--orange)', textDecoration: 'none' }}>
                       {displayName}
                     </a>
                     {p.num_cycles > 1 && (
@@ -341,7 +341,7 @@ export default function CandidatesList() {
                   <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text)', textAlign: 'right', whiteSpace: 'nowrap', fontFamily: 'var(--font-mono)', fontSize: '0.82rem' }}>
                     {p.soft_money_all > 0 ? fmt(p.soft_money_all) : '—'}
                   </td>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--orange)', textAlign: 'right', whiteSpace: 'nowrap', fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '0.82rem' }}>
+                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--orange)', textAlign: 'right', whiteSpace: 'nowrap', fontWeight: 600, fontFamily: 'var(--font-mono)', fontSize: '0.82rem' }}>
                     {fmt(p.total_combined_all)}
                   </td>
                 </tr>

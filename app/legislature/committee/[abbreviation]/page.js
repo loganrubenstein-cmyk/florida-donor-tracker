@@ -107,7 +107,7 @@ export default async function CommitteePage({ params }) {
   const chamberBadgeColor = committee.chamber === 'Senate' ? 'var(--teal)' : 'var(--orange)';
 
   return (
-    <main style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
       <BackLinks links={[
         { href: '/', label: 'home' },
         { href: '/legislators', label: 'legislators' },
@@ -269,7 +269,7 @@ export default async function CommitteePage({ params }) {
             {industryBreakdown.slice(0, 8).map(ind => (
               <div key={ind.industry} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                 <div style={{ width: '8px', height: '8px', borderRadius: '2px', background: INDUSTRY_COLORS[ind.industry] || '#444466', flexShrink: 0 }} />
-                <Link href={`/industry/${slugify(ind.industry)}`} style={{ fontSize: '0.73rem', color: 'var(--text)', minWidth: '160px', textDecoration: 'none' }}>{ind.industry}</Link>
+                <Link href={`/industry/${slugify(ind.industry)}`} style={{ fontSize: '0.73rem', color: 'var(--blue)', minWidth: '160px', textDecoration: 'none' }}>{ind.industry}</Link>
                 <div style={{ flex: 1, height: '4px', background: 'var(--border)', borderRadius: '2px', overflow: 'hidden' }}>
                   <div style={{ width: `${ind.pct}%`, height: '100%', background: INDUSTRY_COLORS[ind.industry] || '#444466', borderRadius: '2px' }} />
                 </div>

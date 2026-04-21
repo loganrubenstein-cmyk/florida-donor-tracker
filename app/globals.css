@@ -1,30 +1,58 @@
-@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
+  /* Surfaces */
   --bg:        #01010d;
   --surface:   #080818;
+  --surface-2: #0d0d24;
+
+  /* Borders */
   --border:    rgba(100, 140, 220, 0.18);
+  --border-hi: rgba(100, 140, 220, 0.36);
+
+  /* Text */
   --text:      #c8d8f0;
   --text-dim:  #7a8eaa;
-  --orange:      #ffb060;
-  --teal:        #4dd8f0;
-  --republican:  #f87171;
-  --democrat:    #60a5fa;
-  --blue:      #a0c0ff;
-  --green:     #80ffa0;
-  --gold:      #ffd060;
-  --purple:    #c084fc;
-  /* Citrus-grade vocabulary — additive, no existing values changed */
-  --cobalt:    #4a7fdf;
-  --sea-green: #3db89f;
-  --cinnabar:  #e06b4a;
-  --font-mono: "Courier New", "Courier", monospace;
-  --font-serif: 'Instrument Serif', serif;
-  --font-sans:  'Instrument Sans', sans-serif;
+  --text-mute: rgba(122, 142, 170, 0.5);
+
+  /* Semantic accents */
+  --brand:       #ffb060;  /* identity, money, italic accent, donor/candidate links */
+  --interactive: #4dd8f0;  /* links, hover, active, committee/lobbyist/legislator links */
+  --live:        #80ffa0;  /* live / new / fresh / confirmed */
+  --warn:        #ffd060;  /* caveats, inferred */
+  --blue:        #a0c0ff;  /* industries + Individual entity type, CLASSIFIED confidence */
+  --rep:         #f87171;  /* party-R data only */
+  --dem:         #60a5fa;  /* party-D data only */
+  --purple:      #c084fc;  /* influence / lobbying */
+
+  /* Legacy aliases — delete once all 71+ component files are migrated */
+  --orange:     var(--brand);
+  --teal:       var(--interactive);
+  --green:      var(--live);
+  --gold:       var(--warn);
+  --republican: var(--rep);
+  --democrat:   var(--dem);
+
+  /* Typography */
+  --font-mono:  'JetBrains Mono', 'Courier New', monospace;
+  --font-serif: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
+  --font-sans:  'Instrument Sans', system-ui, sans-serif;
+
+  /* Radii */
+  --radius-xs: 2px;
+  --radius-sm: 3px;
+  --radius-md: 4px;
 }
 
 html { scroll-behavior: smooth; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
+
+::selection { background: rgba(255, 176, 96, 0.3); color: #fff; }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: rgba(100, 140, 220, 0.2); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(100, 140, 220, 0.4); }
 
 body {
   background: var(--bg);
@@ -211,15 +239,15 @@ body {
 }
 .hub-card {
   border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 1.5rem;
+  border-radius: 3px;
+  padding: 1.375rem;
   text-decoration: none;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   transition: border-color 0.15s, background 0.15s;
 }
-.hub-card:hover { border-color: rgba(100,140,220,0.4); background: rgba(8,8,24,0.6); box-shadow: 0 4px 24px rgba(77,216,240,0.07); }
+.hub-card:hover { border-color: rgba(77,216,240,0.53); background: rgba(77,216,240,0.04); }
 .source-link:hover { border-color: var(--teal); opacity: 1; }
 .hub-card-title { font-size: 1rem; color: var(--text); font-weight: 600; }
 .hub-card-desc  { font-size: 0.82rem; color: var(--text-dim); line-height: 1.5; }
@@ -443,8 +471,8 @@ body {
 }
 
 @keyframes skeleton-pulse {
-  0%, 100% { opacity: 0.2; }
-  50%       { opacity: 0.45; }
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 0.8; }
 }
 .skeleton-row {
   background: var(--border);

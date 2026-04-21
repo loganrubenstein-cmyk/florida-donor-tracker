@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Florida Races — Florida Influence',
+  title: 'Florida Races',
   description: 'Florida election race money — 2026 fundraising leaderboard and historical cycle comparisons going back to 2012.',
 };
 
@@ -26,7 +26,7 @@ const FEATURED_OFFICES = [
 
 export default function RacesIndexPage() {
   return (
-    <main style={{ maxWidth: '1140px', margin: '0 auto', padding: '2.5rem 2.5rem 5rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2.5rem 2.5rem 5rem' }}>
       <div style={{ fontSize: '0.66rem', color: 'var(--text-dim)', marginBottom: '2rem' }}>
         <Link href="/" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Home</Link>
         {' / '}
@@ -53,7 +53,7 @@ export default function RacesIndexPage() {
                 <div style={{ fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--teal)', marginBottom: '0.5rem' }}>
                   Active cycle · Live filings
                 </div>
-                <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--teal)', fontFamily: 'var(--font-mono)', marginBottom: '0.3rem' }}>
+                <div style={{ fontSize: '1.1rem', fontWeight: 400, color: 'var(--teal)', fontFamily: 'var(--font-serif)', marginBottom: '0.3rem' , fontVariantNumeric: 'tabular-nums' }}>
                   → 2026 money race
                 </div>
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
@@ -113,7 +113,7 @@ export default function RacesIndexPage() {
         {CYCLES.filter(c => !c.active).map(c => (
           <Link key={c.year} href={`/cycle/${c.year}`} style={{ textDecoration: 'none' }}>
             <div style={{ border: '1px solid var(--border)', borderRadius: '3px', padding: '1rem 1.1rem' }}>
-              <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text)', fontFamily: 'var(--font-mono)', marginBottom: '0.3rem' }}>{c.year}</div>
+              <div style={{ fontSize: '1.1rem', fontWeight: 400, color: 'var(--text)', fontFamily: 'var(--font-serif)', marginBottom: '0.3rem' , fontVariantNumeric: 'tabular-nums' }}>{c.year}</div>
               <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', lineHeight: 1.5 }}>{c.note}</div>
             </div>
           </Link>

@@ -3,7 +3,7 @@ import SectionHeader from '@/components/shared/SectionHeader';
 import MethodologyTabs from '@/components/methodology/MethodologyTabs';
 
 export const metadata = {
-  title: 'Methodology — Florida Influence',
+  title: 'Methodology',
   description: 'How Florida Influence collects, normalizes, and classifies campaign finance data — plus field definitions and coverage scope.',
 };
 

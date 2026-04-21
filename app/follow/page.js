@@ -5,7 +5,7 @@ import TrustRibbon from '@/components/shared/TrustRibbon';
 const FollowExplorer = dynamic(() => import('@/components/follow/FollowExplorer'), { ssr: false });
 
 export const metadata = {
-  title: 'Follow the Money — Florida Influence',
+  title: 'Follow the Money',
   description: 'Trace any donor\'s money through Florida political committees to candidates and their legislative votes.',
 };
 
@@ -30,7 +30,7 @@ export default async function FollowPage({ searchParams }) {
   const preloadSlug = params?.donor || null;
 
   return (
-    <main style={{ maxWidth: '1140px', margin: '0 auto', padding: '2rem 2.5rem 5rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 2.5rem 5rem' }}>
       <div style={{ fontSize: '0.66rem', color: 'var(--text-dim)', marginBottom: '2rem' }}>
         <Link href="/" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Home</Link>
         {' / '}
@@ -50,8 +50,8 @@ export default async function FollowPage({ searchParams }) {
           }}>
             Money Trail
           </div>
-          <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 400, lineHeight: 1.2, marginBottom: '0.9rem' }}>
-            Follow the money — through PACs,<br />lobbyists, and <span style={{ color: 'var(--orange)' }}>shadow networks.</span>
+          <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 400, lineHeight: 1.2, marginBottom: '0.9rem', letterSpacing: '-0.015em' }}>
+            Follow the money — through PACs,<br />lobbyists, and <span style={{ color: 'var(--orange)', fontStyle: 'italic' }}>shadow networks.</span>
           </h1>
           <p style={{ fontSize: '0.82rem', color: 'var(--text-dim)', lineHeight: 1.75, maxWidth: '500px', marginBottom: '2rem' }}>
             Start with any donor, committee, or candidate and trace the full money trail — upstream contributors, downstream transfers, and the legislative votes that follow the dollars. Exportable to CSV.
@@ -110,7 +110,7 @@ export default async function FollowPage({ searchParams }) {
               ].map(s => (
                 <div key={s.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
                   <span style={{ fontSize: '0.64rem', color: 'var(--text-dim)' }}>{s.label}</span>
-                  <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--orange)', fontFamily: 'var(--font-mono)' }}>{s.val}</span>
+                  <span style={{ fontFamily: 'var(--font-serif)', fontSize: '0.95rem', color: 'var(--orange)', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.01em' }}>{s.val}</span>
                 </div>
               ))}
             </div>

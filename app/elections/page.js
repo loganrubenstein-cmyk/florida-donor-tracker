@@ -37,12 +37,19 @@ export default function ElectionsPage() {
   const totalRaces = generals.reduce((s, c) => s + c.contests_with_finance, 0);
 
   return (
-    <main style={{ maxWidth: '960px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
       <BackLinks links={[{ href: '/', label: 'home' }, { href: '/cycles', label: 'cycles' }, { href: '/party-finance', label: 'party finance' }]} />
 
       <SectionHeader title="Election Results" eyebrow="Florida · 2012–2024" />
-      <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginTop: '-0.75rem', marginBottom: '2rem' }}>
+      <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginTop: '-0.75rem', marginBottom: '1rem' }}>
         {generals.length} general elections · {totalRaces} races with finance data matched
+      </div>
+      <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', lineHeight: 1.6, maxWidth: '640px', marginBottom: '2rem', padding: '0.75rem', border: '1px solid var(--border)', borderRadius: '3px' }}>
+        Finance data is matched to election outcomes where candidate names align between DOE records and campaign filings. Match rate varies by office and cycle.
+        Full finance detail for all candidates is available in the{' '}
+        <a href="/candidates" style={{ color: 'var(--orange)', textDecoration: 'none' }}>Candidates directory</a>
+        {' '}and{' '}
+        <a href="/cycles" style={{ color: 'var(--orange)', textDecoration: 'none' }}>Election Cycles</a>.
       </div>
 
       <ElectionsView cycles={cycles} districtMap={districtMap} />

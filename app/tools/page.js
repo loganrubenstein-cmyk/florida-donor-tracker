@@ -2,7 +2,7 @@ import Link from 'next/link';
 import ToolHubTabs from '@/components/tools/ToolHubTabs';
 
 export const metadata = {
-  title: 'Explore the Data — Florida Influence',
+  title: 'Explore the Data',
   description: 'Three ways into Florida political money: follow the money through PACs and shadow networks, track the 2026 races, or query 22 million raw transactions.',
 };
 
@@ -50,7 +50,7 @@ const ALL_TOOLS = [
 
 export default function ToolsPage() {
   return (
-    <main style={{ maxWidth: '1140px', margin: '0 auto', padding: '2.5rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2.5rem' }}>
       <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', marginBottom: '1.5rem' }}>
         <Link href="/" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Home</Link>
         {' / '}

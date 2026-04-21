@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'About — Florida Influence',
+  title: 'About',
   description: 'The most complete picture of Florida political influence — free from public records. 22M transactions, $34.9B lobbying, 30 years, 160 legislators.',
 };
 
@@ -70,7 +70,7 @@ const SITE_DIRECTORY = [
 
 export default function AboutPage() {
   return (
-    <main style={{ maxWidth: '1140px', margin: '0 auto', padding: '2.5rem 2.5rem 5rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2.5rem 2.5rem 5rem' }}>
       <div style={{ fontSize: '0.66rem', color: 'var(--text-dim)', marginBottom: '2rem' }}>
         <Link href="/" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Home</Link>
         {' / '}
@@ -242,8 +242,8 @@ export default function AboutPage() {
           <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', lineHeight: 1.65, marginBottom: '1rem' }}>
             Data errors, missing committees, or story tips about Florida political money — we want to know. Every correction improves the record.
           </div>
-          <a href="mailto:press@floridainfluence.com" style={{ fontSize: '0.72rem', color: 'var(--teal)', textDecoration: 'none', border: '1px solid rgba(77,216,240,0.3)', borderRadius: '3px', padding: '0.35rem 0.75rem', display: 'inline-block' }}>
-            → press@floridainfluence.com
+          <a href="mailto:info@floridainfluence.com" style={{ fontSize: '0.72rem', color: 'var(--teal)', textDecoration: 'none', border: '1px solid rgba(77,216,240,0.3)', borderRadius: '3px', padding: '0.35rem 0.75rem', display: 'inline-block' }}>
+            → info@floridainfluence.com
           </a>
         </div>
       </div>

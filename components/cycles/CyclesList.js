@@ -39,7 +39,7 @@ export default function CyclesList() {
   const grandTotal = cycles.reduce((s, c) => s + c.combined, 0);
 
   return (
-    <main style={{ maxWidth: '960px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
 
       <BackLinks links={[{ href: '/', label: 'home' }, { href: '/elections', label: 'elections' }, { href: '/party-finance', label: 'party finance' }]} />
 

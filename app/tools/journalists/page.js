@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'For Journalists — Florida Influence',
+  title: 'For Journalists',
   description: 'Investigative tools for Florida political money: follow donor webs through PACs, map shadow networks, trace lobbyist connections, and export everything.',
 };
 
@@ -37,7 +37,7 @@ const QUERIES = [
 
 export default function JournalistLandingPage() {
   return (
-    <main style={{ maxWidth: '1140px', margin: '0 auto', padding: '3rem 2.5rem 5rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '3rem 2.5rem 5rem' }}>
       <div style={{ fontSize: '0.66rem', color: 'var(--text-dim)', marginBottom: '2rem' }}>
         <Link href="/" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Home</Link>
         {' / '}
@@ -134,7 +134,7 @@ export default function JournalistLandingPage() {
             <div style={{ fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--orange)', marginBottom: '0.6rem' }}>
               Featured · Money Tracing
             </div>
-            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--orange)', fontFamily: 'var(--font-mono)', marginBottom: '0.5rem' }}>
+            <div style={{ fontSize: '1.1rem', fontWeight: 400, color: 'var(--orange)', fontFamily: 'var(--font-serif)', marginBottom: '0.5rem' , fontVariantNumeric: 'tabular-nums' }}>
               → follow the money
             </div>
             <div style={{ fontSize: '0.8rem', color: 'var(--text-dim)', lineHeight: 1.7, maxWidth: '560px' }}>

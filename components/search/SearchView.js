@@ -121,7 +121,7 @@ export default function SearchView() {
   const loading = !metaIndex;
 
   return (
-    <main style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
 
       <BackLinks links={[{ href: '/', label: 'home' }]} />
 
@@ -213,8 +213,8 @@ export default function SearchView() {
               { href: '/donor/florida-power-light-company', label: 'Florida Power & Light', sub: 'Corporate donor', type: 'donor', color: 'var(--orange)' },
               { href: '/committee/4700', label: 'Republican Party of Florida', sub: 'Committee · party org', type: 'committee', color: 'var(--republican)' },
               { href: '/principal/florida-medical-association', label: 'Florida Medical Association', sub: 'Lobbying principal · Healthcare', type: 'principal', color: 'var(--green)' },
-              { href: '/lobbyist/rubin-jeff', label: 'Jeff Rubin', sub: 'Lobbyist · top earner', type: 'lobbyist', color: 'var(--purple)' },
-              { href: '/legislator/11', label: 'Daniel Perez', sub: 'FL House Speaker · District 116', type: 'legislator', color: 'var(--teal)' },
+              { href: '/lobbyist/ballard-brian-d', label: 'Brian Ballard', sub: 'Lobbyist · top earner', type: 'lobbyist', color: 'var(--purple)' },
+              { href: '/legislator/19426', label: 'Daniel Perez', sub: 'FL House Speaker · District 116', type: 'legislator', color: 'var(--teal)' },
             ].map(({ href, label, sub, type, color }) => (
               <a key={href} href={href} style={{
                 display: 'flex', alignItems: 'center', gap: '0.75rem',
@@ -245,8 +245,9 @@ export default function SearchView() {
               { href: '/committees', label: 'Browse Committees', color: 'var(--teal)',   border: 'rgba(77,216,240,0.3)'  },
               { href: '/donors',     label: 'Browse Donors',     color: 'var(--orange)', border: 'rgba(255,176,96,0.3)'  },
               { href: '/lobbyists',  label: 'Browse Lobbyists',  color: 'var(--purple)', border: 'rgba(192,132,252,0.3)' },
-              { href: '/principals', label: 'Browse Principals', color: 'var(--green)',  border: 'rgba(128,255,160,0.3)' },
-              { href: '/explorer',   label: 'All Transactions',  color: 'var(--text-dim)', border: 'var(--border)'       },
+              { href: '/principals',  label: 'Browse Principals',  color: 'var(--green)',    border: 'rgba(128,255,160,0.3)'  },
+              { href: '/legislators', label: 'Browse Legislators', color: 'var(--teal)',    border: 'rgba(77,216,240,0.3)'   },
+              { href: '/explorer',    label: 'All Transactions',   color: 'var(--text-dim)', border: 'var(--border)'         },
             ].map(({ href, label, color, border }) => (
               <a key={href} href={href} style={{
                 fontSize: '0.72rem', color, textDecoration: 'none',

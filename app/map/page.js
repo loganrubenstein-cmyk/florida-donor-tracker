@@ -4,13 +4,13 @@ import Link from 'next/link';
 const DonationMap = dynamic(() => import('@/components/map/DonationMap'), { ssr: false });
 
 export const metadata = {
-  title: 'Geographic Donation Map — Florida Influence',
+  title: 'Geographic Donation Map',
   description: 'See where Florida political money comes from — top donor cities, states, and in-state vs. out-of-state breakdown.',
 };
 
 export default function MapPage() {
   return (
-    <main style={{ maxWidth: '960px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
       <div style={{ marginBottom: '0.5rem', fontSize: '0.72rem', color: 'var(--text-dim)' }}>
         <Link href="/" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Home</Link>
         {' / '}

@@ -68,17 +68,7 @@ export default function DiffBars({ a, b }) {
   const leadName = aRaised >= bRaised ? firstName(a.candidate_name) : firstName(b.candidate_name)
 
   return (
-    <div style={{ maxWidth: 1140, margin: '0 auto', padding: '2.5rem 2.5rem 3rem' }}>
-      <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.62rem', color: 'var(--text-dim)', letterSpacing: '0.2em', marginBottom: '0.9rem' }}>
-        ◤ TOOL / CANDIDATE COMPARE
-      </div>
-      <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.9rem, 4.5vw, 3rem)', lineHeight: 1.05, letterSpacing: '-0.022em', color: 'var(--text)', fontWeight: 400, marginBottom: '1rem' }}>
-        Two candidates. <em style={{ color: 'var(--orange)' }}>One receipt.</em>
-      </h1>
-      <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.82rem', color: 'var(--text-dim)', lineHeight: 1.75, maxWidth: '640px', marginBottom: '1.25rem' }}>
-        Every number side-by-side, with the differences called out. Hard money, soft money (affiliated PACs), and what the average donor wrote a check for.
-      </p>
-
+    <div>
       <div style={{ marginBottom: '1.75rem' }}>
         <TrustRibbon source="FL Division of Elections · FEC Form 3" updated="Apr 14, 2026" confidence="direct" />
       </div>

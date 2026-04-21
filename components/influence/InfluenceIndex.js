@@ -100,7 +100,7 @@ export default function InfluenceIndex() {
   const topIndustries = (stats?.industryList || []).slice(0, 8);
 
   return (
-    <main style={{ maxWidth: '1040px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
       <BackLinks links={[{ href: '/', label: 'home' }]} />
 
       {/* Header */}
@@ -134,7 +134,7 @@ export default function InfluenceIndex() {
               borderRight: i < arr.length - 1 ? '1px solid var(--border)' : 'none',
             }}>
               <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: '0.2rem' }}>{label}</div>
-              <div style={{ fontSize: '0.88rem', fontWeight: 700, color, fontFamily: 'var(--font-mono)', lineHeight: 1.2 }}>{value}</div>
+              <div style={{ fontSize: '0.88rem', fontWeight: 400, color, fontFamily: 'var(--font-serif)', lineHeight: 1.2, fontVariantNumeric: 'tabular-nums' }}>{value}</div>
               <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', marginTop: '0.1rem' }}>{sub}</div>
             </div>
           ))}
@@ -245,7 +245,7 @@ export default function InfluenceIndex() {
                   </td>
                   <td style={{ padding: '0.5rem 0.75rem' }}>
                     {org.industry
-                      ? <Link href={`/industry/${slugify(org.industry)}`} style={{ fontSize: '0.72rem', color: 'var(--text-dim)', textDecoration: 'none' }}>{org.industry}</Link>
+                      ? <Link href={`/industry/${slugify(org.industry)}`} style={{ fontSize: '0.72rem', color: 'var(--blue)', textDecoration: 'none' }}>{org.industry}</Link>
                       : <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>—</span>
                     }
                   </td>

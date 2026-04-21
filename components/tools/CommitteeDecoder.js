@@ -95,7 +95,7 @@ export default function CommitteeDecoder() {
   };
 
   return (
-    <main style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
       <BackLinks links={[{ href: '/', label: 'home' }, { href: '/tools', label: 'tools' }]} />
 
       {/* Header */}
@@ -254,7 +254,7 @@ function DecodeResult({ data }) {
             </div>
           </div>
           <div style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--orange)', fontFamily: 'var(--font-mono)' }}>
+            <div style={{ fontFamily: 'var(--font-serif)', fontSize: '1.4rem', color: 'var(--orange)', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.02em' }}>
               {fmt(totalReceived)}
             </div>
             <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)' }}>total raised</div>
@@ -468,7 +468,7 @@ function DecodeResult({ data }) {
           </h3>
           <div style={{ display: 'flex', gap: '2rem', fontSize: '0.78rem' }}>
             <div>
-              <span style={{ color: 'var(--text)', fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{fmt(spending.total_spent)}</span>
+              <span style={{ color: 'var(--text)', fontFamily: 'var(--font-serif)', fontVariantNumeric: 'tabular-nums' }}>{fmt(spending.total_spent)}</span>
               <span style={{ color: 'var(--text-dim)', marginLeft: '0.4rem' }}>total spent</span>
             </div>
             <div>

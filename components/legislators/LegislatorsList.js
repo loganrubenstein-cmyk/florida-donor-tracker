@@ -88,7 +88,7 @@ export default function LegislatorsList() {
   const showingChamber = chamber === 'all' ? 'legislators' : `${chamber} members`;
 
   return (
-    <main style={{ maxWidth: '1040px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
       <BackLinks links={[{ href: '/', label: 'home' }, { href: '/legislature', label: 'legislature' }]} />
 
       <SectionHeader title="Florida Legislature" eyebrow="FL Legislature · 2024–2026 Term" />
@@ -112,7 +112,7 @@ export default function LegislatorsList() {
           ].map(({ label, value, color, sub }, i, arr) => (
             <div key={label} style={{ flex: '1 1 120px', padding: '0.65rem 0.85rem', borderRight: i < arr.length - 1 ? '1px solid var(--border)' : 'none' }}>
               <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: '0.2rem' }}>{label}</div>
-              <div style={{ fontSize: '0.88rem', fontWeight: 700, color, fontFamily: 'var(--font-mono)', lineHeight: 1.2 }}>{value}</div>
+              <div style={{ fontSize: '0.88rem', fontWeight: 600, color, fontFamily: 'var(--font-serif)', fontVariantNumeric: 'tabular-nums', lineHeight: 1.2 }}>{value}</div>
               {sub && <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', marginTop: '0.1rem' }}>{sub}</div>}
             </div>
           ))}

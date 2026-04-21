@@ -27,7 +27,7 @@ function StatBox({ label, value, rawValue, sub, color }) {
       <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
         {label}
       </div>
-      <div style={{ fontSize: '1.3rem', fontFamily: 'var(--font-mono)', fontWeight: 700 }}>
+      <div style={{ fontSize: '1.5rem', fontFamily: 'var(--font-serif)', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.02em' }}>
         {rawValue != null
           ? <AnimatedStat value={rawValue} format="compact" color={color || 'var(--orange)'} />
           : <span style={{ color: color || 'var(--orange)' }}>{value}</span>
@@ -537,7 +537,7 @@ export default function DonorProfile({ data, annotations = {} }) {
   ];
 
   return (
-    <main style={{ maxWidth: '960px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
       <BackLinks links={[{ href: '/', label: 'home' }, { href: '/donors', label: 'donors' }]} />
 
       {/* Header */}

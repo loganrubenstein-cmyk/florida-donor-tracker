@@ -38,7 +38,7 @@ export default async function LobbyingHub() {
   const maxComp = topFirms.length > 0 ? parseFloat(topFirms[0].total_comp) : 1;
 
   return (
-    <main style={{ maxWidth: '900px', margin: '0 auto', padding: '3rem 1.5rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '3rem 1.5rem' }}>
       <div style={{ marginBottom: '0.5rem', fontSize: '0.75rem', color: 'var(--text-dim)' }}>
         <Link href="/" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Home</Link>
         {' / '}
@@ -134,6 +134,12 @@ export default async function LobbyingHub() {
           <div className="hub-card-title">Influence Index</div>
           <div className="hub-card-desc">Organizations ranked by combined political spending — lobbying compensation plus campaign donations.</div>
           <div className="hub-card-stat">$20.9B tracked · 3,393 orgs</div>
+        </Link>
+
+        <Link href="/lobbying/issues" className="hub-card">
+          <div className="hub-card-title">Issue Areas</div>
+          <div className="hub-card-desc">Florida legislative issue categories ranked by lobbying activity — see which policy areas draw the most sustained lobbying effort.</div>
+          <div className="hub-card-stat">1,848 issue categories</div>
         </Link>
 
         <Link href="/solicitations" className="hub-card">

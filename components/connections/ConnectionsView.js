@@ -259,7 +259,7 @@ export default function ConnectionsView() {
   const { data, total, pages: totalPages } = results;
 
   return (
-    <main style={{ maxWidth: '960px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
 
       <BackLinks links={[{ href: '/', label: 'home' }, { href: '/committees', label: 'committees' }]} />
 

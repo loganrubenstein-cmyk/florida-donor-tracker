@@ -84,7 +84,7 @@ export default async function CommitteesPage() {
   const totalRaised = [...house, ...senate].reduce((s, c) => s + (c.total_raised || 0), 0);
 
   return (
-    <main style={{ maxWidth: '1040px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
       <BackLinks links={[{ href: '/', label: 'home' }, { href: '/legislature', label: 'legislature' }]} />
 
       <SectionHeader title="Legislative Committees" eyebrow="FL Legislature · 2024–2026 Term" />

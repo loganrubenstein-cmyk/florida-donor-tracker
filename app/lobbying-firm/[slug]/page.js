@@ -54,6 +54,15 @@ export default async function LobbyingFirmPage({ params }) {
 
   if (!firm) notFound();
 
+  // Fetch issue areas for this firm from lobby_firm_issues (matched by firm_name)
+  const { data: issueRows } = await db
+    .from('lobby_firm_issues')
+    .select('issue, disclosures, bills, principals, lobbyists')
+    .eq('firm', firm.firm_name)
+    .order('disclosures', { ascending: false })
+    .limit(20);
+  const issueAreas = issueRows || [];
+
   // Strip trailing legal suffixes (PA/P.A./LLC/Inc. etc.) so both "GrayRobinson PA"
   // and "GrayRobinson, P.A." lobbyists appear on the merged firm profile.
   const firmBase = firm.firm_name
@@ -89,7 +98,7 @@ export default async function LobbyingFirmPage({ params }) {
   ).sort((a, b) => a.quarter.localeCompare(b.quarter));
 
   return (
-    <main style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 1.5rem 4rem' }}>
       <div style={{ marginBottom: '0.5rem', fontSize: '0.75rem', color: 'var(--text-dim)' }}>
         <Link href="/" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Home</Link>
         {' / '}
@@ -127,7 +136,7 @@ export default async function LobbyingFirmPage({ params }) {
             <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.3rem' }}>
               {label}
             </div>
-            <div style={{ fontSize: '1rem', color: color || 'var(--orange)', fontWeight: 700 }}>{value}</div>
+            <div style={{ fontSize: '1.1rem', fontFamily: 'var(--font-serif)', fontVariantNumeric: 'tabular-nums', color: color || 'var(--orange)', fontWeight: 400 }}>{value}</div>
           </div>
         ))}
       </div>
@@ -258,6 +267,33 @@ export default async function LobbyingFirmPage({ params }) {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* Issue areas */}
+      {issueAreas.length > 0 && (
+        <div style={{ marginBottom: '2rem' }}>
+          <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.75rem' }}>
+            Issue Areas Lobbied
+          </div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+            {issueAreas.map(iss => (
+              <span key={iss.issue} style={{
+                padding: '0.25rem 0.65rem',
+                border: '1px solid rgba(100,140,220,0.2)',
+                borderRadius: '3px',
+                fontSize: '0.72rem',
+                color: 'var(--text-dim)',
+                background: 'var(--surface)',
+                display: 'inline-flex', alignItems: 'center', gap: '0.4rem',
+              }}>
+                {iss.issue}
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: 'rgba(90,106,136,0.6)' }}>
+                  {iss.disclosures.toLocaleString()}
+                </span>
+              </span>
+            ))}
+          </div>
         </div>
       )}
 

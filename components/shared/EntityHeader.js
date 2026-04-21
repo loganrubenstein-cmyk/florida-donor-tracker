@@ -28,7 +28,7 @@ export default function EntityHeader({ name, typeBadge, badges = [], meta = [], 
           <span style={{
             fontSize: '0.65rem', padding: '0.15rem 0.5rem',
             border: `1px solid ${typeBadge.color}`, color: typeBadge.color,
-            borderRadius: '2px', fontFamily: 'var(--font-mono)', fontWeight: 'bold',
+            borderRadius: '2px', fontFamily: 'var(--font-mono)',
           }}>
             {typeBadge.label}
           </span>
@@ -38,7 +38,7 @@ export default function EntityHeader({ name, typeBadge, badges = [], meta = [], 
             <a key={i} href={b.href} style={{
               fontSize: '0.65rem', padding: '0.15rem 0.5rem',
               border: `1px solid ${b.color}`, color: b.color,
-              borderRadius: '2px', fontFamily: 'var(--font-mono)', fontWeight: 'bold',
+              borderRadius: '2px', fontFamily: 'var(--font-mono)',
               textDecoration: 'none',
             }}>
               {b.label}
@@ -47,7 +47,7 @@ export default function EntityHeader({ name, typeBadge, badges = [], meta = [], 
             <span key={i} style={{
               fontSize: '0.65rem', padding: '0.15rem 0.5rem',
               border: `1px solid ${b.color}`, color: b.color,
-              borderRadius: '2px', fontFamily: 'var(--font-mono)', fontWeight: 'bold',
+              borderRadius: '2px', fontFamily: 'var(--font-mono)',
             }}>
               {b.label}
             </span>
@@ -57,8 +57,9 @@ export default function EntityHeader({ name, typeBadge, badges = [], meta = [], 
 
       {/* Name */}
       <h1 style={{
-        fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.5rem, 4vw, 2.4rem)',
+        fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.75rem, 3vw, 2rem)',
         fontWeight: 400, color: 'var(--text)', marginBottom: '0.4rem', lineHeight: 1.1,
+        letterSpacing: '-0.015em',
       }}>
         {name}
       </h1>

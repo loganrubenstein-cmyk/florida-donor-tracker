@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Deep Data — Florida Influence',
+  title: 'Deep Data',
   description: '22 million Florida campaign finance transactions, 19 years of lobbying compensation, and full election cycle comparisons. All queryable, all exportable.',
 };
 
@@ -37,7 +37,7 @@ const QUERIES = [
 
 export default function DataLandingPage() {
   return (
-    <main style={{ maxWidth: '1140px', margin: '0 auto', padding: '3rem 2.5rem 5rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '3rem 2.5rem 5rem' }}>
       <div style={{ fontSize: '0.66rem', color: 'var(--text-dim)', marginBottom: '2rem' }}>
         <Link href="/" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Home</Link>
         {' / '}
@@ -134,7 +134,7 @@ export default function DataLandingPage() {
             <div style={{ fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--blue)', marginBottom: '0.6rem' }}>
               Featured · Raw Data
             </div>
-            <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--blue)', fontFamily: 'var(--font-mono)', marginBottom: '0.5rem' }}>
+            <div style={{ fontSize: '1.1rem', fontWeight: 400, color: 'var(--blue)', fontFamily: 'var(--font-serif)', marginBottom: '0.5rem' , fontVariantNumeric: 'tabular-nums' }}>
               → transaction explorer
             </div>
             <div style={{ fontSize: '0.8rem', color: 'var(--text-dim)', lineHeight: 1.7, maxWidth: '560px' }}>

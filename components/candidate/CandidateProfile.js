@@ -443,10 +443,10 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
                                 </span>
                               )}
                             </div>
-                            {(pc.source_filing_date || filingStatus) && (
-                              <span style={{ fontSize: '0.58rem', color: statusDim ? 'var(--text-dim)' : 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
+                            {(pc.source_filing_date || (filingStatus && filingStatus !== 'active')) && (
+                              <span style={{ fontSize: '0.58rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
                                 {pc.source_filing_date ? fmtDate(pc.source_filing_date) : ''}
-                                {filingStatus ? (pc.source_filing_date ? ' · ' : '') + filingStatus : ''}
+                                {filingStatus && filingStatus !== 'active' ? (pc.source_filing_date ? ' · ' : '') + 'filing ' + filingStatus : ''}
                               </span>
                             )}
                           </div>
@@ -689,7 +689,7 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
   ];
 
   return (
-    <main className="m-padx" style={{ maxWidth: '900px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
+    <main className="m-padx" style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
 
       {!hideHeader && <BackLinks links={[{ href: '/', label: 'home' }, { href: '/candidates', label: 'candidates' }]} />}
 

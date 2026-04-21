@@ -386,13 +386,19 @@ export default function TransactionExplorer({
                 </td>
               </tr>
             ))}
-            {!loading && data.length === 0 && (
-              <tr>
-                <td colSpan={6} style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-dim)' }}>
-                  No transactions found matching these filters.
-                </td>
-              </tr>
-            )}
+            {!loading && data.length === 0 && (() => {
+              const hasAnyFilter = !!(q.trim() || donorSlug || recipAcct || year || txType || amountMin || amountMax || dateStart || dateEnd);
+              return (
+                <tr>
+                  <td colSpan={6} style={{ padding: '2.5rem 1rem', textAlign: 'center', color: 'var(--text-dim)' }}>
+                    {hasAnyFilter
+                      ? 'No transactions found matching these filters.'
+                      : <span>Enter a contributor name, year, or amount to search <span style={{ color: 'var(--text)' }}>22M+ transactions</span>.</span>
+                    }
+                  </td>
+                </tr>
+              );
+            })()}
           </tbody>
         </table>
       </div>

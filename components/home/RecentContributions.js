@@ -91,7 +91,7 @@ export default function RecentContributions() {
   }, [])
 
   return (
-    <section style={{ maxWidth: '1140px', margin: '0 auto', padding: '0.75rem 2.5rem 2rem' }}>
+    <section style={{ maxWidth: '1100px', margin: '0 auto', padding: '0.75rem 2.5rem 2rem' }}>
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '0.75rem' }}>
         <div>
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: 'var(--orange)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: '0.5rem' }}>

@@ -222,7 +222,7 @@ export default function ContractsList() {
                 <td style={{
                   padding: '0.45rem 0.6rem', textAlign: 'right',
                   color: v.total_amount > 0 ? 'var(--blue)' : 'var(--text-dim)',
-                  fontFamily: 'var(--font-mono)', fontWeight: 700, whiteSpace: 'nowrap',
+                  fontFamily: 'var(--font-serif)', fontVariantNumeric: 'tabular-nums', whiteSpace: 'nowrap',
                 }}>
                   {fmt(v.total_amount)}
                 </td>

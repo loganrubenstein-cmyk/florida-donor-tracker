@@ -263,7 +263,7 @@ export default function DonorsList() {
                     {(page - 1) * PAGE_SIZE + i + 1}
                   </td>
                   <td style={{ padding: '0.45rem 0.6rem', wordBreak: 'break-word', maxWidth: '260px' }}>
-                    <a href={`/donor/${d.slug}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+                    <a href={`/donor/${d.slug}`} style={{ color: 'var(--orange)', textDecoration: 'none' }}>
                       {d.name}
                     </a>
                     {d.name !== 'STATE OF FLORIDA' && (
@@ -316,13 +316,13 @@ export default function DonorsList() {
                   <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.78rem' }}>
                     {d.num_committees}
                   </td>
-                  <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--text)', whiteSpace: 'nowrap' }}>
+                  <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--text)', whiteSpace: 'nowrap', fontFamily: 'var(--font-mono)' }}>
                     {d.total_soft > 0 ? fmt(d.total_soft) : '—'}
                   </td>
-                  <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--text)', whiteSpace: 'nowrap' }}>
+                  <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--text)', whiteSpace: 'nowrap', fontFamily: 'var(--font-mono)' }}>
                     {d.total_hard > 0 ? fmt(d.total_hard) : '—'}
                   </td>
-                  <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--orange)', whiteSpace: 'nowrap', fontWeight: 700 }}>
+                  <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--orange)', whiteSpace: 'nowrap', fontFamily: 'var(--font-mono)', fontWeight: 600 }}>
                     {fmt(d.total_combined)}
                   </td>
                 </tr>

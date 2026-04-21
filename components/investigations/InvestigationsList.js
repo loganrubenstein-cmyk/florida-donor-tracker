@@ -134,8 +134,8 @@ function EntityCard({ entity }) {
           <span style={{
             fontSize: '0.58rem', padding: '0.12rem 0.45rem',
             border: `1px solid ${typeColor}`, color: typeColor,
-            borderRadius: '2px', fontFamily: 'var(--font-mono)', fontWeight: 'bold',
-            letterSpacing: '0.05em',
+            borderRadius: '2px', fontFamily: 'var(--font-mono)',
+            letterSpacing: '0.1em',
           }}>
             {entity.type.toUpperCase()}
           </span>
@@ -150,7 +150,7 @@ function EntityCard({ entity }) {
 
         {/* Name */}
         <a href={entity.page_url} style={{
-          color: 'var(--text)', textDecoration: 'none',
+          color: typeColor, textDecoration: 'none',
           fontFamily: 'var(--font-serif)', fontSize: '1.45rem',
           fontWeight: 400, lineHeight: 1.15,
           display: 'block', marginBottom: '0.5rem',
@@ -161,9 +161,9 @@ function EntityCard({ entity }) {
         {/* Stat */}
         {entity.stat && (
           <div style={{
-            fontSize: '1rem', color: 'var(--orange)',
-            fontFamily: 'var(--font-mono)', fontWeight: 700,
-            marginBottom: '0.85rem', letterSpacing: '-0.01em',
+            fontFamily: 'var(--font-serif)', fontSize: '1.1rem', color: 'var(--orange)',
+            fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.01em',
+            marginBottom: '0.85rem',
           }}>
             {entity.stat}
             <span style={{ fontSize: '0.62rem', color: 'var(--text-dim)', fontWeight: 400, marginLeft: '0.4rem' }}>
@@ -247,7 +247,7 @@ export default function InvestigationsList({ entities }) {
           <span style={{
             fontSize: '0.65rem', padding: '0.15rem 0.5rem',
             border: '1px solid var(--orange)', color: 'var(--orange)',
-            borderRadius: '2px', fontFamily: 'var(--font-mono)', fontWeight: 'bold',
+            borderRadius: '2px', fontFamily: 'var(--font-mono)', letterSpacing: '0.1em',
           }}>
             INVESTIGATIONS
           </span>
@@ -280,7 +280,7 @@ export default function InvestigationsList({ entities }) {
           { label: 'Journalism sources',  value: outlets.length },
         ].map(({ label, value }) => (
           <div key={label}>
-            <div style={{ fontSize: '1.4rem', fontFamily: 'var(--font-mono)', color: 'var(--orange)', fontWeight: 700 }}>
+            <div style={{ fontFamily: 'var(--font-serif)', fontSize: '1.4rem', color: 'var(--orange)', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.02em' }}>
               {value}
             </div>
             <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>

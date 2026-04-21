@@ -214,7 +214,7 @@ export default function LobbyistsList() {
                 <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: 'var(--teal)', fontFamily: 'var(--font-mono)', fontSize: '0.78rem' }}>
                   {(l.num_active || 0).toLocaleString()}
                 </td>
-                <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: l.total_comp > 0 ? 'var(--blue)' : 'var(--text-dim)', fontWeight: l.total_comp > 0 ? 700 : 400, whiteSpace: 'nowrap' }}>
+                <td style={{ padding: '0.45rem 0.6rem', textAlign: 'right', color: l.total_comp > 0 ? 'var(--blue)' : 'var(--text-dim)', fontWeight: l.total_comp > 0 ? 600 : 400, fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap' }}>
                   {fmt(l.total_comp)}
                 </td>
               </tr>

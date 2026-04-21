@@ -62,7 +62,7 @@ export default function PartyFinancePage() {
   const maxYearTotal = Math.max(...yearData.map(y => y.rep + y.dem), 1);
 
   return (
-    <main style={{ maxWidth: '960px', margin: '0 auto', padding: '3rem 1.5rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '3rem 1.5rem' }}>
       <div style={{ marginBottom: '0.5rem', fontSize: '0.75rem', color: 'var(--text-dim)' }}>
         <Link href="/" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Home</Link>
         {' / '}
@@ -189,7 +189,7 @@ function PartyCard({ party, color, total }) {
     <div style={{ padding: '1.25rem', background: 'var(--surface)', border: `1px solid ${color}44`, borderRadius: '6px' }}>
       <div style={{ fontSize: '0.95rem', fontWeight: 700, color, marginBottom: '0.75rem' }}>{partyLabel}</div>
       <div style={{ marginBottom: '1rem' }}>
-        <div style={{ fontSize: '1.6rem', fontWeight: 700, color: 'var(--text)', fontFamily: 'var(--font-mono)' }}>
+        <div style={{ fontSize: '1.6rem', fontWeight: 400, color: 'var(--text)', fontFamily: 'var(--font-serif)' , fontVariantNumeric: 'tabular-nums' }}>
           {fmtMoneyCompact(party.total_raised)}
         </div>
         <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)' }}>total raised · {pct}% of all FL candidate fundraising</div>

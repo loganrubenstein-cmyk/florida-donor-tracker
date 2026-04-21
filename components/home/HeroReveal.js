@@ -25,7 +25,7 @@ export default function HeroReveal({ updatedDate }) {
     <section style={{
       padding: '3.5rem 2.5rem 2.75rem',
       borderBottom: '1px solid rgba(100,140,220,0.1)',
-      maxWidth: '1140px',
+      maxWidth: '1100px',
       margin: '0 auto',
       position: 'relative',
     }}>
@@ -61,9 +61,9 @@ export default function HeroReveal({ updatedDate }) {
             fontWeight: 400,
             marginBottom: '1.1rem',
           }}>
-            <span style={{ display: 'block', ...ease(2) }}>Follow the money</span>
-            <span style={{ display: 'block', color: 'var(--orange)', fontStyle: 'italic', ...ease(3) }}>and influence</span>
-            <span style={{ display: 'block', ...ease(4) }}>in Florida politics.</span>
+            <span style={{ display: 'block', ...ease(2) }}>Florida campaign finance</span>
+            <span style={{ display: 'block', color: 'var(--orange)', ...ease(3) }}>and lobbying,</span>
+            <span style={{ display: 'block', ...ease(4) }}>on the record since 1996.</span>
           </h1>
 
           <p style={{
@@ -75,7 +75,7 @@ export default function HeroReveal({ updatedDate }) {
             opacity: show(5) ? 0.75 : 0,
             transition: 'opacity .7s',
           }}>
-            Every donor, every PAC, every lobbyist, every vote. A free public record of who pays for Florida politics and who benefits.
+            22 million contributions, 4 million lobbying records, and 160 legislators — searchable and linked in one place. Free and public.
           </p>
 
           {/* Search */}
@@ -100,10 +100,10 @@ export default function HeroReveal({ updatedDate }) {
               background: 'var(--orange)', color: '#01010d',
               border: 'none', padding: '0.6rem 1.1rem',
               fontSize: '0.75rem', fontWeight: 700,
-              fontFamily: 'var(--font-sans)', borderRadius: '3px',
-              cursor: 'pointer', whiteSpace: 'nowrap',
+              fontFamily: 'var(--font-mono)', borderRadius: '3px',
+              cursor: 'pointer', whiteSpace: 'nowrap', letterSpacing: '0.12em',
             }}>
-              Search
+              ⌕ SEARCH
             </button>
           </form>
 

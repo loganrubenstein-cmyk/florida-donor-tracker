@@ -11,7 +11,7 @@ export const metadata = {
 
 export default function CommitteesPage() {
   return (
-    <main style={{ maxWidth: '960px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
+    <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
       <SectionHeader title="Political Committees" eyebrow="FL Committees · 1996–2026" patch="committees" />
       <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', marginTop: '-0.75rem', marginBottom: '1.25rem' }}>
         4,440 Florida political committees with contribution data · Florida Division of Elections
