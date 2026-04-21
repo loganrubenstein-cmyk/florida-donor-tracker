@@ -35,7 +35,6 @@ const GROUPS = [
       { href: '/party-finance',     label: 'Party Finance' },
       { href: '/ie',                label: 'Indep. Expenditures' },
       { href: '/contracts',         label: 'State Contracts' },
-      { href: '/federal-contracts', label: 'Federal Contracts' },
       { href: '/connections',       label: 'Connections' },
       { href: '/pulse',             label: 'Pulse' },
       { href: '/investigations',    label: 'Investigations' },

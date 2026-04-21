@@ -44,7 +44,6 @@ const ALL_TOOLS = [
   { href: '/decode',           title: 'Committee Decoder',       desc: 'Who controls and funds any FL PAC.' },
   /* ── Other ── */
   { href: '/contracts',        title: 'State Contracts',         desc: 'FL vendors who got state contracts — matched to donors.' },
-  { href: '/federal-contracts',title: 'Federal Contracts',       desc: '$219B in federal awards to FL recipients.' },
   { href: '/federal?cycle=2026',title: 'FL Federal Candidates',  desc: '2,656 FL U.S. Senate/House/President candidates across five cycles — PAC money totals.' },
   { href: '/solicitations',    title: 'Solicitations',           desc: 'FL organizations registered to solicit political contributions.' },
   { href: '/pulse',            title: 'Pulse',                   desc: 'Live feed of recent filings and large donors.' },

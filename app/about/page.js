@@ -55,7 +55,7 @@ const SITE_DIRECTORY = [
   ['Legislature & Government', [
     ['/legislature', 'Legislature Hub'], ['/legislators', 'Legislators Directory'],
     ['/legislature/committees', 'Legislative Committees'],
-    ['/contracts', 'State Contracts'], ['/federal-contracts', 'Federal Contracts'],
+    ['/contracts', 'State Contracts'],
   ]],
   ['Tools & Analysis', [
     ['/tools', 'Tools Hub'], ['/follow', 'Follow the Money'], ['/flow', 'Money Flow'],
@@ -152,7 +152,7 @@ export default function AboutPage() {
             ['Shadow committee networks', 'PACs sharing treasurers, addresses, donors, or money flows.'],
             ['Legislators and votes', '160 current FL members — campaign finance, committee assignments, vote history.'],
             ['Election results', 'precinct-level results 2012–2024 matched to finance records.'],
-            ['State and federal contracts', 'vendors who received government contracts, matched to their campaign donations.'],
+            ['State contracts', 'vendors who received FL government contracts, matched to their campaign donations.'],
           ].map(([title, desc]) => (
             <div key={title} style={{ display: 'flex', gap: '0.75rem', marginBottom: '0.7rem', lineHeight: 1.7 }}>
               <span style={{ color: 'var(--orange)', fontSize: '0.78rem', flexShrink: 0 }}>→</span>

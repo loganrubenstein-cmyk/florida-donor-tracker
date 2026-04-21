@@ -26,7 +26,6 @@ const STATIC_PAGES = [
   { path: '/party-finance', priority: 0.5 },
   { path: '/solicitations', priority: 0.5 },
   { path: '/contracts', priority: 0.6 },
-  { path: '/federal-contracts', priority: 0.5 },
   { path: '/federal', priority: 0.5 },
   { path: '/federal/donors', priority: 0.5 },
   { path: '/investigations', priority: 0.5 },

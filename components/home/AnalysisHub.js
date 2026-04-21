@@ -53,7 +53,6 @@ const GROUPS = [
       { label: 'Lobbying',              href: '/lobbying',           desc: '4M rows · 19 years',     badge: 'DATA' },
       { label: 'Solicitations',         href: '/solicitations',      desc: 'Legislative requests',   badge: 'DATA' },
       { label: 'Independent expenditures', href: '/ie',              desc: 'Outside spending',       badge: 'DATA' },
-      { label: 'Federal contracts',     href: '/federal-contracts',  desc: 'Gov awards to donors',   badge: 'ANALYSIS' },
       { label: 'Contracts',             href: '/contracts',          desc: 'State procurement',      badge: 'DATA' },
     ],
   },
