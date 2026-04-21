@@ -1,15 +1,10 @@
-import DonorTable from '@/components/donors/DonorTable'
 import HeroReveal from '@/components/home/HeroReveal'
-import AnimatedStat from '@/components/shared/AnimatedStat'
-import MoneyLens from '@/components/shared/MoneyLens'
 import AnalysisHub from '@/components/home/AnalysisHub'
 import EmailStrip from '@/components/home/EmailStrip'
-import InvestigationSpotlight from '@/components/home/InvestigationSpotlight'
 import RecentContributions from '@/components/home/RecentContributions'
 import { getDb } from '@/lib/db'
 import { FEDERAL_OFFICE_CODES } from '@/lib/officeCodes'
 import { DATA_LAST_UPDATED } from '@/lib/dataLastUpdated'
-import PulseSection from '@/components/home/PulseSection'
 import Link from 'next/link'
 
 export const dynamic = 'force-dynamic';
@@ -22,14 +17,12 @@ export const metadata = {
 async function getHomeData() {
   const db = getDb();
   const [
-    { data: topDonorsData },
     { count: candidateCount },
     { count: committeeCount },
     { count: donorCount },
     { data: donorAgg },
     { count: contributionCount },
   ] = await Promise.all([
-    db.from('donors').select('slug, name, is_corporate, total_combined, total_soft, total_hard, num_contributions').order('total_combined', { ascending: false }).limit(100),
     db.from('candidates').select('*', { count: 'exact', head: true }).not('office_code', 'in', `(${[...FEDERAL_OFFICE_CODES].join(',')})`),
     db.from('committees').select('*', { count: 'exact', head: true }),
     db.from('donors').select('*', { count: 'exact', head: true }),
@@ -42,7 +35,6 @@ async function getHomeData() {
   const totalContributions = contributionCount ?? 21955118;
 
   return {
-    topDonors: topDonorsData || [],
     candidateCount: candidateCount || 7172,
     committeeCount: committeeCount || 5974,
     totalSpending,
@@ -66,20 +58,12 @@ const RACES_2026 = [
 ];
 
 export default async function Home() {
-  const { topDonors, candidateCount, committeeCount, totalSpending, totalContributions, totalDonors, updatedDate } = await getHomeData();
+  const { candidateCount, committeeCount, totalSpending, totalContributions, totalDonors, updatedDate } = await getHomeData();
 
   return (
     <main>
       {/* ── Hero ── */}
       <HeroReveal updatedDate={updatedDate} />
-
-      {/* ── Investigation Spotlight ── */}
-      <InvestigationSpotlight />
-
-      {/* ── Pulse ── */}
-      <section style={{ maxWidth: '1140px', margin: '0 auto', padding: '1.5rem 2.5rem 0' }}>
-        <PulseSection />
-      </section>
 
       {/* ── Depth Differentiator ── */}
       <section style={{ padding: '2.5rem 2.5rem', borderBottom: '1px solid rgba(100,140,220,0.1)', maxWidth: '1140px', margin: '0 auto' }}>
@@ -153,11 +137,6 @@ export default async function Home() {
 
       {/* ── Analysis Hub ── */}
       <AnalysisHub />
-
-      {/* ── Donor Table ── */}
-      <section id="donors" style={{ padding: '2.5rem 2.5rem 3rem', maxWidth: '1140px', margin: '0 auto' }}>
-        <DonorTable donors={topDonors} />
-      </section>
 
       {/* ── Email Alert Strip ── */}
       <EmailStrip />
