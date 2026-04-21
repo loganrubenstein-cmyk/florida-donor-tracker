@@ -9,7 +9,7 @@ const GROUPS = [
     kicker: 'Start with a name, zip, or race.',
     color: 'var(--teal)',
     items: [
-      { label: 'Who funds your district', href: '/district',    desc: 'Zip → reps → donors',          badge: 'TOOL' },
+      { label: 'Who funds your district', href: '/who-funds',   desc: 'Zip → reps → donors',          badge: 'TOOL' },
       { label: 'Candidates',              href: '/candidates',  desc: '883 indexed · FL + federal',   badge: 'DIR' },
       { label: 'Donors',                  href: '/donors',      desc: '883K normalized entities',     badge: 'DIR' },
       { label: 'Committees',              href: '/committees',  desc: '4.2K committees · linked',     badge: 'DIR' },

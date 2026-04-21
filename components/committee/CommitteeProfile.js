@@ -49,7 +49,6 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
     ...(data.website_url ? [{ label: 'Official Website →', href: data.website_url }] : []),
     { label: 'Committee Connections →', href: `/connections?committee=${data.acct_num}`, internal: true },
     { label: 'Find Donor Overlap →', href: `/compare?a=${data.acct_num}`, internal: true },
-    { label: 'View in Network →', href: `/network/graph?acct=${data.acct_num}`, internal: true },
     { label: 'FL DOE Committee Page →', href: `https://dos.elections.myflorida.com/committees/ComDetail.asp?account=${data.acct_num}` },
     { label: 'Campaign Finance Activity →', href: `https://dos.elections.myflorida.com/cgi-bin/TreSel.exe?account=${data.acct_num}` },
     { label: 'Google News →', href: `https://news.google.com/search?q=${encodeURIComponent(data.committee_name + ' Florida politics')}` },

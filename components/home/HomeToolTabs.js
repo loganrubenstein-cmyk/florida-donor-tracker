@@ -8,7 +8,7 @@ const TABS = [
     id: 'voter',
     label: 'Voter tools',
     tools: [
-      { href: '/district',    title: '→ who funds your district', desc: 'Zip code → your reps → every donor on file. See who\'s bankrolling them.', badge: 'New' },
+      { href: '/who-funds',   title: '→ who funds your district', desc: 'Zip code → your reps → every donor on file. See who\'s bankrolling them.', badge: 'New' },
       { href: '/follow',      title: '→ follow the money',        desc: 'Pick any donor. Trace them through PACs to candidates.' },
       { href: '/races/2026',  title: '→ 2026 money race',         desc: 'Live fundraising leaderboard for every major FL race.', badge: 'New' },
       { href: '/influence',   title: '→ influence index',         desc: 'Orgs ranked by combined lobbying spend + campaign donations.' },

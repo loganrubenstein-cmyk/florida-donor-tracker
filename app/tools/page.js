@@ -22,7 +22,6 @@ const ALL_TOOLS = [
   /* ── Districts & races ── */
   { href: '/who-funds',        title: 'Who Funds Your District', desc: 'Zip code → rep → full donor breakdown.', badge: 'New' },
   { href: '/races/2026',       title: '2026 Money Race',         desc: 'Live fundraising leaderboard per race.', badge: 'New' },
-  { href: '/district',         title: 'District Money Map',      desc: 'Political money raised per FL legislative district.' },
   /* ── Legislature & officials ── */
   { href: '/legislature',      title: 'Legislature',             desc: '160 legislators — donors, votes, disclosures.' },
   { href: '/elections',        title: 'Elections',               desc: 'FL results 2012–2024: finance-matched, cost per vote.' },

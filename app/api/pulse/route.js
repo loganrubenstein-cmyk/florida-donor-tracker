@@ -68,7 +68,8 @@ export async function GET(req) {
     }
 
     if (type === 'cycle') {
-      // Top donors this cycle year — two-step: totals then names
+      // Top donors this cycle year — two-step: totals then names.
+      // donor_by_year view can time out on large year sorts; degrade gracefully.
       const year = searchParams.get('year') || new Date().getFullYear();
       const { data: byYear, error } = await db
         .from('donor_by_year')
@@ -78,7 +79,14 @@ export async function GET(req) {
         .order('total', { ascending: false })
         .limit(limit);
 
-      if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+      if (error) {
+        return NextResponse.json({
+          type: 'cycle',
+          year,
+          items: [],
+          note: 'Cycle aggregation temporarily unavailable — try the full Donors directory.',
+        });
+      }
 
       const slugs = (byYear || []).map(r => r.donor_slug).filter(Boolean);
       const { data: donorRows } = slugs.length

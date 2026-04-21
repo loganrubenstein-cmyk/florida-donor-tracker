@@ -18,11 +18,6 @@ const TOOLS = [
     desc: 'All 160 FL legislators — campaign donors, lobbying contacts, vote history, and official financial disclosures in one place.',
   },
   {
-    href: '/district',
-    title: '→ district money map',
-    desc: 'Choropleth map showing total political money raised per FL legislative district. Zoom in, compare cycles, filter by party.',
-  },
-  {
     href: '/pulse',
     title: '→ pulse',
     desc: 'What\'s happening right now — recent filings, notable donors, and trending committees across Florida politics.',

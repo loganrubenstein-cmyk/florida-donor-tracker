@@ -217,9 +217,6 @@ export default function WhoFundsPage() {
               <Link href="/legislature" style={{ fontSize: '0.73rem', color: 'var(--text-dim)', border: '1px solid var(--border)', borderRadius: '3px', padding: '0.4rem 0.75rem', textDecoration: 'none' }}>
                 → full legislature
               </Link>
-              <Link href="/district" style={{ fontSize: '0.73rem', color: 'var(--text-dim)', border: '1px solid var(--border)', borderRadius: '3px', padding: '0.4rem 0.75rem', textDecoration: 'none' }}>
-                → district map
-              </Link>
             </div>
           </div>
         </div>

@@ -132,7 +132,7 @@ export default function HeroReveal({ updatedDate }) {
             }}>
               → FOLLOW THE MONEY
             </a>
-            <a href="/district" style={{
+            <a href="/who-funds" style={{
               border: '1px solid rgba(100,140,220,0.25)',
               color: 'var(--text-dim)',
               padding: '0.6rem 1.2rem',

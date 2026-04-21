@@ -170,6 +170,12 @@ export default function PulsePage() {
 
       {loading && <p style={{ color: 'var(--text-dim)', fontSize: '0.78rem' }}>Loading…</p>}
 
+      {!loading && current?.note && (
+        <p style={{ color: 'var(--text-dim)', fontSize: '0.78rem', fontStyle: 'italic', marginBottom: '0.75rem' }}>
+          {current.note}
+        </p>
+      )}
+
       {!loading && current && tab === 'filings' && <FilingsTable items={current.items || []} />}
       {!loading && current && tab === 'committees' && <CommitteesTable items={current.items || []} />}
       {!loading && current && tab === 'cycle' && <CycleTable items={current.items || []} year={current.year || currentYear} />}
