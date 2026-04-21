@@ -47,10 +47,8 @@ const GROUPS = [
     items: [
       { href: '/tools',          label: '→ Tools Hub' },
       { href: '/who-funds',      label: 'Who Funds Your District', badge: 'New' },
-      { href: '/races',          label: 'Races' },
       { href: '/races/2026',     label: '2026 Money Race',         badge: 'New' },
       { href: '/follow',         label: 'Follow the Money' },
-      { href: '/flow',           label: 'Money Flow Explorer' },
       { href: '/compare',        label: 'Candidate Compare' },
       { href: '/decode',         label: 'Committee Decoder' },
       { href: '/timeline',       label: 'Influence Timeline' },
