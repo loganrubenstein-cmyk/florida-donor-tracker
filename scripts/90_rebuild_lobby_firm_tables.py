@@ -91,7 +91,14 @@ def main() -> int:
         )
     """)
     cur.execute(f"""
-        WITH firm_agg AS (
+        WITH deduped AS (
+            SELECT DISTINCT ON (firm_name, principal_name, quarter, year, branch)
+                firm_name, principal_name, comp_midpoint, quarter, year, branch
+            FROM lobbyist_comp_detail
+            WHERE firm_name != '' AND year > 0
+            ORDER BY firm_name, principal_name, quarter, year, branch
+        ),
+        firm_agg AS (
             SELECT
                 {_slug_expr('firm_name')} AS slug,
                 firm_name,
@@ -101,8 +108,7 @@ def main() -> int:
                 MIN(year) AS first_year,
                 MAX(year) AS last_year,
                 COUNT(DISTINCT year) AS num_years
-            FROM lobbyist_comp_detail
-            WHERE firm_name != '' AND year > 0
+            FROM deduped
             GROUP BY firm_name
         ),
         slug_merged AS (
@@ -150,8 +156,13 @@ def main() -> int:
             year || ' Q' || quarter,
             branch,
             SUM(comp_midpoint)
-        FROM lobbyist_comp_detail
-        WHERE firm_name != '' AND year > 0
+        FROM (
+            SELECT DISTINCT ON (firm_name, principal_name, quarter, year, branch)
+                firm_name, principal_name, comp_midpoint, quarter, year, branch
+            FROM lobbyist_comp_detail
+            WHERE firm_name != '' AND year > 0
+            ORDER BY firm_name, principal_name, quarter, year, branch
+        ) deduped
         GROUP BY firm_name, year, quarter, branch
         ORDER BY firm_name, year DESC, quarter DESC
     """)
@@ -183,8 +194,13 @@ def main() -> int:
             SUM(comp_midpoint),
             MIN(year),
             MAX(year)
-        FROM lobbyist_comp_detail
-        WHERE firm_name != '' AND principal_name != '' AND year > 0
+        FROM (
+            SELECT DISTINCT ON (firm_name, principal_name, quarter, year, branch)
+                firm_name, principal_name, comp_midpoint, quarter, year, branch
+            FROM lobbyist_comp_detail
+            WHERE firm_name != '' AND principal_name != '' AND year > 0
+            ORDER BY firm_name, principal_name, quarter, year, branch
+        ) deduped
         GROUP BY firm_name, principal_name
         ORDER BY firm_name, SUM(comp_midpoint) DESC
     """)

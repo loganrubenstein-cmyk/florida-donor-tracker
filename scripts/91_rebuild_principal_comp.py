@@ -59,8 +59,13 @@ def main() -> int:
             quarter,
             branch,
             SUM(comp_midpoint)
-        FROM lobbyist_comp_detail
-        WHERE year > 0 AND principal_name != ''
+        FROM (
+            SELECT DISTINCT ON (firm_name, principal_name, quarter, year, branch)
+                firm_name, principal_name, comp_midpoint, quarter, year, branch
+            FROM lobbyist_comp_detail
+            WHERE year > 0 AND principal_name != ''
+            ORDER BY firm_name, principal_name, quarter, year, branch
+        ) deduped
         GROUP BY principal_name, year, quarter, branch
         ORDER BY principal_name, year, quarter
     """)

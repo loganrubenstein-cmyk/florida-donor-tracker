@@ -45,10 +45,19 @@ def main() -> int:
     print(f"Source: lobbyist_comp_detail has {total:,} rows")
 
     # ── 1. lobby_firm_annual ──────────────────────────────────────────────────
+    # Deduplicate to one row per (firm, principal, quarter, branch) before summing
+    # so that multiple lobbyists at the same firm don't multiply the firm-level amount.
     print("\n1. Building lobby_firm_annual...")
     cur.execute("DROP TABLE IF EXISTS lobby_firm_annual")
     cur.execute("""
         CREATE TABLE lobby_firm_annual AS
+        WITH deduped AS (
+            SELECT DISTINCT ON (firm_name, principal_name, quarter, year, branch)
+                firm_name, principal_name, lobbyist_name, comp_midpoint, quarter, year, branch
+            FROM lobbyist_comp_detail
+            WHERE year > 0
+            ORDER BY firm_name, principal_name, quarter, year, branch
+        )
         SELECT
             firm_name,
             year,
@@ -56,8 +65,7 @@ def main() -> int:
             COUNT(DISTINCT principal_name) AS num_principals,
             COUNT(DISTINCT lobbyist_name) FILTER (WHERE lobbyist_name != '') AS num_lobbyists,
             COUNT(*) AS num_records
-        FROM lobbyist_comp_detail
-        WHERE year > 0
+        FROM deduped
         GROUP BY firm_name, year
         ORDER BY firm_name, year
     """)
@@ -71,6 +79,13 @@ def main() -> int:
     cur.execute("DROP TABLE IF EXISTS lobby_principal_annual")
     cur.execute("""
         CREATE TABLE lobby_principal_annual AS
+        WITH deduped AS (
+            SELECT DISTINCT ON (firm_name, principal_name, quarter, year, branch)
+                firm_name, principal_name, lobbyist_name, comp_midpoint, quarter, year, branch
+            FROM lobbyist_comp_detail
+            WHERE year > 0
+            ORDER BY firm_name, principal_name, quarter, year, branch
+        )
         SELECT
             principal_name,
             year,
@@ -80,8 +95,7 @@ def main() -> int:
             COUNT(DISTINCT firm_name) AS num_firms,
             COUNT(DISTINCT lobbyist_name) FILTER (WHERE lobbyist_name != '') AS num_lobbyists,
             COUNT(*) AS num_records
-        FROM lobbyist_comp_detail
-        WHERE year > 0
+        FROM deduped
         GROUP BY principal_name, year
         ORDER BY principal_name, year
     """)
