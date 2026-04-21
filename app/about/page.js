@@ -211,7 +211,7 @@ export default function AboutPage() {
             → Full methodology and confidence labels
           </Link>
           <span style={{ color: 'var(--text-dim)', fontSize: '0.68rem', marginLeft: '1rem' }}>
-            <Link href="/coverage" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>→ Coverage &amp; limits</Link>
+            <Link href="/methodology" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>→ Coverage &amp; field definitions</Link>
           </span>
         </div>
       </div>

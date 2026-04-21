@@ -65,9 +65,8 @@ const GROUPS = [
     items: [
       { label: 'Investigations',   href: '/investigations',   desc: 'Named files · sourced',             badge: 'REPORTS' },
       { label: 'Decode',           href: '/decode',           desc: 'Shadow PAC decoder',                badge: 'TOOL' },
-      { label: 'Coverage',         href: '/coverage',         desc: 'News that cites our data',          badge: 'NEWS' },
       { label: 'Transparency',     href: '/transparency',     desc: 'How we source · merge · classify',  badge: 'METHOD' },
-      { label: 'Data dictionary',  href: '/data-dictionary',  desc: 'Field definitions',                 badge: 'REF' },
+      { label: 'Methodology',      href: '/methodology',      desc: 'Methods · field definitions · coverage scope', badge: 'REF' },
     ],
   },
 ]

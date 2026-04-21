@@ -40,10 +40,7 @@ const STATIC_PAGES = [
   { path: '/decode', priority: 0.5 },
   { path: '/search', priority: 0.4 },
   { path: '/about', priority: 0.4 },
-  { path: '/methodology', priority: 0.4 },
-  { path: '/data', priority: 0.4 },
-  { path: '/data-dictionary', priority: 0.4 },
-  { path: '/coverage', priority: 0.4 },
+  { path: '/methodology', priority: 0.5 },
   { path: '/lobbying/bills', priority: 0.6 },
 ];
 

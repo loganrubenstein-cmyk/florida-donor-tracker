@@ -71,11 +71,8 @@ const GROUPS = [
   {
     label: 'Sources',
     items: [
-      { href: '/methodology',     label: 'Methodology' },
-      { href: '/data-dictionary', label: 'Data Dictionary' },
-      { href: '/coverage',        label: 'Coverage & Limits' },
-      { href: '/about',           label: 'About' },
-      { href: '/data',            label: 'Data Sources' },
+      { href: '/methodology', label: 'Methodology' },
+      { href: '/about',       label: 'About' },
     ],
   },
 ];

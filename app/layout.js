@@ -120,10 +120,8 @@ export default function RootLayout({ children }) {
             <div>
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.58rem', color: 'var(--text-dim)', letterSpacing: '0.18em', textTransform: 'uppercase', marginBottom: '0.75rem' }}>ABOUT</div>
               {[
-                ['About',              '/about'],
-                ['Methodology',        '/methodology'],
-                ['Sources',            '/data'],
-                ['Coverage & limits',  '/coverage'],
+                ['About',        '/about'],
+                ['Methodology',  '/methodology'],
               ].map(([label, href]) => (
                 <Link key={href} href={href} style={{ display: 'block', fontFamily: 'var(--font-mono)', fontSize: '0.7rem', color: 'var(--text-dim)', textDecoration: 'none', marginBottom: '0.4rem' }}>
                   {label}
