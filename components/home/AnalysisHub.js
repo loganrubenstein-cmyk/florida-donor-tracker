@@ -41,7 +41,6 @@ const GROUPS = [
       { label: 'Follow the money', href: '/follow',      desc: 'Source → PAC → candidate',      badge: 'TOOL' },
       { label: 'Flow',             href: '/flow',        desc: 'Committee transfers',           badge: 'VIZ' },
       { label: 'Connections',      href: '/connections', desc: 'Shared treasurers + addresses', badge: 'ANALYSIS' },
-      { label: 'Network',          href: '/network',     desc: 'Graph view · entities',         badge: 'VIZ' },
     ],
   },
   {

@@ -12,7 +12,6 @@ const ALL_TOOLS = [
   { href: '/flow',             title: 'Money Flow Explorer',     desc: 'Multi-path donor → committee → candidate drill-down.' },
   { href: '/connections',      title: 'Committee Connections',   desc: 'Shadow network graph of committee relationships.' },
   { href: '/ie',               title: 'Independent Expenditures',desc: '$70.9M in IE spending — who ran ads for/against candidates.' },
-  { href: '/transfers',        title: 'Committee Transfers',     desc: 'Money moving between committees — trace every transfer.' },
   /* ── Influence & analysis ── */
   { href: '/influence',        title: 'Influence Index',         desc: 'Orgs ranked by combined lobbying + campaign donations.' },
   { href: '/compare',          title: 'Donor Overlap',           desc: 'Find shared donors between any two candidates.' },
