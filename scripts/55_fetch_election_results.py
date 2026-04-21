@@ -196,20 +196,44 @@ def _build_race_clusters(df: pd.DataFrame) -> dict:
         if ra != rb:
             parent[ra] = rb
 
+    # Pseudo-candidates (UnderVotes/OverVotes/WriteIn) appear in every district's
+    # precincts and would bridge distinct races into one component. Exclude from
+    # clustering; reassign them per-district afterward by precinct co-occurrence.
+    def _is_pseudo(name: str) -> bool:
+        n = (name or "").strip().lower().replace(" ", "")
+        return n in {"undervotes", "overvotes", "writein", "write-in", "writeinvotes"}
+
+    real = df[~df["candidate_name"].map(_is_pseudo)]
+
     # Candidate key = (contest_name, candidate_name, party). init each to itself.
-    keys = df[["contest_name", "candidate_name", "party"]].drop_duplicates()
+    keys = real[["contest_name", "candidate_name", "party"]].drop_duplicates()
     for _, r in keys.iterrows():
         k = (r["contest_name"], r["candidate_name"], r["party"])
         parent[k] = k
 
-    # Group by precinct+contest; within each group, union all candidates together.
-    for _, sub in df.groupby(["county_code", "precinct_id", "contest_name"], sort=False):
+    # Per-candidate county footprint. Candidates in the same district will have
+    # (near-)identical footprints; cross-district candidates within a multi-
+    # district county (e.g. Miami-Dade holds FL-24/25/26/27) will NOT.
+    cand_counties = {}
+    for (cn, name, party), sub in real.groupby(["contest_name", "candidate_name", "party"], sort=False):
+        cand_counties[(cn, name, party)] = frozenset(sub["county_code"].unique())
+
+    def _same_district(a, b) -> bool:
+        ca, cb = cand_counties.get(a, frozenset()), cand_counties.get(b, frozenset())
+        if not ca or not cb:
+            return False
+        return ca == cb  # exact footprint — different districts differ even when they share some counties
+
+    # Group by precinct+contest; union only candidates whose county footprints overlap.
+    for _, sub in real.groupby(["county_code", "precinct_id", "contest_name"], sort=False):
         cands = sub[["contest_name", "candidate_name", "party"]].drop_duplicates()
         if len(cands) < 2:
             continue
-        first = (cands.iloc[0]["contest_name"], cands.iloc[0]["candidate_name"], cands.iloc[0]["party"])
-        for _, r in cands.iloc[1:].iterrows():
-            union(first, (r["contest_name"], r["candidate_name"], r["party"]))
+        keys_here = [(r["contest_name"], r["candidate_name"], r["party"]) for _, r in cands.iterrows()]
+        for i, a in enumerate(keys_here):
+            for b in keys_here[i + 1:]:
+                if _same_district(a, b):
+                    union(a, b)
 
     # Assign sequential race ids to connected components.
     roots = {}
