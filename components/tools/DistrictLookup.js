@@ -66,22 +66,23 @@ export default function DistrictLookup() {
   }
 
   return (
-    <div className="container" style={{ paddingTop: '2rem', paddingBottom: '3rem' }}>
-      <div style={{ marginBottom: '0.75rem', fontSize: '0.72rem', color: 'var(--text-dim)' }}>
+    <div style={{ maxWidth: 1100, margin: '0 auto', padding: '2.5rem 2.5rem 3rem' }}>
+      <div style={{ marginBottom: '0.75rem', fontSize: '0.7rem', color: 'var(--text-dim)' }}>
         <Link href="/" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Home</Link>
         {' / '}
         <Link href="/tools" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Tools</Link>
         {' / '}
         <span>District Lookup</span>
       </div>
-      <div style={{ marginBottom: '1.5rem' }}>
-        <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.6rem', color: 'var(--orange)', margin: 0 }}>
-          Money in Your District
-        </h1>
-        <p style={{ color: 'var(--text-dim)', fontSize: '0.78rem', marginTop: '0.35rem' }}>
-          Look up your Florida legislator — see who funds them, how they vote, and how their fundraising compares.
-        </p>
+      <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.62rem', color: 'var(--text-dim)', letterSpacing: '0.2em', marginBottom: '0.9rem' }}>
+        ◤ TOOL / WHO FUNDS YOUR DISTRICT
       </div>
+      <h1 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.9rem, 4.5vw, 3rem)', lineHeight: 1.05, letterSpacing: '-0.022em', color: 'var(--text)', fontWeight: 400, marginBottom: '1rem' }}>
+        Pick your district. See <em style={{ color: 'var(--orange)' }}>who pays</em> for your representative.
+      </h1>
+      <p style={{ fontFamily: 'var(--font-mono)', fontSize: '0.82rem', color: 'var(--text-dim)', lineHeight: 1.75, maxWidth: '600px', marginBottom: '1.5rem' }}>
+        Enter a Florida House or Senate district to see your legislator, their fundraising, top donors, voting record, and how they compare.
+      </p>
 
       {/* Input controls */}
       <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-end', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
@@ -173,13 +174,32 @@ function DistrictResult({ data }) {
   const totalRaised = leg.total_raised;
   const topAmount = top_donors.length > 0 ? top_donors[0].amount : 1;
 
+  const [phase, setPhase] = useState(0);
+  useEffect(() => {
+    setPhase(0);
+    const t1 = setTimeout(() => setPhase(1), 60);
+    const t2 = setTimeout(() => setPhase(2), 450);
+    const t3 = setTimeout(() => setPhase(3), 900);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+  }, [leg.people_id, leg.district, leg.chamber]);
+
+  const reveal = (n) => ({
+    opacity: phase >= n ? 1 : 0,
+    transform: phase >= n ? 'translateY(0)' : 'translateY(8px)',
+    transition: 'opacity .5s ease, transform .5s ease',
+  });
+
   return (
-    <div style={{ animation: 'fadeIn 0.3s ease-out' }}>
+    <div>
       {/* Legislator header card */}
       <div style={{
         background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '3px',
-        padding: '1.25rem', marginBottom: '1rem', borderLeft: `3px solid ${partyColor}`,
+        padding: '1.35rem 1.5rem', marginBottom: '1rem', borderLeft: `5px solid ${partyColor}`,
+        ...reveal(1),
       }}>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.6rem', color: 'var(--orange)', letterSpacing: '0.2em', marginBottom: '0.5rem' }}>
+          ◤ RESULT · {String(leg.chamber).toUpperCase()} DISTRICT {leg.district}
+        </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.75rem' }}>
           <div>
             <div style={{ fontSize: '0.62rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.25rem' }}>
@@ -213,7 +233,7 @@ function DistrictResult({ data }) {
       {/* Fundraising comparison bar */}
       <div style={{
         background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '3px',
-        padding: '1rem', marginBottom: '1rem',
+        padding: '1rem', marginBottom: '1rem', ...reveal(2),
       }}>
         <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.75rem' }}>
           Fundraising vs. {leg.chamber} Average
@@ -229,7 +249,7 @@ function DistrictResult({ data }) {
       {/* Voting participation */}
       <div style={{
         background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '3px',
-        padding: '1rem', marginBottom: '1rem',
+        padding: '1rem', marginBottom: '1rem', ...reveal(2),
       }}>
         <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.75rem' }}>
           Voting Record
@@ -238,7 +258,7 @@ function DistrictResult({ data }) {
       </div>
 
       {/* Two-column: Top Donors + Donor Types */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem', ...reveal(3) }}>
         {/* Top Donors */}
         <div style={{
           background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '3px',
@@ -291,7 +311,7 @@ function DistrictResult({ data }) {
       {recent_votes.length > 0 && (
         <div style={{
           background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '3px',
-          padding: '1rem', marginBottom: '1rem',
+          padding: '1rem', marginBottom: '1rem', ...reveal(3),
         }}>
           <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '0.75rem' }}>
             Recent Votes
@@ -324,8 +344,38 @@ function DistrictResult({ data }) {
         </div>
       )}
 
+      {/* WHAT NEXT */}
+      <div style={{ marginTop: '1.75rem', marginBottom: '1.25rem', ...reveal(3) }}>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.62rem', color: 'var(--text-dim)', letterSpacing: '0.2em', marginBottom: '0.75rem' }}>
+          ◤ WHAT NEXT
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '0.75rem' }}>
+          <Link href="/follow" style={{
+            display: 'block', padding: '1rem 1.15rem', border: '1px solid var(--orange)',
+            borderRadius: '3px', background: 'rgba(255,176,96,0.04)', textDecoration: 'none',
+            fontFamily: 'var(--font-mono)', fontSize: '0.78rem', color: 'var(--orange)', letterSpacing: '0.08em',
+          }}>
+            → FOLLOW THE MONEY UPSTREAM
+          </Link>
+          <Link href="/compare" style={{
+            display: 'block', padding: '1rem 1.15rem', border: '1px solid var(--teal)',
+            borderRadius: '3px', background: 'rgba(77,216,240,0.04)', textDecoration: 'none',
+            fontFamily: 'var(--font-mono)', fontSize: '0.78rem', color: 'var(--teal)', letterSpacing: '0.08em',
+          }}>
+            → COMPARE CANDIDATES
+          </Link>
+          <Link href="/influence" style={{
+            display: 'block', padding: '1rem 1.15rem', border: '1px solid var(--border)',
+            borderRadius: '3px', background: 'transparent', textDecoration: 'none',
+            fontFamily: 'var(--font-mono)', fontSize: '0.78rem', color: 'var(--text)', letterSpacing: '0.08em',
+          }}>
+            → BROWSE INFLUENCE INDEX
+          </Link>
+        </div>
+      </div>
+
       {/* Links */}
-      <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', fontSize: '0.72rem' }}>
+      <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', fontSize: '0.72rem', ...reveal(3) }}>
         <Link href={`/legislator/${leg.people_id}`} style={{ color: 'var(--orange)', textDecoration: 'none' }}>
           Full legislator profile →
         </Link>

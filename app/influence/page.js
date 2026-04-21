@@ -1,4 +1,4 @@
-import InfluenceIndex from '@/components/influence/InfluenceIndex';
+import InfluenceTerminal from '@/components/influence/InfluenceTerminal';
 
 export const metadata = {
   title: 'Florida Influence Index',
@@ -6,5 +6,5 @@ export const metadata = {
 };
 
 export default function InfluencePage() {
-  return <InfluenceIndex />;
+  return <InfluenceTerminal />;
 }

@@ -1,59 +1,45 @@
 import { getDb } from '@/lib/db';
-import DonorOverlap from '@/components/tools/DonorOverlap';
+import DiffBars from '@/components/compare/DiffBars';
+
+export const dynamic = 'force-dynamic';
 
 export const metadata = {
-  title: 'Compare Candidates & Committees',
-  description: 'Compare any two Florida candidates or committees — shared donors, industry funding sources, and who backs only one side.',
+  title: 'Compare Candidates — Florida Influence',
+  description: 'Two Florida candidates, side-by-side. Hard money, soft money, contributions, average donation, and corporate share.',
 };
 
-async function fetchEntity(db, acct) {
-  const { data: candRows } = await db.from('candidates')
-    .select('acct_num, candidate_name, office_desc, election_year, party_code')
-    .eq('acct_num', acct)
-    .limit(1);
-  const cand = candRows?.[0] ?? null;
+const FIELDS = 'acct_num, candidate_name, office_desc, election_year, party_code, total_combined, hard_money_total, hard_corporate_total, hard_individual_total, hard_num_contributions, soft_money_total';
 
-  if (cand) {
-    return {
-      acct_num: cand.acct_num,
-      name: cand.candidate_name,
-      type: 'candidate',
-      detail: [cand.office_desc, cand.election_year, cand.party_code].filter(Boolean).join(' · '),
-    };
-  }
-
-  const { data: commRows } = await db.from('committees')
-    .select('acct_num, committee_name, total_received')
-    .eq('acct_num', acct)
-    .limit(1);
-  const comm = commRows?.[0] ?? null;
-
-  if (comm) {
-    return {
-      acct_num: comm.acct_num,
-      name: comm.committee_name,
-      type: 'committee',
-      detail: comm.total_received ? `$${(comm.total_received / 1e6).toFixed(1)}M raised` : '',
-    };
-  }
-
-  return null;
+async function fetchCandidate(db, acct) {
+  if (!acct) return null;
+  const { data } = await db.from('candidates').select(FIELDS).eq('acct_num', String(acct)).limit(1);
+  return data?.[0] ?? null;
 }
 
 export default async function ComparePage({ searchParams }) {
   const db = getDb();
+  const aParam = searchParams?.a || '79799'; // DeSantis 2022
+  const bParam = searchParams?.b || '79408'; // Crist 2022
 
-  const aParam = searchParams?.a;
-  const bParam = searchParams?.b;
-
-  // Default comparison: DeSantis (79799) vs Crist (79408) — 2022 governor's race
-  const DEFAULT_A = '79799';
-  const DEFAULT_B = '79408';
-
-  const [initialEntityA, initialEntityB] = await Promise.all([
-    fetchEntity(db, aParam || DEFAULT_A),
-    fetchEntity(db, bParam || DEFAULT_B),
+  const [a, b] = await Promise.all([
+    fetchCandidate(db, aParam),
+    fetchCandidate(db, bParam),
   ]);
 
-  return <DonorOverlap initialEntityA={initialEntityA} initialEntityB={initialEntityB} />;
+  if (!a || !b) {
+    return (
+      <main style={{ maxWidth: 900, margin: '0 auto', padding: '3rem 2.5rem' }}>
+        <h1 style={{ fontFamily: 'var(--font-serif)', color: 'var(--text)' }}>Compare candidates</h1>
+        <p style={{ color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.8rem', marginTop: '1rem' }}>
+          Couldn&apos;t find one or both candidates. Pass two valid account numbers: <code>/compare?a=79799&amp;b=79408</code>.
+        </p>
+      </main>
+    );
+  }
+
+  return (
+    <main>
+      <DiffBars a={a} b={b} />
+    </main>
+  );
 }
