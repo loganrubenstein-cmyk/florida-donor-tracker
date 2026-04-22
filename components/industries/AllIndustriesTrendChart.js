@@ -109,7 +109,16 @@ export default function AllIndustriesTrendChart({ trendData, industries }) {
           </BarChart>
         </ResponsiveContainer>
       </div>
-      <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', marginTop: '0.35rem' }}>
+      {/* Legend */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem 1rem', marginTop: '0.75rem', marginBottom: '0.35rem' }}>
+        {sorted.map(ind => (
+          <div key={ind} style={{ display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+            <span style={{ width: '8px', height: '8px', borderRadius: '1px', background: INDUSTRY_COLORS[ind] || '#444466', flexShrink: 0, display: 'inline-block' }} />
+            <span style={{ fontSize: '0.58rem', color: '#5a6a88', fontFamily: 'Courier New, monospace' }}>{ind}</span>
+          </div>
+        ))}
+      </div>
+      <div style={{ fontSize: '0.6rem', color: '#5a6a88', marginTop: '0.1rem' }}>
         Hard money contributions only · Even years = election cycles · Click any bar to explore
       </div>
     </div>

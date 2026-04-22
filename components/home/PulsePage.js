@@ -189,18 +189,6 @@ export default function PulsePage() {
         ))}
       </div>
 
-      <div className="tab-bar" style={{ marginBottom: '1.5rem' }}>
-        {TABS.map(t => (
-          <button
-            key={t.key}
-            className={tab === t.key ? 'tab tab-active' : 'tab'}
-            onClick={() => switchTab(t.key)}
-          >
-            {t.label}
-          </button>
-        ))}
-      </div>
-
       {loading && <p style={{ color: 'var(--text-dim)', fontSize: '0.78rem' }}>Loading…</p>}
 
       {!loading && current?.note && (
