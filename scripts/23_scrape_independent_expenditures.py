@@ -530,6 +530,8 @@ def main(force=False, dry_run=False, election_filter=None) -> int:
     for i, (acct, name) in enumerate(all_ecos.items()):
         if i % 25 == 0 and i > 0:
             print(f"  {i}/{len(all_ecos):,} committees processed ...", flush=True)
+        cache_path = IE_RAW_DIR / f"eco_{acct}.tsv"
+        needs_network = not cache_path.exists() or force
         df_raw = scrape_committee_expenditures(session, acct, name, force=force)
         if df_raw is not None and not df_raw.empty:
             df_proc = process_df(df_raw, 0)  # year=0 fallback; per-row date used in process_df
@@ -538,7 +540,8 @@ def main(force=False, dry_run=False, election_filter=None) -> int:
                 df_proc["committee_id"]   = acct
                 df_proc["committee_name"] = name
                 all_dfs.append(df_proc)
-        time.sleep(REQUEST_DELAY_SEC * 0.5)  # lighter delay for per-committee loop
+        if needs_network:
+            time.sleep(REQUEST_DELAY_SEC * 0.5)  # only delay after live network requests
 
     if not all_dfs:
         print("No IE data collected across any year.")
@@ -570,6 +573,8 @@ def main(force=False, dry_run=False, election_filter=None) -> int:
 
     try:
         cur.execute(CREATE_IE_TABLE)
+        if not dry_run:
+            cur.execute("TRUNCATE independent_expenditures RESTART IDENTITY")
         con.commit()
 
         n = load_to_supabase(combined, cur, dry_run)
