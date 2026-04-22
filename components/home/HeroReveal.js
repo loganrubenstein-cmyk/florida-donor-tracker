@@ -76,7 +76,7 @@ export default function HeroReveal({ updatedDate }) {
           }}>
             The only Florida site that crosses{' '}
             <span style={{ color: 'var(--orange)' }}>campaign finance</span>,{' '}
-            <span style={{ color: 'var(--teal)' }}>$34.9B in lobbying</span>,{' '}
+            <span style={{ color: 'var(--teal)' }}>$36B+ in lobbying</span>,{' '}
             <span style={{ color: 'var(--gold)' }}>shadow PAC networks</span>, and the{' '}
             <span style={{ color: 'var(--blue)' }}>legislature</span>{' '}
             — 30 years of public records, one investigation view.

@@ -1,10 +1,10 @@
 import Link from 'next/link';
 
 const ITEMS = [
-  { live: true,  text: '$3.9B TRACKED' },
+  { live: true,  text: '$4.5B TRACKED' },
   { text: 'DATA: APR 2026' },
   { text: '22M CONTRIBUTIONS' },
-  { text: '883K DONORS' },
+  { text: '1M+ DONORS' },
   { text: '431 SHADOW PACS' },
   { text: '160 LEGISLATORS' },
   { live: true,  text: '2026 CYCLE OPEN' },

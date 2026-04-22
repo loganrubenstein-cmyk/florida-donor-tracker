@@ -79,9 +79,9 @@ async function getHomeData() {
     }
   } catch (e) { /* use fallback */ }
 
-  const totalSpending = donorAgg?.sum ?? 3894316430;
-  const totalDonors = donorCount ?? 883681;
-  const totalContributions = contributionCount ?? 21955118;
+  const totalSpending = donorAgg?.sum ?? 4523635357;
+  const totalDonors = donorCount ?? 1061588;
+  const totalContributions = contributionCount ?? 22027852;
 
   return {
     candidateCount: candidateCount || 7172,
@@ -126,8 +126,8 @@ async function getHomeData() {
 }
 
 const DEPTH_STATS = [
-  { val: '$3.9B+', color: 'var(--orange)', detail: 'campaign contributions · 22M transactions · 883K donors · 1996–2026' },
-  { val: '$34.9B', color: 'var(--teal)',   detail: 'lobbying compensation · 4M rows · 2,473 lobbyists · 19 years' },
+  { val: '$4.5B+', color: 'var(--orange)', detail: 'campaign contributions · 22M transactions · 1M+ donors · 1996–2026' },
+  { val: '$36B+',  color: 'var(--teal)',   detail: 'lobbying compensation · 4M rows · 2,473 lobbyists · 19 years' },
   { val: '160',    color: 'var(--green)',  detail: 'current FL legislators · donors · votes · lobbyist connections · disclosures' },
   { val: '431',    color: 'var(--blue)',   detail: 'shadow PAC orgs · 56K+ committee pairs' },
 ];
