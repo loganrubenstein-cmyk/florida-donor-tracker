@@ -45,7 +45,7 @@ The relevant docs:
 
 ---
 
-### 3. Donor ↔ Principal name-matching is thin
+### 3. Donor ↔ Principal name-matching is thin ✅ PARTIAL 2026-04-22
 
 **Symptom**: `/donor/the-geo-group-inc?tab=lobbying` shows no lobbying despite GEO Group being a registered FL lobbying principal. Many corporate donors fail to link to their principal record.
 
@@ -61,6 +61,12 @@ The relevant docs:
 **Fix (small)**: lower the match threshold OR add a prefix/suffix normalization step to the population script so "THE GEO GROUP, INC." and "GEO Group" both resolve.
 
 **Fix (proper)**: create a `donor_principal_links_v` materialized view (outlined in `docs/handoff-follow-dream-flow.md` Phase 1) — uses `pg_trgm` similarity + manual override table. Target ≥60% match rate on top 500 corporate donors.
+
+**What was done 2026-04-22 (small fix, query-side only):** Rewrote Fallback B in `lib/loadDonor.js` — shared `normalizeCorpName()` helper that upper-cases, strips periods, drops comma-separated suffix segments (THE, INC, LLC, LTD, CORP, CO, COMPANY, PA, PLLC, PC, NA, USA, etc.), then strips head/tail suffix words. Both donor and principal candidates run through it; pick is exact-normalized match, falling back to substring containment. Verified: GEO Group, Publix, FPL, Lockheed, Walt Disney Company all resolve. Disney Worldwide Services correctly rejects (no matching principal).
+
+**Still outstanding (proper fix):**
+- `scripts/16_match_principals.py` has `_MIN_TOKEN_LEN = 4` which filters short brand names from the blocking index entirely; GEO/CVS/UPS/IBM-style names never enter candidate pool. Lower to 3 and re-run 16→25→26→40 to widen `principal_donation_matches` table. Not done this session (pipeline re-run scope).
+- Materialized view with `pg_trgm` + manual override is the dream-flow Phase 1 target — still queued.
 
 ---
 
