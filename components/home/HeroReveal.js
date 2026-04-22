@@ -66,15 +66,20 @@ export default function HeroReveal({ updatedDate }) {
           </h1>
 
           <p style={{
-            fontSize: '0.9rem',
+            fontSize: '0.88rem',
             color: 'var(--text)',
             marginBottom: '1.25rem',
-            maxWidth: '520px',
+            maxWidth: '540px',
             lineHeight: 1.75,
-            opacity: show(5) ? 0.75 : 0,
+            opacity: show(5) ? 0.8 : 0,
             transition: 'opacity .7s',
           }}>
-            22 million contributions, 4 million lobbying records, and 160 legislators — searchable and linked in one place. Free and public.
+            The only Florida site that crosses{' '}
+            <span style={{ color: 'var(--orange)' }}>campaign finance</span>,{' '}
+            <span style={{ color: 'var(--teal)' }}>$34.9B in lobbying</span>,{' '}
+            <span style={{ color: 'var(--gold)' }}>shadow PAC networks</span>, and the{' '}
+            <span style={{ color: 'var(--blue)' }}>legislature</span>{' '}
+            — 30 years of public records, one investigation view.
           </p>
 
           {/* Search */}
