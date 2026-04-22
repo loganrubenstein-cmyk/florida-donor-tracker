@@ -19,7 +19,7 @@ const ALL_TOOLS = [
   { href: '/transparency',     title: 'Transparency Index',      desc: 'Candidates ranked by disclosure completeness and diversity.' },
   { href: '/investigations',   title: 'Investigations',          desc: '11 entities with documented influence, cross-referenced with journalism.' },
   /* ── Districts & races ── */
-  { href: '/who-funds',        title: 'Who Funds Your District', desc: 'Zip code → rep → full donor breakdown.', badge: 'New' },
+  { href: '/who-funds',        title: 'Who Funds Your District', desc: 'FL House/Senate district → your legislator → full donor breakdown.', badge: 'New' },
   { href: '/races/2026',       title: '2026 Money Race',         desc: 'Live fundraising leaderboard per race.', badge: 'New' },
   /* ── Legislature & officials ── */
   { href: '/legislature',      title: 'Legislature',             desc: '160 legislators — donors, votes, disclosures.' },
@@ -34,9 +34,9 @@ const ALL_TOOLS = [
   /* ── Lobbying ── */
   { href: '/lobbyists',        title: 'Lobbyists',               desc: '2,473 registered lobbyists — clients, bills, donations.' },
   { href: '/principals',       title: 'Lobbying Principals',     desc: '19 years of lobbying clients and spend.' },
-  { href: '/lobbying-firms',   title: 'Lobbying Firms',          desc: '1,970 firms ranked by total compensation.' },
+  { href: '/lobbying-firms',   title: 'Lobbying Firms',          desc: '1,785 firms ranked by total compensation.' },
   /* ── Directories ── */
-  { href: '/donors',           title: 'Donors',                  desc: '883K deduped donor profiles — all-time FL contributors.' },
+  { href: '/donors',           title: 'Donors',                  desc: '1M+ deduped donor profiles — all-time FL contributors.' },
   { href: '/committees',       title: 'Committees',              desc: '5,974 PACs, ECOs, and party committees.' },
   { href: '/candidates',       title: 'Candidates',              desc: 'Every FL candidate — hard money, soft money, PAC links.' },
   { href: '/vendors',          title: 'Vendors & Payees',        desc: '205,254 canonical vendors paid by FL committees + candidates — aliases merged.' },

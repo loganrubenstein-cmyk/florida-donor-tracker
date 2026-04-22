@@ -211,7 +211,7 @@ export default function CommitteeDecoder() {
       <div style={{ marginTop: '3rem' }}>
         <DataTrustBlock
           source="Florida Division of Elections — Campaign Finance Database"
-          sourceUrl="https://dos.elections.myflorida.com/campaign-finance/contributions/"
+          sourceUrl="https://dos.fl.gov/elections/candidates-committees/campaign-finance/campaign-finance-database/"
           
           direct={['committee name', 'treasurer', 'chair', 'contributions received', 'expenditures']}
           normalized={['donor industry classifications', 'candidate linkages (PAC-to-candidate edges)']}

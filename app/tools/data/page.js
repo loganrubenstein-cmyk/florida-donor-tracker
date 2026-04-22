@@ -165,8 +165,8 @@ export default function DataLandingPage() {
       {/* Credibility strip */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem', borderTop: '1px solid var(--border)', paddingTop: '2.5rem', marginBottom: '3rem' }}>
         {[
-          { val: '22M+',         label: 'individual transactions\n883K unique donors · 1996–2026' },
-          { val: '$34.9B',       label: 'lobbying comp tracked across\n4M rows · 1,970 firms · 19 years' },
+          { val: '22M+',         label: 'individual transactions\n1M+ unique donors · 1996–2026' },
+          { val: '$36B+',        label: 'lobbying comp tracked across\n4M rows · 1,785 firms · 19 years' },
           { val: 'Public record', label: 'all data from FL Division of Elections,\nELMO, and official lobbying disclosures' },
         ].map(s => (
           <div key={s.val}>

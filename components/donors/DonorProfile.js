@@ -469,7 +469,7 @@ export default function DonorProfile({ data, annotations = {} }) {
           }}>
             <div>
               <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.2rem' }}>Corp Number</div>
-              <a href={`https://search.sunbiz.org/Inquiry/CorporationSearch/ByDocumentNumber?Id=${data.corp_number}`}
+              <a href={`https://dos.fl.gov/sunbiz/search/`}
                 target="_blank" rel="noopener noreferrer"
                 style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', color: 'var(--green)', textDecoration: 'none' }}>
                 {data.corp_number} ↗
@@ -503,10 +503,10 @@ export default function DonorProfile({ data, annotations = {} }) {
       <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
         {[
           { label: 'Find Donor Overlap →', href: '/compare', internal: true },
-          { label: 'FL Elections Search →', href: `https://dos.elections.myflorida.com/campaign-finance/contributions/#${encodeURIComponent(data.name || '')}` },
+          { label: 'FL Elections Search →', href: `https://dos.fl.gov/elections/candidates-committees/campaign-finance/contributions/#${encodeURIComponent(data.name || '')}` },
           { label: 'Google →', href: `https://www.google.com/search?q=${encodeURIComponent((data.name || '') + ' Florida political donation')}` },
-          ...(lobbyists.length > 0 ? [{ label: 'FL Lobbyist Registry →', href: 'https://www.leg.state.fl.us/Lobbyist/index.cfm?Tab=lobbyistsearch' }] : []),
-          ...(data.corp_number ? [{ label: 'Sunbiz Corp Search →', href: `https://search.sunbiz.org/Inquiry/CorporationSearch/ByDocumentNumber?Id=${data.corp_number}` }] : [{ label: 'Sunbiz Corp Search →', href: `https://search.sunbiz.org/Inquiry/CorporationSearch/ByName?inquiryType=EntityName&inquiryDirectionType=ForwardList&searchNameOrder=&masterDataFile=&inq_cor_name=${encodeURIComponent(data.name || '')}` }]),
+          ...(lobbyists.length > 0 ? [{ label: 'FL Lobbyist Registry →', href: 'https://www.floridalobbyist.gov/LobbyistInformation/SearchLobbyist' }] : []),
+          { label: 'Sunbiz Corp Search →', href: `https://dos.fl.gov/sunbiz/search/` },
         ].map(({ label, href, internal }) => (
           <a key={label} href={href} {...(!internal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
             style={{
@@ -521,7 +521,7 @@ export default function DonorProfile({ data, annotations = {} }) {
 
       <DataTrustBlock
         source="Florida Division of Elections"
-        sourceUrl="https://dos.elections.myflorida.com/campaign-finance/"
+        sourceUrl="https://dos.fl.gov/elections/candidates-committees/campaign-finance/"
         direct={['amount', 'contribution_date', 'contributor_address', 'occupation']}
         normalized={['contributor_name', 'slug']}
         inferred={['committee_links', 'candidate_links', 'lobbyist_principal_match', 'corp_match']}
@@ -564,7 +564,7 @@ export default function DonorProfile({ data, annotations = {} }) {
           ...(data.industry && data.industry !== 'Not Employed' && data.industry !== 'Other'
             ? [{ label: data.industry, color: 'rgba(100,140,220,0.5)', href: `/industry/${slugify(data.industry)}` }]
             : []),
-          ...(data.corp_number ? [{ label: corpActive ? 'ACTIVE CORP' : 'INACTIVE CORP', color: corpActive ? 'var(--green)' : 'var(--text-dim)', href: `https://search.sunbiz.org/Inquiry/CorporationSearch/ByDocumentNumber?Id=${data.corp_number}` }] : []),
+          ...(data.corp_number ? [{ label: corpActive ? 'ACTIVE CORP' : 'INACTIVE CORP', color: corpActive ? 'var(--green)' : 'var(--text-dim)', href: `https://dos.fl.gov/sunbiz/search/` }] : []),
           ...(annotation ? [{ label: 'INVESTIGATION', color: 'var(--orange)', href: '/investigations' }] : []),
         ]}
         meta={[

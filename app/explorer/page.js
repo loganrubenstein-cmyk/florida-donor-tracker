@@ -39,7 +39,7 @@ export default function ExplorerPage() {
 
       <DataTrustBlock
         source="Florida Division of Elections"
-        sourceUrl="https://dos.elections.myflorida.com/campaign-finance/"
+        sourceUrl="https://dos.fl.gov/elections/candidates-committees/campaign-finance/"
         direct={['amount', 'contribution_date', 'contributor_name', 'contributor_occupation', 'type_code']}
         normalized={['contributor_name_normalized']}
         inferred={['donor profile links (name-matched)']}

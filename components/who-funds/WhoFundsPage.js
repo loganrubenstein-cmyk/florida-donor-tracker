@@ -151,7 +151,7 @@ export default function WhoFundsPage() {
           </div>
 
           {/* Quick picks */}
-          <div style={{ display: 'flex', gap: '0.3rem', flexWrap: 'wrap', marginBottom: '1.25rem' }}>
+          <div style={{ display: 'flex', gap: '0.3rem', flexWrap: 'wrap', marginBottom: '1rem' }}>
             {(chamber === 'House' ? [1,10,20,30,40,60,80,100,120] : [1,5,10,20,30,40]).map(n => (
               <button key={n} onClick={() => setDistrict(String(n))}
                 style={{
@@ -163,6 +163,41 @@ export default function WhoFundsPage() {
               </button>
             ))}
           </div>
+
+          {/* District lookup — link out to canonical FL tools */}
+          <div style={{
+            padding: '0.8rem 0.95rem', marginBottom: '1.25rem',
+            border: '1px solid var(--border)', borderRadius: '3px',
+            background: 'rgba(255,255,255,0.015)',
+          }}>
+            <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.4rem' }}>
+              Don't know your district?
+            </div>
+            <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', lineHeight: 1.55, marginBottom: '0.55rem' }}>
+              Enter your address at the official Florida House or Senate lookup — they'll tell you your district number, then come back here.
+            </div>
+            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+              <a href="https://www.flhouse.gov/FindYourRepresentative" target="_blank" rel="noopener noreferrer"
+                style={{
+                  padding: '0.35rem 0.7rem', fontSize: '0.7rem', fontFamily: 'var(--font-mono)',
+                  background: 'rgba(77,216,240,0.08)', color: 'var(--teal)',
+                  border: '1px solid rgba(77,216,240,0.25)', borderRadius: '3px',
+                  textDecoration: 'none', whiteSpace: 'nowrap',
+                }}>
+                FL House → Find My Rep
+              </a>
+              <a href="https://www.flsenate.gov/Senators/Find" target="_blank" rel="noopener noreferrer"
+                style={{
+                  padding: '0.35rem 0.7rem', fontSize: '0.7rem', fontFamily: 'var(--font-mono)',
+                  background: 'rgba(77,216,240,0.08)', color: 'var(--teal)',
+                  border: '1px solid rgba(77,216,240,0.25)', borderRadius: '3px',
+                  textDecoration: 'none', whiteSpace: 'nowrap',
+                }}>
+                FL Senate → Find My Senator
+              </a>
+            </div>
+          </div>
+
           <TrustRibbon source="FL Division of Elections · LegiScan vote data" updated="Apr 14, 2026" confidence="normalized" />
         </div>
 
@@ -185,7 +220,7 @@ export default function WhoFundsPage() {
           </div>
           <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             {[
-              { val: '883K', label: 'donors in database' },
+              { val: '1M+',  label: 'donors in database' },
               { val: '160',  label: 'current legislators' },
             ].map(s => (
               <div key={s.label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>

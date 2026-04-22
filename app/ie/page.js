@@ -1,9 +1,12 @@
+import { readFileSync, readdirSync } from 'fs';
+import { join } from 'path';
 import importDynamic from 'next/dynamic';
 import Link from 'next/link';
 import SectionHeader from '@/components/shared/SectionHeader';
 import { getDb } from '@/lib/db';
 import { fmtMoneyCompact, fmtCount } from '../../lib/fmt';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
+import { getPoliticianSlugByAcctNum } from '@/lib/loadCandidate';
 
 const IEYearChart = importDynamic(() => import('@/components/ie/IEYearChart'), { ssr: false });
 
@@ -74,9 +77,23 @@ async function loadData() {
   };
 }
 
+function loadTargetedCandidates() {
+  try {
+    const dir = join(process.cwd(), 'public', 'data', 'ie', 'by_candidate');
+    const files = readdirSync(dir);
+    const rows = files.map(f => {
+      try { return JSON.parse(readFileSync(join(dir, f), 'utf-8')); } catch { return null; }
+    }).filter(Boolean);
+    return rows.sort((a, b) => (b.total_ie_amount || 0) - (a.total_ie_amount || 0));
+  } catch {
+    return [];
+  }
+}
+
 export default async function IEPage() {
   const { summary, committees, yearData } = await loadData();
   const top25  = committees.slice(0, 25);
+  const targetedCandidates = loadTargetedCandidates();
 
   const dateRange = summary.year_min && summary.year_max
     ? `${summary.year_min}–${summary.year_max}`
@@ -191,10 +208,56 @@ export default async function IEPage() {
         </div>
       </div>
 
+      {targetedCandidates.length > 0 && (
+        <div style={{ marginTop: '2.5rem' }}>
+          <div style={{
+            fontSize: '0.7rem', letterSpacing: '0.12em', textTransform: 'uppercase',
+            color: 'var(--text-dim)', fontWeight: 600,
+            marginBottom: '0.4rem', paddingBottom: '0.4rem', borderBottom: '1px solid var(--border)',
+          }}>
+            Top Targeted Candidates
+          </div>
+          <p style={{ fontSize: '0.72rem', color: 'var(--text-dim)', lineHeight: 1.55, marginBottom: '1rem' }}>
+            Candidates named in IE/EC purpose text, matched to FL DOE finance records. Only matched candidates are shown —
+            {' '}{targetedCandidates.length} of the ~{Math.round(targetedCandidates.length / 0.26)} unique targets parsed.
+            This is the cut that makes IE different from direct contributions: outside spending on a specific candidate, without coordination.
+          </p>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '0.5rem' }}>
+            {targetedCandidates.slice(0, 12).map((c) => {
+              const polSlug = c.candidate_acct_num ? getPoliticianSlugByAcctNum(c.candidate_acct_num) : null;
+              const href = polSlug ? `/politician/${polSlug}` : `/candidate/${c.candidate_acct_num}`;
+              const yrs = (c.by_year || []).map(y => y.year);
+              const yrRange = yrs.length ? (yrs[0] === yrs[yrs.length - 1] ? String(yrs[0]) : `${yrs[0]}–${yrs[yrs.length - 1]}`) : '';
+              return (
+                <Link key={c.candidate_acct_num} href={href} style={{
+                  textDecoration: 'none', padding: '0.7rem 0.85rem',
+                  background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '3px',
+                  display: 'flex', flexDirection: 'column', gap: '0.3rem',
+                }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '0.5rem' }}>
+                    <span style={{ fontSize: '0.82rem', color: 'var(--orange)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      {c.candidate_name}
+                    </span>
+                    <span style={{ fontSize: '0.82rem', fontFamily: 'var(--font-mono)', color: 'var(--orange)', fontWeight: 700, flexShrink: 0 }}>
+                      {fmtMoneyCompact(c.total_ie_amount)}
+                    </span>
+                  </div>
+                  <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', display: 'flex', gap: '0.85rem', flexWrap: 'wrap' }}>
+                    <span>{c.num_committees} committee{c.num_committees !== 1 ? 's' : ''}</span>
+                    <span>{c.num_expenditures} expenditures</span>
+                    {yrRange && <span>{yrRange}</span>}
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       <div style={{ maxWidth: '900px', margin: '2rem auto 0' }}>
         <DataTrustBlock
           source="Florida Division of Elections — IE/EC Filings"
-          sourceUrl="https://dos.elections.myflorida.com/independent-expenditures/"
+          sourceUrl="https://dos.fl.gov/elections/candidates-committees/campaign-finance/"
           direct={['committee name', 'total amount', 'transaction count', 'expenditure date', 'purpose']}
           normalized={['committee linked to profile by name match', 'calendar year derived from expenditure date']}
           caveats={[

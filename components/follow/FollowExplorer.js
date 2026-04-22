@@ -299,12 +299,15 @@ export default function FollowExplorer({ preloadSlug }) {
                   : votes.note
                     ? <div style={{ color: 'var(--text-dim)', fontSize: '0.76rem' }}>{votes.note}</div>
                     : votes.votes.length === 0
-                      ? <div style={{ color: 'var(--text-dim)', fontSize: '0.76rem' }}>No vote records found.</div>
+                      ? <div style={{ color: 'var(--text-dim)', fontSize: '0.76rem', lineHeight: 1.55 }}>
+                          No FL roll-call votes on record for this candidate.
+                          {votes.legislator && <> Their legislator profile may still have committee/bill activity: <a href={`/legislator/${votes.legislator.people_id}`} style={{ color: 'var(--teal)' }}>view profile →</a></>}
+                        </div>
                       : votes.votes.map((v, i) => (
                         <div key={i} style={{ ...rowStyle(false), cursor: 'default' }}>
                           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: '0.5rem' }}>
                             <span style={{ fontSize: '0.72rem', color: 'var(--blue)', fontFamily: 'var(--font-mono)' }}>
-                              {v.url ? <a href={v.url} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--blue)', textDecoration: 'none' }}>{v.bill_number}</a> : v.bill_number}
+                              {v.bill_number}
                             </span>
                             <span style={{ fontSize: '0.72rem', fontWeight: 700, color: VOTE_COLOR[v.vote?.toUpperCase()] || 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
                               {v.vote}

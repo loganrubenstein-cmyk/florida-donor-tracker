@@ -144,7 +144,7 @@ export default function PulsePage() {
       <div style={{ marginBottom: '0.5rem', fontSize: '0.72rem', color: 'var(--text-dim)' }}>
         <Link href="/" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Home</Link>
         {' / '}
-        <Link href="/tools" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Tools</Link>
+        <span style={{ color: 'var(--text-dim)' }}>Analysis</span>
         {' / '}
         <span>Pulse</span>
       </div>
@@ -153,7 +153,7 @@ export default function PulsePage() {
         Pulse
       </h1>
       <p style={{ fontSize: '0.82rem', color: 'var(--text-dim)', lineHeight: 1.6, marginBottom: '1.5rem', maxWidth: '620px' }}>
-        What's happening in Florida political money right now — recent large contributions, newly registered committees, and the top donors of the current cycle.
+        Recent movement in Florida political money — large contributions by filing date, committees registered this cycle, and the top donors of 2026 so far. Backed by FL Division of Elections data, refreshed manually on a weekly cadence.
       </p>
 
       {/* Context strip — one card per tab */}
@@ -163,9 +163,9 @@ export default function PulsePage() {
         border: '1px solid var(--border)', borderRadius: '3px', overflow: 'hidden',
       }}>
         {[
-          { key: 'filings',    accent: '#ffb060', icon: '↑', head: 'Latest Filings',   body: 'Large contributions ($10K+) filed in the past 30 days — who gave, who received.' },
-          { key: 'committees', accent: '#4dd8f0', icon: '◎', head: 'New Committees',   body: 'PACs, ECOs, and party committees registered in the current cycle.' },
-          { key: 'cycle',      accent: '#a0c0ff', icon: '★', head: 'This Cycle',       body: 'Top donors by total giving since January 1, 2026 — the biggest spenders in the room.' },
+          { key: 'filings',    accent: '#ffb060', icon: '↑', head: 'Latest Filings',   body: 'Large contributions ($25K+) filed in the past 90 days — who gave, who received.' },
+          { key: 'committees', accent: '#4dd8f0', icon: '◎', head: 'New Committees',   body: 'PACs, ECOs, and party committees registered since Jan 1 of the current cycle.' },
+          { key: 'cycle',      accent: '#a0c0ff', icon: '★', head: 'This Cycle',       body: 'Top donors by total giving since January 1 of the current cycle year — the biggest spenders so far.' },
         ].map(({ key, accent, icon, head, body }, i, arr) => (
           <button
             key={key}
@@ -200,6 +200,36 @@ export default function PulsePage() {
       {!loading && current && tab === 'filings' && <FilingsTable items={current.items || []} />}
       {!loading && current && tab === 'committees' && <CommitteesTable items={current.items || []} />}
       {!loading && current && tab === 'cycle' && <CycleTable items={current.items || []} year={current.year || currentYear} />}
+
+      {!loading && current && (current.latest_date || tab === 'cycle') && (
+        <div style={{ marginTop: '1.5rem', fontSize: '0.66rem', color: 'var(--text-dim)', lineHeight: 1.6, padding: '0.75rem 0.9rem', border: '1px solid var(--border)', borderRadius: '3px' }}>
+          {current.latest_date && (
+            <div>
+              <strong style={{ color: 'var(--text)' }}>Data current through:</strong>{' '}
+              {fmtDate(current.latest_date)}
+            </div>
+          )}
+          <div style={{ marginTop: '0.2rem' }}>
+            FL Division of Elections campaign-finance data is re-ingested manually on a weekly cadence; there is no continuous live feed.
+            For dates between the latest shown above and today, filings exist at the FL DoE but are not yet loaded here.
+          </div>
+        </div>
+      )}
+
+      <div style={{ marginTop: '2.5rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border)', display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
+        <Link href="/explorer" style={{ fontSize: '0.72rem', color: 'var(--orange)', border: '1px solid rgba(255,176,96,0.25)', borderRadius: '3px', padding: '0.35rem 0.75rem', textDecoration: 'none' }}>
+          → Explore all transactions
+        </Link>
+        <Link href="/committees" style={{ fontSize: '0.72rem', color: 'var(--teal)', border: '1px solid rgba(77,216,240,0.25)', borderRadius: '3px', padding: '0.35rem 0.75rem', textDecoration: 'none' }}>
+          → Browse all committees
+        </Link>
+        <Link href="/donors" style={{ fontSize: '0.72rem', color: 'var(--orange)', border: '1px solid rgba(255,176,96,0.25)', borderRadius: '3px', padding: '0.35rem 0.75rem', textDecoration: 'none' }}>
+          → Browse all donors
+        </Link>
+        <Link href="/follow" style={{ fontSize: '0.72rem', color: 'var(--teal)', border: '1px solid rgba(77,216,240,0.25)', borderRadius: '3px', padding: '0.35rem 0.75rem', textDecoration: 'none' }}>
+          → Follow the money trail
+        </Link>
+      </div>
     </main>
   );
 }

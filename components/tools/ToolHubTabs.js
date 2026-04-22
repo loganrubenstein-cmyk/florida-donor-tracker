@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 
 const VOTER_TOOLS = [
-  { href: '/who-funds', title: '→ who funds your district', desc: 'Enter your zip code. See who bankrolls your state rep, state senator, and US rep — donors, industries, and PAC money.', featured: true, badge: 'New' },
+  { href: '/who-funds', title: '→ who funds your district', desc: 'Enter your FL House or Senate district number (or use the official lookup). See who bankrolls your legislator — donors, industries, and PAC money.', featured: true, badge: 'New' },
   { href: '/races/2026', title: '→ 2026 money race', desc: 'Live fundraising leaderboard for every major FL race. Hard money vs. soft money split. Updated as filings drop.', badge: 'New' },
   { href: '/legislature', title: '→ legislature', desc: 'All 160 FL legislators — donors, lobbying connections, vote records, and official financial disclosures.' },
   { href: '/pulse',       title: '→ pulse',              desc: 'What\'s happening right now — recent filings, notable new donors, and trending committees.' },

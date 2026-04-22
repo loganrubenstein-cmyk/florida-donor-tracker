@@ -167,7 +167,7 @@ export default function PartyFinancePage() {
       </div>
       <DataTrustBlock
         source="Florida Division of Elections — Candidate Finance Records"
-        sourceUrl="https://dos.elections.myflorida.com/campaign-finance/"
+        sourceUrl="https://dos.fl.gov/elections/candidates-committees/campaign-finance/"
         
         direct={['party affiliation', 'total raised', 'contribution amounts']}
         normalized={['hard money vs soft money split', 'office-level aggregation']}

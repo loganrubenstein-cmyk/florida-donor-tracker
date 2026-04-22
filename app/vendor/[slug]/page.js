@@ -117,6 +117,16 @@ export default async function VendorPage({ params }) {
       <div style={{ marginTop: '2rem', padding: '0.9rem', border: '1px solid var(--border)', borderRadius: '3px', fontSize: '0.76rem', color: 'var(--text-dim)' }}>
         Totals aggregate raw expenditures filed by Florida committees and candidates with the FL Division of Elections. Name matching uses exact normalization plus pg_trgm fuzzy similarity (≥0.75); look-alike vendor names are clustered under a single canonical entity.
       </div>
+      <div style={{ marginTop: '0.75rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+        <a href={`https://www.usaspending.gov/search/?keyword=${encodeURIComponent(entity.canonical_name)}`} target="_blank" rel="noopener noreferrer"
+           style={{ fontSize: '0.68rem', color: 'var(--teal)', textDecoration: 'none', border: '1px solid rgba(77,216,240,0.25)', borderRadius: '3px', padding: '0.2rem 0.55rem' }}>
+          Search on USASpending ↗
+        </a>
+        <a href="https://apps.fldfs.com/FACTS/" target="_blank" rel="noopener noreferrer"
+           style={{ fontSize: '0.68rem', color: 'var(--text-dim)', textDecoration: 'none', border: '1px solid var(--border)', borderRadius: '3px', padding: '0.2rem 0.55rem' }}>
+          FL Contracts (FACTS) ↗
+        </a>
+      </div>
     </div>
   );
 }

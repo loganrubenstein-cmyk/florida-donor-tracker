@@ -441,7 +441,7 @@ export default function ConnectionsView() {
       <div style={{ marginTop: '3rem' }}>
         <DataTrustBlock
           source="Florida Division of Elections — Committee Registration Filings"
-          sourceUrl="https://dos.elections.myflorida.com/committees/"
+          sourceUrl="https://dos.fl.gov/elections/candidates-committees/"
           
           direct={['treasurer name', 'chair name', 'registered address', 'phone']}
           normalized={['shared signals derived from exact-match on normalized names and addresses']}

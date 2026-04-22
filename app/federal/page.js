@@ -84,6 +84,21 @@ export default async function FederalPage({ searchParams }) {
         <Link href="/federal/donors" style={{ color: 'var(--teal)' }}>FL Federal Donors</Link> page. Source:{' '}
         <a href="https://www.fec.gov/data/browse-data/?tab=bulk-data" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)' }}>FEC bulk data</a>.
       </div>
+      <div style={{ marginTop: '0.75rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+        {[
+          { label: 'FEC — FL Candidates →', href: 'https://www.fec.gov/data/candidates/?state=FL&cycle=2026' },
+          { label: 'FEC Bulk Data →', href: 'https://www.fec.gov/data/browse-data/?tab=bulk-data' },
+          { label: 'GovTrack — FL Members →', href: 'https://www.govtrack.us/congress/members/FL' },
+        ].map(({ label, href }) => (
+          <a key={href} href={href} target="_blank" rel="noopener noreferrer" style={{
+            fontSize: '0.68rem', color: 'var(--teal)', textDecoration: 'none',
+            border: '1px solid rgba(77,216,240,0.25)', borderRadius: '3px',
+            padding: '0.2rem 0.55rem',
+          }}>
+            {label}
+          </a>
+        ))}
+      </div>
     </div>
   );
 }

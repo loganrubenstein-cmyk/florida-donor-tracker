@@ -397,7 +397,7 @@ export default function CycleProfile({ year, candidates, topDonors = [], electio
     <div style={{ paddingTop: '1.25rem' }}>
       <DataTrustBlock
         source="Florida Division of Elections — Campaign Finance Filings"
-        sourceUrl="https://dos.elections.myflorida.com/campaign-finance/"
+        sourceUrl="https://dos.fl.gov/elections/candidates-committees/campaign-finance/"
         direct={['candidate and committee totals per cycle', 'party breakdown', 'office breakdown']}
         normalized={['soft money linked from committee contributions (2020 onward)', 'combined totals = hard + linked soft money']}
         caveats={[

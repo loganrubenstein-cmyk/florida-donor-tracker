@@ -189,9 +189,26 @@ export default async function BillLobbyingPage({ params, searchParams }) {
           ))}
         </div>
       )}
-      <p style={{ fontSize: '0.72rem', color: 'var(--text-dim)', marginBottom: '2rem' }}>
+      <p style={{ fontSize: '0.72rem', color: 'var(--text-dim)', marginBottom: '1rem' }}>
         Source: FL House Lobbyist Disclosure portal. Not affiliated with the State of Florida. All data from public records.
       </p>
+
+      {(() => {
+        const billNum = bill.match(/\d+/)?.[0];
+        if (!billNum) return null;
+        return (
+          <div style={{ marginBottom: '1.5rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <a href={`https://www.flsenate.gov/Session/Bill/${activeYear}/${billNum}`} target="_blank" rel="noopener noreferrer"
+               style={{ fontSize: '0.68rem', color: 'var(--teal)', textDecoration: 'none', border: '1px solid rgba(77,216,240,0.3)', borderRadius: '3px', padding: '0.2rem 0.55rem' }}>
+              View {bill} ({activeYear}) on FL Senate ↗
+            </a>
+            <a href="https://www.flhouse.gov/Sections/Lobbyists/lobbyists.aspx" target="_blank" rel="noopener noreferrer"
+               style={{ fontSize: '0.68rem', color: 'var(--text-dim)', textDecoration: 'none', border: '1px solid var(--border)', borderRadius: '3px', padding: '0.2rem 0.55rem' }}>
+              FL House Lobbyist Portal ↗
+            </a>
+          </div>
+        );
+      })()}
 
       <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', marginBottom: '2.5rem', padding: '1rem 1.25rem', background: 'var(--surface)', borderRadius: '6px', border: '1px solid var(--border)' }}>
         <StatBox value={fmtCount(entries.length)} label="Total Filings" />

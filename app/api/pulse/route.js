@@ -12,18 +12,22 @@ export async function GET(req) {
 
   try {
     if (type === 'filings') {
-      // Recent large contributions
+      // Recent large contributions — last 90 days by contribution_date.
+      // Uses a wide window since data refreshes are manual (6–14 days lag).
+      const windowDays = parseInt(searchParams.get('days') || '90');
+      const cutoff = new Date(Date.now() - windowDays * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+
       const { data, error } = await db
         .from('contributions')
         .select('contributor_name, donor_slug, recipient_acct, amount, contribution_date, type_code')
         .gte('amount', 25000)
+        .gte('contribution_date', cutoff)
         .not('contribution_date', 'is', null)
         .order('contribution_date', { ascending: false })
         .limit(limit);
 
       if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-      // Fetch committee names for these recipient accounts
       const accts = [...new Set((data || []).map(r => r.recipient_acct).filter(Boolean))];
       const { data: committees } = accts.length
         ? await db.from('committees').select('acct_num, committee_name').in('acct_num', accts)
@@ -32,6 +36,8 @@ export async function GET(req) {
 
       return NextResponse.json({
         type: 'filings',
+        window_days: windowDays,
+        latest_date: (data && data[0]?.contribution_date) || null,
         items: (data || []).map(r => ({
           donor_name:     r.contributor_name,
           donor_slug:     r.donor_slug,
@@ -45,10 +51,15 @@ export async function GET(req) {
     }
 
     if (type === 'committees') {
-      // Recently registered committees
+      // Committees registered in the current cycle (Jan 1 of current year onward).
+      // Falls back to "newest by date_start" if no current-year rows exist.
+      const cycleYear = new Date().getFullYear();
+      const cutoff = `${cycleYear}-01-01`;
+
       const { data, error } = await db
         .from('committees')
         .select('acct_num, committee_name, date_start, total_received, num_contributions')
+        .gte('date_start', cutoff)
         .order('date_start', { ascending: false })
         .not('date_start', 'is', null)
         .limit(limit);
@@ -57,6 +68,8 @@ export async function GET(req) {
 
       return NextResponse.json({
         type: 'committees',
+        cycle_year: cycleYear,
+        latest_date: (data && data[0]?.date_start) || null,
         items: (data || []).map(r => ({
           acct_num:      r.acct_num,
           name:          r.committee_name,

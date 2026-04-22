@@ -103,32 +103,68 @@ export async function GET(req) {
     const acct = searchParams.get('acct');
     if (!acct) return NextResponse.json({ error: 'acct required' }, { status: 400 });
 
-    // Look up politician slug from candidate acct
-    const { data: polRow } = await db
-      .from('politicians')
-      .select('people_id, name')
-      .eq('candidate_acct_num', acct)
-      .limit(1)
-      .then(r => ({ data: r.data?.[0] ?? null }));
+    // Primary: match by acct_num (only works for legislator's LATEST cycle).
+    let legRow = null;
+    {
+      const { data } = await db
+        .from('legislators')
+        .select('people_id, display_name')
+        .eq('acct_num', acct)
+        .limit(1);
+      legRow = data?.[0] ?? null;
+    }
 
-    if (!polRow) return NextResponse.json({ votes: [], note: 'No legislator record linked to this candidate.' });
+    // Fallback: legislators.acct_num only holds latest-cycle acct. Look up the
+    // candidate's name + district from candidates and try to match a legislator
+    // whose display_name ends with that last name + matching district.
+    if (!legRow) {
+      const { data: candData } = await db
+        .from('candidates')
+        .select('candidate_name, district, office_desc')
+        .eq('acct_num', acct)
+        .limit(1);
+      const cand = candData?.[0];
+      if (cand?.candidate_name) {
+        const lastName = cand.candidate_name.trim().split(/\s+/).pop();
+        const districtNum = cand.district ? String(cand.district).match(/\d+/)?.[0] : null;
+        const chamber = /senator|senate/i.test(cand.office_desc || '') ? 'Senate'
+                      : /representative|house/i.test(cand.office_desc || '') ? 'House'
+                      : null;
+        if (lastName && districtNum && chamber) {
+          const { data: byName } = await db
+            .from('legislators')
+            .select('people_id, display_name')
+            .ilike('last_name', lastName)
+            .eq('district', parseInt(districtNum))
+            .eq('chamber', chamber)
+            .limit(1);
+          legRow = byName?.[0] ?? null;
+        }
+      }
+    }
+
+    if (!legRow) {
+      return NextResponse.json({
+        votes: [],
+        note: 'No FL state legislator record linked to this candidate — local, judicial, and non-legislative candidates have no roll-call record, and prior-cycle legislator rows may not match the current legislators table.',
+      });
+    }
 
     const { data: votes } = await db
       .from('legislator_votes')
-      .select('bill_number, bill_title, vote, vote_date, session_year, bill_url')
-      .eq('people_id', polRow.people_id)
+      .select('bill_number, bill_title, vote_text, vote_date, session_id')
+      .eq('people_id', legRow.people_id)
       .order('vote_date', { ascending: false })
       .limit(30);
 
     return NextResponse.json({
-      legislator: { people_id: polRow.people_id, name: polRow.name },
+      legislator: { people_id: legRow.people_id, name: legRow.display_name },
       votes: (votes || []).map(v => ({
         bill_number: v.bill_number,
         bill_title:  v.bill_title,
-        vote:        v.vote,
+        vote:        v.vote_text,
         date:        v.vote_date,
-        year:        v.session_year,
-        url:         v.bill_url,
+        session_id:  v.session_id,
       })),
     });
   }

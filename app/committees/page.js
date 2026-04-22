@@ -20,7 +20,7 @@ export default function CommitteesPage() {
       <div style={{ marginTop: '3rem' }}>
         <DataTrustBlock
           source="Florida Division of Elections — Committee Registration Filings"
-          sourceUrl="https://dos.elections.myflorida.com/committees/"
+          sourceUrl="https://dos.fl.gov/elections/candidates-committees/"
           
           direct={['committee name', 'committee type', 'total raised', 'total spent', 'donor counts']}
           normalized={['committee type codes mapped to plain-language labels']}

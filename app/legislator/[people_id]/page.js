@@ -541,6 +541,17 @@ export default async function LegislatorPage({ params }) {
               Campaign history →
             </Link>
           )}
+          {leg.chamber === 'Senate' ? (
+            <a href={`https://www.flsenate.gov/Senators/s${leg.district}`} target="_blank" rel="noopener noreferrer"
+               style={{ fontSize: '0.7rem', padding: '0.25rem 0.6rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '3px', color: 'var(--teal)', textDecoration: 'none' }}>
+              FL Senate ↗
+            </a>
+          ) : (
+            <a href="https://www.flhouse.gov/Sections/Representatives/representatives.aspx" target="_blank" rel="noopener noreferrer"
+               style={{ fontSize: '0.7rem', padding: '0.25rem 0.6rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '3px', color: 'var(--teal)', textDecoration: 'none' }}>
+              FL House ↗
+            </a>
+          )}
           {leg.ballotpedia && (
             <a href={`https://ballotpedia.org/${encodeURIComponent(leg.ballotpedia)}`} target="_blank" rel="noopener noreferrer"
                style={{ fontSize: '0.7rem', padding: '0.25rem 0.6rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '3px', color: 'var(--teal)', textDecoration: 'none' }}>

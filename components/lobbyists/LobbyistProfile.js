@@ -304,7 +304,7 @@ export default function LobbyistProfile({ data }) {
       <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
         {[
           { label: 'Find Donor Overlap →', href: '/compare', internal: true },
-          { label: 'FL Lobbyist Registry →', href: 'https://www.leg.state.fl.us/Lobbyist/index.cfm?Tab=lobbyistsearch' },
+          { label: 'FL Lobbyist Registry →', href: 'https://www.floridalobbyist.gov/LobbyistInformation/SearchLobbyist' },
           { label: 'Google →', href: `https://www.google.com/search?q=${encodeURIComponent((data.name || '') + ' Florida lobbyist')}` },
         ].map(({ label, href, internal }) => (
           <a key={label} href={href} {...(!internal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}

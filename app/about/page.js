@@ -2,14 +2,14 @@ import Link from 'next/link';
 
 export const metadata = {
   title: 'About',
-  description: 'The most complete picture of Florida political influence — free from public records. 22M transactions, $34.9B lobbying, 30 years, 160 legislators.',
+  description: 'The most complete picture of Florida political influence — free from public records. 22M transactions, $36B+ lobbying, 30 years, 160 legislators.',
 };
 
 const DIFFERENTIATORS = [
   {
     title: 'Not just donations — lobbying too',
     color: 'var(--teal)',
-    body: 'Every other FL tracker covers campaign finance. We also have 4 million rows of lobbyist compensation — 19 years, 1,970 firms, $34.9B. Cross-referenced to the same donor profiles.',
+    body: 'Every other FL tracker covers campaign finance. We also have 4 million rows of lobbyist compensation — 19 years, 1,785 firms, $36B+. Cross-referenced to the same donor profiles.',
   },
   {
     title: 'Shadow networks, not just top donors',
@@ -25,16 +25,19 @@ const DIFFERENTIATORS = [
 
 const SOURCES = [
   { name: 'Florida Division of Elections',          url: 'https://dos.fl.gov/elections/campaign-finance/', note: 'Campaign contributions 1996–present' },
-  { name: 'FL Lobbyist Registration Office',        url: 'https://www.leg.state.fl.us/Lobbyist/',          note: 'Registrations, principals, comp reports' },
+  { name: 'FL Lobbyist Registration Office',        url: 'https://www.floridalobbyist.gov/',               note: 'Registrations, principals, comp reports' },
   { name: 'LegiScan',                               url: 'https://legiscan.com/',                           note: 'Floor votes, bill text, sponsorships' },
-  { name: 'FL House Lobbyist Disclosure Portal',    url: 'https://www.flhouse.gov/lobbyists/',              note: 'Bill-level lobbying filings 2016–present' },
+  { name: 'FL House Lobbyist Disclosure Portal',    url: 'https://www.flhouse.gov/Sections/Lobbyists/lobbyists.aspx', note: 'Bill-level lobbying filings 2016–present' },
   { name: 'USASpending.gov',                        url: 'https://www.usaspending.gov/',                    note: 'Federal contracts, FL recipients FY2020–2025' },
   { name: 'FL Accountability Contract Tracking',    url: 'https://apps.fldfs.com/FACTS/',                   note: 'State contracts, purchase orders' },
+  { name: 'Florida Senate',                         url: 'https://www.flsenate.gov/',                       note: 'Official FL Senate member roster and bill text' },
+  { name: 'Florida House of Representatives',       url: 'https://www.flhouse.gov/',                        note: 'Official FL House member roster' },
+  { name: 'FL Commission on Ethics',                url: 'https://ethics.state.fl.us/',                     note: 'Financial disclosure filings for state officials' },
 ];
 
 const CREDIBILITY_STATS = [
   { val: '22M+',     label: 'transactions',        color: 'var(--orange)', detail: 'individual contribution records · 1996–2026' },
-  { val: '$34.9B',   label: 'lobbying tracked',    color: 'var(--teal)',   detail: '4M rows · 1,970 firms · 19 years' },
+  { val: '$36B+',    label: 'lobbying tracked',    color: 'var(--teal)',   detail: '4M rows · 1,785 firms · 19 years' },
   { val: '30 years', label: 'of public records',   color: 'var(--blue)',   detail: 'the longest-running free FL finance database' },
   { val: '160',      label: 'legislators',         color: 'var(--green)',  detail: 'donors · votes · lobbyist connections · disclosures' },
 ];

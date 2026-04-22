@@ -296,10 +296,25 @@ export default function LegislatorsList() {
         ))}
       </div>
 
-      <div style={{ marginTop: '3rem' }}>
+      <div style={{ marginTop: '1.5rem', display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+        {[
+          { label: 'FL Senate Roster →', href: 'https://www.flsenate.gov/Senators/' },
+          { label: 'FL House Roster →', href: 'https://www.flhouse.gov/Sections/Representatives/representatives.aspx' },
+          { label: 'FL Ethics Disclosures →', href: 'https://ethics.state.fl.us/' },
+        ].map(({ label, href }) => (
+          <a key={href} href={href} target="_blank" rel="noopener noreferrer" style={{
+            fontSize: '0.68rem', color: 'var(--teal)', textDecoration: 'none',
+            border: '1px solid rgba(77,216,240,0.25)', borderRadius: '3px',
+            padding: '0.2rem 0.55rem',
+          }}>
+            {label}
+          </a>
+        ))}
+      </div>
+
+      <div style={{ marginTop: '1.5rem' }}>
         <DataTrustBlock
           source="LobbyTools member export · LegiScan API · FL Division of Elections"
-          
           direct={['name', 'party', 'district', 'chamber', 'leadership title', 'contact info']}
           normalized={['campaign finance totals matched from FL DoE candidate records by name + district']}
           caveats={[
