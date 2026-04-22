@@ -28,67 +28,30 @@ async function loadData() {
     { data: topRows },
     { data: issueRows },
     { data: lobbyistRows },
-    { data: summaryRows },
+    { count: uniqueBills },
+    { data: summaryAgg },
   ] = await Promise.all([
-    // Top 300 bill-year records by filing count
     db.from('bill_year_stats')
       .select('bill_slug, year, bill_canon, filings, unique_lobbyists, unique_principals')
       .order('filings', { ascending: false })
       .limit(300),
 
-    // Issue rollup
-    db.from('bill_disclosures')
-      .select('issues')
-      .not('issues', 'eq', '[]')
-      .not('issues', 'is', null)
-      .limit(50000),
+    db.from('bill_issue_stats')
+      .select('category, total_filings')
+      .order('total_filings', { ascending: false })
+      .limit(15),
 
-    // Top lobbyists
-    db.from('bill_disclosures')
-      .select('lobbyist, principal, firm')
-      .not('lobbyist', 'is', null)
-      .limit(50000),
+    db.from('bill_lobbyist_totals')
+      .select('lobbyist, total_filings, top_firm')
+      .order('total_filings', { ascending: false })
+      .limit(15),
 
-    // Summary totals
-    db.from('bill_year_stats')
-      .select('filings, unique_lobbyists, unique_principals'),
+    db.from('bill_year_stats').select('*', { count: 'exact', head: true }),
+
+    db.from('bill_year_stats').select('filings').order('filings', { ascending: false }).limit(10000),
   ]);
 
-  // Aggregate summary
-  const totalFilings      = (summaryRows || []).reduce((s, r) => s + Number(r.filings || 0), 0);
-  const uniqueBills       = (summaryRows || []).length;
-  const maxLobbyists      = Math.max(...(summaryRows || []).map(r => Number(r.unique_lobbyists || 0)));
-  const allLobbyistNames  = new Set((lobbyistRows || []).map(r => r.lobbyist).filter(Boolean));
-  const allPrincipalNames = new Set((summaryRows || []).map(r => r.unique_principals));
-
-  // Issue rollup from raw JSON strings
-  const issueCounts = {};
-  for (const row of issueRows || []) {
-    let cats = [];
-    try { cats = JSON.parse(row.issues || '[]'); } catch { continue; }
-    for (const cat of cats) {
-      if (!cat || cat.length < 3) continue;
-      issueCounts[cat] = (issueCounts[cat] || 0) + 1;
-    }
-  }
-  const topIssues = Object.entries(issueCounts)
-    .filter(([k]) => k.length < 80 && !k.startsWith('Ensure'))
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 15)
-    .map(([category, total_filings]) => ({ category, total_filings }));
-
-  // Top lobbyists rollup
-  const lobbyistMap = {};
-  for (const row of lobbyistRows || []) {
-    if (!row.lobbyist) continue;
-    if (!lobbyistMap[row.lobbyist]) lobbyistMap[row.lobbyist] = { filings: 0, firms: new Set() };
-    lobbyistMap[row.lobbyist].filings++;
-    if (row.firm) lobbyistMap[row.lobbyist].firms.add(row.firm);
-  }
-  const topLobbyists = Object.entries(lobbyistMap)
-    .sort((a, b) => b[1].filings - a[1].filings)
-    .slice(0, 15)
-    .map(([name, d]) => ({ lobbyist: name, total_filings: d.filings, firms: [...d.firms].slice(0, 2) }));
+  const totalFilings = (summaryAgg || []).reduce((s, r) => s + Number(r.filings || 0), 0);
 
   const bills = (topRows || []).map(r => ({
     slug:              r.bill_slug,
@@ -102,12 +65,11 @@ async function loadData() {
 
   return {
     bills,
-    topIssues,
-    topLobbyists,
+    topIssues:    (issueRows || []).map(r => ({ category: r.category, total_filings: Number(r.total_filings) })),
+    topLobbyists: (lobbyistRows || []).map(r => ({ lobbyist: r.lobbyist, total_filings: Number(r.total_filings), firms: r.top_firm ? [r.top_firm] : [] })),
     totals: {
-      total_records:     totalFilings,
-      unique_bills:      uniqueBills,
-      unique_lobbyists:  allLobbyistNames.size,
+      total_records:  totalFilings,
+      unique_bills:   uniqueBills ?? 0,
     },
   };
 }
@@ -140,9 +102,8 @@ export default async function LobbyingBillsPage() {
 
       {/* Stats bar */}
       <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap', marginBottom: '2.5rem', padding: '1rem 1.25rem', background: 'var(--surface)', borderRadius: '3px', border: '1px solid var(--border)' }}>
-        <StatBox value={fmtCount(totals.total_records)}    label="Total Filings" />
-        <StatBox value={fmtCount(totals.unique_bills)}     label="Bill-Sessions" />
-        <StatBox value={fmtCount(totals.unique_lobbyists)} label="Unique Lobbyists" />
+        <StatBox value={fmtCount(totals.total_records)} label="Total Filings" />
+        <StatBox value={fmtCount(totals.unique_bills)}  label="Bill-Sessions" />
         <StatBox value="2017–2026" label="Years Covered" color="var(--text-dim)" />
       </div>
 
