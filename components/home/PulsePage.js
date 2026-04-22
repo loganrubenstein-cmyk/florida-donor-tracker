@@ -156,6 +156,39 @@ export default function PulsePage() {
         What's happening in Florida political money right now — recent large contributions, newly registered committees, and the top donors of the current cycle.
       </p>
 
+      {/* Context strip — one card per tab */}
+      <div style={{
+        display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)',
+        gap: '0', marginBottom: '1.5rem',
+        border: '1px solid var(--border)', borderRadius: '3px', overflow: 'hidden',
+      }}>
+        {[
+          { key: 'filings',    accent: '#ffb060', icon: '↑', head: 'Latest Filings',   body: 'Large contributions ($10K+) filed in the past 30 days — who gave, who received.' },
+          { key: 'committees', accent: '#4dd8f0', icon: '◎', head: 'New Committees',   body: 'PACs, ECOs, and party committees registered in the current cycle.' },
+          { key: 'cycle',      accent: '#a0c0ff', icon: '★', head: 'This Cycle',       body: 'Top donors by total giving since January 1, 2026 — the biggest spenders in the room.' },
+        ].map(({ key, accent, icon, head, body }, i, arr) => (
+          <button
+            key={key}
+            onClick={() => switchTab(key)}
+            style={{
+              padding: '0.9rem 1rem',
+              background: tab === key ? `${accent}0f` : 'transparent',
+              border: 'none',
+              borderRight: i < arr.length - 1 ? '1px solid var(--border)' : 'none',
+              borderBottom: tab === key ? `2px solid ${accent}` : '2px solid transparent',
+              cursor: 'pointer', textAlign: 'left',
+              transition: 'background 0.12s',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginBottom: '0.3rem' }}>
+              <span style={{ color: accent, fontFamily: 'var(--font-mono)', fontSize: '0.7rem' }}>{icon}</span>
+              <span style={{ fontSize: '0.68rem', fontWeight: 700, color: tab === key ? accent : 'var(--text)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>{head}</span>
+            </div>
+            <p style={{ fontSize: '0.65rem', color: 'var(--text-dim)', lineHeight: 1.55, margin: 0 }}>{body}</p>
+          </button>
+        ))}
+      </div>
+
       <div className="tab-bar" style={{ marginBottom: '1.5rem' }}>
         {TABS.map(t => (
           <button
