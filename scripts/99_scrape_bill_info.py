@@ -48,16 +48,24 @@ DELAY = 0.8  # seconds between requests
 
 STATUS_MAP = [
     (re.compile(r'\bSigned by Governor\b', re.I),          'Signed'),
+    (re.compile(r'\bApproved by Governor\b', re.I),        'Signed'),
     (re.compile(r'\bVetoed by Governor\b', re.I),          'Vetoed'),
+    (re.compile(r'Veto Message\b', re.I),                  'Vetoed'),   # "Veto Message transmitted/received"
+    (re.compile(r'Line Item Veto', re.I),                  'Vetoed'),
     (re.compile(r'\bChapter\b', re.I),                     'Signed'),
     (re.compile(r'\bEnrolled\b', re.I),                    'Enrolled'),
+    (re.compile(r'\bSigned by Officers\b', re.I),          'Enrolled'),
+    (re.compile(r'\bLaid on Table\b', re.I),               'Tabled'),   # must precede Passed
+    (re.compile(r'See (?:CS/)*(?:HB|SB)\b', re.I),        'Signed'),   # incorporated into companion
     (re.compile(r'\bPassed\b', re.I),                      'Passed'),
     (re.compile(r'\bAdopted\b', re.I),                     'Adopted'),
     (re.compile(r'\bDied\b', re.I),                        'Died'),
+    (re.compile(r'\bFailed to pass\b', re.I),              'Died'),
     (re.compile(r'\bWithdrawn\b', re.I),                   'Withdrawn'),
     (re.compile(r'\bIndefinitely Postponed\b', re.I),      'Died'),
     (re.compile(r'\bTabled\b', re.I),                      'Tabled'),
     (re.compile(r'\bReferred\b', re.I),                    'In Committee'),
+    (re.compile(r'\bIntroduced\b', re.I),                  'Filed'),
     (re.compile(r'\bFiled\b', re.I),                       'Filed'),
 ]
 
