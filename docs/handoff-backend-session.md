@@ -70,7 +70,7 @@ The relevant docs:
 
 ---
 
-### 4. Bills have no dedicated profile page — just `/lobbying/bill/[slug]`
+### 4. Bills have no dedicated profile page — just `/lobbying/bill/[slug]` ✅ DONE 2026-04-22
 
 **Symptom**: User asked for bill profile pages with the bill **title** (not just bill number). Today's site shows `HB 1019` as a label but no landing page that aggregates: title, sponsors, votes, lobbied-by, status, full text link.
 
@@ -87,6 +87,12 @@ The relevant docs:
 - Backfill `bill_title` everywhere `bill_number` is shown — `legislator_votes.bill_title` is already populated for 2025–2026 data; extend to historical years
 
 **Note**: memory `bill_number_backfill.md` says all 30,880 `legislator_votes` rows now have `bill_number` filled in (done 2026-04-19). So the data is there. Just needs the UI.
+
+**What was done 2026-04-22:**
+- `lib/loadBill.js` joins `bill_info` (title/status/sponsor/last_action) + `bill_sponsorships` + `legislator_votes` (roll-call tally aggregated by chamber) + `bill_disclosures` (lobbied-by principals), keyed by `bill_slug` ↔ zero-padded `bill_number` (e.g. `hb-1019` ↔ `H1019`).
+- `app/bill/[slug]/page.js` renders hero (bill #, session year, title, status, sponsor, last action), session selector when multiple years exist, House/Senate floor-vote cards (Yea/Nay/NV + date), sponsors list (linked to `/politician/...`), top-30 lobbied-by principals with "View all" link, FL Senate external link, and DataTrustBlock.
+- Verified: `/bill/hb-1019` → Perfluoroalkyl bill, Enrolled, 130 sponsors, 15 principals, 10s first-compile. `/bill/hb-1` → shows 2018–2024 session selector. Nonexistent slugs 404.
+- Did NOT alter `legislator_votes` / `bill_sponsorships` schema (T1 territory). No `bill_title` backfill attempted this item — legislator_votes.bill_title is already populated for current sessions per `bill_number_backfill.md`; historical gaps fall into item #7 (bill_slug normalization).
 
 ---
 
