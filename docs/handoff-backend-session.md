@@ -18,21 +18,15 @@ The relevant docs:
 
 ## URGENT blockers (ship-blocking; fix first)
 
-### 1. `committee_memberships` table is empty or sparsely populated
+### 1. `committee_memberships` table is empty or sparsely populated ✅ DONE 2026-04-22
 
-**Symptom**: `/legislature/committees` shows "0 members" for every legislative committee. Each committee card shows `chair: —` and `0 members`.
+**Root cause was NOT an empty table.** `committee_memberships` had 811 rows, `legislative_committees` had 65, 57 chairs — all fully joinable in raw SQL. The bug: migration `012_legislature_foreign_keys.sql` was never applied to the live DB, so PostgREST returned `PGRST200 "Could not find a relationship between committee_memberships and legislators"` on every embed → UI saw empty member arrays.
 
-**Affected files**:
-- `lib/loadLegislativeCommittee.js` — `loadCommitteesDirectory()` reads `committee_memberships` joined to `legislators`
-- `app/legislature/committees/page.js` — renders the directory
-- `app/legislature/committee/[abbreviation]/page.js` — renders per-committee profile (also empty)
+**Fix applied**: migration `037_committee_memberships_fks.sql` re-adds `fk_cm_people_id` and `fk_cm_abbreviation` idempotently (via `DO $$ ... pg_constraint` guard), then `NOTIFY pgrst, 'reload schema'`. 0 orphan rows pre-check; constraints applied without truncation. Embedded query now returns 811/811 with legislators and 57 chairs.
 
-**Investigation needed**:
-- `SELECT COUNT(*) FROM committee_memberships;` — if 0 or very low, this is a pipeline issue
-- Check if there's an ingest script (`scripts/7?_*.py` ?) that populates it from FL Senate/House committee rosters
-- Memory file `fl_data_pipeline_gaps.md` already flags this as a known gap
-
-**Fix**: (a) find/write the ingest script, (b) scrape committee memberships from flsenate.gov/myfloridahouse.gov committee pages, (c) load into Supabase keyed by `(abbreviation, people_id, role)`.
+**Follow-ups** (not done this session — T1 territory):
+- Migration 012 also declared `legislator_votes.people_id` and `bill_sponsorships.people_id` FKs. These are still missing in the live DB. Adding them requires T1 coordination.
+- Lesson: whenever PostgREST returns `PGRST200`, check `pg_constraint` before assuming a view/table is missing.
 
 ---
 
