@@ -18,9 +18,11 @@ export const metadata = {
     siteName: 'Florida Influence',
     type: 'website',
     locale: 'en_US',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Florida Influence — Follow the money in Florida politics' }],
   },
   twitter: {
     card: 'summary_large_image',
+    images: ['/og-image.png'],
   },
 };
 
