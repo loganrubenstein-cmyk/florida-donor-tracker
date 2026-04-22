@@ -169,7 +169,7 @@ export default async function Home() {
 
         <div className="rg-3" style={{ gap: '1rem', marginBottom: '1.75rem' }}>
           {races.map(race => (
-            <Link key={race.office} href={race.href} style={{ textDecoration: 'none' }}>
+            <a key={race.office} href={race.href} style={{ textDecoration: 'none' }}>
               <div style={{ border: `1px solid ${race.color}22`, background: `${race.color}05`, borderRadius: '4px', padding: '1.25rem 1.35rem' }}>
                 <div style={{ fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: race.color, marginBottom: '0.5rem' }}>
                   {race.office}
@@ -185,7 +185,7 @@ export default async function Home() {
                   Leading: <span style={{ color: 'var(--text)' }}>{race.lead}</span> · {race.leadAmt}
                 </div>
               </div>
-            </Link>
+            </a>
           ))}
         </div>
 
