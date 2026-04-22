@@ -23,11 +23,11 @@ async function loadData() {
     { count: committeeCount },
   ] = await Promise.all([
     db.from('ie_committee_totals')
-      .select('committee_id, committee_name, total_amount, num_transactions, year_min, year_max')
+      .select('committee_id, committee_name, total_amount, num_transactions, support_amount, oppose_amount, year_min, year_max')
       .order('total_amount', { ascending: false })
       .limit(50),
     db.from('ie_year_totals')
-      .select('cycle, total_amount, num_transactions, num_committees')
+      .select('cycle, total_amount, num_transactions, num_committees, support_amount, oppose_amount')
       .order('cycle', { ascending: true }),
     db.from('ie_committee_totals').select('*', { count: 'exact', head: true }),
   ]);
@@ -37,15 +37,21 @@ async function loadData() {
     total_amount:     parseFloat(r.total_amount || 0),
     num_transactions: parseInt(r.num_transactions || 0),
     num_committees:   parseInt(r.num_committees || 0),
+    support_amount:   parseFloat(r.support_amount || 0),
+    oppose_amount:    parseFloat(r.oppose_amount || 0),
   }));
 
   const totalAmount       = yearData.reduce((s, r) => s + r.total_amount, 0);
   const totalTransactions = yearData.reduce((s, r) => s + r.num_transactions, 0);
+  const totalSupport      = yearData.reduce((s, r) => s + r.support_amount, 0);
+  const totalOppose       = yearData.reduce((s, r) => s + r.oppose_amount, 0);
   const peakRow           = [...yearData].sort((a, b) => b.total_amount - a.total_amount)[0];
 
   return {
     summary: {
       total_amount:       totalAmount,
+      total_support:      totalSupport,
+      total_oppose:       totalOppose,
       num_committees:     committeeCount ?? 0,
       total_transactions: totalTransactions,
       num_cycles:         yearData.length,
@@ -59,6 +65,8 @@ async function loadData() {
       committee_name:   r.committee_name,
       total_amount:     parseFloat(r.total_amount || 0),
       num_transactions: parseInt(r.num_transactions || 0),
+      support_amount:   parseFloat(r.support_amount || 0),
+      oppose_amount:    parseFloat(r.oppose_amount || 0),
       year_min:         r.year_min,
       year_max:         r.year_max,
     })),
@@ -103,18 +111,28 @@ export default async function IEPage() {
           { value: fmtMoneyCompact(summary.total_amount),       label: 'Total IE / EC',   color: 'var(--orange)' },
           { value: fmtCount(summary.num_committees),            label: 'Committees',       color: 'var(--teal)'   },
           { value: fmtCount(summary.total_transactions),        label: 'Transactions',     color: 'var(--blue)'   },
-          { value: String(summary.num_cycles ?? '—'),           label: 'Years of Data',    color: 'var(--text-dim)' },
-          { value: summary.peak_cycle ? `${summary.peak_cycle} · ${fmtMoneyCompact(summary.peak_amount)}` : '—', label: 'Peak Year', color: 'var(--gold)' },
           { value: dateRange,                                   label: 'Date Range',       color: 'var(--text-dim)' },
-        ].map(({ value, label, color }, i, arr) => (
-          <div key={label} style={{
-            padding: '1rem 1.1rem',
-            borderRight: i < arr.length - 1 ? '1px solid var(--border)' : 'none',
-          }}>
+          { value: summary.peak_cycle ? `${summary.peak_cycle} · ${fmtMoneyCompact(summary.peak_amount)}` : '—', label: 'Peak Year', color: 'var(--gold)' },
+        ].map(({ value, label, color }, i) => (
+          <div key={label} style={{ padding: '1rem 1.1rem', borderRight: '1px solid var(--border)' }}>
             <div style={{ fontSize: '1.1rem', fontWeight: 400, color, fontFamily: 'var(--font-serif)', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{value}</div>
             <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: '0.35rem' }}>{label}</div>
           </div>
         ))}
+        {/* Support / Oppose breakdown */}
+        <div style={{ padding: '1rem 1.1rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+              <span style={{ fontSize: '0.62rem', color: 'var(--green)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>For</span>
+              <span style={{ fontSize: '0.88rem', fontFamily: 'var(--font-mono)', color: 'var(--green)' }}>{fmtMoneyCompact(summary.total_support)}</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+              <span style={{ fontSize: '0.62rem', color: 'var(--republican)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Against</span>
+              <span style={{ fontSize: '0.88rem', fontFamily: 'var(--font-mono)', color: 'var(--republican)' }}>{fmtMoneyCompact(summary.total_oppose)}</span>
+            </div>
+          </div>
+          <div style={{ fontSize: '0.65rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: '0.35rem' }}>For / Against (partial)</div>
+        </div>
       </div>
 
       {/* Top committees + year chart */}
@@ -166,8 +184,8 @@ export default async function IEPage() {
               <Link href="/methodology" style={{ color: 'var(--teal)' }}>More →</Link>
             </p>
             <p style={{ margin: 0 }}>
-              Note: FL filings don't consistently record which candidate a given expenditure targeted or whether it was
-              supportive vs. opposed — only the spending committee and amount are reliably available.
+              Note: Candidate targeting and support/opposition direction are partially derivable from purpose text — coverage
+              varies by filing era. Committee name and total amount are the most reliably complete fields.
             </p>
           </div>
         </div>
@@ -182,7 +200,7 @@ export default async function IEPage() {
           caveats={[
             'Candidate targeting is not reliably derivable from purpose text in FL state filings.',
             'Does not include federal IE filings (FEC). Florida state filings only.',
-            'Support vs. opposition direction is not consistently recorded at the transaction level.',
+            'Support vs. opposition direction is partially parsed from purpose text — coverage varies by filing era and committee.',
             'Historical filings back to 1996 — data quality and completeness vary by era.',
           ]}
         />
@@ -221,9 +239,15 @@ function CommitteeRow({ committee: c, rank, maxAmount }) {
       <div style={{ height: '3px', background: 'var(--border)', borderRadius: '2px', marginBottom: '0.3rem' }}>
         <div style={{ height: '100%', width: `${pct}%`, background: 'var(--orange)', borderRadius: '2px', opacity: 0.55 }} />
       </div>
-      <div style={{ display: 'flex', gap: '1rem', fontSize: '0.68rem', color: 'var(--text-dim)' }}>
+      <div style={{ display: 'flex', gap: '1rem', fontSize: '0.68rem', color: 'var(--text-dim)', flexWrap: 'wrap' }}>
         <span>{fmtCount(c.num_transactions)} transactions</span>
         {yearStr && <span>{yearStr}</span>}
+        {c.support_amount > 0 && (
+          <span style={{ color: 'var(--green)' }}>For {fmtMoneyCompact(c.support_amount)}</span>
+        )}
+        {c.oppose_amount > 0 && (
+          <span style={{ color: 'var(--republican)' }}>Against {fmtMoneyCompact(c.oppose_amount)}</span>
+        )}
       </div>
     </div>
   );
