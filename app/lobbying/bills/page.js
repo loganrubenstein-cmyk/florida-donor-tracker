@@ -53,15 +53,28 @@ async function loadData() {
 
   const totalFilings = (summaryAgg || []).reduce((s, r) => s + Number(r.filings || 0), 0);
 
-  const bills = (topRows || []).map(r => ({
-    slug:              r.bill_slug,
-    year:              r.year,
-    bill:              r.bill_canon,
-    category:          billCategory(r.bill_canon),
-    filings:           Number(r.filings),
-    unique_lobbyists:  Number(r.unique_lobbyists),
-    unique_principals: Number(r.unique_principals),
-  }));
+  // Batch-fetch bill_info for the top 300 bills
+  const topSlugs = [...new Set((topRows || []).map(r => r.bill_slug))];
+  const { data: infoRows } = await db.from('bill_info')
+    .select('bill_slug, year, title, status')
+    .in('bill_slug', topSlugs);
+  const infoMap = {};
+  for (const r of infoRows || []) infoMap[`${r.bill_slug}__${r.year}`] = r;
+
+  const bills = (topRows || []).map(r => {
+    const info = infoMap[`${r.bill_slug}__${r.year}`] || {};
+    return {
+      slug:              r.bill_slug,
+      year:              r.year,
+      bill:              r.bill_canon,
+      category:          billCategory(r.bill_canon),
+      filings:           Number(r.filings),
+      unique_lobbyists:  Number(r.unique_lobbyists),
+      unique_principals: Number(r.unique_principals),
+      title:             info.title || null,
+      status:            info.status || null,
+    };
+  });
 
   return {
     bills,
@@ -214,12 +227,26 @@ function StatBox({ value, label, color = 'var(--teal)' }) {
   );
 }
 
+const STATUS_DOT = {
+  'Signed':     '#80ffa0',
+  'Passed':     '#4dd8f0',
+  'Enrolled':   '#4dd8f0',
+  'Adopted':    '#4dd8f0',
+  'Vetoed':     '#f87171',
+  'Died':       '#5a6a88',
+  'Withdrawn':  '#5a6a88',
+  'Tabled':     '#5a6a88',
+  'In Committee': '#ffb060',
+  'Filed':      '#ffb060',
+};
+
 function BillRow({ bill, maxFilings, isBudget = false }) {
   const barPct = (bill.filings / maxFilings * 100).toFixed(1);
+  const dotColor = bill.status ? (STATUS_DOT[bill.status] || '#5a6a88') : null;
 
   return (
     <div style={{ padding: '0.6rem 0.75rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '3px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '0.35rem', flexWrap: 'wrap', gap: '0.25rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: bill.title ? '0.15rem' : '0.35rem', flexWrap: 'wrap', gap: '0.25rem' }}>
         <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'baseline', flexWrap: 'wrap' }}>
           <Link
             href={`/lobbying/bill/${bill.slug}?year=${bill.year}`}
@@ -232,9 +259,22 @@ function BillRow({ bill, maxFilings, isBudget = false }) {
               {bill.category}
             </span>
           )}
+          {dotColor && (
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', fontSize: '0.65rem', color: dotColor }}>
+              <span style={{ width: '5px', height: '5px', borderRadius: '50%', background: dotColor, display: 'inline-block', flexShrink: 0 }} />
+              {bill.status}
+            </span>
+          )}
         </div>
         <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>{bill.year}</span>
       </div>
+
+      {bill.title && (
+        <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginBottom: '0.3rem', lineHeight: 1.3,
+          overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          {bill.title}
+        </div>
+      )}
 
       <div style={{ height: '3px', background: 'var(--border)', borderRadius: '2px', marginBottom: '0.4rem' }}>
         <div style={{ height: '100%', width: `${barPct}%`, background: isBudget ? '#ffd060' : '#4dd8f0', borderRadius: '2px', opacity: 0.7 }} />
