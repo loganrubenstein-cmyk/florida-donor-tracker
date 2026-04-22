@@ -120,7 +120,7 @@ Added the `/pulse` "New Candidates" tab:
 - **Medium**: add click-through to `/donors?city=X&state=FL`
 - **Large**: add county choropleth or ZIP-level aggregation
 
-### 6. `connections_enriched` view doesn't exist; `/connections` page is broken
+### 6. `connections_enriched` view doesn't exist; `/connections` page is broken ✅ DONE 2026-04-22
 
 **Symptom**: Standalone `/connections` page (under Analysis dropdown) queries `connections_enriched` — a view not defined in any migration (still, as of last check). Page may render empty or error.
 
@@ -130,6 +130,10 @@ Added the `/pulse` "New Candidates" tab:
 - Base table `entity_connections` (migration 007) exists and has data
 
 **Fix**: either create the `connections_enriched` view (joining `entity_connections` with `committees`/`donors` to resolve names + types), OR rewrite the API to query `entity_connections` directly and enrich in JS.
+
+**What was done 2026-04-22:** The view _already exists_ on the live DB (was created ad-hoc at some point and never committed as a migration). Columns match exactly what `app/api/connections/route.js` queries, and `/api/connections?limit=3` returns enriched rows. The problem was drift risk: if the DB got rebuilt from migrations the view would vanish, which matches the "missing-view pattern" lesson.
+
+Migration `038_connections_enriched_view.sql` captures the live definition via `CREATE OR REPLACE VIEW`. It joins `entity_connections` to `committee_meta` twice (once per side) to resolve treasurer/chair/address names and type_code for both entities. Applied; 56,107 rows.
 
 ---
 
