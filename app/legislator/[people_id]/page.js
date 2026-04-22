@@ -221,21 +221,27 @@ export default async function LegislatorPage({ params }) {
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.76rem' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid var(--border)' }}>
-              {['Bill', 'Title', 'Date', 'Vote'].map(h => (
+              {['Bill', 'Title', 'Date', 'Vote', 'Lobbyists'].map(h => (
                 <th key={h} style={{ padding: '0.35rem 0.6rem', textAlign: 'left', fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600 }}>{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {votes.length === 0 && (
-              <tr><td colSpan={4} style={{ padding: '1.5rem', color: 'var(--text-dim)', fontSize: '0.78rem' }}>No vote records found.</td></tr>
+              <tr><td colSpan={5} style={{ padding: '1.5rem', color: 'var(--text-dim)', fontSize: '0.78rem' }}>No vote records found.</td></tr>
             )}
             {votes.map((v, i) => (
               <tr key={i} style={{ borderBottom: '1px solid rgba(100,140,220,0.07)' }}>
-                <td style={{ padding: '0.35rem 0.6rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.68rem', whiteSpace: 'nowrap' }}>
-                  {v.bill_number || `#${v.bill_id}`}
+                <td style={{ padding: '0.35rem 0.6rem', fontFamily: 'var(--font-mono)', fontSize: '0.68rem', whiteSpace: 'nowrap' }}>
+                  {v.bill_slug ? (
+                    <Link href={`/lobbying/bill/${v.bill_slug}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+                      {v.bill_display || v.bill_number}
+                    </Link>
+                  ) : (
+                    <span style={{ color: 'var(--text-dim)' }}>{v.bill_display || v.bill_number || `#${v.bill_id}`}</span>
+                  )}
                 </td>
-                <td style={{ padding: '0.35rem 0.6rem', color: 'var(--text)', maxWidth: '360px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <td style={{ padding: '0.35rem 0.6rem', color: 'var(--text)', maxWidth: '340px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {v.bill_title || '—'}
                 </td>
                 <td style={{ padding: '0.35rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.7rem', whiteSpace: 'nowrap' }}>
@@ -244,13 +250,22 @@ export default async function LegislatorPage({ params }) {
                 <td style={{ padding: '0.35rem 0.6rem', fontWeight: 600, color: VOTE_COLOR[v.vote_text] || 'var(--text-dim)', fontSize: '0.7rem', whiteSpace: 'nowrap' }}>
                   {v.vote_text}
                 </td>
+                <td style={{ padding: '0.35rem 0.6rem', fontSize: '0.68rem', whiteSpace: 'nowrap' }}>
+                  {v.lobbyist_count > 0 ? (
+                    <Link href={`/lobbying/bill/${v.bill_slug}`} style={{ color: 'var(--blue)', textDecoration: 'none' }}>
+                      {fmtCount(v.lobbyist_count)}
+                    </Link>
+                  ) : (
+                    <span style={{ color: 'var(--text-dim)' }}>—</span>
+                  )}
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      {votes.length === 100 && (
-        <div style={{ marginTop: '0.75rem', fontSize: '0.7rem', color: 'var(--text-dim)' }}>Showing most recent 100 votes.</div>
+      {votes.length === 200 && (
+        <div style={{ marginTop: '0.75rem', fontSize: '0.7rem', color: 'var(--text-dim)' }}>Showing most recent 200 votes.</div>
       )}
     </div>
   );
@@ -268,7 +283,7 @@ export default async function LegislatorPage({ params }) {
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.76rem' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                {['Bill', 'Title', 'Role'].map(h => (
+                {['Bill', 'Title', 'Role', 'Lobbyists'].map(h => (
                   <th key={h} style={{ padding: '0.35rem 0.6rem', textAlign: 'left', fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600 }}>{h}</th>
                 ))}
               </tr>
@@ -276,14 +291,29 @@ export default async function LegislatorPage({ params }) {
             <tbody>
               {sponsorships.map((s, i) => (
                 <tr key={i} style={{ borderBottom: '1px solid rgba(100,140,220,0.07)' }}>
-                  <td style={{ padding: '0.35rem 0.6rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)', fontSize: '0.68rem', whiteSpace: 'nowrap' }}>
-                    {s.bill_number || `#${s.bill_id}`}
+                  <td style={{ padding: '0.35rem 0.6rem', fontFamily: 'var(--font-mono)', fontSize: '0.68rem', whiteSpace: 'nowrap' }}>
+                    {s.bill_slug ? (
+                      <Link href={`/lobbying/bill/${s.bill_slug}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+                        {s.bill_display || s.bill_number}
+                      </Link>
+                    ) : (
+                      <span style={{ color: 'var(--text-dim)' }}>{s.bill_display || s.bill_number || `#${s.bill_id}`}</span>
+                    )}
                   </td>
-                  <td style={{ padding: '0.35rem 0.6rem', color: 'var(--text)', maxWidth: '420px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  <td style={{ padding: '0.35rem 0.6rem', color: 'var(--text)', maxWidth: '400px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                     {s.bill_title || '—'}
                   </td>
                   <td style={{ padding: '0.35rem 0.6rem', fontSize: '0.68rem', color: s.sponsor_type === 'Primary' ? 'var(--orange)' : 'var(--text-dim)', whiteSpace: 'nowrap' }}>
                     {s.sponsor_type}
+                  </td>
+                  <td style={{ padding: '0.35rem 0.6rem', fontSize: '0.68rem', whiteSpace: 'nowrap' }}>
+                    {s.lobbyist_count > 0 ? (
+                      <Link href={`/lobbying/bill/${s.bill_slug}`} style={{ color: 'var(--blue)', textDecoration: 'none' }}>
+                        {fmtCount(s.lobbyist_count)}
+                      </Link>
+                    ) : (
+                      <span style={{ color: 'var(--text-dim)' }}>—</span>
+                    )}
                   </td>
                 </tr>
               ))}
