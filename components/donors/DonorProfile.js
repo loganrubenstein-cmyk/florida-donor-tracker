@@ -18,23 +18,34 @@ import InsightStrip from '@/components/shared/InsightStrip';
 const DonorYearChart      = dynamic(() => import('./DonorYearChart'), { ssr: false });
 const TransactionExplorer = dynamic(() => import('@/components/explorer/TransactionExplorer'), { ssr: false });
 
-function StatBox({ label, value, rawValue, sub, color }) {
+function StatBox({ label, value, rawValue, sub, color, hero }) {
   return (
     <div style={{
-      background: 'var(--bg)', padding: '1rem 1.25rem',
-      display: 'flex', flexDirection: 'column', gap: '0.25rem',
+      background: hero ? 'rgba(8,8,24,0.9)' : 'var(--bg)',
+      padding: '1.1rem 1.35rem',
+      display: 'flex', flexDirection: 'column', gap: '0.3rem',
+      position: 'relative', overflow: 'hidden',
+      ...(hero ? { boxShadow: 'inset 0 -2px 0 0 ' + (color || 'var(--orange)') } : {}),
     }}>
-      <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+      {hero && (
+        <div style={{
+          position: 'absolute', bottom: '-30px', left: '-20px',
+          width: '160px', height: '100px', borderRadius: '50%',
+          background: color || 'var(--orange)',
+          opacity: 0.07, filter: 'blur(28px)', pointerEvents: 'none',
+        }} />
+      )}
+      <div style={{ fontSize: '0.57rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
         {label}
       </div>
-      <div style={{ fontSize: '1.5rem', fontFamily: 'var(--font-serif)', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.02em' }}>
+      <div style={{ fontSize: hero ? '1.75rem' : '1.25rem', fontFamily: 'var(--font-serif)', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.02em' }}>
         {rawValue != null
-          ? <AnimatedStat value={rawValue} format="compact" color={color || 'var(--orange)'} />
-          : <span style={{ color: color || 'var(--orange)' }}>{value}</span>
+          ? <AnimatedStat value={rawValue} format="compact" color={hero ? (color || 'var(--orange)') : 'var(--text)'} />
+          : <span style={{ color: hero ? (color || 'var(--orange)') : 'var(--text)' }}>{value}</span>
         }
       </div>
       {sub && (
-        <div style={{ fontSize: '0.62rem', color: 'var(--text-dim)' }}>{sub}</div>
+        <div style={{ fontSize: '0.62rem', color: 'var(--text-dim)', lineHeight: 1.5 }}>{sub}</div>
       )}
     </div>
   );
@@ -176,7 +187,7 @@ export default function DonorProfile({ data, annotations = {} }) {
         display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
         gap: '1px', background: 'var(--border)', marginBottom: '2rem',
       }}>
-        <StatBox label="Combined Total" rawValue={data.total_combined} value={fmtMoneyCompact(data.total_combined)} />
+        <StatBox label="Combined Total" rawValue={data.total_combined} value={fmtMoneyCompact(data.total_combined)} hero />
         <StatBox label="PAC / Soft Money" rawValue={data.total_soft} value={fmtMoneyCompact(data.total_soft)}
           sub={`${data.num_committees || 0} committees`} color="var(--teal)" />
         <StatBox label="Direct / Hard Money" rawValue={data.total_hard > 0 ? data.total_hard : null} value={data.total_hard > 0 ? fmtMoneyCompact(data.total_hard) : '—'}

@@ -1,28 +1,47 @@
 export default function InsightStrip({ insights }) {
   if (!insights || insights.length === 0) return null;
+
+  const cells = insights.slice(0, 4);
+  // Pad to 4 cells so the grid always fills the full width
+  while (cells.length < 4) cells.push(null);
+
   return (
     <div style={{
-      display: 'flex',
-      flexWrap: 'wrap',
-      gap: '0.35rem',
-      padding: '0.65rem 0 0.75rem',
-      borderBottom: '1px solid var(--border)',
+      display: 'grid',
+      gridTemplateColumns: `repeat(${cells.length}, 1fr)`,
+      border: '1px solid var(--border)',
+      borderRadius: '3px',
+      overflow: 'hidden',
       marginBottom: '1.25rem',
     }}>
-      {insights.map((pill, i) => (
-        <span key={i} style={{
-          fontSize: '0.68rem',
+      {cells.map((pill, i) => (
+        <div key={i} style={{
+          background: 'var(--surface)',
+          borderRight: i < cells.length - 1 ? '1px solid var(--border)' : 'none',
+          padding: '0.5rem 0.9rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.45rem',
+          fontSize: '0.69rem',
           fontFamily: 'var(--font-mono)',
-          padding: '0.18rem 0.52rem',
-          borderRadius: '2px',
-          border: `1px solid ${pill.color || 'var(--border)'}55`,
-          background: `${pill.color || 'var(--text-dim)'}12`,
-          color: pill.color || 'var(--text)',
-          whiteSpace: 'nowrap',
-          letterSpacing: '0.01em',
+          minWidth: 0,
+          opacity: pill ? 1 : 0.25,
         }}>
-          {pill.text}
-        </span>
+          <div style={{
+            width: '6px', height: '6px',
+            borderRadius: '50%',
+            background: pill?.color || 'var(--text-dim)',
+            flexShrink: 0,
+          }} />
+          <span style={{
+            color: 'var(--text-dim)',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          }}>
+            {pill ? pill.text : '—'}
+          </span>
+        </div>
       ))}
     </div>
   );

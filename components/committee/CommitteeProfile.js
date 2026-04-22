@@ -68,16 +68,33 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
         marginBottom: '2rem', overflow: 'hidden',
       }}>
         {[
-          { label: 'Total Received',  value: fmtMoneyCompact(data.total_received) },
-          { label: 'Contributions',   value: (data.num_contributions || 0).toLocaleString() },
-          { label: 'Earliest',        value: fmtDateLocal(data.date_range?.earliest) },
-          { label: 'Latest',          value: fmtDateLocal(data.date_range?.latest) },
-        ].map(({ label, value }) => (
-          <div key={label} style={{ background: 'var(--bg)', padding: '1rem 1.25rem' }}>
-            <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.3rem' }}>
+          { label: 'Total Received', value: fmtMoneyCompact(data.total_received), hero: true },
+          { label: 'Contributions',  value: (data.num_contributions || 0).toLocaleString() },
+          { label: 'Earliest',       value: fmtDateLocal(data.date_range?.earliest) },
+          { label: 'Latest',         value: fmtDateLocal(data.date_range?.latest) },
+        ].map(({ label, value, hero }) => (
+          <div key={label} style={{
+            background: hero ? 'rgba(8,8,24,0.9)' : 'var(--bg)',
+            padding: '1.1rem 1.35rem',
+            position: 'relative', overflow: 'hidden',
+            ...(hero ? { boxShadow: 'inset 0 -2px 0 0 var(--orange)' } : {}),
+          }}>
+            {hero && (
+              <div style={{
+                position: 'absolute', bottom: '-30px', left: '-20px',
+                width: '160px', height: '100px', borderRadius: '50%',
+                background: 'var(--orange)', opacity: 0.07, filter: 'blur(28px)', pointerEvents: 'none',
+              }} />
+            )}
+            <div style={{ fontSize: '0.57rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.35rem' }}>
               {label}
             </div>
-            <div style={{ fontFamily: 'var(--font-serif)', fontSize: '1.3rem', color: 'var(--orange)', fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.02em' }}>
+            <div style={{
+              fontFamily: 'var(--font-serif)',
+              fontSize: hero ? '1.75rem' : '1.25rem',
+              color: hero ? 'var(--orange)' : 'var(--text)',
+              fontVariantNumeric: 'tabular-nums', letterSpacing: '-0.02em',
+            }}>
               {value}
             </div>
           </div>

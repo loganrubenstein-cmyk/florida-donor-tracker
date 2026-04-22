@@ -237,10 +237,10 @@ export default function CandidatesList() {
         {loading ? 'Loading…' : `${total.toLocaleString()} result${total !== 1 ? 's' : ''}`}
       </div>
 
-      <div style={{ overflowX: 'auto', opacity: loading ? 0.5 : 1, transition: 'opacity 0.15s' }}>
+      <div style={{ overflowX: 'auto', opacity: loading ? 0.5 : 1, transition: 'opacity 0.15s', border: '1px solid var(--border)', borderRadius: '4px' }}>
         <table className="dir-table" style={{ width: '100%', minWidth: '650px', borderCollapse: 'collapse', fontSize: '0.83rem' }}>
           <thead>
-            <tr style={{ borderBottom: '1px solid var(--border)' }}>
+            <tr style={{ borderBottom: '1px solid rgba(100,140,220,0.25)', background: 'var(--surface)' }}>
               {[
                 { label: '#',        align: 'center', width: '2rem' },
                 { label: 'Name',     align: 'left',   sortKey: 'display_name'      },
@@ -303,13 +303,21 @@ export default function CandidatesList() {
                 ? `${p.earliest_cycle}–${p.latest_cycle}`
                 : String(p.latest_cycle || '');
 
+              const isAlt = i % 2 === 1;
+              const partyLabel = p.party === 'REP' ? 'R' : p.party === 'DEM' ? 'D' : p.party === 'NPA' ? 'I' : (p.party || null);
+              const rowBorderColor = p.party === 'REP' ? 'rgba(248,113,113,0.5)' : p.party === 'DEM' ? 'rgba(96,165,250,0.5)' : 'transparent';
+
               return (
-                <tr key={`${p.display_name}-${p.latest_acct_num}`} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2rem', fontFamily: 'var(--font-mono)', fontSize: '0.72rem' }}>
+                <tr key={`${p.display_name}-${p.latest_acct_num}`} style={{
+                  borderBottom: '1px solid rgba(100,140,220,0.07)',
+                  borderLeft: `3px solid ${rowBorderColor}`,
+                  background: isAlt ? 'rgba(8,8,24,0.55)' : 'transparent',
+                }}>
+                  <td style={{ padding: '0.5rem 0.6rem', color: 'var(--text-dim)', textAlign: 'right', width: '2.5rem', fontFamily: 'var(--font-mono)', fontSize: '0.69rem' }}>
                     {(page - 1) * PAGE_SIZE + i + 1}
                   </td>
-                  <td style={{ padding: '0.45rem 0.6rem' }}>
-                    <a href={href} style={{ color: 'var(--orange)', textDecoration: 'none' }}>
+                  <td style={{ padding: '0.5rem 0.6rem' }}>
+                    <a href={href} style={{ color: 'var(--orange)', textDecoration: 'none', fontSize: '0.8rem' }}>
                       {displayName}
                     </a>
                     {p.num_cycles > 1 && (
@@ -318,30 +326,34 @@ export default function CandidatesList() {
                       </span>
                     )}
                   </td>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.82rem' }}>
+                  <td style={{ padding: '0.5rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.76rem' }}>
                     {p.latest_office || '—'}
                     {p.latest_district ? ` · ${p.latest_district}` : ''}
                   </td>
-                  <td style={{ padding: '0.45rem 0.6rem', textAlign: 'center' }}>
-                    <span style={{
-                      display: 'inline-flex', alignItems: 'center', gap: '0.25rem',
-                    }}>
-                      <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: pColor, display: 'inline-block', flexShrink: 0 }} />
-                      <span style={{ fontSize: '0.65rem', color: pColor, fontFamily: 'var(--font-mono)', fontWeight: 700 }}>
-                        {p.party === 'REP' ? 'R' : p.party === 'DEM' ? 'D' : p.party === 'NPA' ? 'I' : (p.party || '—')}
+                  <td style={{ padding: '0.5rem 0.6rem', textAlign: 'center' }}>
+                    {partyLabel && (
+                      <span style={{
+                        fontSize: '0.58rem', padding: '0.1rem 0.4rem',
+                        border: `1px solid ${pColor}40`,
+                        background: `${pColor}14`,
+                        color: pColor,
+                        borderRadius: '2px', fontFamily: 'var(--font-mono)',
+                        display: 'inline-block',
+                      }}>
+                        {partyLabel}
                       </span>
-                    </span>
+                    )}
                   </td>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '0.82rem' }}>
+                  <td style={{ padding: '0.5rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: '0.76rem' }}>
                     {cycleRange}
                   </td>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text)', textAlign: 'right', whiteSpace: 'nowrap', fontFamily: 'var(--font-mono)', fontSize: '0.82rem' }}>
+                  <td style={{ padding: '0.5rem 0.6rem', color: 'var(--blue)', textAlign: 'right', whiteSpace: 'nowrap', fontFamily: 'var(--font-mono)', fontSize: '0.76rem' }}>
                     {fmt(p.hard_money_all)}
                   </td>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text)', textAlign: 'right', whiteSpace: 'nowrap', fontFamily: 'var(--font-mono)', fontSize: '0.82rem' }}>
+                  <td style={{ padding: '0.5rem 0.6rem', color: 'var(--blue)', textAlign: 'right', whiteSpace: 'nowrap', fontFamily: 'var(--font-mono)', fontSize: '0.76rem' }}>
                     {p.soft_money_all > 0 ? fmt(p.soft_money_all) : '—'}
                   </td>
-                  <td style={{ padding: '0.45rem 0.6rem', color: 'var(--orange)', textAlign: 'right', whiteSpace: 'nowrap', fontWeight: 600, fontFamily: 'var(--font-mono)', fontSize: '0.82rem' }}>
+                  <td style={{ padding: '0.5rem 0.6rem', color: 'var(--orange)', textAlign: 'right', whiteSpace: 'nowrap', fontWeight: 600, fontFamily: 'var(--font-mono)', fontSize: '0.82rem' }}>
                     {fmt(p.total_combined_all)}
                   </td>
                 </tr>

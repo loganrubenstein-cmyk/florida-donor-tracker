@@ -208,10 +208,11 @@ export default async function LobbyingFirmPage({ params }) {
                 border: '1px solid var(--border)', borderRadius: '3px',
                 color: l.num_active > 0 ? 'var(--teal)' : 'var(--text-dim)',
                 textDecoration: 'none', fontSize: '0.72rem',
+                display: 'inline-flex', alignItems: 'center', gap: '0.35rem',
               }}>
                 {l.name}
                 {l.num_active > 0 && (
-                  <span style={{ marginLeft: '0.35rem', fontSize: '0.58rem', color: 'var(--text-dim)' }}>
+                  <span style={{ fontSize: '0.58rem', color: 'var(--text-dim)' }}>
                     {l.num_active} active
                   </span>
                 )}
