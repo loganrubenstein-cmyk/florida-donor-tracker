@@ -34,16 +34,19 @@ async function loadBill(slug, yearFilter) {
       .limit(20000);
     if (yearFilter) query = query.eq('year', parseInt(yearFilter, 10));
 
-    const { data: entries } = await query;
+    const [{ data: entries }, { data: allYearRows }, { data: infoRows }] = await Promise.all([
+      query,
+      db.from('bill_disclosures').select('year').eq('bill_slug', slug).order('year', { ascending: true }),
+      db.from('bill_info').select('year, title, status, last_action, primary_sponsor').eq('bill_slug', slug).order('year', { ascending: false }),
+    ]);
+
     if (!entries || entries.length === 0) return null;
 
-    // All years for this bill number (unfiltered) — used for the year-selector
-    const { data: allYearRows } = await db
-      .from('bill_disclosures')
-      .select('year')
-      .eq('bill_slug', slug)
-      .order('year', { ascending: true });
     const allYears = [...new Set((allYearRows || []).map(r => r.year))].sort();
+
+    // Build info map keyed by year
+    const infoByYear = {};
+    for (const row of infoRows || []) infoByYear[row.year] = row;
 
     const years      = [...new Set(entries.map(e => e.year))].sort();
     const principals = [...new Set(entries.map(e => e.principal))].sort();
@@ -85,6 +88,7 @@ async function loadBill(slug, yearFilter) {
         Object.entries(byYear).map(([yr, d]) => [yr, { ...d, principals: d.principals.size, lobbyists: d.lobbyists.size }])
       ),
       principalList,
+      infoByYear,
     };
   } catch { return null; }
 }
@@ -108,12 +112,16 @@ export default async function BillLobbyingPage({ params, searchParams }) {
   const data = await loadBill(slug, yearFilter);
   if (!data) return notFound();
 
-  const { bill, entries, years, allYears, principals, lobbyists, firms, issues, byYear, principalList } = data;
+  const { bill, entries, years, allYears, principals, lobbyists, firms, issues, byYear, principalList, infoByYear } = data;
   const yearStr = yearFilter
     ? `${yearFilter} session`
     : years.length > 1 ? `${years[0]}–${years[years.length - 1]}` : String(years[0]);
   const maxFilings = Math.max(...Object.values(byYear).map(y => y.filings), 1);
   const maxPrincipal = principalList[0]?.filings || 1;
+
+  // Bill info for the active year (or most recent year if no filter)
+  const activeYear = yearFilter ? parseInt(yearFilter) : years[years.length - 1];
+  const activeInfo = infoByYear[activeYear] || infoByYear[years[years.length - 1]] || null;
 
   return (
     <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '3rem 1.5rem' }}>
@@ -130,8 +138,33 @@ export default async function BillLobbyingPage({ params, searchParams }) {
       <h1 style={{ fontFamily: 'var(--font-mono)', fontSize: '1.8rem', color: 'var(--teal)', marginBottom: '0.25rem' }}>
         {bill}{yearFilter ? ` · ${yearFilter}` : ''}
       </h1>
-      <p style={{ color: 'var(--text-dim)', fontSize: '0.88rem', lineHeight: 1.6, marginBottom: '0.25rem' }}>
-        Florida House lobbyist disclosure filings for this bill number, {yearStr}.
+
+      {activeInfo?.title && (
+        <p style={{ fontSize: '1.05rem', color: 'var(--text)', fontFamily: 'var(--font-serif)', marginBottom: '0.35rem', lineHeight: 1.4 }}>
+          {activeInfo.title}
+        </p>
+      )}
+
+      {activeInfo && (
+        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginBottom: '0.5rem', alignItems: 'center' }}>
+          {activeInfo.status && (
+            <StatusBadge status={activeInfo.status} />
+          )}
+          {activeInfo.primary_sponsor && (
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
+              Sponsor: <span style={{ color: 'var(--text)' }}>{activeInfo.primary_sponsor}</span>
+            </span>
+          )}
+          {activeInfo.last_action && (
+            <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)', fontStyle: 'italic' }}>
+              {activeInfo.last_action.length > 80 ? activeInfo.last_action.slice(0, 80) + '…' : activeInfo.last_action}
+            </span>
+          )}
+        </div>
+      )}
+
+      <p style={{ color: 'var(--text-dim)', fontSize: '0.82rem', lineHeight: 1.6, marginBottom: '0.25rem' }}>
+        Florida House lobbyist disclosure filings for this bill, {yearStr}.
         Each filing represents one lobbyist–principal pair reporting they lobbied on this bill.
       </p>
       <p style={{ fontSize: '0.72rem', color: 'var(--orange)', marginBottom: '0.5rem', fontFamily: 'var(--font-mono)' }}>
@@ -283,8 +316,34 @@ export default async function BillLobbyingPage({ params, searchParams }) {
 function StatBox({ value, label, color = 'var(--teal)' }) {
   return (
     <div>
-      <div style={{ fontSize: '1.3rem', fontWeight: 400, color, fontFamily: 'var(--font-serif)' , fontVariantNumeric: 'tabular-nums' }}>{value}</div>
+      <div style={{ fontSize: '1.3rem', fontWeight: 400, color, fontFamily: 'var(--font-serif)', fontVariantNumeric: 'tabular-nums' }}>{value}</div>
       <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>{label}</div>
     </div>
+  );
+}
+
+const STATUS_COLORS = {
+  'Signed':      { bg: 'rgba(128,255,160,0.10)', border: 'rgba(128,255,160,0.35)', color: '#80ffa0' },
+  'Vetoed':      { bg: 'rgba(248,113,113,0.10)', border: 'rgba(248,113,113,0.35)', color: '#f87171' },
+  'Enrolled':    { bg: 'rgba(77,216,240,0.10)',  border: 'rgba(77,216,240,0.30)',  color: '#4dd8f0' },
+  'Passed':      { bg: 'rgba(77,216,240,0.10)',  border: 'rgba(77,216,240,0.30)',  color: '#4dd8f0' },
+  'Adopted':     { bg: 'rgba(77,216,240,0.10)',  border: 'rgba(77,216,240,0.30)',  color: '#4dd8f0' },
+  'Died':        { bg: 'rgba(90,106,136,0.15)',  border: 'rgba(90,106,136,0.35)', color: '#5a6a88' },
+  'Withdrawn':   { bg: 'rgba(90,106,136,0.15)',  border: 'rgba(90,106,136,0.35)', color: '#5a6a88' },
+  'Tabled':      { bg: 'rgba(90,106,136,0.15)',  border: 'rgba(90,106,136,0.35)', color: '#5a6a88' },
+  'In Committee':{ bg: 'rgba(255,176,96,0.10)',  border: 'rgba(255,176,96,0.30)', color: '#ffb060' },
+  'Filed':       { bg: 'rgba(255,176,96,0.08)',  border: 'rgba(255,176,96,0.22)', color: '#ffb060' },
+};
+
+function StatusBadge({ status }) {
+  const s = STATUS_COLORS[status] || { bg: 'rgba(90,106,136,0.12)', border: 'var(--border)', color: 'var(--text-dim)' };
+  return (
+    <span style={{
+      fontSize: '0.68rem', padding: '2px 8px', borderRadius: '3px',
+      background: s.bg, border: `1px solid ${s.border}`, color: s.color,
+      fontFamily: 'var(--font-mono)', letterSpacing: '0.04em',
+    }}>
+      {status}
+    </span>
   );
 }

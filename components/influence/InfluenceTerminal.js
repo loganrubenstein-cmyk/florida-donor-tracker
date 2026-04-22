@@ -46,6 +46,13 @@ export default function InfluenceTerminal() {
 
   return (
     <div style={{ maxWidth: 1200, margin: '0 auto', padding: '2.5rem 2.5rem 3rem' }}>
+      <div style={{ fontSize: '0.66rem', color: 'var(--text-dim)', marginBottom: '1.5rem' }}>
+        <Link href="/" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Home</Link>
+        {' / '}
+        <Link href="/tools" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Tools</Link>
+        {' / '}
+        <span>Influence Index</span>
+      </div>
       <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.62rem', color: 'var(--text-dim)', letterSpacing: '0.2em', marginBottom: '0.9rem' }}>
         ◤ INFLUENCE INDEX
       </div>
