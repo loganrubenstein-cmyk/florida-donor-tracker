@@ -30,7 +30,7 @@ The relevant docs:
 
 ---
 
-### 2. `candidates` table has no `filing_date` / `updated_at` timestamp
+### 2. `candidates` table has no `filing_date` / `updated_at` timestamp ✅ DONE 2026-04-22
 
 **Symptom**: `/pulse` can't honestly show "new candidate filings" because the table has no way to detect which rows are new. Filtered out from /pulse for this reason.
 
@@ -42,6 +42,13 @@ The relevant docs:
 **Fix**: add `file_date DATE` and `updated_at TIMESTAMPTZ DEFAULT NOW()` columns. Backfill `file_date` from FL DoE source data if available. Add `updated_at` trigger so changed rows bubble up.
 
 **Unlock**: /pulse can add a "New Candidate Filings" tab that genuinely shows non-quarterly changes.
+
+**What was done 2026-04-22:** No migration needed — `candidates` already has `date_start DATE` and `date_end DATE` columns (populated for 4,868/7,304 rows, 67%; current-cycle coverage is effectively complete — 2026 entries filed March–April 2026). Handoff doc was stale.
+
+Added the `/pulse` "New Candidates" tab:
+- `app/api/pulse/route.js` new `type=candidates` handler queries `candidates.date_start >= now() - N days` (default 60).
+- `components/home/PulsePage.js` adds a 4th context-strip card ("New Candidates") + `CandidatesTable` with Filed / Candidate / Office / Party / Cycle columns linked to `/candidate/[acct_num]`.
+- Verified: API returns recent filings (Scott Wilkins 2026-04-08 etc.); UI renders the tab.
 
 ---
 

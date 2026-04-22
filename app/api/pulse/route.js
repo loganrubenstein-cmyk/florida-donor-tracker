@@ -50,6 +50,41 @@ export async function GET(req) {
       });
     }
 
+    if (type === 'candidates') {
+      // New candidate filings: candidates.date_start within last N days.
+      // date_start is the FL DoE candidate-record filing timestamp (populated
+      // for ~67% of rows; current-cycle coverage is effectively 100%).
+      const windowDays = parseInt(searchParams.get('days') || '60');
+      const cutoff = new Date(Date.now() - windowDays * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+
+      const { data, error } = await db
+        .from('candidates')
+        .select('acct_num, candidate_name, election_year, office_desc, party_code, district, date_start, status_desc, total_combined')
+        .gte('date_start', cutoff)
+        .not('date_start', 'is', null)
+        .order('date_start', { ascending: false })
+        .limit(limit);
+
+      if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+      return NextResponse.json({
+        type: 'candidates',
+        window_days: windowDays,
+        latest_date: (data && data[0]?.date_start) || null,
+        items: (data || []).map(r => ({
+          acct_num:      r.acct_num,
+          name:          r.candidate_name,
+          election_year: r.election_year,
+          office:        r.office_desc,
+          party:         r.party_code,
+          district:      r.district,
+          date_start:    r.date_start,
+          status:        r.status_desc,
+          total_combined: parseFloat(r.total_combined) || 0,
+        })),
+      });
+    }
+
     if (type === 'committees') {
       // Committees registered in the current cycle (Jan 1 of current year onward).
       // Falls back to "newest by date_start" if no current-year rows exist.

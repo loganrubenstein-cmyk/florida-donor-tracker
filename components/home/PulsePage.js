@@ -6,9 +6,16 @@ import { fmtMoney, fmtMoneyCompact } from '@/lib/fmt';
 
 const TABS = [
   { key: 'filings',    label: 'Latest Filings' },
+  { key: 'candidates', label: 'New Candidates' },
   { key: 'committees', label: 'New Committees' },
   { key: 'cycle',      label: 'This Cycle' },
 ];
+
+function partyColor(p) {
+  if (p === 'REP') return 'var(--republican)';
+  if (p === 'DEM') return 'var(--democrat)';
+  return 'var(--text-dim)';
+}
 
 function fmtDate(s) {
   if (!s) return '—';
@@ -46,6 +53,36 @@ function FilingsTable({ items }) {
                 <Link href={`/follow?donor=${item.donor_slug}`} style={{ fontSize: '0.65rem', color: 'var(--teal)', textDecoration: 'none', opacity: 0.8, whiteSpace: 'nowrap' }}>follow →</Link>
               )}
             </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+function CandidatesTable({ items }) {
+  if (!items.length) return <p style={{ color: 'var(--text-dim)', fontSize: '0.82rem' }}>No new candidate filings in the past 60 days.</p>;
+  return (
+    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.78rem' }}>
+      <thead>
+        <tr style={{ borderBottom: '1px solid var(--border)' }}>
+          {['Filed', 'Candidate', 'Office', 'Party', 'Cycle'].map(h => (
+            <th key={h} style={{ textAlign: 'left', padding: '0.4rem 0.6rem', fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 400 }}>{h}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {items.map((item, i) => (
+          <tr key={i} style={{ borderBottom: '1px solid var(--border)' }}>
+            <td style={{ padding: '0.55rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.72rem', whiteSpace: 'nowrap' }}>{fmtDate(item.date_start)}</td>
+            <td style={{ padding: '0.55rem 0.6rem' }}>
+              <Link href={`/candidate/${item.acct_num}`} style={{ color: 'var(--orange)', textDecoration: 'none', fontWeight: 500 }}>{item.name}</Link>
+            </td>
+            <td style={{ padding: '0.55rem 0.6rem', fontSize: '0.74rem', color: 'var(--text)' }}>
+              {item.office || '—'}{item.district ? ` · ${item.district}` : ''}
+            </td>
+            <td style={{ padding: '0.55rem 0.6rem', fontSize: '0.72rem', fontFamily: 'var(--font-mono)', color: partyColor(item.party) }}>{item.party || '—'}</td>
+            <td style={{ padding: '0.55rem 0.6rem', fontSize: '0.72rem', color: 'var(--text-dim)', textAlign: 'right' }}>{item.election_year || '—'}</td>
           </tr>
         ))}
       </tbody>
@@ -158,12 +195,13 @@ export default function PulsePage() {
 
       {/* Context strip — one card per tab */}
       <div style={{
-        display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)',
+        display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)',
         gap: '0', marginBottom: '1.5rem',
         border: '1px solid var(--border)', borderRadius: '3px', overflow: 'hidden',
       }}>
         {[
           { key: 'filings',    accent: '#ffb060', icon: '↑', head: 'Latest Filings',   body: 'Large contributions ($25K+) filed in the past 90 days — who gave, who received.' },
+          { key: 'candidates', accent: '#80ffa0', icon: '✦', head: 'New Candidates',   body: 'Candidates whose FL DoE filing was registered in the past 60 days — who just entered a race.' },
           { key: 'committees', accent: '#4dd8f0', icon: '◎', head: 'New Committees',   body: 'PACs, ECOs, and party committees registered since Jan 1 of the current cycle.' },
           { key: 'cycle',      accent: '#a0c0ff', icon: '★', head: 'This Cycle',       body: 'Top donors by total giving since January 1 of the current cycle year — the biggest spenders so far.' },
         ].map(({ key, accent, icon, head, body }, i, arr) => (
@@ -198,6 +236,7 @@ export default function PulsePage() {
       )}
 
       {!loading && current && tab === 'filings' && <FilingsTable items={current.items || []} />}
+      {!loading && current && tab === 'candidates' && <CandidatesTable items={current.items || []} />}
       {!loading && current && tab === 'committees' && <CommitteesTable items={current.items || []} />}
       {!loading && current && tab === 'cycle' && <CycleTable items={current.items || []} year={current.year || currentYear} />}
 
