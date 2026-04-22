@@ -1,13 +1,11 @@
 // components/committee/CommitteeProfile.js
 
 import Link from 'next/link';
-import EgoGraph from '@/components/shared/EgoGraph';
 import { getPartyFromName } from '@/lib/partyUtils';
 import BackLinks from '@/components/BackLinks';
 import { fmtArticleDate } from '@/lib/dateUtils';
 import { slugify } from '@/lib/slugify';
 import { getPoliticianSlugByAcctNum } from '@/lib/loadCandidate';
-import CommitteeConnections from './CommitteeConnections';
 import TabbedProfile from '@/components/shared/TabbedProfile';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import FreshnessBadge from '@/components/shared/FreshnessBadge';
@@ -16,7 +14,7 @@ import SourceLink from '@/components/shared/SourceLink';
 import EntityHeader from '@/components/shared/EntityHeader';
 import RelationshipsBlock from '@/components/shared/RelationshipsBlock';
 import dynamic from 'next/dynamic';
-import { fmtMoneyCompact, fmtMoney } from '@/lib/fmt';
+import { fmtMoneyCompact, fmtMoney, fmtAvgContribution } from '@/lib/fmt';
 import InsightStrip from '@/components/shared/InsightStrip';
 
 const TransactionExplorer = dynamic(() => import('@/components/explorer/TransactionExplorer'), { ssr: false });
@@ -69,10 +67,10 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
       }}>
         {[
           { label: 'Total Received', value: fmtMoneyCompact(data.total_received), hero: true },
-          { label: 'Contributions',  value: (data.num_contributions || 0).toLocaleString() },
+          { label: 'Contributions',  value: (data.num_contributions || 0).toLocaleString(), sub: `avg ${fmtAvgContribution(data.total_received, data.num_contributions)}` },
           { label: 'Earliest',       value: fmtDateLocal(data.date_range?.earliest) },
           { label: 'Latest',         value: fmtDateLocal(data.date_range?.latest) },
-        ].map(({ label, value, hero }) => (
+        ].map(({ label, value, hero, sub }) => (
           <div key={label} style={{
             background: hero ? 'rgba(8,8,24,0.9)' : 'var(--bg)',
             padding: '1.1rem 1.35rem',
@@ -97,6 +95,11 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
             }}>
               {value}
             </div>
+            {sub && sub !== 'avg —' && (
+              <div style={{ fontSize: '0.66rem', color: 'var(--text-dim)', marginTop: '0.2rem', fontFamily: 'var(--font-mono)' }}>
+                {sub}
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -393,12 +396,6 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
     </div>
   );
 
-  const connectionsContent = (
-    <div>
-      <CommitteeConnections acctNum={data.acct_num} />
-    </div>
-  );
-
   const sourcesContent = (
     <div>
       {articles.length > 0 && (
@@ -466,9 +463,7 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
     { id: 'candidates',    label: 'Candidates',    description: 'Candidates linked to this committee via FL DOE filings',   content: candidatesContent },
     { id: 'payees',        label: 'Payees',        description: 'Vendors and consultants paid by this committee',           content: payeesContent },
     { id: 'transactions',  label: 'Transactions',  description: 'Search individual contribution records',                    content: transactionsContent },
-    { id: 'connections',   label: 'Connections',   description: 'Committees sharing treasurer, address, or officers',       content: connectionsContent },
-    { id: 'network',       label: 'Network',       description: 'Visual ego-network of structural committee connections',    content: <EgoGraph acctNum={data.acct_num} centerLabel={data.committee_name} centerType="committee" /> },
-    { id: 'sources',       label: 'Sources',       description: 'Research links, data sources, and methodology',            content: sourcesContent },
+    { id: 'sources',       label: 'In The News',   description: 'Recent news coverage, research links, and data sources',   content: sourcesContent },
   ];
 
   return (

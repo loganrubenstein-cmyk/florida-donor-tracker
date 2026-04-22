@@ -436,8 +436,8 @@ export default function CycleProfile({ year, candidates, topDonors = [], electio
     }] : []),
     {
       id: 'sources',
-      label: 'Sources',
-      description: 'Data sources and methodology',
+      label: 'In The News',
+      description: 'Recent news coverage, research links, and data sources',
       content: sourcesContent,
     },
   ];

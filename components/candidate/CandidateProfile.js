@@ -4,7 +4,6 @@ import dynamic from 'next/dynamic';
 import BackLinks from '@/components/BackLinks';
 import TabbedProfile from '@/components/shared/TabbedProfile';
 import BackToTop from '@/components/shared/BackToTop';
-import EgoGraph from '@/components/shared/EgoGraph';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import FreshnessBadge from '@/components/shared/FreshnessBadge';
 import NewsBlock from '@/components/shared/NewsBlock';
@@ -15,7 +14,7 @@ import AnimatedStat from '@/components/shared/AnimatedStat';
 import ConfidenceBadge from '@/components/shared/ConfidenceBadge';
 import InsightStrip from '@/components/shared/InsightStrip';
 import { slugify } from '@/lib/slugify';
-import { fmtMoneyCompact, fmtMoney } from '@/lib/fmt';
+import { fmtMoneyCompact, fmtMoney, fmtAvgContribution, avgContribution } from '@/lib/fmt';
 import { PARTY_COLOR } from '@/lib/partyUtils';
 
 const QuarterlyChart      = dynamic(() => import('./QuarterlyChart'), { ssr: false });
@@ -228,7 +227,9 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
             rawValue: hm.total,
             value: fmt(hm.total),
             valueColor: 'var(--orange)',
-            sub: `${(hm.num_contributions || 0).toLocaleString()} contributions`,
+            sub: avgContribution(hm.total, hm.num_contributions) != null
+              ? `${(hm.num_contributions || 0).toLocaleString()} contributions · avg ${fmtAvgContribution(hm.total, hm.num_contributions)}`
+              : `${(hm.num_contributions || 0).toLocaleString()} contributions`,
           },
           {
             label: 'Soft Money (Candidate PACs)',
@@ -684,8 +685,7 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
     { id: 'industries',    label: 'Industries',    description: 'Donor industry breakdown — corporate vs. individual',     content: industriesContent },
     { id: 'expenditures',  label: 'Expenditures',  description: 'Top vendors and consultants paid by this campaign',      content: expendituresContent },
     { id: 'transactions',  label: 'Transactions',  description: 'Search individual contribution records',                  content: transactionsContent },
-    { id: 'network',       label: 'Network',       description: 'Structural connections to other committees — shared staff, addresses, and donors', content: <EgoGraph acctNum={data.acct_num} centerLabel={data.candidate_name} centerType="candidate" /> },
-    { id: 'sources',       label: 'Sources',       description: 'Research links, data sources, and methodology',          content: sourcesContent },
+    { id: 'sources',       label: 'In The News',   description: 'Recent news coverage, research links, and data sources',  content: sourcesContent },
   ];
 
   return (

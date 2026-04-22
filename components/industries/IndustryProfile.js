@@ -402,8 +402,8 @@ export default function IndustryProfile({ data, totalAmount, trendData, topDonor
     }] : []),
     {
       id: 'sources',
-      label: 'Sources',
-      description: 'Data sources, methodology, and research tools',
+      label: 'In The News',
+      description: 'Recent news coverage, research links, and data sources',
       content: sourcesContent,
     },
   ];

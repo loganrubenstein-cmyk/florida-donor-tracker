@@ -6,7 +6,7 @@ import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import EntityHeader from '@/components/shared/EntityHeader';
 import TabbedProfile from '@/components/shared/TabbedProfile';
 import { slugify } from '@/lib/slugify';
-import { fmtMoney, fmtMoneyCompact, fmtCount } from '@/lib/fmt';
+import { fmtMoney, fmtMoneyCompact, fmtCount, fmtAvgContribution, avgContribution } from '@/lib/fmt';
 
 const SpendTrendChart = dynamic(() => import('@/components/candidate/QuarterlyChart'), { ssr: false });
 
@@ -89,7 +89,11 @@ export default function PrincipalProfile({ data, compData = null }) {
         <StatBox
           label="Donation Match"
           value={data.donation_total > 0 ? fmtMoneyCompact(data.donation_total) : '—'}
-          sub={data.num_contributions > 0 ? `${data.num_contributions.toLocaleString()} contributions` : null}
+          sub={data.num_contributions > 0
+            ? (avgContribution(data.donation_total, data.num_contributions) != null
+                ? `${data.num_contributions.toLocaleString()} contributions · avg ${fmtAvgContribution(data.donation_total, data.num_contributions)}`
+                : `${data.num_contributions.toLocaleString()} contributions`)
+            : null}
           color={data.donation_total > 0 ? 'var(--orange)' : 'var(--text-dim)'}
         />
         {compData ? (
@@ -515,7 +519,7 @@ export default function PrincipalProfile({ data, compData = null }) {
         </div>
       ),
     }] : []),
-    { id: 'sources', label: 'Sources', description: 'Data sources and research links', content: sourcesContent },
+    { id: 'sources', label: 'In The News', description: 'Recent news coverage, research links, and data sources', content: sourcesContent },
   ];
 
   return (

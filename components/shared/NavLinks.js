@@ -6,28 +6,51 @@ import { useState, useEffect, useRef } from 'react';
 
 // Direct top-level links (no dropdown)
 const DIRECT = [
-  { href: '/candidates', label: 'Candidates' },
-  { href: '/committees', label: 'Committees' },
-  { href: '/follow',     label: 'Follow $' },
+  { href: '/candidates',  label: 'Candidates' },
+  { href: '/committees',  label: 'Committees' },
+  { href: '/donors',      label: 'Donors' },
+  { href: '/legislature', label: 'Legislature' },
 ];
 
 const GROUPS = [
   {
+    label: 'Lobbying',
+    items: [
+      { href: '/lobbying',       label: 'Lobbying Hub' },
+      { href: '/lobbying/bills', label: 'Bills' },
+      { href: '/solicitations',  label: 'Solicitations' },
+    ],
+    extra: ['/lobbying/bill/'],
+  },
+  {
     label: 'Explore',
     items: [
-      { href: '/donors',         label: 'Donors' },
       { href: '/explorer',       label: 'Transactions' },
       { href: '/lobbyists',      label: 'Lobbyists' },
       { href: '/principals',     label: 'Principals' },
       { href: '/lobbying-firms', label: 'Lobbying Firms' },
-      { href: '/legislature',    label: 'Legislature' },
       { href: '/legislators',    label: 'Legislators' },
     ],
     extra: ['/donor/', '/lobbyist/', '/principal/', '/lobbying-firm/', '/legislator/'],
   },
   {
+    label: 'Tools',
+    items: [
+      { href: '/tools',          label: '→ Tools Hub' },
+      { href: '/who-funds',      label: 'Who Funds Your District', badge: 'New' },
+      { href: '/races/2026',     label: '2026 Money Race',         badge: 'New' },
+      { href: '/compare',        label: 'Candidate Compare' },
+      { href: '/decode',         label: 'Committee Decoder' },
+      { href: '/timeline',       label: 'Influence Timeline' },
+      { href: '/transparency',   label: 'Dark Money Score' },
+      { href: '/map',            label: 'Geographic Map' },
+    ],
+    extra: ['/who-funds', '/races/'],
+  },
+  {
     label: 'Analysis',
     items: [
+      { href: '/follow',            label: 'Follow the Money' },
       { href: '/influence',         label: 'Influence Index' },
       { href: '/industries',        label: 'Industries' },
       { href: '/elections',         label: 'Elections' },
@@ -42,34 +65,10 @@ const GROUPS = [
     extra: ['/industry/', '/cycle/'],
   },
   {
-    label: 'Tools',
+    label: 'About',
     items: [
-      { href: '/tools',          label: '→ Tools Hub' },
-      { href: '/who-funds',      label: 'Who Funds Your District', badge: 'New' },
-      { href: '/races/2026',     label: '2026 Money Race',         badge: 'New' },
-      { href: '/follow',         label: 'Follow the Money' },
-      { href: '/compare',        label: 'Candidate Compare' },
-      { href: '/decode',         label: 'Committee Decoder' },
-      { href: '/timeline',       label: 'Influence Timeline' },
-      { href: '/transparency',   label: 'Dark Money Score' },
-      { href: '/map',            label: 'Geographic Map' },
-    ],
-    extra: ['/who-funds', '/races/'],
-  },
-  {
-    label: 'Lobbying',
-    items: [
-      { href: '/lobbying',       label: 'Lobbying Hub' },
-      { href: '/lobbying/bills', label: 'Bills' },
-      { href: '/solicitations',  label: 'Solicitations' },
-    ],
-    extra: ['/lobbying/bill/'],
-  },
-  {
-    label: 'Sources',
-    items: [
-      { href: '/methodology', label: 'Methodology' },
       { href: '/about',       label: 'About' },
+      { href: '/methodology', label: 'Methodology' },
     ],
   },
 ];

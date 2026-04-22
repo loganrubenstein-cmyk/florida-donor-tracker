@@ -34,7 +34,7 @@ export default async function FollowPage({ searchParams }) {
       <div style={{ fontSize: '0.66rem', color: 'var(--text-dim)', marginBottom: '2rem' }}>
         <Link href="/" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Home</Link>
         {' / '}
-        <Link href="/tools" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>Tools</Link>
+        <span style={{ color: 'var(--text-dim)' }}>Analysis</span>
         {' / '}
         <span>Follow the Money</span>
       </div>

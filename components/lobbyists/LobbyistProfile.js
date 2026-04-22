@@ -358,7 +358,7 @@ export default function LobbyistProfile({ data }) {
       description: 'Year-by-year compensation breakdown by firm',
       content: compHistoryContent,
     }] : []),
-    { id: 'sources', label: 'Sources', description: 'Data sources and research links', content: sourcesContent },
+    { id: 'sources', label: 'In The News', description: 'Recent news coverage, research links, and data sources', content: sourcesContent },
   ];
 
   return (

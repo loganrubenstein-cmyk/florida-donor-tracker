@@ -11,7 +11,7 @@ import NewsBlock from '@/components/shared/NewsBlock';
 import SourceLink from '@/components/shared/SourceLink';
 import AnimatedStat from '@/components/shared/AnimatedStat';
 import { slugify } from '@/lib/slugify';
-import { fmtMoneyCompact, fmtMoney, fmtCount } from '@/lib/fmt';
+import { fmtMoneyCompact, fmtMoney, fmtCount, fmtAvgContribution, avgContribution } from '@/lib/fmt';
 import { getPoliticianSlugByAcctNum } from '@/lib/loadCandidate';
 import InsightStrip from '@/components/shared/InsightStrip';
 
@@ -187,7 +187,10 @@ export default function DonorProfile({ data, annotations = {} }) {
         display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
         gap: '1px', background: 'var(--border)', marginBottom: '2rem',
       }}>
-        <StatBox label="Combined Total" rawValue={data.total_combined} value={fmtMoneyCompact(data.total_combined)} hero />
+        <StatBox label="Combined Total" rawValue={data.total_combined} value={fmtMoneyCompact(data.total_combined)} hero
+          sub={avgContribution(data.total_combined, data.num_contributions) != null
+            ? `${(data.num_contributions || 0).toLocaleString()} gifts · avg ${fmtAvgContribution(data.total_combined, data.num_contributions)}`
+            : null} />
         <StatBox label="PAC / Soft Money" rawValue={data.total_soft} value={fmtMoneyCompact(data.total_soft)}
           sub={`${data.num_committees || 0} committees`} color="var(--teal)" />
         <StatBox label="Direct / Hard Money" rawValue={data.total_hard > 0 ? data.total_hard : null} value={data.total_hard > 0 ? fmtMoneyCompact(data.total_hard) : '—'}
@@ -544,7 +547,7 @@ export default function DonorProfile({ data, annotations = {} }) {
     { id: 'transactions', label: 'Transactions', description: 'Individual contribution records from the FL Division of Elections', content: transactionsContent },
     { id: 'lobbying',     label: 'Lobbying',     description: 'FL registered lobbying principal linked to this donor by name', content: lobbyingContent },
     ...(contracts.length > 0 ? [{ id: 'contracts', label: 'Contracts', description: 'FL state contracts awarded to this entity', content: contractsContent }] : []),
-    { id: 'sources',      label: 'Sources',      description: 'Data sources, confidence levels, and research links',           content: sourcesContent },
+    { id: 'sources',      label: 'In The News',  description: 'Recent news coverage, research links, and data sources',        content: sourcesContent },
   ];
 
   return (
