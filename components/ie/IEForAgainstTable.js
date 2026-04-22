@@ -19,7 +19,7 @@ export default function IEForAgainstTable({ rows }) {
           <div key={r.slug || r.name} style={{ padding: '0.6rem 0.85rem', border: '1px solid rgba(100,140,220,0.1)', borderRadius: '3px', background: 'var(--bg)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '0.4rem' }}>
               {r.slug
-                ? <Link href={`/politician/${r.slug}`} style={{ color: 'var(--teal)', textDecoration: 'none', fontSize: '0.8rem', fontWeight: 600 }}>{r.name}</Link>
+                ? <Link href={`/politician/${r.slug}`} style={{ color: 'var(--orange)', textDecoration: 'none', fontSize: '0.8rem', fontWeight: 600 }}>{r.name}</Link>
                 : <span style={{ color: 'var(--text)', fontSize: '0.8rem', fontWeight: 600 }}>{r.name}</span>
               }
               <span style={{ fontSize: '0.72rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>

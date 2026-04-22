@@ -125,7 +125,7 @@ function CandidateTable({ candidates }) {
               <tr key={c.acct_num} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
                 <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2rem' }}>{i + 1}</td>
                 <td style={{ padding: '0.4rem 0.6rem', maxWidth: '240px', wordBreak: 'break-word' }}>
-                  <a href={polSlug ? `/politician/${polSlug}` : `/candidate/${c.acct_num}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+                  <a href={polSlug ? `/politician/${polSlug}` : `/candidate/${c.acct_num}`} style={{ color: 'var(--orange)', textDecoration: 'none' }}>
                     {c.candidate_name || `#${c.acct_num}`}
                   </a>
                 </td>

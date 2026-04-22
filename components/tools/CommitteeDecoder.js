@@ -442,7 +442,7 @@ function DecodeResult({ data }) {
               padding: '0.4rem 0', borderBottom: i < candidates.length - 1 ? '1px solid rgba(100,140,220,0.06)' : 'none',
               fontSize: '0.72rem',
             }}>
-              <a href={`/candidate/${cand.acct_num}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+              <a href={`/candidate/${cand.acct_num}`} style={{ color: 'var(--orange)', textDecoration: 'none' }}>
                 {cand.name || `Account ${cand.acct_num}`}
               </a>
               <div style={{ display: 'flex', gap: '0.75rem', fontSize: '0.6rem', color: 'var(--text-dim)' }}>

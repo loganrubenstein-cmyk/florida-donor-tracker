@@ -228,7 +228,7 @@ export default function FollowExplorer({ preloadSlug }) {
               {fmtMoneyCompact(donor.total_combined)} total
             </div>
             {donor.industry && <Link href={`/industry/${slugify(donor.industry)}`} style={{ fontSize: '0.68rem', color: 'var(--gold)', textDecoration: 'none', display: 'block' }}>{donor.industry}</Link>}
-            <Link href={`/donor/${donor.slug}`} style={{ fontSize: '0.68rem', color: 'var(--teal)', textDecoration: 'none', display: 'block', marginTop: '0.5rem' }}>
+            <Link href={`/donor/${donor.slug}`} style={{ fontSize: '0.68rem', color: 'var(--orange)', textDecoration: 'none', display: 'block', marginTop: '0.5rem' }}>
               full profile →
             </Link>
           </div>

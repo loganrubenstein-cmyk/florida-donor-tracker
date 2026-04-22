@@ -29,7 +29,7 @@ function fmtDateLocal(s) {
   return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
 }
 
-const TYPE_COLOR = { committee: 'var(--teal)', corporate: '#94a3b8', individual: 'var(--blue)' };
+const TYPE_COLOR = { committee: 'var(--teal)', corporate: 'var(--text-dim)', individual: 'var(--blue)' };
 
 function findCommitteeAnnotation(annotations, acct_num, committee_name) {
   if (annotations[`c_${acct_num}`]) return annotations[`c_${acct_num}`];
@@ -254,7 +254,7 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
                     {i + 1}
                   </td>
                   <td style={{ padding: '0.45rem 0.6rem', wordBreak: 'break-word' }}>
-                    <a href={`/donor/${donor.slug || slugify(donor.name)}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+                    <a href={`/donor/${donor.slug || slugify(donor.name)}`} style={{ color: 'var(--orange)', textDecoration: 'none' }}>
                       {donor.name}
                     </a>
                   </td>

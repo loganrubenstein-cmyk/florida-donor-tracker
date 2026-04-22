@@ -164,7 +164,7 @@ export default function BipartisanPage() {
         {data && (
           <div>
             <div style={{ marginBottom: '1.5rem' }}>
-              <Link href={`/donor/${data.donor.slug}`} style={{ color: 'var(--teal)', textDecoration: 'none', fontSize: '1rem', fontWeight: 600 }}>{data.donor.name}</Link>
+              <Link href={`/donor/${data.donor.slug}`} style={{ color: 'var(--orange)', textDecoration: 'none', fontSize: '1rem', fontWeight: 600 }}>{data.donor.name}</Link>
               <span style={{ color: 'var(--text-dim)', fontSize: '0.78rem', marginLeft: '0.75rem' }}>
                 {fmtMoneyCompact(grand)} total giving identified
               </span>

@@ -371,7 +371,7 @@ export default function ElectionsView({ cycles, districtMap = {} }) {
             Finance data for this cycle is available in the Candidates and Cycles directories, where you can filter by year, office, and party.
           </div>
           <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
-            <a href={`/candidates?year=${resolvedYear}`} style={{ color: 'var(--teal)', textDecoration: 'none', border: '1px solid rgba(77,216,240,0.3)', borderRadius: '3px', padding: '0.3rem 0.7rem', fontSize: '0.72rem' }}>
+            <a href={`/candidates?year=${resolvedYear}`} style={{ color: 'var(--orange)', textDecoration: 'none', border: '1px solid rgba(255,176,96,0.3)', borderRadius: '3px', padding: '0.3rem 0.7rem', fontSize: '0.72rem' }}>
               → Candidates ({resolvedYear})
             </a>
             <a href={`/cycle/${resolvedYear}`} style={{ color: 'var(--orange)', textDecoration: 'none', border: '1px solid rgba(255,176,96,0.3)', borderRadius: '3px', padding: '0.3rem 0.7rem', fontSize: '0.72rem' }}>

@@ -169,7 +169,7 @@ export default async function Home() {
 
         <div className="rg-3" style={{ gap: '1rem', marginBottom: '1.75rem' }}>
           {races.map(race => (
-            <a key={race.office} href={race.href} style={{ textDecoration: 'none' }}>
+            <Link key={race.office} href={race.href} style={{ textDecoration: 'none' }}>
               <div style={{ border: `1px solid ${race.color}22`, background: `${race.color}05`, borderRadius: '4px', padding: '1.25rem 1.35rem' }}>
                 <div style={{ fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: race.color, marginBottom: '0.5rem' }}>
                   {race.office}
@@ -185,7 +185,7 @@ export default async function Home() {
                   Leading: <span style={{ color: 'var(--text)' }}>{race.lead}</span> · {race.leadAmt}
                 </div>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
 
@@ -197,9 +197,9 @@ export default async function Home() {
             { href: '/follow',     label: '→ follow the money trail',    color: 'var(--blue)'     },
             { href: '/donors',     label: '→ browse all donors',         color: 'var(--text-dim)' },
           ].map(l => (
-            <a key={l.label} href={l.href} style={{ fontSize: '0.7rem', color: l.color, textDecoration: 'none', border: `1px solid ${l.color}33`, borderRadius: '3px', padding: '0.35rem 0.75rem' }}>
+            <Link key={l.label} href={l.href} style={{ fontSize: '0.7rem', color: l.color, textDecoration: 'none', border: `1px solid ${l.color}33`, borderRadius: '3px', padding: '0.35rem 0.75rem' }}>
               {l.label}
-            </a>
+            </Link>
           ))}
         </div>
       </section>

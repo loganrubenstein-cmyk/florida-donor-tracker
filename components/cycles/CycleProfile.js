@@ -249,7 +249,7 @@ export default function CycleProfile({ year, candidates, topDonors = [], electio
                   {i + 1}
                 </td>
                 <td style={{ padding: '0.4rem 0.6rem', wordBreak: 'break-word', maxWidth: '220px' }}>
-                  <a href={`/candidate/${c.acct_num}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+                  <a href={`/candidate/${c.acct_num}`} style={{ color: 'var(--orange)', textDecoration: 'none' }}>
                     {c.candidate_name}
                   </a>
                 </td>

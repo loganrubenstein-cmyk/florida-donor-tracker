@@ -38,7 +38,7 @@ const FieldGroup = ({ title, children }) => (
 
 const StatusBadge = ({ status }) => {
   const styles = {
-    complete: { background: 'rgba(128,255,160,0.12)', color: '#80ffa0', border: '1px solid rgba(128,255,160,0.25)' },
+    complete: { background: 'rgba(128,255,160,0.12)', color: 'var(--green)', border: '1px solid rgba(128,255,160,0.25)' },
     partial:  { background: 'rgba(255,176,96,0.1)',   color: 'var(--orange)', border: '1px solid rgba(255,176,96,0.2)' },
     missing:  { background: 'rgba(90,106,136,0.15)',  color: 'var(--text-dim)', border: '1px solid var(--border)' },
   };

@@ -21,7 +21,7 @@ import { PARTY_COLOR } from '@/lib/partyUtils';
 const QuarterlyChart      = dynamic(() => import('./QuarterlyChart'), { ssr: false });
 const IndustryBreakdown   = dynamic(() => import('./IndustryBreakdown'), { ssr: false });
 const TransactionExplorer = dynamic(() => import('@/components/explorer/TransactionExplorer'), { ssr: false });
-const TYPE_COLOR  = { corporate: '#94a3b8', individual: 'var(--blue)' };
+const TYPE_COLOR  = { corporate: 'var(--text-dim)', individual: 'var(--blue)' };
 
 const LINK_TYPE_LABEL = {
   SOLICITATION_CONTROL:              'Solicitation',
@@ -238,7 +238,7 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
             valueColor: hasLinkedPcsButNoSoft ? 'var(--text-dim)' : 'var(--orange)',
             sub: hasLinkedPcsButNoSoft
               ? (laterCycle
-                  ? <>Tracked on <a href={`/candidate/${laterCycle.acct_num}`} style={{ color: 'var(--teal)' }}>{laterCycle.year} cycle →</a></>
+                  ? <>Tracked on <a href={`/candidate/${laterCycle.acct_num}`} style={{ color: 'var(--orange)' }}>{laterCycle.year} cycle →</a></>
                   : 'Tracked on most recent cycle')
               : pcsSpecific.length > 0
                 ? `${pcsSpecific.length} candidate PAC${pcsSpecific.length !== 1 ? 's' : ''}`
@@ -346,7 +346,7 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
                       {isStateMatch ? (
                         <span style={{ color: 'var(--text-dim)' }}>STATE OF FLORIDA</span>
                       ) : (
-                        <a href={`/donor/${donor.slug || slugify(donor.name)}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+                        <a href={`/donor/${donor.slug || slugify(donor.name)}`} style={{ color: 'var(--orange)', textDecoration: 'none' }}>
                           {donor.name}
                         </a>
                       )}

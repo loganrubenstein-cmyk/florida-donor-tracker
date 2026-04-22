@@ -240,7 +240,7 @@ export default function Races2026Page() {
           {display.length > 100 && (
             <div style={{ padding: '1rem', textAlign: 'center', fontSize: '0.72rem', color: 'var(--text-dim)' }}>
               Showing top 100 of {display.length} candidates. Use{' '}
-              <Link href="/candidates" style={{ color: 'var(--teal)', textDecoration: 'none' }}>Candidates directory</Link>
+              <Link href="/candidates" style={{ color: 'var(--orange)', textDecoration: 'none' }}>Candidates directory</Link>
               {' '}for the full list.
             </div>
           )}

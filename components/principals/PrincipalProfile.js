@@ -332,7 +332,7 @@ export default function PrincipalProfile({ data, compData = null }) {
               <tr key={m.contributor_name} style={{ borderBottom: '1px solid rgba(100,140,220,0.06)' }}>
                 <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-dim)', textAlign: 'center', width: '2rem' }}>{i + 1}</td>
                 <td style={{ padding: '0.4rem 0.6rem', maxWidth: '280px', wordBreak: 'break-word' }}>
-                  <a href={`/donor/${m.donor_slug || slugify(m.contributor_name)}`} style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+                  <a href={`/donor/${m.donor_slug || slugify(m.contributor_name)}`} style={{ color: 'var(--orange)', textDecoration: 'none' }}>
                     {m.contributor_name}
                   </a>
                   <a href={`/follow?donor=${m.donor_slug || slugify(m.contributor_name)}`} style={{ marginLeft: '0.4rem', fontSize: '0.58rem', color: 'var(--teal)', textDecoration: 'none', opacity: 0.6 }}>follow</a>
