@@ -12,10 +12,23 @@ Usage:
 
 import json
 import os
+import re
 from io import StringIO
 from pathlib import Path
 
 import psycopg2
+
+_BILL_NUM_RE = re.compile(r'^([HS])0*(\d+)$')
+
+def _bill_number_to_slug(bn):
+    if not bn:
+        return None
+    m = _BILL_NUM_RE.match(str(bn).strip())
+    if not m:
+        return None
+    prefix = 'hb' if m.group(1).upper() == 'H' else 'sb'
+    return f"{prefix}-{m.group(2)}"
+
 
 ROOT = Path(__file__).parent.parent
 dotenv = ROOT / ".env.local"
@@ -43,6 +56,7 @@ def main():
             people_id    INTEGER NOT NULL,
             bill_id      INTEGER NOT NULL,
             bill_number  TEXT,
+            bill_slug    TEXT,
             bill_title   TEXT,
             vote_text    TEXT,
             vote_date    DATE,
@@ -54,6 +68,7 @@ def main():
     cur.execute("CREATE INDEX lv_people_idx ON legislator_votes (people_id)")
     cur.execute("CREATE INDEX lv_bill_idx ON legislator_votes (bill_id)")
     cur.execute("CREATE INDEX lv_date_idx ON legislator_votes (vote_date DESC NULLS LAST)")
+    cur.execute("CREATE INDEX lv_bill_slug_idx ON legislator_votes (bill_slug)")
 
     # Get valid people_ids from legislators table (to avoid FK issues)
     cur.execute("SELECT people_id FROM legislators")
@@ -100,6 +115,7 @@ def main():
 
             bill_id = v.get("bill_id") or 0
             bill_number = (v.get("bill_number") or "").strip() or None
+            bill_slug = _bill_number_to_slug(bill_number)
             bill_title = (v.get("bill_title") or "").strip() or None
             vote_text = v.get("vote_text", "")
             vote_date = v.get("date") or None
@@ -110,6 +126,7 @@ def main():
                 people_id,
                 bill_id,
                 bill_number,
+                bill_slug,
                 bill_title,
                 vote_text,
                 vote_date,
@@ -139,17 +156,18 @@ def main():
             str(r[0]),                      # people_id
             str(r[1]),                      # bill_id
             r[2] or "\\N",                  # bill_number
-            (r[3] or "")[:200].replace("\t", " ").replace("\n", " ") or "\\N",  # bill_title
-            r[4] or "\\N",                  # vote_text
-            str(r[5]) if r[5] else "\\N",   # vote_date
-            str(r[6]),                      # roll_call_id
-            str(r[7]) if r[7] else "\\N",   # session_id
+            r[3] or "\\N",                  # bill_slug
+            (r[4] or "")[:200].replace("\t", " ").replace("\n", " ") or "\\N",  # bill_title
+            r[5] or "\\N",                  # vote_text
+            str(r[6]) if r[6] else "\\N",   # vote_date
+            str(r[7]),                      # roll_call_id
+            str(r[8]) if r[8] else "\\N",   # session_id
         ]
         buf.write("\t".join(fields) + "\n")
 
     buf.seek(0)
     cur.copy_from(buf, "legislator_votes", columns=[
-        "people_id", "bill_id", "bill_number", "bill_title",
+        "people_id", "bill_id", "bill_number", "bill_slug", "bill_title",
         "vote_text", "vote_date", "roll_call_id", "session_id",
     ])
 

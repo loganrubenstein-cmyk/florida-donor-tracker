@@ -137,11 +137,17 @@ Migration `038_connections_enriched_view.sql` captures the live definition via `
 
 ---
 
-### 7. Bill number normalization across tables
+### 7. Bill number normalization across tables ✅ DONE 2026-04-22
 
 **Symptom**: `legislator_votes.bill_number` is strings like `HB 1019`; `bill_sponsorships` and lobby disclosures use different identifiers. Helper `billNumberToSlug()` in `lib/fmt.js` exists but isn't used consistently.
 
 **Fix**: normalize at ingest time — every table that refers to a bill should include `bill_slug` (canonical `hb-1019` form) + `session_year` (biennium start). Update any script that writes bill_number to also write bill_slug.
+
+**What was done 2026-04-22:**
+- Migration `039_bill_slug_normalization.sql` adds `bill_slug TEXT` to `legislator_votes` and `bill_sponsorships` (ADD COLUMN IF NOT EXISTS), plus a SQL helper `fl_bill_number_to_slug(text)` mirroring the JS `billNumberToSlug`. Backfilled 100% of rows (30,880 votes + 3,744 sponsorships). Created `lv_bill_slug_idx` and `bs_bill_slug_idx`.
+- Updated `scripts/73_load_legislator_votes.py` and `scripts/74_fetch_bill_sponsors.py` to include `bill_slug` in CREATE TABLE, compute it via `_bill_number_to_slug()` at row build time, and write it via COPY. Future re-ingests preserve the column.
+- `session_year` intentionally NOT added — can always be derived from `bill_info (bill_slug, year)` via `bill_info_bill_slug_year_key` unique index. Revisit if a direct column is needed.
+- `lib/loadBill.js` still uses `slugToBillNumber()` at query time because it joins on `bill_number` (which was already populated). Now that `bill_slug` is populated, downstream code can join directly on it.
 
 ---
 
