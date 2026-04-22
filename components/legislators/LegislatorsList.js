@@ -284,7 +284,7 @@ export default function LegislatorsList() {
         <span style={{ fontSize: '0.68rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginRight: '0.25rem' }}>Also see:</span>
         {[
           { href: '/legislature/committees', label: 'Committees',       color: 'var(--teal)',   border: 'rgba(77,216,240,0.25)'  },
-          { href: '/candidates',             label: 'Campaign Finance', color: 'var(--blue)',   border: 'rgba(160,192,255,0.25)' },
+          { href: '/candidates',             label: 'Campaign Finance', color: 'var(--orange)', border: 'rgba(255,176,96,0.25)'  },
           { href: '/solicitations',          label: 'Solicitations',    color: 'var(--teal)',   border: 'rgba(77,216,240,0.25)'  },
           { href: '/lobbying',               label: 'Lobbying Hub',     color: 'var(--purple)', border: 'rgba(192,132,252,0.25)' },
           { href: '/follow',                 label: 'Follow the Money', color: 'var(--orange)', border: 'rgba(255,176,96,0.25)'  },

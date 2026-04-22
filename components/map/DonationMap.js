@@ -39,9 +39,9 @@ function CityChart({ items }) {
             <XAxis type="number" tickFormatter={v => fmtMoneyCompact(v)} tick={{ fontSize: 10, fill: '#5a6a88', fontFamily: 'var(--font-mono)' }} axisLine={false} tickLine={false} />
             <YAxis type="category" dataKey="city" width={120} interval={0} tick={{ fontSize: 10, fill: '#5a6a88', fontFamily: 'var(--font-mono)' }} axisLine={false} tickLine={false} />
             <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(100,140,220,0.06)' }} />
-            <Bar dataKey="total" radius={[0, 2, 2, 0]}>
+            <Bar dataKey="total" radius={[0, 2, 2, 0]} isAnimationActive={false}>
               {top.map((entry, i) => (
-                <Cell key={i} fill={i === 0 ? '#ffb060' : i < 5 ? '#4dd8f0' : 'rgba(100,140,220,0.45)'} />
+                <Cell key={i} fill={i === 0 ? '#ffb060' : i < 5 ? '#4dd8f0' : '#3a4a7a'} />
               ))}
             </Bar>
           </BarChart>
@@ -63,9 +63,9 @@ function StateChart({ items }) {
             <XAxis type="number" tickFormatter={v => fmtMoneyCompact(v)} tick={{ fontSize: 10, fill: '#5a6a88', fontFamily: 'var(--font-mono)' }} axisLine={false} tickLine={false} />
             <YAxis type="category" dataKey="state" width={36} interval={0} tick={{ fontSize: 10, fill: '#5a6a88', fontFamily: 'var(--font-mono)' }} axisLine={false} tickLine={false} />
             <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(100,140,220,0.06)' }} />
-            <Bar dataKey="total" radius={[0, 2, 2, 0]}>
+            <Bar dataKey="total" radius={[0, 2, 2, 0]} isAnimationActive={false}>
               {items.map((entry, i) => (
-                <Cell key={i} fill={entry.state === 'FL' ? '#ffb060' : entry.state === 'DC' ? '#ffd060' : 'rgba(100,140,220,0.45)'} />
+                <Cell key={i} fill={entry.state === 'FL' ? '#ffb060' : entry.state === 'DC' ? '#ffd060' : '#3a4a7a'} />
               ))}
             </Bar>
           </BarChart>

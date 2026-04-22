@@ -104,7 +104,7 @@ export default function AllIndustriesTrendChart({ trendData, industries }) {
             />
             <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,255,255,0.04)' }} />
             {sorted.map(ind => (
-              <Bar key={ind} dataKey={ind} stackId="a" fill={INDUSTRY_COLORS[ind] || '#444466'} radius={ind === sorted[0] ? [2, 2, 0, 0] : [0, 0, 0, 0]} />
+              <Bar key={ind} dataKey={ind} stackId="a" fill={INDUSTRY_COLORS[ind] || '#444466'} radius={ind === sorted[0] ? [2, 2, 0, 0] : [0, 0, 0, 0]} isAnimationActive={false} />
             ))}
           </BarChart>
         </ResponsiveContainer>

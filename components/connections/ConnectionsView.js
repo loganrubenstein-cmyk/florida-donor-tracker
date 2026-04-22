@@ -162,7 +162,26 @@ export default function ConnectionsView() {
   const [filter,       setFilter]       = useState(searchParams?.get('filter') || 'all');
   const [sort,         setSort]         = useState(searchParams?.get('sort') || 'connection_score');
   const [page,         setPage]         = useState(1);
+  const [summary,      setSummary]      = useState(null);
   const abortRef = useRef(null);
+
+  useEffect(() => {
+    Promise.all([
+      fetch('/api/connections?type=all&page=1').then(r => r.json()),
+      fetch('/api/connections?type=shared_treasurer&page=1').then(r => r.json()),
+      fetch('/api/connections?type=shared_chair&page=1').then(r => r.json()),
+      fetch('/api/connections?type=shared_address&page=1').then(r => r.json()),
+      fetch('/api/connections?type=donor_overlap&page=1').then(r => r.json()),
+    ]).then(([all, treas, chair, addr, overlap]) => {
+      setSummary({
+        total:            all.total     || 0,
+        shared_treasurer: treas.total   || 0,
+        shared_chair:     chair.total   || 0,
+        shared_address:   addr.total    || 0,
+        donor_overlap:    overlap.total || 0,
+      });
+    }).catch(() => {});
+  }, []);
 
   useEffect(() => {
     const t = setTimeout(() => setDebouncedQ(search), 300);
@@ -284,6 +303,43 @@ export default function ConnectionsView() {
           All signals are exact matches from FL Division of Elections filings.
         </p>
       </div>
+
+      {/* Summary strip */}
+      {summary && !committeeParam && (
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(5, 1fr)',
+          gap: 0,
+          marginBottom: '1.5rem',
+          border: '1px solid var(--border)',
+          borderRadius: '3px',
+          overflow: 'hidden',
+          background: 'var(--surface)',
+        }}>
+          {[
+            { label: 'Total Connections', value: summary.total.toLocaleString(),            color: '#c8d8f0', hex: '#c8d8f0', type: 'all'              },
+            { label: 'Shared Treasurer',  value: summary.shared_treasurer.toLocaleString(), color: '#ffb060', hex: '#ffb060', type: 'shared_treasurer' },
+            { label: 'Shared Chair',      value: summary.shared_chair.toLocaleString(),     color: '#4dd8f0', hex: '#4dd8f0', type: 'shared_chair'     },
+            { label: 'Shared Address',    value: summary.shared_address.toLocaleString(),   color: '#a0c0ff', hex: '#a0c0ff', type: 'shared_address'   },
+            { label: 'Donor Overlap',     value: summary.donor_overlap.toLocaleString(),    color: '#5a6a88', hex: '#5a6a88', type: 'donor_overlap'    },
+          ].map(({ label, value, color, hex, type }, i, arr) => (
+            <button
+              key={type}
+              onClick={() => setFilter(type)}
+              style={{
+                padding: '0.75rem 0.85rem',
+                background: filter === type ? `${hex}18` : 'transparent',
+                border: 'none',
+                borderRight: i < arr.length - 1 ? '1px solid var(--border)' : 'none',
+                cursor: 'pointer', textAlign: 'left',
+              }}
+            >
+              <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: '0.25rem' }}>{label}</div>
+              <div style={{ fontSize: '0.92rem', fontWeight: 400, color, fontFamily: 'var(--font-serif)', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>{value}</div>
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Committee filter banner */}
       {committeeParam && (

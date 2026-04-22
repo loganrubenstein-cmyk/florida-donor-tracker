@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import FloridaOutline from '@/components/shared/FloridaOutline'
 import MoneyClock from '@/components/home/MoneyClock'
-import DidYouKnow from '@/components/home/DidYouKnow'
 
 export default function HeroReveal({ updatedDate }) {
   const [phase, setPhase] = useState(0)
@@ -149,10 +148,6 @@ export default function HeroReveal({ updatedDate }) {
           {/* Money clock */}
           <div style={{ ...ease(6, 10), marginBottom: '1.5rem' }}>
             <MoneyClock />
-          </div>
-
-          <div style={{ ...ease(6, 10) }}>
-            <DidYouKnow />
           </div>
         </div>
 

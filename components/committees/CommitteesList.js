@@ -234,7 +234,7 @@ export default function CommitteesList() {
                   </a>
                   {(() => { const p = partyOf(c.committee_name, c.acct_num); return p ? (
                     <span style={{
-                      marginLeft: '0.4rem', fontSize: '0.54rem', padding: '0.05rem 0.25rem',
+                      marginLeft: '0.4rem', fontSize: '0.65rem', padding: '0.05rem 0.25rem',
                       border: `1px solid ${p === 'R' ? 'var(--republican)' : 'var(--democrat)'}`,
                       color: p === 'R' ? 'var(--republican)' : 'var(--democrat)',
                       borderRadius: '2px', fontWeight: 'bold', verticalAlign: 'middle',
@@ -286,7 +286,7 @@ export default function CommitteesList() {
       <div style={{ marginTop: '2.5rem', paddingTop: '1.25rem', borderTop: '1px solid var(--border)', display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
         <span style={{ fontSize: '0.68rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginRight: '0.25rem' }}>Also see:</span>
         {[
-          { href: '/candidates',  label: 'Candidates',              color: 'var(--blue)',     border: 'rgba(160,192,255,0.25)' },
+          { href: '/candidates',  label: 'Candidates',              color: 'var(--orange)',   border: 'rgba(255,176,96,0.25)'  },
           { href: '/donors',      label: 'Donors',                  color: 'var(--orange)',   border: 'rgba(255,176,96,0.25)'  },
           { href: '/explorer',    label: 'All Transactions',        color: 'var(--text-dim)', border: 'var(--border)'          },
           { href: '/connections', label: 'Committee Connections',   color: 'var(--teal)',     border: 'rgba(77,216,240,0.25)'  },

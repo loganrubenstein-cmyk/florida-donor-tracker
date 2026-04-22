@@ -297,7 +297,7 @@ export default function DonorsList() {
                       </div>
                     ) : d.industry && d.industry !== 'Not Employed' && d.industry !== 'Other' && (
                       <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', marginTop: '0.1rem' }}>
-                        <Link href={`/industry/${slugify(d.industry)}`} style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>{d.industry}</Link>
+                        <Link href={`/industry/${slugify(d.industry)}`} style={{ color: 'var(--blue)', textDecoration: 'none' }}>{d.industry}</Link>
                       </div>
                     )}
                   </td>
@@ -364,10 +364,10 @@ export default function DonorsList() {
       <div style={{ marginTop: '2.5rem', paddingTop: '1.25rem', borderTop: '1px solid var(--border)', display: 'flex', gap: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
         <span style={{ fontSize: '0.68rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginRight: '0.25rem' }}>Also see:</span>
         {[
-          { href: '/candidates',  label: 'Candidates',         color: 'var(--blue)',   border: 'rgba(160,192,255,0.25)' },
+          { href: '/candidates',  label: 'Candidates',         color: 'var(--orange)', border: 'rgba(255,176,96,0.25)'  },
           { href: '/committees',  label: 'Committees',         color: 'var(--teal)',   border: 'rgba(77,216,240,0.25)'  },
           { href: '/explorer',    label: 'All Transactions',   color: 'var(--text-dim)', border: 'var(--border)'        },
-          { href: '/industries',    label: 'Industries',        color: 'var(--orange)', border: 'rgba(255,176,96,0.25)'  },
+          { href: '/industries',    label: 'Industries',        color: 'var(--blue)',   border: 'rgba(160,192,255,0.25)' },
           { href: '/influence',    label: 'Influence Index',   color: 'var(--orange)', border: 'rgba(255,176,96,0.25)'  },
           { href: '/connections',   label: 'Connections',     color: 'var(--teal)',   border: 'rgba(77,216,240,0.25)'  },
           { href: '/flow',          label: 'Money Flow',      color: 'var(--teal)',   border: 'rgba(77,216,240,0.25)'  },

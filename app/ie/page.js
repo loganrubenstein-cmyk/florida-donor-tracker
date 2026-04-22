@@ -4,8 +4,6 @@ import SectionHeader from '@/components/shared/SectionHeader';
 import { getDb } from '@/lib/db';
 import { fmtMoneyCompact, fmtCount } from '../../lib/fmt';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
-import IECandidatesTable from '@/components/ie/IECandidatesTable';
-import IEForAgainstTable from '@/components/ie/IEForAgainstTable';
 
 const IEYearChart = importDynamic(() => import('@/components/ie/IEYearChart'), { ssr: false });
 
@@ -68,9 +66,8 @@ async function loadData() {
   };
 }
 
-export default async function IEPage({ searchParams }) {
+export default async function IEPage() {
   const { summary, committees, yearData } = await loadData();
-  const tab    = (await searchParams)?.tab || 'committees';
   const top25  = committees.slice(0, 25);
 
   const dateRange = summary.year_min && summary.year_max
@@ -120,119 +117,61 @@ export default async function IEPage({ searchParams }) {
         ))}
       </div>
 
-      {/* Tab bar */}
-      <div style={{ display: 'flex', gap: '0', marginBottom: '2rem', borderBottom: '1px solid var(--border)' }}>
-        {[
-          { id: 'committees', label: 'By Committee' },
-          { id: 'candidates', label: 'By Candidate' },
-          { id: 'foragainst', label: 'For vs. Against' },
-        ].map(t => (
-          <a key={t.id} href={`/ie?tab=${t.id}`} style={{
-            fontSize: '0.75rem', padding: '0.5rem 1rem',
-            color: tab === t.id ? 'var(--orange)' : 'var(--text-dim)',
-            borderBottom: tab === t.id ? '2px solid var(--orange)' : '2px solid transparent',
-            textDecoration: 'none', fontFamily: 'var(--font-mono)',
-            marginBottom: '-1px',
+      {/* Top committees + year chart */}
+      <div style={{ display: 'grid', gridTemplateColumns: '3fr 2fr', gap: '2rem', alignItems: 'start' }}>
+        <div>
+          <div style={{
+            fontSize: '0.7rem', letterSpacing: '0.12em', textTransform: 'uppercase',
+            color: 'var(--text-dim)', fontWeight: 600,
+            marginBottom: '1rem', paddingBottom: '0.4rem', borderBottom: '1px solid var(--border)',
           }}>
-            {t.label}
-          </a>
-        ))}
+            Top Committees by IE/EC Spending
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+            {top25.map((c, i) => (
+              <CommitteeRow key={c.committee_id || i} committee={c} rank={i + 1} maxAmount={top25[0]?.total_amount || 1} />
+            ))}
+            {committees.length > 25 && (
+              <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', padding: '0.5rem 0.75rem' }}>
+                +{(summary.num_committees - 25).toLocaleString()} more committees
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div>
+          <div style={{ padding: '1rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '3px', marginBottom: '1.5rem' }}>
+            <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text)', marginBottom: '0.75rem' }}>
+              Spending by Year
+            </div>
+            <IEYearChart data={yearData} />
+            <div style={{ fontSize: '0.62rem', color: 'var(--text-dim)', marginTop: '0.5rem', lineHeight: 1.5 }}>
+              Peak: {summary.peak_cycle} ({fmtMoneyCompact(summary.peak_amount)}).
+              Includes all calendar years, not just election cycles.
+            </div>
+          </div>
+
+          <div style={{ padding: '1rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '3px', fontSize: '0.78rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
+            <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text)', marginBottom: '0.5rem' }}>What is an IE?</div>
+            <p style={{ margin: '0 0 0.5rem' }}>
+              An <strong style={{ color: 'var(--text)' }}>independent expenditure</strong> is campaign spending by a committee to
+              expressly advocate for or against a candidate — without coordinating with the campaign.
+            </p>
+            <p style={{ margin: '0 0 0.5rem' }}>
+              An <strong style={{ color: 'var(--text)' }}>electioneering communication</strong> refers to a candidate by name
+              within 30 days of a primary or 60 days of a general election.
+            </p>
+            <p style={{ margin: '0 0 0.5rem' }}>
+              Both are disclosed to the FL Division of Elections but are separate from direct contributions.{' '}
+              <Link href="/methodology" style={{ color: 'var(--teal)' }}>More →</Link>
+            </p>
+            <p style={{ margin: 0 }}>
+              Note: FL filings don't consistently record which candidate a given expenditure targeted or whether it was
+              supportive vs. opposed — only the spending committee and amount are reliably available.
+            </p>
+          </div>
+        </div>
       </div>
-
-      {/* ── By Committee tab ────────────────────────────────── */}
-      {tab === 'committees' && (
-        <div style={{ display: 'grid', gridTemplateColumns: '3fr 2fr', gap: '2rem', alignItems: 'start' }}>
-          <div>
-            <div style={{
-              fontSize: '0.7rem', letterSpacing: '0.12em', textTransform: 'uppercase',
-              color: 'var(--text-dim)', fontWeight: 600,
-              marginBottom: '1rem', paddingBottom: '0.4rem', borderBottom: '1px solid var(--border)',
-            }}>
-              Top Committees by IE/EC Spending
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              {top25.map((c, i) => (
-                <CommitteeRow key={c.committee_id || i} committee={c} rank={i + 1} maxAmount={top25[0]?.total_amount || 1} />
-              ))}
-              {committees.length > 25 && (
-                <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', padding: '0.5rem 0.75rem' }}>
-                  +{(summary.num_committees - 25).toLocaleString()} more committees
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div>
-            {/* Spending by year chart */}
-            <div style={{ padding: '1rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '3px', marginBottom: '1.5rem' }}>
-              <div style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text)', marginBottom: '0.75rem' }}>
-                Spending by Year
-              </div>
-              <IEYearChart data={yearData} />
-              <div style={{ fontSize: '0.62rem', color: 'var(--text-dim)', marginTop: '0.5rem', lineHeight: 1.5 }}>
-                Peak: {summary.peak_cycle} ({fmtMoneyCompact(summary.peak_amount)}).
-                Includes all calendar years, not just election cycles.
-              </div>
-            </div>
-
-            <div style={{ padding: '1rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '3px', fontSize: '0.78rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
-              <div style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text)', marginBottom: '0.5rem' }}>What is an IE?</div>
-              <p style={{ margin: '0 0 0.5rem' }}>
-                An <strong style={{ color: 'var(--text)' }}>independent expenditure</strong> is campaign spending by a committee to
-                expressly advocate for or against a candidate — without coordinating with the campaign.
-              </p>
-              <p style={{ margin: '0 0 0.5rem' }}>
-                An <strong style={{ color: 'var(--text)' }}>electioneering communication</strong> refers to a candidate by name
-                within 30 days of a primary or 60 days of a general election.
-              </p>
-              <p style={{ margin: 0 }}>
-                Both are disclosed to the FL Division of Elections but are separate from direct contributions.{' '}
-                <Link href="/methodology" style={{ color: 'var(--teal)' }}>More →</Link>
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ── By Candidate tab ────────────────────────────────── */}
-      {tab === 'candidates' && (
-        <div style={{ marginBottom: '3rem' }}>
-          <div style={{
-            fontSize: '0.7rem', letterSpacing: '0.12em', textTransform: 'uppercase',
-            color: 'var(--text-dim)', fontWeight: 600,
-            marginBottom: '0.6rem', paddingBottom: '0.4rem', borderBottom: '1px solid var(--border)',
-          }}>
-            Candidates Targeted by IE / EC Spending
-          </div>
-          <div style={{ padding: '1.5rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '3px', fontSize: '0.78rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
-            <div style={{ color: 'var(--text)', marginBottom: '0.4rem', fontWeight: 600 }}>Candidate targeting data not available in raw filings</div>
-            Florida IE filings record the expenditure purpose as free text (e.g. "ADVERTISING/COMMUNICATION SERVICES") without
-            consistently naming a targeted candidate. Candidate-level IE attribution is not reliably derivable from this dataset.
-            <br /><br />
-            To find IE activity for a specific committee, visit the committee's profile and check the Florida Division of Elections source.
-            {' '}<a href="/committees" style={{ color: 'var(--teal)', textDecoration: 'none' }}>Browse committees →</a>
-          </div>
-        </div>
-      )}
-
-      {/* ── For vs. Against tab ─────────────────────────────── */}
-      {tab === 'foragainst' && (
-        <div style={{ marginBottom: '3rem' }}>
-          <div style={{
-            fontSize: '0.7rem', letterSpacing: '0.12em', textTransform: 'uppercase',
-            color: 'var(--text-dim)', fontWeight: 600,
-            marginBottom: '0.6rem', paddingBottom: '0.4rem', borderBottom: '1px solid var(--border)',
-          }}>
-            For vs. Against by Candidate
-          </div>
-          <div style={{ padding: '1.5rem', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: '4px', fontSize: '0.78rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
-            <div style={{ color: 'var(--text)', marginBottom: '0.4rem', fontWeight: 600 }}>Support/oppose direction not available</div>
-            Florida IE filings do not consistently record whether a given expenditure supported or opposed a specific candidate.
-            The IES/IEO type codes exist in aggregate but are not linked to individual candidates in the state filing data.
-            {' '}<a href="/ie?tab=candidates" style={{ color: 'var(--teal)', textDecoration: 'none' }}>View by committee →</a>
-          </div>
-        </div>
-      )}
 
       <div style={{ maxWidth: '900px', margin: '2rem auto 0' }}>
         <DataTrustBlock
