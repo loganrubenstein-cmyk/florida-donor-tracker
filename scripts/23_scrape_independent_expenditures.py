@@ -369,6 +369,48 @@ def scrape_election(session: requests.Session, election_id: str,
 
 # ── Processing ────────────────────────────────────────────────────────────────
 
+_OPPOSE_RE = re.compile(
+    r'\b(oppos|against|defeat|stop|no on|vote no|anti[- ]|fighting)\b', re.IGNORECASE
+)
+_SUPPORT_RE = re.compile(
+    r'\b(support|elect|re-?elect|vote for|for |in support|endors|help|pro[- ])\b', re.IGNORECASE
+)
+_CAND_RE = re.compile(
+    r'\b(?:for|elect|re-?elect|support(?:ing)?|oppos(?:ing)?|against|defeat(?:ing)?)\s+'
+    r'([A-Z][a-zA-Z\-\'\.]+(?:\s+[A-Z][a-zA-Z\-\'\.]+){1,3})',
+    re.IGNORECASE,
+)
+
+
+def _parse_stance(purpose: str, existing: str) -> str:
+    """Derive support/oppose from the purpose field if not already set."""
+    existing = str(existing).upper().strip()
+    if existing in ("S", "O"):
+        return existing
+    if existing.startswith("S") or "SUPPORT" in existing or existing == "FOR":
+        return "S"
+    if existing.startswith("O") or "OPPOSE" in existing or "AGAINST" in existing:
+        return "O"
+    p = str(purpose).upper()
+    if _OPPOSE_RE.search(p):
+        return "O"
+    if _SUPPORT_RE.search(p):
+        return "S"
+    return ""
+
+
+def _parse_candidate(name: str, purpose: str) -> str:
+    """Extract candidate name from purpose when no explicit field exists."""
+    if name and str(name).strip() and str(name).strip() != "nan":
+        return str(name).strip()
+    m = _CAND_RE.search(str(purpose))
+    if m:
+        candidate = m.group(1).strip().rstrip(".,;")
+        if 4 < len(candidate) < 50:
+            return candidate
+    return ""
+
+
 def process_df(df: pd.DataFrame, year: int) -> pd.DataFrame:
     """Normalize columns, types, and add derived fields."""
     df = map_columns(df)
@@ -378,21 +420,23 @@ def process_df(df: pd.DataFrame, year: int) -> pd.DataFrame:
         if col not in df.columns:
             df[col] = ""
 
-    df["amount"]       = df["amount"].apply(parse_amount)
-    df["expend_date"]  = df["expend_date"].apply(parse_date)
-    df["cycle"]        = pd.to_numeric(df["cycle"], errors="coerce").fillna(year).astype(int)
-    df["raw_year"]     = year
-    df["candidate_slug"] = df["candidate_name"].apply(slugify)
+    df["amount"]      = df["amount"].apply(parse_amount)
+    df["expend_date"] = df["expend_date"].apply(parse_date)
 
-    # Normalize support/oppose: S/O (FL uses various spellings)
-    def norm_stance(s):
-        s = str(s).upper().strip()
-        if s.startswith("S") or "SUPPORT" in s or "FOR" in s:
-            return "S"
-        if s.startswith("O") or "OPPOSE" in s or "AGAINST" in s:
-            return "O"
-        return s[:1] or ""
-    df["support_oppose"] = df["support_oppose"].apply(norm_stance)
+    # Derive year per-row from parsed date so multi-year committees are bucketed correctly
+    df["raw_year"] = pd.to_datetime(
+        df["expend_date"].apply(lambda d: d.isoformat() if d else None), errors="coerce"
+    ).dt.year.fillna(year).astype(int)
+    df["cycle"] = pd.to_numeric(df["cycle"], errors="coerce").fillna(df["raw_year"]).astype(int)
+
+    # Parse candidate name and stance from purpose when explicit fields are absent
+    df["candidate_name"] = df.apply(
+        lambda r: _parse_candidate(r["candidate_name"], r["purpose"]), axis=1
+    )
+    df["support_oppose"] = df.apply(
+        lambda r: _parse_stance(r["purpose"], r["support_oppose"]), axis=1
+    )
+    df["candidate_slug"] = df["candidate_name"].apply(slugify)
 
     return df[[
         "committee_id", "committee_name", "candidate_name", "candidate_slug",
@@ -488,12 +532,7 @@ def main(force=False, dry_run=False, election_filter=None) -> int:
             print(f"  {i}/{len(all_ecos):,} committees processed ...", flush=True)
         df_raw = scrape_committee_expenditures(session, acct, name, force=force)
         if df_raw is not None and not df_raw.empty:
-            try:
-                raw_date = df_raw["Date"].iloc[0] if "Date" in df_raw.columns else "2020"
-                year = int(str(raw_date).strip()[-4:])
-            except (ValueError, IndexError):
-                year = 2020
-            df_proc = process_df(df_raw, year)
+            df_proc = process_df(df_raw, 0)  # year=0 fallback; per-row date used in process_df
             if not df_proc.empty:
                 # Tag with committee info
                 df_proc["committee_id"]   = acct
