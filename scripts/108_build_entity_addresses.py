@@ -151,6 +151,21 @@ def main() -> int:
     conn.commit()
     print("  principal_addresses loaded")
 
+    # ── Refresh corroboration MV ────────────────────────────────────────────
+    # Migration 053 materialized the corroboration view; must refresh so
+    # consumers see the new addresses. Script 109 may still run after this and
+    # add more principal addresses, so 109 owns its own post-refresh too.
+    with conn.cursor() as cur:
+        cur.execute("SET statement_timeout = 0")
+        print("\nRefreshing donor_principal_address_corroboration_v …", flush=True)
+        try:
+            cur.execute("REFRESH MATERIALIZED VIEW CONCURRENTLY donor_principal_address_corroboration_v")
+        except psycopg2.errors.ObjectNotInPrerequisiteState:
+            # First refresh after creation cannot be CONCURRENTLY; fall back.
+            conn.rollback()
+            cur.execute("REFRESH MATERIALIZED VIEW donor_principal_address_corroboration_v")
+    conn.commit()
+
     # ── Summary ─────────────────────────────────────────────────────────────
     with conn.cursor() as cur:
         cur.execute("SELECT COUNT(*), COUNT(DISTINCT donor_slug) FROM donor_addresses")

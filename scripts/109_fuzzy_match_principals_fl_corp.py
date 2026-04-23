@@ -206,6 +206,15 @@ def main() -> int:
             )
         conn.commit()
 
+    # ── Refresh corroboration MV ────────────────────────────────────────────
+    # principal_addresses changed; the corroboration MV needs to re-run so
+    # /api/follow?step=principals sees the new links on the next request.
+    with conn.cursor() as cur:
+        cur.execute("SET statement_timeout = 0")
+        print("\nRefreshing donor_principal_address_corroboration_v …", flush=True)
+        cur.execute("REFRESH MATERIALIZED VIEW CONCURRENTLY donor_principal_address_corroboration_v")
+    conn.commit()
+
     # ── Summary ────────────────────────────────────────────────────────────
     with conn.cursor() as cur:
         cur.execute("SELECT COUNT(*), COUNT(DISTINCT principal_slug) FROM principal_addresses")
