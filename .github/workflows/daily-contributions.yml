@@ -47,8 +47,8 @@ jobs:
           script: 41_load_contributions.py
       - name: Open issue on failure
         if: failure()
-        uses: peter-evans/create-issue-from-file@v5
+        uses: ./.github/actions/report-failure
         with:
           title: "[pipeline-failure:medium] daily-contributions"
-          content-filepath: data/logs/03_scrape_contributions.py.log
           labels: pipeline-failure,severity:medium,data-update
+          primary-log: data/logs/03_scrape_contributions.py.log

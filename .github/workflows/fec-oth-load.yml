@@ -37,8 +37,8 @@ jobs:
 
       - name: Open issue on failure
         if: failure()
-        uses: peter-evans/create-issue-from-file@v5
+        uses: ./.github/actions/report-failure
         with:
           title: "[pipeline-failure:medium] fec-oth-load"
-          content-filepath: data/logs/106_load_fec_oth_fl.py.log
           labels: pipeline-failure,severity:medium,data-update
+          primary-log: data/logs/106_load_fec_oth_fl.py.log
