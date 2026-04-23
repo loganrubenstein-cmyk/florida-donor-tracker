@@ -44,7 +44,11 @@ LEG_DIR = ROOT / "public" / "data" / "legislators"
 def main():
     print("=== Script 73: Load Legislator Votes → Supabase ===\n")
 
-    conn = psycopg2.connect(DB_URL)
+    conn = psycopg2.connect(
+        DB_URL,
+        keepalives=1, keepalives_idle=30,
+        keepalives_interval=10, keepalives_count=5,
+    )
     conn.autocommit = True
     cur = conn.cursor()
 
