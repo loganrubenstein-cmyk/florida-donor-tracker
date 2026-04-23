@@ -402,7 +402,11 @@ def load_analysis(cur):
 # ── Main ──────────────────────────────────────────────────────────────────────
 def main():
     print("Connecting to Supabase...")
-    conn = psycopg2.connect(DB_URL)
+    conn = psycopg2.connect(
+        DB_URL,
+        keepalives=1, keepalives_idle=30,
+        keepalives_interval=10, keepalives_count=5,
+    )
     conn.autocommit = False
     cur = conn.cursor()
 

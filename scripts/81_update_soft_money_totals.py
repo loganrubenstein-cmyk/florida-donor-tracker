@@ -134,7 +134,11 @@ WHERE acct_num NOT IN (
 def main() -> int:
     print("=== Script 81: Recompute Soft Money Totals (Person-Level Dedup) ===\n")
 
-    conn = psycopg2.connect(DB_URL)
+    conn = psycopg2.connect(
+        DB_URL,
+        keepalives=1, keepalives_idle=30,
+        keepalives_interval=10, keepalives_count=5,
+    )
     conn.autocommit = True
 
     with conn.cursor() as cur:

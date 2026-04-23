@@ -67,7 +67,11 @@ def main() -> int:
         pub = len(edges_df[(edges_df["edge_type"] == et) & (edges_df["is_publishable"] == "true")])
         print(f"  {et:<42s}: {cnt:>6,} total, {pub:>6,} publishable")
 
-    conn = psycopg2.connect(DB_URL)
+    conn = psycopg2.connect(
+        DB_URL,
+        keepalives=1, keepalives_idle=30,
+        keepalives_interval=10, keepalives_count=5,
+    )
     conn.autocommit = True
 
     with conn.cursor() as cur:

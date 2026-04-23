@@ -104,7 +104,11 @@ def main() -> int:
                 v.get("pct", 0.0) or 0.0,
             ))
 
-    conn = psycopg2.connect(DB_URL)
+    conn = psycopg2.connect(
+        DB_URL,
+        keepalives=1, keepalives_idle=30,
+        keepalives_interval=10, keepalives_count=5,
+    )
     conn.autocommit = True
 
     with conn.cursor() as cur:

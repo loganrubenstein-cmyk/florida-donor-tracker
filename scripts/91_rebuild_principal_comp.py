@@ -28,7 +28,11 @@ if not DB_URL:
 def main() -> int:
     print("=== Script 91: Rebuild Principal Comp (Full History) ===\n")
 
-    conn = psycopg2.connect(DB_URL)
+    conn = psycopg2.connect(
+        DB_URL,
+        keepalives=1, keepalives_idle=30,
+        keepalives_interval=10, keepalives_count=5,
+    )
     conn.autocommit = True
     cur = conn.cursor()
     cur.execute("SET statement_timeout = 0")

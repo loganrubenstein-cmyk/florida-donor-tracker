@@ -60,9 +60,14 @@ def http_get(path, timeout=30):
 
 
 def main():
-    conn = psycopg2.connect(DB_URL)
+    conn = psycopg2.connect(
+        DB_URL,
+        keepalives=1, keepalives_idle=30,
+        keepalives_interval=10, keepalives_count=5,
+    )
     conn.autocommit = True
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    cur.execute("SET statement_timeout = '5min'")
 
     # ── 1. Homepage top-10 donor consistency ──────────────────────────────────
     print("\n=== Check 1: homepage top-10 donors ===")
