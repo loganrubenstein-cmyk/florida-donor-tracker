@@ -1,5 +1,7 @@
 # Handoff: Backend Fixes Session
 
+> **Status 2026-04-23**: All 9 backlog items ✅ done or ✅ partial. T1 and T2 reviewed through commit `d33c26c`. Two follow-up commits since then (`e4cdcac` eliminates remaining PGRST200 silent-fails on aggregating views; `d33c26c` adds the last missing FK) — NOT re-reviewed. Branch `ship-week` is 16 commits ahead of main, not yet pushed to origin. Migrations 037–046 all applied to prod DB and confirmed idempotent.
+
 Consolidates every backend issue discovered during the 17-task front-end shipping sweep + the follow-up visual QA. Use this as the entry prompt for a new session focused entirely on backend.
 
 ---
