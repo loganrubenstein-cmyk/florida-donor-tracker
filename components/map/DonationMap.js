@@ -182,8 +182,9 @@ function FloridaMap({ items }) {
             const { x, y } = project(c.coords);
             const r = radius(c.total);
             const isHover = hover?.city === c.city;
+            const href = `/donors?city=${encodeURIComponent(c.city)}&state=FL`;
             return (
-              <g key={c.city}
+              <a key={c.city} href={href}
                  onMouseEnter={() => setHover(c)}
                  onMouseLeave={() => setHover(null)}
                  style={{ cursor: 'pointer' }}>
@@ -202,7 +203,7 @@ function FloridaMap({ items }) {
                     {c.city}
                   </text>
                 )}
-              </g>
+              </a>
             );
           })}
         </svg>
@@ -236,8 +237,9 @@ function FloridaMap({ items }) {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '0.4rem' }}>
           {ordered.slice(0, 24).map((c, i) => {
             const isHover = hover?.city === c.city;
+            const href = `/donors?city=${encodeURIComponent(c.city)}&state=FL`;
             return (
-              <div key={c.city}
+              <a key={c.city} href={href}
                 onMouseEnter={() => setHover(c)}
                 onMouseLeave={() => setHover(null)}
                 style={{
@@ -248,6 +250,7 @@ function FloridaMap({ items }) {
                   display: 'flex', justifyContent: 'space-between', gap: '0.5rem',
                   cursor: 'pointer',
                   transition: 'all 0.12s',
+                  textDecoration: 'none',
                 }}>
                 <span style={{ fontSize: '0.7rem', color: isHover ? 'var(--text)' : 'var(--text-dim)', fontFamily: 'var(--font-mono)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {i + 1}. {c.city}
@@ -255,7 +258,7 @@ function FloridaMap({ items }) {
                 <span style={{ fontSize: '0.68rem', color: 'var(--orange)', fontFamily: 'var(--font-mono)', whiteSpace: 'nowrap' }}>
                   {fmtMoneyCompact(c.total)}
                 </span>
-              </div>
+              </a>
             );
           })}
         </div>

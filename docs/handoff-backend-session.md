@@ -122,7 +122,9 @@ Added the `/pulse` "New Candidates" tab:
 - **Medium**: add click-through to `/donors?city=X&state=FL`
 - **Large**: add county choropleth or ZIP-level aggregation
 
-**What was done 2026-04-22:** Audited `/api/map?view=cities` response against the existing 45-entry `FL_CITY_COORDS` lookup. 7 of the top-30 cities were missed (Clewiston $64M, Lake Buena Vista $45M, Juno Beach $42M, Venice $15M, Deerfield Beach $14M, Miami Shores $13M, Dade City $13M). Added those 7 plus 37 more common FL cities (Port St. Lucie variants, Cape Coral, Kissimmee, Palm Bay, Boynton Beach, etc.) for ~85-entry total coverage. Kept inline SVG (deferred `react-simple-maps` swap). Click-through to `/donors?city=X` not added — requires adding a `city` filter to `/api/donors` (bigger scope than a "small win"). Deferred with a comment above the table noting the audit cadence.
+**What was done 2026-04-22:** Audited `/api/map?view=cities` response against the existing 45-entry `FL_CITY_COORDS` lookup. 7 of the top-30 cities were missed (Clewiston $64M, Lake Buena Vista $45M, Juno Beach $42M, Venice $15M, Deerfield Beach $14M, Miami Shores $13M, Dade City $13M). Added those 7 plus 37 more common FL cities (Port St. Lucie variants, Cape Coral, Kissimmee, Palm Bay, Boynton Beach, etc.) for ~85-entry total coverage. Kept inline SVG (deferred `react-simple-maps` swap).
+
+**Update 2026-04-23:** Click-through added. `/api/donors` now accepts `?city=X&state=Y` and filters by prefix-matching `donors.top_location` (format "CITY, STATE ZIP"). Both the map SVG bubbles and the ranked legend links to `/donors?city=<CITY>&state=FL` via SVG `<a>` and regular `<a>` tags.
 
 ### 6. `connections_enriched` view doesn't exist; `/connections` page is broken ✅ DONE 2026-04-22
 
