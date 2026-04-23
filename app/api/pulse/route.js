@@ -3,6 +3,12 @@ import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
+function clampDays(raw, fallback) {
+  const n = parseInt(raw, 10);
+  if (!Number.isFinite(n) || n < 1) return fallback;
+  return Math.min(n, 365);
+}
+
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const type = searchParams.get('type') || 'filings'; // filings | committees | cycle
@@ -14,7 +20,7 @@ export async function GET(req) {
     if (type === 'filings') {
       // Recent large contributions — last 90 days by contribution_date.
       // Uses a wide window since data refreshes are manual (6–14 days lag).
-      const windowDays = parseInt(searchParams.get('days') || '90');
+      const windowDays = clampDays(searchParams.get('days'), 90);
       const cutoff = new Date(Date.now() - windowDays * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
       const { data, error } = await db
@@ -54,7 +60,7 @@ export async function GET(req) {
       // New candidate filings: candidates.date_start within last N days.
       // date_start is the FL DoE candidate-record filing timestamp (populated
       // for ~67% of rows; current-cycle coverage is effectively 100%).
-      const windowDays = parseInt(searchParams.get('days') || '60');
+      const windowDays = clampDays(searchParams.get('days'), 60);
       const cutoff = new Date(Date.now() - windowDays * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
       const { data, error } = await db

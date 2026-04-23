@@ -15,19 +15,15 @@ async function loadData() {
   const db = getDb();
 
   const [
-    commSummary,
-    candSummary,
+    commTotals,
+    candTotals,
     topCommittees,
     topCandidates,
   ] = await Promise.all([
-    // Global committee expenditure totals
-    db.from('committee_expenditure_summary')
-      .select('total_spent, num_expenditures', { count: 'exact', head: false })
-      .limit(20000),
-    // Global candidate expenditure totals
-    db.from('candidate_expenditure_summary')
-      .select('total_spent, num_expenditures', { count: 'exact', head: false })
-      .limit(20000),
+    // Global committee expenditure totals — DB-side SUM via RPC so a row cap
+    // can't silently undercount as the summary view grows (migration 043).
+    db.rpc('get_committee_expenditure_global_totals'),
+    db.rpc('get_candidate_expenditure_global_totals'),
     // Top 25 spending committees
     db.from('committee_expenditure_summary')
       .select('acct_num, total_spent, num_expenditures, date_start, date_end')
@@ -40,13 +36,10 @@ async function loadData() {
       .limit(25),
   ]);
 
-  const sum = (rows) => (rows.data || []).reduce((s, r) => s + (parseFloat(r.total_spent) || 0), 0);
-  const sumN = (rows) => (rows.data || []).reduce((s, r) => s + (parseInt(r.num_expenditures) || 0), 0);
-
-  const committeeTotal  = sum(commSummary);
-  const candidateTotal  = sum(candSummary);
-  const committeeCount  = sumN(commSummary);
-  const candidateCount  = sumN(candSummary);
+  const committeeTotal  = parseFloat(commTotals.data?.total_spent)      || 0;
+  const candidateTotal  = parseFloat(candTotals.data?.total_spent)      || 0;
+  const committeeCount  = parseInt(commTotals.data?.num_expenditures, 10) || 0;
+  const candidateCount  = parseInt(candTotals.data?.num_expenditures, 10) || 0;
 
   // Resolve names for the top tables
   const commAccts = (topCommittees.data || []).map(r => r.acct_num);
