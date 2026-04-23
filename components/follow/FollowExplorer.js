@@ -290,7 +290,19 @@ export default function FollowExplorer({ preloadSlug }) {
                               fontFamily: 'inherit',
                             }}
                           >
-                            <span style={{ fontSize: '0.7rem', lineHeight: 1.3, flex: 1 }}>{p.name}</span>
+                            <span style={{ fontSize: '0.7rem', lineHeight: 1.3, flex: 1 }}>
+                              {p.name}
+                              {p.address_corroborated && (
+                                <span
+                                  title="Corporate address on file matches a registered donor address"
+                                  style={{
+                                    display: 'inline-block', marginLeft: '0.35rem',
+                                    fontSize: '0.56rem', color: 'var(--green)',
+                                    fontFamily: 'var(--font-mono)', verticalAlign: '1px',
+                                  }}
+                                >✓ addr</span>
+                              )}
+                            </span>
                             <span style={{ fontSize: '0.58rem', color: tierColor, fontFamily: 'var(--font-mono)' }} title={`match score ${score}`}>
                               {tier}
                             </span>
@@ -299,7 +311,7 @@ export default function FollowExplorer({ preloadSlug }) {
                       })}
                     </div>
                     <div style={{ fontSize: '0.58rem', color: 'var(--text-dim)', marginTop: '0.5rem', lineHeight: 1.5 }}>
-                      Lobbyists this donor hires to influence the FL Legislature. Select one to filter the last column to that principal&rsquo;s lobbied bills.
+                      Lobbyists this donor hires to influence the FL Legislature. Select one to filter the last column to that principal&rsquo;s lobbied bills. <span style={{ color: 'var(--green)' }}>✓ addr</span> means the principal&rsquo;s corporate address also shows up in donor filings — a second, independent confirmation of the name link.
                     </div>
                   </>
                 )}
