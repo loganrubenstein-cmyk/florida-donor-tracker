@@ -58,7 +58,7 @@ export default async function FollowPage({ searchParams }) {
           </p>
 
           {/* Chain flow */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0', marginBottom: '2rem', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
             {CHAIN_STEPS.map((s, i) => (
               <div key={s.label} style={{ display: 'flex', alignItems: 'center' }}>
                 <div style={{ border: `1px solid ${s.color}44`, background: `${s.color}08`, borderRadius: '3px', padding: '0.5rem 0.75rem', textAlign: 'center' }}>
@@ -70,6 +70,11 @@ export default async function FollowPage({ searchParams }) {
                 )}
               </div>
             ))}
+          </div>
+
+          {/* Principal overlay note */}
+          <div style={{ fontSize: '0.62rem', color: 'var(--text-dim)', marginBottom: '2rem', lineHeight: 1.6, maxWidth: '500px' }}>
+            When the donor also registers a FL lobbyist, a <span style={{ color: 'var(--teal)', fontFamily: 'var(--font-mono)' }}>Lobbies as</span> panel appears on the donor column. Selecting an alias narrows &ldquo;Key Votes&rdquo; to bills that principal filed on — so you can see whether the candidate voted with the donor&rsquo;s lobbying agenda.
           </div>
 
           <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', marginBottom: '1.25rem' }}>
