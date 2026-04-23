@@ -63,6 +63,20 @@ jobs:
         uses: ./.github/actions/run-script
         with: { script: 25_export_donor_profiles.py }
 
+      # Principal matcher pipeline. Depends on data/processed/principals.csv
+      # (built by scripts/15_import_lobbyists.py, run locally — not yet wired
+      # into CI). If principals.csv is stale, matches + addresses will lag
+      # new lobbyist registrations by a quarter. Worth a follow-up to schedule
+      # 15 alongside the daily-fl-lobbyist refresh so this always sees fresh
+      # input.
+      - name: "16 match principals to contributors"
+        uses: ./.github/actions/run-script
+        with: { script: 16_match_principals.py, args: "--force" }
+
+      - name: "26 export lobbyist profiles"
+        uses: ./.github/actions/run-script
+        with: { script: 26_export_lobbyist_profiles.py, args: "--force" }
+
       - name: "40 load committees"
         uses: ./.github/actions/run-script
         with: { script: 40_load_supabase.py }
@@ -90,6 +104,11 @@ jobs:
       - name: "85b reconcile committees"
         uses: ./.github/actions/run-script
         with: { script: 85b_reconcile_committees.py }
+
+      # Reload pdm from the JSONs produced by step 26. Truncate+insert; fast.
+      - name: "40c reload principal_donation_matches"
+        uses: ./.github/actions/run-script
+        with: { script: 40c_reload_principal_matches.py }
 
       - name: "84 integrity audit"
         uses: ./.github/actions/run-script
