@@ -48,7 +48,6 @@ export default function CandidatesList() {
 
   const [results, setResults]       = useState({ data: [], total: 0, pages: 0 });
   const [loading, setLoading]       = useState(true);
-  const [explainerOpen, setExplainerOpen] = useState(false);
   const [search, setSearch]         = useState(() => searchParams?.get('q') || '');
   const [debouncedQ, setDebouncedQ] = useState(() => searchParams?.get('q') || '');
   const [party, setParty]           = useState(() => searchParams?.get('party') || 'all');
@@ -183,51 +182,35 @@ export default function CandidatesList() {
         </button>
       </div>
 
-      {/* Hard vs Soft money explainer */}
+      {/* Hard vs Soft money explainer — inline, always visible */}
       <div style={{
         border: '1px solid var(--border)', borderRadius: '4px', marginBottom: '1.25rem',
-        background: 'var(--surface)', overflow: 'hidden',
+        background: 'var(--surface)', padding: '0.85rem',
       }}>
-        <button
-          onClick={() => setExplainerOpen(o => !o)}
-          style={{
-            width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-            padding: '0.55rem 0.85rem', background: 'none', border: 'none',
-            cursor: 'pointer', textAlign: 'left',
-          }}
-        >
-          <span style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
-            What is hard money vs. soft money?
-          </span>
-          <span style={{ fontSize: '0.65rem', color: 'var(--text-dim)', fontFamily: 'var(--font-mono)' }}>
-            {explainerOpen ? '▲' : '▼'}
-          </span>
-        </button>
-        {explainerOpen && (
-          <div style={{ padding: '0 0.85rem 0.85rem', display: 'flex', flexDirection: 'column', gap: '0.6rem', borderTop: '1px solid var(--border)' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', paddingTop: '0.75rem' }}>
-              <div>
-                <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--orange)', marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
-                  Hard Money
-                </div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
-                  Contributions made directly to a candidate's campaign committee. Subject to strict limits — individuals can give up to $3,000 per election in Florida state races. Goes directly to the candidate.
-                </div>
-              </div>
-              <div>
-                <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--blue)', marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
-                  Soft Money
-                </div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
-                  Money raised by linked political committees (PACs, ECOs, CCEs) associated with a candidate. Florida has no contribution limits for state-level PACs — a single donor can give millions. Tracked via committee connections.
-                </div>
-              </div>
+        <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.6rem' }}>
+          Hard money vs. soft money
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+          <div>
+            <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--orange)', marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
+              Hard Money
             </div>
-            <div style={{ fontSize: '0.68rem', color: 'rgba(90,106,136,0.7)', paddingTop: '0.25rem', borderTop: '1px solid var(--border)' }}>
-              Combined = hard money raised + soft money from linked committees. Soft money links are inferred from shared treasurers and candidate-committee relationships — see individual profiles for confidence levels.
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
+              Contributions made directly to a candidate's campaign committee. Subject to strict limits — individuals can give up to $3,000 per election in Florida state races. Goes directly to the candidate.
             </div>
           </div>
-        )}
+          <div>
+            <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--blue)', marginBottom: '0.3rem', fontFamily: 'var(--font-mono)' }}>
+              Soft Money
+            </div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
+              Money raised by linked political committees (PACs, ECOs, CCEs) associated with a candidate. Florida has no contribution limits for state-level PACs — a single donor can give millions. Tracked via committee connections.
+            </div>
+          </div>
+        </div>
+        <div style={{ fontSize: '0.68rem', color: 'rgba(90,106,136,0.7)', marginTop: '0.7rem', paddingTop: '0.5rem', borderTop: '1px solid var(--border)' }}>
+          Combined = hard money raised + soft money from linked committees. Soft money links are inferred from shared treasurers and candidate-committee relationships — see individual profiles for confidence levels.
+        </div>
       </div>
 
       <div style={{
@@ -413,7 +396,7 @@ export default function CandidatesList() {
       <div style={{ marginTop: '2rem' }}>
         <DataTrustBlock
           source="Florida Division of Elections — Candidate Registration Filings"
-          sourceUrl="https://dos.elections.myflorida.com/candidates/"
+          sourceUrl="https://dos.fl.gov/elections/candidates-committees/"
           
           direct={['candidate name', 'party', 'office', 'district', 'election cycle']}
           normalized={['canonical politician grouping merges multiple-cycle candidates into one row', 'soft money linked from associated political committees']}

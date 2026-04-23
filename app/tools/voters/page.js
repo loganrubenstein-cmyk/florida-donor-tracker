@@ -104,7 +104,7 @@ export default function VoterLandingPage() {
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem', paddingTop: '1.1rem', borderTop: '1px solid var(--border)' }}>
             {[
-              { val: '883K', label: 'FL donors in the database' },
+              { val: '1M+',  label: 'FL donors in the database' },
               { val: '120+', label: 'Races tracked in 2026' },
               { val: '160',  label: 'Current FL legislators' },
             ].map(s => (
@@ -169,7 +169,7 @@ export default function VoterLandingPage() {
       {/* Credibility strip */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem', borderTop: '1px solid var(--border)', paddingTop: '2.5rem', marginBottom: '3rem' }}>
         {[
-          { val: '$3.9B+',     label: 'campaign contributions tracked\n22M+ transactions · 1996–2026' },
+          { val: '$4.5B+',     label: 'campaign contributions tracked\n22M+ transactions · 1996–2026' },
           { val: 'All public', label: 'every figure sourced from Florida\nDivision of Elections public records' },
           { val: 'Free',       label: 'no paywall, no signup required\nfor any voter tool' },
         ].map(s => (

@@ -193,8 +193,8 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
   const researchLinks = [
     { label: 'Fundraising Timeline →', href: `/timeline?acct=${data.acct_num}`, internal: true },
     { label: 'Find Donor Overlap →', href: `/compare?a=${data.acct_num}`, internal: true },
-    { label: 'FL DOE Candidate Page →', href: `https://dos.elections.myflorida.com/candidates/CanDetail.asp?account=${data.acct_num}` },
     { label: 'Campaign Finance Activity →', href: `https://dos.elections.myflorida.com/cgi-bin/TreSel.exe?account=${data.acct_num}` },
+    { label: 'FL Campaign Finance Database →', href: 'https://dos.fl.gov/elections/candidates-committees/campaign-finance/campaign-finance-database/' },
     { label: 'Google News →', href: `https://news.google.com/search?q=${encodeURIComponent((data.candidate_name || '') + ' Florida')}` },
     { label: 'OpenSecrets →', href: `https://www.opensecrets.org/search?q=${encodeURIComponent(data.candidate_name || '')}&type=politicians` },
   ];
@@ -372,7 +372,7 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
           {stateMatchingTotal > 0 && (
             <p style={{ fontSize: '0.65rem', color: 'var(--text-dim)', marginTop: '0.6rem', lineHeight: 1.5 }}>
               * "STATE OF FLORIDA" entries represent public matching fund disbursements under Florida's{' '}
-              <a href="https://dos.elections.myflorida.com/campaign-finance/public-financing/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-dim)', textDecoration: 'underline' }}>
+              <a href="https://dos.fl.gov/elections/candidates-committees/campaign-finance/public-campaign-finance-matching-funds-program/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-dim)', textDecoration: 'underline' }}>
                 Election Campaign Financing Program
               </a>
               , not a private donor.
@@ -664,7 +664,7 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
 
       <DataTrustBlock
         source="Florida Division of Elections"
-        sourceUrl={`https://dos.elections.myflorida.com/candidates/CanDetail.asp?account=${data.acct_num}`}
+        sourceUrl={`https://dos.elections.myflorida.com/cgi-bin/TreSel.exe?account=${data.acct_num}`}
         direct={['candidate_name', 'party_code', 'office_desc', 'district', 'election_year', 'status_desc', 'amount', 'contribution_date']}
         normalized={['hard_money_total', 'soft_money_total', 'combined_total']}
         inferred={['linked_pc_connections', 'donor_profile_links']}

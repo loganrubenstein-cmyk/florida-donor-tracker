@@ -27,7 +27,7 @@ async function getData() {
 
 export const metadata = {
   title: 'Lobbying',
-  description: 'Lobbyists, principals, and solicitation records for Florida state government.',
+  description: 'Lobbyists, principals, firms, bills, and issue areas for Florida state government.',
 };
 
 export default async function LobbyingHub() {
@@ -140,12 +140,6 @@ export default async function LobbyingHub() {
           <div className="hub-card-title">Issue Areas</div>
           <div className="hub-card-desc">Florida legislative issue categories ranked by lobbying activity — see which policy areas draw the most sustained lobbying effort.</div>
           <div className="hub-card-stat">1,848 issue categories</div>
-        </Link>
-
-        <Link href="/solicitations" className="hub-card">
-          <div className="hub-card-title">Solicitations</div>
-          <div className="hub-card-desc">Compensation disclosure filings — how much principals paid lobbyists, by period and agency.</div>
-          <div className="hub-card-stat">1,060 filings</div>
         </Link>
 
         <Link href="/lobbyists" className="hub-card" style={{ opacity: 0.75 }}>

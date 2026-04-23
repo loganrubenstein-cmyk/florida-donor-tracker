@@ -147,7 +147,7 @@ export default function DonorOverlap({ initialEntityA = null, initialEntityB = n
       <div style={{ marginTop: '2rem' }}>
         <DataTrustBlock
           source="Florida Division of Elections — Campaign Finance Database"
-          sourceUrl="https://dos.elections.myflorida.com/campaign-finance/contributions/"
+          sourceUrl="https://dos.fl.gov/elections/candidates-committees/campaign-finance/campaign-finance-database/"
           
           direct={['donor names', 'contribution amounts', 'entity type']}
           normalized={['donor slug matching (name normalization for cross-entity comparison)']}

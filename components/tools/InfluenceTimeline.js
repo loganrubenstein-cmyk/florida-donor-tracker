@@ -126,7 +126,7 @@ export default function InfluenceTimeline() {
       <div style={{ marginTop: '2rem' }}>
         <DataTrustBlock
           source="Florida Division of Elections — Campaign Finance Database"
-          sourceUrl="https://dos.elections.myflorida.com/campaign-finance/contributions/"
+          sourceUrl="https://dos.fl.gov/elections/candidates-committees/campaign-finance/campaign-finance-database/"
           
           direct={['quarterly contribution totals', 'candidate name and office', 'election year']}
           normalized={['connected PAC linkages (Statement of Organization filings)']}

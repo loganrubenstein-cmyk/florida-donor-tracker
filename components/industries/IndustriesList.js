@@ -2,15 +2,10 @@
 // Server component — reads industry_summary.json at build time
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import dynamic from 'next/dynamic';
 import BackLinks from '@/components/BackLinks';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import { slugify } from '@/lib/slugify';
-
-const AllIndustriesTrendChart = dynamic(
-  () => import('@/components/industries/AllIndustriesTrendChart'),
-  { ssr: false }
-);
+import IndustryRanking from './IndustryRanking';
 
 function fmt(n) {
   if (n >= 1_000_000_000) return `$${(n / 1_000_000_000).toFixed(2)}B`;
@@ -51,6 +46,7 @@ export default function IndustriesList() {
   const summary = JSON.parse(raw);
   const { total_amount, total_count, industries } = summary;
 
+  // Optional year trend data for the interactive ranking
   let trendData = null;
   try {
     trendData = JSON.parse(readFileSync(
@@ -60,6 +56,7 @@ export default function IndustriesList() {
 
   // Sort by total desc for display
   const sorted = [...industries].sort((a, b) => b.total - a.total);
+  const maxTotal = sorted[0]?.total || 1;
 
   return (
     <main style={{ maxWidth: '1100px', margin: '0 auto', padding: '2rem 2rem 4rem' }}>
@@ -83,7 +80,7 @@ export default function IndustriesList() {
           Which industries own Florida politics?
         </h1>
         <p style={{ fontSize: '0.78rem', color: 'var(--text-dim)', lineHeight: 1.6, maxWidth: '520px', marginBottom: '0.75rem' }}>
-          Campaign contributions broken down by sector — real estate, healthcare, agriculture, energy, and more. See which industries give the most, which candidates they fund, and how spending has shifted over 30 years.
+          Campaign contributions broken down by sector — real estate, healthcare, agriculture, energy, and more. Ranked by total direct giving. Click an industry to see its trend, top donors, and the candidates it funds.
         </p>
         <div style={{ fontSize: '0.82rem', color: 'var(--text-dim)', display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
           <span style={{ color: 'var(--orange)', fontWeight: 700 }}>{fmt(total_amount)}</span>
@@ -93,30 +90,31 @@ export default function IndustriesList() {
         </div>
       </div>
 
-      {/* Stacked trend chart */}
-      {trendData && (
-        <AllIndustriesTrendChart
-          trendData={trendData}
-          industries={industries.map(i => i.industry)}
-        />
-      )}
-
-      {/* Bar summary */}
+      {/* Proportional composition strip */}
       <div style={{
-        display: 'flex', height: '10px', borderRadius: '3px', overflow: 'hidden',
-        marginBottom: '2rem', gap: '1px',
+        display: 'flex', height: '8px', borderRadius: '2px', overflow: 'hidden',
+        marginBottom: '1.5rem', gap: '1px',
       }}>
         {sorted.map(ind => (
           <div
             key={ind.industry}
+            title={`${ind.industry} — ${ind.pct.toFixed(1)}%`}
             style={{
               width: `${ind.pct}%`,
               background: INDUSTRY_COLORS[ind.industry] || '#444466',
               minWidth: ind.pct > 0.5 ? '2px' : '0',
-              title: ind.industry,
             }}
           />
         ))}
+      </div>
+
+      {/* Labeled horizontal bar ranking — interactive year filter */}
+      <div style={{ marginBottom: '2rem' }}>
+        <IndustryRanking
+          industriesAll={industries}
+          trendData={trendData}
+          colors={INDUSTRY_COLORS}
+        />
       </div>
 
       {/* Table */}
@@ -191,10 +189,22 @@ export default function IndustriesList() {
         </table>
       </div>
 
-      <div style={{ marginTop: '3rem' }}>
+      <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border)', display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
+        <a href="/lobbying/issues" style={{ fontSize: '0.72rem', color: 'var(--teal)', border: '1px solid rgba(77,216,240,0.25)', borderRadius: '3px', padding: '0.35rem 0.75rem', textDecoration: 'none' }}>
+          → Lobbying by issue area
+        </a>
+        <a href="/donors" style={{ fontSize: '0.72rem', color: 'var(--orange)', border: '1px solid rgba(255,176,96,0.25)', borderRadius: '3px', padding: '0.35rem 0.75rem', textDecoration: 'none' }}>
+          → Browse all donors
+        </a>
+        <a href="/explorer" style={{ fontSize: '0.72rem', color: 'var(--text-dim)', border: '1px solid var(--border)', borderRadius: '3px', padding: '0.35rem 0.75rem', textDecoration: 'none' }}>
+          → Transaction explorer
+        </a>
+      </div>
+
+      <div style={{ marginTop: '2rem' }}>
         <DataTrustBlock
           source="Florida Division of Elections — Campaign Finance Filings"
-          sourceUrl="https://dos.elections.myflorida.com/campaign-finance/"
+          sourceUrl="https://dos.fl.gov/elections/candidates-committees/campaign-finance/"
           
           direct={['contribution amounts', 'contributor occupation field']}
           normalized={['industry bucket derived from occupation using keyword classifier']}

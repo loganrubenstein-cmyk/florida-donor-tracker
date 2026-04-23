@@ -71,7 +71,7 @@ function MethodsTab() {
       </p>
 
       <Section title="Data Collection">
-        <p>Raw data is downloaded in bulk from the <a href="https://dos.elections.myflorida.com/campaign-finance/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)', textDecoration: 'none' }}>Florida Division of Elections CGI API</a> (TreFin.exe).
+        <p>Raw data is downloaded in bulk from the <a href="https://dos.fl.gov/elections/candidates-committees/campaign-finance/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)', textDecoration: 'none' }}>Florida Division of Elections CGI API</a> (TreFin.exe).
         Each committee and candidate is queried individually; results are tab-delimited text files stored locally then imported into a PostgreSQL database.</p>
         <p style={{ marginTop: '0.75rem' }}>Lobbyist and solicitation data is sourced from the <a href="https://www.floridalobbyist.gov/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)', textDecoration: 'none' }}>Florida Lobbyist Registration Office</a> annual export.</p>
       </Section>
@@ -115,7 +115,7 @@ function MethodsTab() {
           <ul style={{ marginTop: '0.5rem', paddingLeft: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
             <li><strong>~22M+ contribution records</strong> — every filed contribution line, including duplicates across amendments.</li>
             <li><strong>~880K+ contributor names</strong> — unique normalized names across all records (before deduplication).</li>
-            <li><strong>~883K donor profiles</strong> — unique names that received a deduplication slot; browseable at <Link href="/donors" style={{ color: 'var(--teal)', textDecoration: 'none' }}>/donors</Link>.</li>
+            <li><strong>~1M+ donor profiles</strong> — unique names that received a deduplication slot; browseable at <Link href="/donors" style={{ color: 'var(--teal)', textDecoration: 'none' }}>/donors</Link>.</li>
             <li><strong>~94K donors in the default directory view</strong> — a filtered subset of donors with ≥$1K in total contributions, to keep the directory usable. Smaller donors exist in the index; search for them directly.</li>
           </ul>
         </div>
@@ -170,7 +170,7 @@ function MethodsTab() {
 
       <div style={{ marginBottom: '0.5rem', fontSize: '0.75rem', color: 'var(--text-dim)' }}>
         Primary sources:{' '}
-        <a href="https://dos.elections.myflorida.com/campaign-finance/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)', textDecoration: 'none' }}>FL Division of Elections</a>
+        <a href="https://dos.fl.gov/elections/candidates-committees/campaign-finance/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)', textDecoration: 'none' }}>FL Division of Elections</a>
         {' · '}
         <a href="https://www.floridalobbyist.gov/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)', textDecoration: 'none' }}>FL Lobbyist Registration Office</a>
         {' · '}

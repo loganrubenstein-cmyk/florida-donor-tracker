@@ -166,7 +166,7 @@ export default function JournalistLandingPage() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '2rem', borderTop: '1px solid var(--border)', paddingTop: '2.5rem', marginBottom: '3rem' }}>
         {[
           { val: '431 orgs',    label: 'shadow PAC entities mapped\n56K+ committee pairs documented' },
-          { val: '$34.9B',      label: 'lobbying compensation tracked\n4M rows · 1,970 firms · 19 years' },
+          { val: '$36B+',       label: 'lobbying compensation tracked\n4M rows · 1,785 firms · 19 years' },
           { val: 'CSV export',  label: 'every tool exports to CSV\nno account required' },
         ].map(s => (
           <div key={s.val}>

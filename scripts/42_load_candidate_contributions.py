@@ -279,7 +279,11 @@ def main() -> int:
     print(f"Source: {CSV_PATH}")
     print(f"Size:   {CSV_PATH.stat().st_size / 1e9:.2f} GB")
 
-    conn = psycopg2.connect(DB_URL)
+    # TCP keepalives — see 41_load_contributions.py for rationale.
+    conn = psycopg2.connect(
+        DB_URL,
+        keepalives=1, keepalives_idle=30, keepalives_interval=10, keepalives_count=5,
+    )
     conn.autocommit = False
     cur = conn.cursor()
     # Ensure read-write mode and disable statement timeout for long COPY operations
@@ -346,7 +350,10 @@ def main() -> int:
                     try: conn.close()
                     except Exception: pass
                     import time as _t; _t.sleep(3 * (attempt + 1))
-                    conn = psycopg2.connect(DB_URL)
+                    conn = psycopg2.connect(
+                        DB_URL,
+                        keepalives=1, keepalives_idle=30, keepalives_interval=10, keepalives_count=5,
+                    )
                     conn.autocommit = False
                     cur = conn.cursor()
                     cur.execute("SET SESSION CHARACTERISTICS AS TRANSACTION READ WRITE")

@@ -133,7 +133,7 @@ export default function IndustryProfile({ data, totalAmount, trendData, topDonor
 
       <div style={{ fontSize: '0.68rem', color: 'var(--text-dim)', lineHeight: 1.6, marginTop: '1rem' }}>
         Hard money contributions are direct donations to candidate campaign accounts, reported to the{' '}
-        <a href="https://dos.elections.myflorida.com/campaign-finance/" target="_blank" rel="noopener noreferrer"
+        <a href="https://dos.fl.gov/elections/candidates-committees/campaign-finance/" target="_blank" rel="noopener noreferrer"
           style={{ color: 'var(--teal)', textDecoration: 'none' }}>
           Florida Division of Elections
         </a>.
@@ -362,13 +362,14 @@ export default function IndustryProfile({ data, totalAmount, trendData, topDonor
       </div>
       <DataTrustBlock
         source="Florida Division of Elections — Campaign Finance Filings"
-        sourceUrl="https://dos.elections.myflorida.com/campaign-finance/"
+        sourceUrl="https://dos.fl.gov/elections/candidates-committees/campaign-finance/"
         direct={['contribution amounts', 'contributor occupation field']}
-        normalized={['industry assignment derived from occupation using keyword classifier']}
+        normalized={['industry category — derived from occupation via keyword classifier']}
         inferred={['top candidates ranked by total received from this industry']}
         caveats={[
-          'Hard money (direct candidate contributions) only — PAC-to-PAC transfers not included.',
-          'Occupation field is self-reported. Blank or unrecognized occupations are excluded from this industry.',
+          'Hard money only — PAC-to-PAC transfers not included.',
+          'Occupation is self-reported; blank or unrecognized values are bucketed as "Unclassified."',
+          'Automated classification — some contributors may be miscategorized.',
         ]}
       />
     </div>

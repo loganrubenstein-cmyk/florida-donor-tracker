@@ -276,7 +276,7 @@ export default function SolicitationsList() {
       <div style={{ marginTop: '3rem' }}>
         <DataTrustBlock
           source="Florida Division of Elections — Public Solicitations Registry"
-          sourceUrl="https://dos.elections.myflorida.com/solicitations/"
+          sourceUrl="https://doesecure.dos.state.fl.us/PublicSolicitations/"
           
           direct={['organization name', 'website', 'solicitor names', 'registration / expiration dates', 'status']}
           caveats={[

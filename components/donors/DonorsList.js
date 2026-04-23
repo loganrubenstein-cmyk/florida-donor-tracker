@@ -381,7 +381,7 @@ export default function DonorsList() {
       <div style={{ marginTop: '2rem' }}>
         <DataTrustBlock
           source="Florida Division of Elections — Campaign Finance Filings"
-          sourceUrl="https://dos.elections.myflorida.com/campaign-finance/"
+          sourceUrl="https://dos.fl.gov/elections/candidates-committees/campaign-finance/"
           
           direct={['donor name', 'contribution amounts', 'employer / occupation']}
           normalized={['donors deduplicated by normalized name across committees', 'corporate flag derived from entity-type keywords']}

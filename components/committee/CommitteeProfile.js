@@ -47,8 +47,8 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
     ...(data.website_url ? [{ label: 'Official Website →', href: data.website_url }] : []),
     { label: 'Committee Connections →', href: `/connections?committee=${data.acct_num}`, internal: true },
     { label: 'Find Donor Overlap →', href: `/compare?a=${data.acct_num}`, internal: true },
-    { label: 'FL DOE Committee Page →', href: `https://dos.elections.myflorida.com/committees/ComDetail.asp?account=${data.acct_num}` },
     { label: 'Campaign Finance Activity →', href: `https://dos.elections.myflorida.com/cgi-bin/TreSel.exe?account=${data.acct_num}` },
+    { label: 'FL Campaign Finance Database →', href: 'https://dos.fl.gov/elections/candidates-committees/campaign-finance/campaign-finance-database/' },
     { label: 'Google News →', href: `https://news.google.com/search?q=${encodeURIComponent(data.committee_name + ' Florida politics')}` },
   ];
 
@@ -443,7 +443,7 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
 
       <DataTrustBlock
         source="Florida Division of Elections"
-        sourceUrl={`https://dos.elections.myflorida.com/committees/ComDetail.asp?account=${data.acct_num}`}
+        sourceUrl={`https://dos.elections.myflorida.com/cgi-bin/TreSel.exe?account=${data.acct_num}`}
         direct={['committee_name', 'acct_num', 'total_received', 'contribution_date', 'amount']}
         normalized={['donor_name_normalized']}
         inferred={['top_donor_links', 'candidate_links']}

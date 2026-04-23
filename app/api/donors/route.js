@@ -11,6 +11,8 @@ export async function GET(request) {
   const q        = searchParams.get('q') || '';
   const type     = searchParams.get('type') || 'all';
   const industry = searchParams.get('industry') || 'all';
+  const city     = searchParams.get('city') || '';
+  const state    = searchParams.get('state') || '';
   const sortRaw  = searchParams.get('sort');
   const sort     = VALID_SORTS.includes(sortRaw) ? sortRaw : 'total_combined';
   const sortDir  = searchParams.get('sort_dir') || '';
@@ -31,6 +33,17 @@ export async function GET(request) {
   if (type === 'individual') query = query.eq('is_corporate', false);
   if (type === 'lobbyist')   query = query.eq('has_lobbyist_link', true);
   if (industry !== 'all')    query = query.eq('industry', industry);
+  if (city.trim()) {
+    // top_location is formatted "CITY, STATE ZIP" (e.g. "MIAMI, FL 33172").
+    // Prefix-match the city; fold in state if supplied.
+    // Escape % and _ so a stray character in the input can't turn into a
+    // wildcard (e.g. city="STE. %" would otherwise wildcard-match everything).
+    const escape = s => s.replace(/\\/g, '\\\\').replace(/%/g, '\\%').replace(/_/g, '\\_');
+    const cityEsc = escape(city.trim());
+    const stateEsc = state.trim() ? escape(state.trim()) : '';
+    const cityPat = stateEsc ? `${cityEsc},%${stateEsc}%` : `${cityEsc},%`;
+    query = query.ilike('top_location', cityPat);
+  }
 
   const defaultAsc = sort === 'name';
   const ascending  = sortDir === 'asc' ? true : sortDir === 'desc' ? false : defaultAsc;

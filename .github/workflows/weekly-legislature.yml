@@ -1,0 +1,70 @@
+name: Weekly — Legislature Refresh
+
+# Refreshes FL House/Senate committee memberships, legislator profiles, votes,
+# and bill sponsorships. Scripts 72-75 + 99 (bill info scrape). Written
+# 2026-04-22 from the handoff-backend-session.md item #8.
+#
+# Intentionally MANUAL-ONLY (workflow_dispatch) — the original backlog asked
+# for T1 review before enabling a schedule. When enabling, uncomment the
+# schedule trigger below and pick a low-traffic UTC window (e.g. Sundays).
+#
+# No untrusted inputs are read in this file — only repo secrets, which are
+# forwarded to step env via the composite action's explicit env map.
+
+on:
+  schedule:
+    - cron: '0 9 * * 0'   # Sundays 09:00 UTC — T1 reviewed + approved 2026-04-23
+  workflow_dispatch:
+
+concurrency:
+  group: weekly-legislature
+  cancel-in-progress: false
+
+env:
+  SUPABASE_DB_URL:               ${{ secrets.SUPABASE_DB_URL }}
+  SUPABASE_SERVICE_ROLE_KEY:     ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+  NEXT_PUBLIC_SUPABASE_URL:      ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+  LEGISCAN_API_KEY:              ${{ secrets.LEGISCAN_API_KEY }}
+
+jobs:
+  legislature-refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      issues: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "71 import legislators"
+        uses: ./.github/actions/run-script
+        with: { script: 71_import_legislators.py }
+
+      - name: "72 scrape committees + memberships"
+        uses: ./.github/actions/run-script
+        with: { script: 72_scrape_committees.py }
+
+      - name: "73 load legislator votes"
+        uses: ./.github/actions/run-script
+        with: { script: 73_load_legislator_votes.py }
+
+      - name: "74 fetch bill sponsors"
+        uses: ./.github/actions/run-script
+        with: { script: 74_fetch_bill_sponsors.py }
+
+      - name: "75 update legislator stats"
+        uses: ./.github/actions/run-script
+        with: { script: 75_update_legislator_stats.py }
+
+      - name: "99 scrape bill info (most-recent sessions)"
+        uses: ./.github/actions/run-script
+        with: { script: 99_scrape_bill_info.py }
+
+      - name: Open issue on failure
+        if: failure()
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: "[pipeline-failure:medium] weekly-legislature"
+          content-filepath: data/logs/75_update_legislator_stats.py.log
+          labels: pipeline-failure,severity:medium,data-update

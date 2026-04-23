@@ -6,32 +6,44 @@ import { useState, useEffect, useRef } from 'react';
 
 // Direct top-level links (no dropdown)
 const DIRECT = [
-  { href: '/candidates',  label: 'Candidates' },
-  { href: '/committees',  label: 'Committees' },
-  { href: '/donors',      label: 'Donors' },
-  { href: '/legislature', label: 'Legislature' },
+  { href: '/candidates', label: 'Candidates' },
+  { href: '/committees', label: 'Committees' },
+  { href: '/donors',     label: 'Donors' },
 ];
 
 const GROUPS = [
   {
+    label: 'Legislature',
+    items: [
+      { href: '/legislature',   label: '→ Legislature Hub' },
+      { href: '/legislators',   label: 'Legislators' },
+      { href: '/elections',     label: 'Elections' },
+      { href: '/cycles',        label: 'Cycles' },
+      { href: '/party-finance', label: 'Party Finance' },
+    ],
+    extra: ['/legislator/', '/cycle/'],
+  },
+  {
     label: 'Lobbying',
     items: [
-      { href: '/lobbying',       label: 'Lobbying Hub' },
-      { href: '/lobbying/bills', label: 'Bills' },
-      { href: '/solicitations',  label: 'Solicitations' },
+      { href: '/lobbying',        label: '→ Lobbying Hub' },
+      { href: '/lobbying/bills',  label: 'Bills' },
+      { href: '/lobbying/issues', label: 'Issue Areas' },
+      { href: '/lobbyists',       label: 'Lobbyists' },
+      { href: '/principals',      label: 'Principals' },
+      { href: '/lobbying-firms',  label: 'Lobbying Firms' },
     ],
-    extra: ['/lobbying/bill/'],
+    extra: ['/lobbyist/', '/principal/', '/lobbying-firm/', '/lobbying/bill/', '/lobbying/issue/'],
   },
   {
     label: 'Explore',
     items: [
-      { href: '/explorer',       label: 'Transactions' },
-      { href: '/lobbyists',      label: 'Lobbyists' },
-      { href: '/principals',     label: 'Principals' },
-      { href: '/lobbying-firms', label: 'Lobbying Firms' },
-      { href: '/legislators',    label: 'Legislators' },
+      { href: '/explorer',      label: 'Transactions' },
+      { href: '/expenditures',  label: 'Expenditures' },
+      { href: '/contracts',     label: 'State Contracts' },
+      { href: '/solicitations', label: 'Solicitations' },
     ],
-    extra: ['/donor/', '/lobbyist/', '/principal/', '/lobbying-firm/', '/legislator/'],
+    extra: ['/donor/', '/solicitations', '/contracts', '/expenditures', '/vendor/'],
   },
   {
     label: 'Tools',
@@ -53,16 +65,12 @@ const GROUPS = [
       { href: '/follow',            label: 'Follow the Money' },
       { href: '/influence',         label: 'Influence Index' },
       { href: '/industries',        label: 'Industries' },
-      { href: '/elections',         label: 'Elections' },
-      { href: '/cycles',            label: 'Cycles' },
-      { href: '/party-finance',     label: 'Party Finance' },
       { href: '/ie',                label: 'Indep. Expenditures' },
-      { href: '/contracts',         label: 'State Contracts' },
       { href: '/connections',       label: 'Connections' },
       { href: '/pulse',             label: 'Pulse' },
       { href: '/investigations',    label: 'Investigations' },
     ],
-    extra: ['/industry/', '/cycle/'],
+    extra: ['/industry/'],
   },
   {
     label: 'About',

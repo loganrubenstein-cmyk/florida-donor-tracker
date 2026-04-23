@@ -415,7 +415,7 @@ export default function PrincipalProfile({ data, compData = null }) {
         {[
           { label: 'Find Donor Overlap →', href: '/compare', internal: true },
           { label: 'State Contracts →', href: '/contracts', internal: true },
-          { label: 'FL Lobbyist Registry →', href: 'https://www.leg.state.fl.us/Lobbyist/index.cfm?Tab=principalsearch' },
+          { label: 'FL Lobbyist Registry →', href: 'https://www.floridalobbyist.gov/CompensationReportSearch' },
           { label: 'Google →', href: `https://www.google.com/search?q=${encodeURIComponent((data.name || '') + ' Florida lobbying')}` },
         ].map(({ label, href, internal }) => (
           <a key={label} href={href} {...(!internal ? { target: '_blank', rel: 'noopener noreferrer' } : {})}

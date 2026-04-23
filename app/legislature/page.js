@@ -185,6 +185,30 @@ export default async function LegislaturePage() {
           </div>
         </div>
       )}
+
+      <div style={{ marginTop: '2.5rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border)' }}>
+        <div style={{ fontSize: '0.6rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-dim)', marginBottom: '0.75rem' }}>
+          Official Sources
+        </div>
+        <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
+          {[
+            { label: 'Florida Senate →', href: 'https://www.flsenate.gov/' },
+            { label: 'Florida House →', href: 'https://www.flhouse.gov/' },
+            { label: 'Senate Members →', href: 'https://www.flsenate.gov/Senators/' },
+            { label: 'House Members →', href: 'https://www.flhouse.gov/Sections/Representatives/representatives.aspx' },
+            { label: 'House Lobbyist Disclosures →', href: 'https://www.flhouse.gov/Sections/Lobbyists/lobbyists.aspx' },
+            { label: 'FL Commission on Ethics →', href: 'https://ethics.state.fl.us/' },
+          ].map(({ label, href }) => (
+            <a key={href} href={href} target="_blank" rel="noopener noreferrer" style={{
+              fontSize: '0.68rem', color: 'var(--teal)', textDecoration: 'none',
+              border: '1px solid rgba(77,216,240,0.25)', borderRadius: '3px',
+              padding: '0.2rem 0.55rem',
+            }}>
+              {label}
+            </a>
+          ))}
+        </div>
+      </div>
     </main>
   );
 }

@@ -494,7 +494,7 @@ export default function FlowClient({ flows, flowsByCycle = null, donorIndustries
       <div style={{ marginTop: '3rem' }}>
         <DataTrustBlock
           source="Florida Division of Elections — Campaign Finance Filings"
-          sourceUrl="https://dos.elections.myflorida.com/campaign-finance/"
+          sourceUrl="https://dos.fl.gov/elections/candidates-committees/campaign-finance/"
           
           direct={['donor name', 'committee name', 'contribution amounts', 'contribution counts']}
           normalized={['flows aggregated by donor → committee pair across all years']}

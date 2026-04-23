@@ -14,12 +14,25 @@ Usage:
 
 import json
 import os
+import re
 import time
 from io import StringIO
 from pathlib import Path
 
 import psycopg2
 import requests
+
+_BILL_NUM_RE = re.compile(r'^([HS])0*(\d+)$')
+
+def _bill_number_to_slug(bn):
+    if not bn:
+        return None
+    m = _BILL_NUM_RE.match(str(bn).strip())
+    if not m:
+        return None
+    prefix = 'hb' if m.group(1).upper() == 'H' else 'sb'
+    return f"{prefix}-{m.group(2)}"
+
 
 ROOT = Path(__file__).parent.parent
 dotenv = ROOT / ".env.local"
@@ -97,6 +110,7 @@ def main():
             people_id    INTEGER NOT NULL,
             bill_id      INTEGER NOT NULL,
             bill_number  TEXT,
+            bill_slug    TEXT,
             bill_title   TEXT,
             sponsor_type TEXT,
             session_id   INTEGER,
@@ -105,6 +119,7 @@ def main():
     """)
     cur.execute("CREATE INDEX bs_people_idx ON bill_sponsorships (people_id)")
     cur.execute("CREATE INDEX bs_bill_idx ON bill_sponsorships (bill_id)")
+    cur.execute("CREATE INDEX bs_bill_slug_idx ON bill_sponsorships (bill_slug)")
 
     # Fetch bills and extract sponsors
     http = requests.Session()
@@ -144,6 +159,7 @@ def main():
                     people_id,
                     bill_id,
                     bill_number or None,
+                    _bill_number_to_slug(bill_number),
                     bill_title or None,
                     sponsor_type,
                     session_id,
@@ -165,7 +181,7 @@ def main():
     seen = set()
     deduped = []
     for r in rows:
-        key = (r[0], r[1], r[4])
+        key = (r[0], r[1], r[5])
         if key not in seen:
             seen.add(key)
             deduped.append(r)
@@ -178,15 +194,16 @@ def main():
             str(r[0]),
             str(r[1]),
             r[2] or "\\N",
-            (r[3] or "").replace("\t", " ").replace("\n", " ") or "\\N",
-            r[4],
-            str(r[5]) if r[5] else "\\N",
+            r[3] or "\\N",
+            (r[4] or "").replace("\t", " ").replace("\n", " ") or "\\N",
+            r[5],
+            str(r[6]) if r[6] else "\\N",
         ]
         buf.write("\t".join(fields) + "\n")
 
     buf.seek(0)
     cur.copy_from(buf, "bill_sponsorships", columns=[
-        "people_id", "bill_id", "bill_number", "bill_title", "sponsor_type", "session_id",
+        "people_id", "bill_id", "bill_number", "bill_slug", "bill_title", "sponsor_type", "session_id",
     ])
 
     # Verify

@@ -118,7 +118,7 @@ export default function DarkMoneyScoreboard() {
       <div style={{ marginTop: '1rem' }}>
         <DataTrustBlock
           source="Florida Division of Elections — Campaign Finance Database"
-          sourceUrl="https://dos.elections.myflorida.com/campaign-finance/contributions/"
+          sourceUrl="https://dos.fl.gov/elections/candidates-committees/campaign-finance/campaign-finance-database/"
           
           direct={['committee name', 'total received', 'contribution counts']}
           classified={['donor type (individual, corporate, committee) from FL DOE type codes']}

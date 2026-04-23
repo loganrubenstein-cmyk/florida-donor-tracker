@@ -104,7 +104,7 @@ export default async function FollowPage({ searchParams }) {
           <div style={{ borderTop: '1px solid var(--border)', marginTop: '0.75rem', paddingTop: '0.75rem' }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
               {[
-                { val: '883K', label: 'donor profiles' },
+                { val: '1M+',  label: 'donor profiles' },
                 { val: '5,974', label: 'committees tracked' },
                 { val: '22M+', label: 'transactions' },
               ].map(s => (

@@ -221,9 +221,12 @@ export default function ElectionsView({ cycles, districtMap = {} }) {
     return { statewideRaces, legRaces, flatStats };
   }, [flatData, districtMap, resolvedYear]);
 
-  const filteredLegRaces = useMemo(() => {
+  const houseRaces = useMemo(() => legRaces.filter(r => r.prefix === 'HD'), [legRaces]);
+  const senateRaces = useMemo(() => legRaces.filter(r => r.prefix === 'SD'), [legRaces]);
+
+  function applyLegSearch(races) {
     const s = search.trim().toLowerCase();
-    if (!s) return legRaces;
+    if (!s) return races;
 
     const hdMatch = s.match(/(?:hd|house|h\.d\.|state\s+rep)[\s#.]*(\d+)/);
     const sdMatch = s.match(/(?:sd|senate|s\.d\.|state\s+sen)[\s#.]*(\d+)/);
@@ -232,16 +235,19 @@ export default function ElectionsView({ cycles, districtMap = {} }) {
     if (hdMatch || sdMatch || numOnly) {
       const num = ((hdMatch || sdMatch || numOnly)[1]).padStart(3, '0');
       const type = hdMatch ? 'HD' : sdMatch ? 'SD' : null;
-      return legRaces.filter(r => {
+      return races.filter(r => {
         const rNum = String(parseInt(r.district || '0')).padStart(3, '0');
         return (!type || r.prefix === type) && rNum === num;
       });
     }
 
-    return legRaces.filter(r =>
+    return races.filter(r =>
       r.candidates.some(c => c.candidate_name.toLowerCase().includes(s))
     );
-  }, [legRaces, search]);
+  }
+
+  const filteredHouseRaces = useMemo(() => applyLegSearch(houseRaces), [houseRaces, search]);
+  const filteredSenateRaces = useMemo(() => applyLegSearch(senateRaces), [senateRaces, search]);
 
   const filteredStatewideRaces = useMemo(() => {
     const s = search.trim().toLowerCase();
@@ -273,8 +279,15 @@ export default function ElectionsView({ cycles, districtMap = {} }) {
     );
   }
 
-  const showingLeg = activeTab === 'legislature';
-  const racesToShow = showingLeg ? filteredLegRaces : filteredStatewideRaces;
+  const chamberRaces =
+    activeTab === 'house'  ? filteredHouseRaces :
+    activeTab === 'senate' ? filteredSenateRaces :
+    [];
+  const chamberAllCount =
+    activeTab === 'house'  ? houseRaces.length :
+    activeTab === 'senate' ? senateRaces.length :
+    0;
+  const chamberLabel = activeTab === 'house' ? 'House' : 'Senate';
 
   return (
     <div>
@@ -354,7 +367,8 @@ export default function ElectionsView({ cycles, districtMap = {} }) {
       {/* Tabs */}
       <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
         <TabBtn val="statewide" label="Statewide" count={fetching ? null : statewideRaces.length} />
-        <TabBtn val="legislature" label="Legislature" count={fetching ? null : legRaces.length} />
+        <TabBtn val="house"     label="House"     count={fetching ? null : houseRaces.length} />
+        <TabBtn val="senate"    label="Senate"    count={fetching ? null : senateRaces.length} />
       </div>
 
       {/* Content */}
@@ -403,22 +417,23 @@ export default function ElectionsView({ cycles, districtMap = {} }) {
         </>
       ) : (
         <>
-          {/* Legislature header / context */}
+          {/* Chamber header / context */}
           <div style={{ fontSize: '0.72rem', color: 'var(--text-dim)', marginBottom: '1rem', lineHeight: 1.6 }}>
-            Showing <strong style={{ color: 'var(--text)' }}>{filteredLegRaces.length}</strong> of{' '}
-            <strong style={{ color: 'var(--text)' }}>{legRaces.length}</strong> districts with finance-matched candidates.
-            {search && legRaces.length > 0 && filteredLegRaces.length === 0 && (
-              <span style={{ color: 'var(--text-dim)' }}> No results for "{search}" — try "HD 11" or a candidate name.</span>
+            <strong style={{ color: 'var(--text)' }}>{chamberLabel}</strong> — showing{' '}
+            <strong style={{ color: 'var(--text)' }}>{chamberRaces.length}</strong> of{' '}
+            <strong style={{ color: 'var(--text)' }}>{chamberAllCount}</strong> districts with finance-matched candidates.
+            {search && chamberAllCount > 0 && chamberRaces.length === 0 && (
+              <span style={{ color: 'var(--text-dim)' }}> No results for "{search}" — try "{activeTab === 'house' ? 'HD 11' : 'SD 14'}" or a candidate name.</span>
             )}
           </div>
 
-          {filteredLegRaces.length === 0 && !search ? (
+          {chamberRaces.length === 0 && !search ? (
             <div style={{ padding: '2rem', border: '1px solid var(--border)', borderRadius: '4px', textAlign: 'center', color: 'var(--text-dim)', fontSize: '0.78rem' }}>
-              No legislative race data available for {resolvedYear} {electionType}.
+              No {chamberLabel.toLowerCase()} race data available for {resolvedYear} {electionType}.
             </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-              {filteredLegRaces.map(race => (
+              {chamberRaces.map(race => (
                 <BallotRaceCard
                   key={`${race.prefix}_${race.district}`}
                   title={`${race.prefix} ${parseInt(race.district)} — ${race.contestName}`}
@@ -439,7 +454,7 @@ export default function ElectionsView({ cycles, districtMap = {} }) {
 
       <div style={{ fontSize: '0.6rem', color: 'var(--text-dim)', marginTop: '2rem', lineHeight: 1.7, borderTop: '1px solid var(--border)', paddingTop: '1rem' }}>
         Source:{' '}
-        <a href="https://dos.elections.myflorida.com/election-results/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)', textDecoration: 'none' }}>
+        <a href="https://dos.fl.gov/elections/data-statistics/elections-data/election-results-archive/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--teal)', textDecoration: 'none' }}>
           FL Division of Elections
         </a>{' '}
         results matched to campaign finance records. Finance totals reflect hard-money contributions. Not all candidates have finance matches.
