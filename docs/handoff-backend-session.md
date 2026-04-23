@@ -151,13 +151,17 @@ Migration `038_connections_enriched_view.sql` captures the live definition via `
 
 ---
 
-### 8. No automated ingestion pipeline
+### 8. No automated ingestion pipeline ✅ PARTIAL 2026-04-22
 
 **Symptom**: Data is 6–14 days stale at any given moment. Every refresh is a manual double-click on `run_pipeline.command`, `scrape_new_committees.command`, etc.
 
 **Fix**: GitHub Actions workflow that runs the pipeline nightly or weekly. T1 explicitly volunteered to review when someone builds it (knows which scripts are idempotent vs. destructive). See `docs/shipping-lessons.md` for context.
 
 **Honest framing**: `/pulse` now shows "Data current through: {date}" + a weekly-cadence caveat, so users aren't misled. But eventually this should be daily-automated.
+
+**What was done 2026-04-22:** The backlog's "no automated pipeline" framing was stale — `.github/workflows/` already contains 11 workflows including daily-contributions, daily-expenditures, daily-fl-lobbyist, daily-new-committees, weekly-transfers, quarterly-full-refresh, fec-indiv-load, fec-oth-load, nightly-smoke, expend-exe-watchdog, and quarterly-reminder. The real gap was legislature data (scripts 72-75 + 99) — no scheduled refresh.
+
+Added `.github/workflows/weekly-legislature.yml` running 71 → 72 → 73 → 74 → 75 → 99. Intentionally **manual-only** (`workflow_dispatch`) with the schedule trigger commented out, per the backlog's "owner: T1 for review" requirement. Uncomment the cron after T1 validates idempotency (scripts 73/74 use DROP+CREATE; 72 uses per-page caching). Failure path opens a pipeline-failure issue.
 
 ---
 
