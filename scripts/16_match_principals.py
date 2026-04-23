@@ -61,12 +61,19 @@ _STOPWORDS = {
     "FL", "FLORIDA", "STATE", "NATIONAL", "AMERICAN",
 }
 
-# Tokens shorter than this are skipped in the blocking index.
-# Lowered 4 -> 3 2026-04-23 so 3-letter brand names (GEO, CVS, UPS, IBM,
-# AT&T -> "AT T", etc.) enter the candidate pool instead of being filtered
-# out before any scoring happens. The MATCH_THRESHOLD=82 + token_set_ratio
-# still prevents spurious matches; only the blocking index widens.
+# Tokens shorter than this are skipped in the blocking index. Kept at 3 so
+# noisy 1-2 char tokens (IN, OF, AT, T, …) don't balloon candidate pools.
+# Short brand names (AT&T → "AT T", 3M, BP, GE, …) whose tokens are ALL below
+# this threshold rely on the full-form fallback block key instead.
 _MIN_TOKEN_LEN = 3
+
+# Prefix for fallback full-form block keys. Symmetric on both sides:
+# every principal and every contributor is indexed under their full
+# normalized form (e.g. "__FULL__:AT T"). This guarantees short-name
+# principals whose tokens are all filtered out by _MIN_TOKEN_LEN still
+# enter the candidate pool. Match quality is still gated by
+# MATCH_THRESHOLD + token_set_ratio, so noise stays out.
+_FULL_PREFIX = "__FULL__:"
 
 
 def _normalize(name: str) -> str:
@@ -86,6 +93,14 @@ def _block_tokens(normalized: str) -> list[str]:
     ]
 
 
+def _all_block_keys(normalized: str) -> list[str]:
+    """Token keys + full-form fallback key. Used to index AND to probe."""
+    keys = _block_tokens(normalized)
+    if normalized:
+        keys.append(_FULL_PREFIX + normalized)
+    return keys
+
+
 def build_contributor_index(
     contrib_names: list[str],
 ) -> tuple[dict[str, list[int]], list[str]]:
@@ -99,7 +114,7 @@ def build_contributor_index(
     for i, name in enumerate(contrib_names):
         n = _normalize(name)
         normed.append(n)
-        for tok in _block_tokens(n):
+        for tok in _all_block_keys(n):
             index[tok].append(i)
 
     return index, normed
@@ -124,12 +139,12 @@ def match_principals(
 
         prin_name = str(row["principal_name"])
         prin_norm = _normalize(prin_name)
-        tokens = _block_tokens(prin_norm)
+        tokens = _all_block_keys(prin_norm)
 
         if not tokens:
             continue
 
-        # Gather candidate indices (union across tokens)
+        # Gather candidate indices (union across tokens + full-form key)
         candidate_set: set[int] = set()
         for tok in tokens:
             candidate_set.update(index.get(tok, []))

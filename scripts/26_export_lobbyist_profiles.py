@@ -210,13 +210,15 @@ def build_principal_data(pri, reg, match, sidecar_by_principal):
     """
     Returns (index_rows, profiles).
     """
-    # Registrations by principal
-    reg_by_principal = defaultdict(list)
+    # Registrations by principal — keyed by slug so variant spellings
+    # ("Premier Milk Inc" vs "Premier Milk, Inc.") collapse into one bucket.
+    reg_by_slug = defaultdict(list)
     for _, row in reg.iterrows():
         pname = str(row["principal_name"]).strip()
+        pslug = slugify(pname)
         lname = str(row["lobbyist_name"]).strip().upper()
         is_active = str(row.get("is_active", "")).lower() in ("true", "1", "yes")
-        reg_by_principal[pname].append({
+        reg_by_slug[pslug].append({
             "lobbyist_name": lname,
             "firm":          str(row.get("firm_name", "")).strip(),
             "branch":        str(row.get("branch", "")).strip(),
@@ -224,37 +226,59 @@ def build_principal_data(pri, reg, match, sidecar_by_principal):
             "since":         str(row.get("reg_eff_date", "")).strip(),
         })
 
-    # Donation matches by principal (from principal_matches.csv)
-    match_by_principal = defaultdict(list)
+    # Donation matches by principal — also keyed by slug. The matcher keys
+    # by principal_name but script 16 resolves the canonical name, so a slug
+    # collision across variants still needs a merge here to keep all matches.
+    match_by_slug = defaultdict(list)
+    seen_pairs: set = set()  # (slug, contributor_name) dedupe across variants
     for _, row in match.iterrows():
         pname = str(row["principal_name"]).strip()
-        match_by_principal[pname].append({
-            "contributor_name": str(row["contributor_name"]).strip(),
+        pslug = slugify(pname)
+        cname = str(row["contributor_name"]).strip()
+        key = (pslug, cname)
+        if key in seen_pairs:
+            continue
+        seen_pairs.add(key)
+        match_by_slug[pslug].append({
+            "contributor_name": cname,
             "match_score":      round(float(row["match_score"]), 1),
         })
+
+    # Sidecar also keyed by slug so variant-name principals surface any
+    # donation totals stored under a sibling spelling.
+    sidecar_by_slug: dict = {}
+    for pname, data in sidecar_by_principal.items():
+        sidecar_by_slug.setdefault(slugify(str(pname).strip()), data)
 
     index_rows = []
     profiles = {}
 
+    seen_slugs: set = set()
     for _, row in pri.iterrows():
         name = str(row["principal_name"]).strip()
         if not name or name.startswith("Test"):
             continue
 
         slug = slugify(name)
+        # Skip subsequent variants of the same slug; first wins. Registration +
+        # match data already merged across all variants above.
+        if slug in seen_slugs:
+            continue
+        seen_slugs.add(slug)
+
         naics = str(row.get("principal_naics", "") or "").strip()
         city  = str(row.get("city", "") or "").strip()
         state = str(row.get("state", "") or "").strip()
 
-        regs = reg_by_principal.get(name, [])
+        regs = reg_by_slug.get(slug, [])
         num_active = sum(1 for r in regs if r["is_active"])
 
-        don = sidecar_by_principal.get(name, {})
+        don = sidecar_by_slug.get(slug, {})
         donation_total = float(don.get("total_donated", 0))
         num_contributions = don.get("num_contributions", 0)
         committees_donated = don.get("committees", [])
 
-        matches = match_by_principal.get(name, [])
+        matches = match_by_slug.get(slug, [])
         donation_matches = [
             {
                 **m,
