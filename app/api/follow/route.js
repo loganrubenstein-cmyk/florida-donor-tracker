@@ -111,15 +111,20 @@ export async function GET(req) {
       .select('principal_slug, principal_name, match_score')
       .eq('donor_slug', slug)
       .order('match_score', { ascending: false })
-      .limit(20);
+      .limit(40);
 
-    return NextResponse.json({
-      principals: (data || []).map(r => ({
-        slug:  r.principal_slug,
-        name:  r.principal_name,
-        score: parseFloat(r.match_score) || 0,
-      })),
-    });
+    // Dedupe — UNION in the view can emit the same pair twice when both
+    // fuzzy_match and direct branches hit.
+    const byPslug = new Map();
+    for (const r of data || []) {
+      const score = parseFloat(r.match_score) || 0;
+      const existing = byPslug.get(r.principal_slug);
+      if (!existing || score > existing.score) {
+        byPslug.set(r.principal_slug, { slug: r.principal_slug, name: r.principal_name, score });
+      }
+    }
+    const out = Array.from(byPslug.values()).sort((a, b) => b.score - a.score).slice(0, 20);
+    return NextResponse.json({ principals: out });
   }
 
   // ── Principal → Bills lobbied ────────────────────────────────────────────
