@@ -105,7 +105,7 @@ Added the `/pulse` "New Candidates" tab:
 
 ## MEDIUM priority (should-have, not ship-blocking)
 
-### 5. `/map` needs UI/UX work + better data wiring
+### 5. `/map` needs UI/UX work + better data wiring ✅ PARTIAL 2026-04-22
 
 **Known gaps**:
 - Cities not in the hardcoded `FL_CITY_COORDS` table are invisible (counted in footer, not plotted)
@@ -119,6 +119,8 @@ Added the `/pulse` "New Candidates" tab:
 - **Medium**: swap inline SVG outline for `react-simple-maps` + FL TopoJSON for precise projection
 - **Medium**: add click-through to `/donors?city=X&state=FL`
 - **Large**: add county choropleth or ZIP-level aggregation
+
+**What was done 2026-04-22:** Audited `/api/map?view=cities` response against the existing 45-entry `FL_CITY_COORDS` lookup. 7 of the top-30 cities were missed (Clewiston $64M, Lake Buena Vista $45M, Juno Beach $42M, Venice $15M, Deerfield Beach $14M, Miami Shores $13M, Dade City $13M). Added those 7 plus 37 more common FL cities (Port St. Lucie variants, Cape Coral, Kissimmee, Palm Bay, Boynton Beach, etc.) for ~85-entry total coverage. Kept inline SVG (deferred `react-simple-maps` swap). Click-through to `/donors?city=X` not added — requires adding a `city` filter to `/api/donors` (bigger scope than a "small win"). Deferred with a comment above the table noting the audit cadence.
 
 ### 6. `connections_enriched` view doesn't exist; `/connections` page is broken ✅ DONE 2026-04-22
 

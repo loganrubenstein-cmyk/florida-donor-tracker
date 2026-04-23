@@ -11,9 +11,11 @@ const TABS = [
   { key: 'instateout',  label: 'In-State vs. Out' },
 ];
 
-// FL city → [lon, lat] for the ~30 most common donor-origin cities in the data.
+// FL city → [lon, lat] for the most common donor-origin cities in the data.
 // Coordinates are approximate city centroids; map uses a simple equirectangular
-// projection over the state's bounding box. Missing cities fall back to Tallahassee.
+// projection over the state's bounding box. Unknown cities are counted in the
+// footer but not plotted. Audit the /api/map?view=cities response against this
+// table periodically — add any city ranked in the top 40 by total$.
 const FL_CITY_COORDS = {
   'TALLAHASSEE':      [-84.280, 30.438],
   'MIAMI':            [-80.194, 25.774],
@@ -60,6 +62,54 @@ const FL_CITY_COORDS = {
   'DAVIE':            [-80.251, 26.076],
   'SUNRISE':          [-80.306, 26.141],
   'HIALEAH':          [-80.278, 25.858],
+  // Added 2026-04-22 from /api/map coverage audit — top-30 cities missed:
+  'CLEWISTON':        [-80.935, 26.755],
+  'LAKE BUENA VISTA': [-81.520, 28.395],
+  'JUNO BEACH':       [-80.066, 26.885],
+  'VENICE':           [-82.454, 27.100],
+  'DEERFIELD BEACH':  [-80.099, 26.318],
+  'MIAMI SHORES':     [-80.190, 25.864],
+  'DADE CITY':        [-82.196, 28.365],
+  // Additional common FL cities that show up in longer-tail queries:
+  'PORT SAINT LUCIE': [-80.353, 27.274],
+  'PORT ST LUCIE':    [-80.353, 27.274],
+  'PORT ST. LUCIE':   [-80.353, 27.274],
+  'CAPE CORAL':       [-81.950, 26.563],
+  'KISSIMMEE':        [-81.408, 28.292],
+  'PALM BAY':         [-80.587, 28.034],
+  'BOYNTON BEACH':    [-80.066, 26.525],
+  'SPRING HILL':      [-82.568, 28.481],
+  'POMPANO':          [-80.125, 26.238],
+  'PORT ORANGE':      [-81.006, 29.138],
+  'PALM HARBOR':      [-82.762, 28.078],
+  'LARGO':            [-82.788, 27.910],
+  'PINELLAS PARK':    [-82.700, 27.843],
+  'NORTH MIAMI':      [-80.186, 25.890],
+  'NORTH MIAMI BEACH':[-80.163, 25.933],
+  'MARATHON':         [-81.090, 24.714],
+  'KEY LARGO':        [-80.453, 25.086],
+  'OCOEE':            [-81.544, 28.569],
+  'ALTAMONTE SPRINGS':[-81.373, 28.661],
+  'APOPKA':           [-81.511, 28.676],
+  'CASSELBERRY':      [-81.328, 28.677],
+  'LONGWOOD':         [-81.339, 28.703],
+  'SANFORD':          [-81.269, 28.800],
+  'DELTONA':          [-81.264, 28.901],
+  'ORMOND BEACH':     [-81.056, 29.286],
+  'NEW SMYRNA BEACH': [-80.926, 29.026],
+  'TITUSVILLE':       [-80.808, 28.612],
+  'COCOA':            [-80.742, 28.386],
+  'ROCKLEDGE':        [-80.725, 28.350],
+  'SATELLITE BEACH':  [-80.600, 28.175],
+  'INDIALANTIC':      [-80.566, 28.088],
+  'FERNANDINA BEACH': [-81.462, 30.669],
+  'NEPTUNE BEACH':    [-81.396, 30.310],
+  'ATLANTIC BEACH':   [-81.398, 30.336],
+  'JACKSONVILLE BEACH':[-81.393, 30.295],
+  'PONTE VEDRA BEACH':[-81.388, 30.240],
+  'ST AUGUSTINE':     [-81.314, 29.901],
+  'ST. AUGUSTINE':    [-81.314, 29.901],
+  'SAINT AUGUSTINE':  [-81.314, 29.901],
 };
 
 // Florida SVG path — sourced from components/shared/FloridaOutline.js (USGS/PublicaMundi
