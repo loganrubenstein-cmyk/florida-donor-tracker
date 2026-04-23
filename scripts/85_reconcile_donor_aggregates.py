@@ -54,6 +54,10 @@ def main():
     failures = []
 
     with conn.cursor() as cur:
+        # Supabase applies a default statement_timeout via pgbouncer;
+        # REFRESH MATERIALIZED VIEW CONCURRENTLY on donors_mv (1M+ rows) easily
+        # exceeds it. Lift timeout for this connection only.
+        cur.execute("SET statement_timeout = 0")
         if not check_only:
             print("REFRESH MATERIALIZED VIEW CONCURRENTLY donors_mv …", flush=True)
             cur.execute("REFRESH MATERIALIZED VIEW CONCURRENTLY donors_mv")
