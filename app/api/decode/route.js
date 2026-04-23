@@ -48,8 +48,11 @@ export async function GET(request) {
       .eq('acct_num', acct)
       .limit(1)
       .then(r => ({ data: r.data?.[0] ?? null, error: r.error })),
+    // PostgREST can't embed candidates() on this view (aggregating CTE; PGRST200).
+    // Fetch the linked acct_nums here and hydrate candidate details in a 2nd
+    // query below.
     db.from('candidate_pc_links_v')
-      .select('candidate_acct_num, link_type, candidates(candidate_name, office_desc, election_year)')
+      .select('candidate_acct_num, link_type')
       .eq('pc_acct_num', String(acct)),
     db.from('committee_expenditure_summary')
       .select('total_spent, num_expenditures')
@@ -75,11 +78,21 @@ export async function GET(request) {
     : 0;
   const isSingleDonorPAC = topDonorPct >= 80;
 
+  const linkedAccts = [...new Set((linkedCandidates || []).map(r => r.candidate_acct_num).filter(Boolean))];
+  const candMap = {};
+  if (linkedAccts.length) {
+    const { data: candRows } = await db
+      .from('candidates')
+      .select('acct_num, candidate_name, office_desc, election_year')
+      .in('acct_num', linkedAccts);
+    for (const c of candRows || []) candMap[c.acct_num] = c;
+  }
+
   const candidates = (linkedCandidates || []).map(r => ({
     acct_num: r.candidate_acct_num,
-    name: r.candidates?.candidate_name || null,
-    office: r.candidates?.office_desc || null,
-    year: r.candidates?.election_year || null,
+    name: candMap[r.candidate_acct_num]?.candidate_name || null,
+    office: candMap[r.candidate_acct_num]?.office_desc || null,
+    year: candMap[r.candidate_acct_num]?.election_year || null,
     link_type: r.link_type,
   }));
 

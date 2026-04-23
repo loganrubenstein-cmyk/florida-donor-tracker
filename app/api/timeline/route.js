@@ -39,8 +39,10 @@ export async function GET(request) {
       .eq('acct_num', acct)
       .limit(1)
       .then(r => ({ data: r.data?.[0] ?? null, error: r.error })),
+    // PostgREST can't embed committees() on this aggregating view (PGRST200).
+    // Fetch PC acct_nums here and hydrate committee details below.
     db.from('candidate_pc_links_v')
-      .select('pc_acct_num, link_type, committees(committee_name, total_received, date_start)')
+      .select('pc_acct_num, link_type')
       .eq('candidate_acct_num', acct),
   ]);
 
@@ -65,11 +67,21 @@ export async function GET(request) {
     if (match) match.annotation = 'Election';
   }
 
+  const pcAccts = [...new Set((linkedPCs || []).map(r => r.pc_acct_num).filter(Boolean))];
+  const commMap = {};
+  if (pcAccts.length) {
+    const { data: commRows } = await db
+      .from('committees')
+      .select('acct_num, committee_name, total_received, date_start')
+      .in('acct_num', pcAccts);
+    for (const c of commRows || []) commMap[c.acct_num] = c;
+  }
+
   const pacs = (linkedPCs || []).map(r => ({
     acct_num: r.pc_acct_num,
-    name: r.committees?.committee_name || null,
-    total: parseFloat(r.committees?.total_received) || 0,
-    formed: r.committees?.date_start || null,
+    name: commMap[r.pc_acct_num]?.committee_name || null,
+    total: parseFloat(commMap[r.pc_acct_num]?.total_received) || 0,
+    formed: commMap[r.pc_acct_num]?.date_start || null,
     link_type: r.link_type,
   }));
 
