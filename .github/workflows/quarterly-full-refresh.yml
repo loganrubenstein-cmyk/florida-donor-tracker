@@ -63,12 +63,17 @@ jobs:
         uses: ./.github/actions/run-script
         with: { script: 25_export_donor_profiles.py }
 
-      # Principal matcher pipeline. Depends on data/processed/principals.csv
-      # (built by scripts/15_import_lobbyists.py, run locally — not yet wired
-      # into CI). If principals.csv is stale, matches + addresses will lag
-      # new lobbyist registrations by a quarter. Worth a follow-up to schedule
-      # 15 alongside the daily-fl-lobbyist refresh so this always sees fresh
-      # input.
+      # Principal matcher pipeline. 14 + 15 regenerate principals.csv from
+      # Online Sunshine (fresh on each run, since data/processed/ is gitignored
+      # and CI runners are ephemeral).
+      - name: "14 download lobbyist registration files"
+        uses: ./.github/actions/run-script
+        with: { script: 14_download_lobbyists.py, args: "--force" }
+
+      - name: "15 import lobbyist registrations (→ principals.csv)"
+        uses: ./.github/actions/run-script
+        with: { script: 15_import_lobbyists.py, args: "--force" }
+
       - name: "16 match principals to contributors"
         uses: ./.github/actions/run-script
         with: { script: 16_match_principals.py, args: "--force" }
