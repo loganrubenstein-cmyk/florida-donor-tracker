@@ -1,0 +1,73 @@
+name: "Report Pipeline Failure"
+description: "Collect whatever logs exist into a single report and open a GitHub issue. Tolerates missing log files."
+
+inputs:
+  title:
+    description: "Issue title"
+    required: true
+  labels:
+    description: "Comma-separated labels"
+    required: true
+  primary-log:
+    description: "Preferred log path to surface at top of report (optional)"
+    required: false
+    default: ""
+
+runs:
+  using: composite
+  steps:
+    - name: Collect logs into failure report
+      shell: bash
+      run: |
+        set -u
+        mkdir -p data/logs
+        REPORT=data/logs/failure_report.md
+        {
+          echo "# Pipeline failure report"
+          echo ""
+          echo "- workflow: ${GITHUB_WORKFLOW}"
+          echo "- run: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          echo "- commit: ${GITHUB_SHA}"
+          echo "- triggered by: ${GITHUB_EVENT_NAME}"
+          echo ""
+        } > "$REPORT"
+
+        PRIMARY="${{ inputs.primary-log }}"
+        if [ -n "$PRIMARY" ] && [ -f "$PRIMARY" ]; then
+          {
+            echo "## Primary log: $PRIMARY (last 200 lines)"
+            echo ""
+            echo '```'
+            tail -n 200 "$PRIMARY"
+            echo '```'
+            echo ""
+          } >> "$REPORT"
+        fi
+
+        LOGS=$(find data/logs -maxdepth 2 -name '*.log' 2>/dev/null | sort)
+        if [ -z "$LOGS" ]; then
+          echo "_No log files found in data/logs/. The failure likely occurred before any pipeline script produced output — check the workflow run link above._" >> "$REPORT"
+        else
+          for f in $LOGS; do
+            if [ "$f" = "$PRIMARY" ]; then
+              continue
+            fi
+            {
+              echo "## $f (last 80 lines)"
+              echo ""
+              echo '```'
+              tail -n 80 "$f"
+              echo '```'
+              echo ""
+            } >> "$REPORT"
+          done
+        fi
+
+        echo "Report written to $REPORT ($(wc -l < "$REPORT") lines)"
+
+    - name: Open issue from report
+      uses: peter-evans/create-issue-from-file@v5
+      with:
+        title: ${{ inputs.title }}
+        content-filepath: data/logs/failure_report.md
+        labels: ${{ inputs.labels }}

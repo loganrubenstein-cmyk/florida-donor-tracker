@@ -33,8 +33,8 @@ jobs:
         with: { script: 99_smoke_test.py }
       - name: Open issue on failure
         if: failure()
-        uses: peter-evans/create-issue-from-file@v5
+        uses: ./.github/actions/report-failure
         with:
           title: "[pipeline-failure:high] nightly-smoke"
-          content-filepath: data/logs/99_smoke_test.py.log
           labels: pipeline-failure,severity:high,smoke-test
+          primary-log: data/logs/99_smoke_test.py.log

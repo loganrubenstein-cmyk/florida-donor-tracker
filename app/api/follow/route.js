@@ -98,6 +98,30 @@ export async function GET(req) {
     return NextResponse.json({ candidates });
   }
 
+  // ── Donor → Principals (lobbying-side identity match) ────────────────────
+  // Phase 1 of the "dream use case". Surfaces principal_donation_matches rows
+  // >= 85 score so /follow can pivot from a corporate donor to the principal
+  // that lobbies the legislature under a matching name.
+  if (step === 'principals') {
+    const slug = searchParams.get('donor_slug') || searchParams.get('slug');
+    if (!slug) return NextResponse.json({ error: 'donor_slug required' }, { status: 400 });
+
+    const { data } = await db
+      .from('donor_principal_links_v')
+      .select('principal_slug, principal_name, match_score')
+      .eq('donor_slug', slug)
+      .order('match_score', { ascending: false })
+      .limit(20);
+
+    return NextResponse.json({
+      principals: (data || []).map(r => ({
+        slug:  r.principal_slug,
+        name:  r.principal_name,
+        score: parseFloat(r.match_score) || 0,
+      })),
+    });
+  }
+
   // ── Candidate → Votes ─────────────────────────────────────────────────────
   if (step === 'votes') {
     const acct = searchParams.get('acct');

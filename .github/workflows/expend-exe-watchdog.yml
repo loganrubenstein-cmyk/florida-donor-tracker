@@ -46,8 +46,8 @@ jobs:
 
       - name: Open issue if down
         if: steps.probe.outputs.status == 'down'
-        uses: peter-evans/create-issue-from-file@v5
+        uses: ./.github/actions/report-failure
         with:
           title: "[data-source-down] expend.exe non-200"
-          content-filepath: data/logs/expend_watchdog.log
           labels: pipeline-failure,data-source-down,severity:high
+          primary-log: data/logs/expend_watchdog.log

@@ -36,8 +36,8 @@ jobs:
           script: 11_scrape_transfers.py
       - name: Open issue on failure
         if: failure()
-        uses: peter-evans/create-issue-from-file@v5
+        uses: ./.github/actions/report-failure
         with:
           title: "[pipeline-failure:low] weekly-transfers"
-          content-filepath: data/logs/11_scrape_transfers.py.log
           labels: pipeline-failure,severity:low,data-update
+          primary-log: data/logs/11_scrape_transfers.py.log
