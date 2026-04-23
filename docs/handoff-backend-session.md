@@ -163,17 +163,21 @@ Migration `038_connections_enriched_view.sql` captures the live definition via `
 
 ## LOWER priority (polish)
 
-### 9. `vendor_canonical_slug` columns are NULL for most expenditure rows
+### 9. `vendor_canonical_slug` columns are NULL for most expenditure rows ✅ DONE 2026-04-22
 
 Vendor canonicalization schema exists (migrations 024, 028). The dedup pipeline (scripts 46a/46b) creates canonical rows, but `expenditures.vendor_canonical_slug` and `candidate_expenditures.vendor_canonical_slug` may still be NULL for rows processed before the dedup ran. VendorBar + /vendors rely on this being populated.
 
 **Fix**: backfill `vendor_canonical_slug` after dedup pipeline runs. Add a one-shot UPDATE script or a trigger.
 
-### 10. `get_vendor_profile(p_slug)` RPC missing from migrations
+**What was done 2026-04-22:** Pre-state confirmed worse than suspected — `expenditures.vendor_canonical_slug` was 0/512,793 populated (candidate_expenditures was already 99.99%). Wrote `scripts/46c_backfill_expenditures_slug.py` which does only Step 7 of 46b (no entity/alias rebuild): loads the `vendor_aliases` map, collects distinct NULL-slug `vendor_name` values, normalizes via `_vendor_norm.normalize`, and runs a chunked UPDATE via `UNNEST()` pairs (3,000 vendors per chunk to stay under pgbouncer statement_timeout). Ran to completion — `expenditures` is now 512,534/512,793 (99.9%); the 259 remainder are vendor_names with no alias match, fine. Idempotent — re-running only affects NULL rows.
+
+### 10. `get_vendor_profile(p_slug)` RPC missing from migrations ✅ DONE 2026-04-22
 
 Referenced in `lib/loadVendor.js` but not in `supabase/migrations/`. T1 added the `vendor_totals_mv` view; the RPC may still be live-only.
 
 **Fix**: capture the function definition as a migration.
+
+**What was done 2026-04-22:** Captured the live definition of `get_vendor_profile(p_slug text)` via `pg_get_functiondef` and committed as migration `040_get_vendor_profile_rpc.sql`. Uses `CREATE OR REPLACE FUNCTION`, idempotent. Returns jsonb with entity, totals, by_committee/by_candidate (top 25 each), by_year, aliases (top 50). Applied + sanity-tested.
 
 ### 11. Investigations page — content refresh cadence
 
