@@ -36,9 +36,12 @@ export async function GET(request) {
   if (city.trim()) {
     // top_location is formatted "CITY, STATE ZIP" (e.g. "MIAMI, FL 33172").
     // Prefix-match the city; fold in state if supplied.
-    const cityPat = state.trim()
-      ? `${city.trim()},%${state.trim()}%`
-      : `${city.trim()},%`;
+    // Escape % and _ so a stray character in the input can't turn into a
+    // wildcard (e.g. city="STE. %" would otherwise wildcard-match everything).
+    const escape = s => s.replace(/\\/g, '\\\\').replace(/%/g, '\\%').replace(/_/g, '\\_');
+    const cityEsc = escape(city.trim());
+    const stateEsc = state.trim() ? escape(state.trim()) : '';
+    const cityPat = stateEsc ? `${cityEsc},%${stateEsc}%` : `${cityEsc},%`;
     query = query.ilike('top_location', cityPat);
   }
 

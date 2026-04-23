@@ -53,7 +53,6 @@ const FL_CITY_COORDS = {
   'MELBOURNE':        [-80.608, 28.084],
   'PLANTATION':       [-80.233, 26.134],
   'CORAL SPRINGS':    [-80.271, 26.271],
-  'POMPANO BEACH':    [-80.125, 26.238],
   'WELLINGTON':       [-80.267, 26.659],
   'BRADENTON':        [-82.571, 27.499],
   'FORT PIERCE':      [-80.324, 27.447],
