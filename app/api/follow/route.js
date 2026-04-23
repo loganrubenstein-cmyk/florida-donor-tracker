@@ -122,6 +122,133 @@ export async function GET(req) {
     });
   }
 
+  // ── Principal → Bills lobbied ────────────────────────────────────────────
+  // Phase 2 of dream flow. Returns bills this principal lobbied, optionally
+  // filtered to a session biennium start year.
+  if (step === 'principal_bills') {
+    const pslug = searchParams.get('principal_slug') || searchParams.get('slug');
+    if (!pslug) return NextResponse.json({ error: 'principal_slug required' }, { status: 400 });
+    const session = searchParams.get('session');
+
+    let q = db
+      .from('principal_lobbied_bills')
+      .select('bill_slug, bill_number, session_year, filing_count, years, position')
+      .eq('principal_slug', pslug)
+      .order('session_year', { ascending: false })
+      .order('filing_count', { ascending: false })
+      .limit(200);
+
+    if (session) q = q.eq('session_year', parseInt(session));
+
+    const { data } = await q;
+    return NextResponse.json({
+      bills: (data || []).map(r => ({
+        bill_slug:    r.bill_slug,
+        bill_number:  r.bill_number,
+        session_year: r.session_year,
+        filing_count: r.filing_count,
+        years:        r.years || [],
+        position:     r.position || null,
+      })),
+    });
+  }
+
+  // ── Candidate votes ∩ Principal's lobbied bills ──────────────────────────
+  // Phase 3 of dream flow. Given a candidate + principal, return the candidate's
+  // votes on bills that principal lobbied — the payoff payload for /follow.
+  if (step === 'aligned_votes') {
+    const acct = searchParams.get('candidate_acct') || searchParams.get('acct');
+    const pslug = searchParams.get('principal_slug');
+    if (!acct || !pslug) {
+      return NextResponse.json({ error: 'candidate_acct and principal_slug required' }, { status: 400 });
+    }
+
+    // Resolve candidate → people_id. Mirrors the lookup in step=votes.
+    let peopleId = null;
+    {
+      const { data } = await db
+        .from('legislators')
+        .select('people_id')
+        .eq('acct_num', acct)
+        .limit(1);
+      peopleId = data?.[0]?.people_id ?? null;
+    }
+    if (!peopleId) {
+      const { data: candData } = await db
+        .from('candidates')
+        .select('candidate_name, district, office_desc')
+        .eq('acct_num', acct)
+        .limit(1);
+      const cand = candData?.[0];
+      if (cand?.candidate_name) {
+        const lastName = cand.candidate_name.trim().split(/\s+/).pop();
+        const districtNum = cand.district ? String(cand.district).match(/\d+/)?.[0] : null;
+        const chamber = /senator|senate/i.test(cand.office_desc || '') ? 'Senate'
+                      : /representative|house/i.test(cand.office_desc || '') ? 'House'
+                      : null;
+        if (lastName && districtNum && chamber) {
+          const { data: byName } = await db
+            .from('legislators')
+            .select('people_id')
+            .ilike('last_name', lastName)
+            .eq('district', parseInt(districtNum))
+            .eq('chamber', chamber)
+            .limit(1);
+          peopleId = byName?.[0]?.people_id ?? null;
+        }
+      }
+    }
+    if (!peopleId) {
+      return NextResponse.json({
+        aligned_votes: [],
+        note: 'No FL legislator record linked to this candidate.',
+      });
+    }
+
+    // Step A: bills this principal lobbied (returns bill_slug + session_year)
+    const { data: lobbied } = await db
+      .from('principal_lobbied_bills')
+      .select('bill_slug, bill_number, session_year, filing_count, position')
+      .eq('principal_slug', pslug)
+      .limit(500);
+
+    const lobbiedMap = new Map();
+    for (const r of lobbied || []) {
+      // Take highest filing_count across sessions for a given bill_slug.
+      const prev = lobbiedMap.get(r.bill_slug);
+      if (!prev || (r.filing_count || 0) > (prev.filing_count || 0)) {
+        lobbiedMap.set(r.bill_slug, r);
+      }
+    }
+    const slugs = Array.from(lobbiedMap.keys());
+    if (slugs.length === 0) return NextResponse.json({ aligned_votes: [] });
+
+    // Step B: this legislator's votes on those slugs
+    const { data: votes } = await db
+      .from('legislator_votes')
+      .select('bill_slug, bill_number, bill_title, vote_text, vote_date, session_id')
+      .eq('people_id', peopleId)
+      .in('bill_slug', slugs)
+      .order('vote_date', { ascending: false })
+      .limit(200);
+
+    const aligned = (votes || []).map(v => {
+      const l = lobbiedMap.get(v.bill_slug);
+      return {
+        bill_slug:    v.bill_slug,
+        bill_number:  v.bill_number,
+        bill_title:   v.bill_title,
+        vote:         v.vote_text,
+        vote_date:    v.vote_date,
+        session_id:   v.session_id,
+        filing_count: l?.filing_count || 0,
+        position:     l?.position || null,
+      };
+    });
+
+    return NextResponse.json({ aligned_votes: aligned });
+  }
+
   // ── Candidate → Votes ─────────────────────────────────────────────────────
   if (step === 'votes') {
     const acct = searchParams.get('acct');
