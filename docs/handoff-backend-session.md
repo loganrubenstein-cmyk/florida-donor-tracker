@@ -28,6 +28,8 @@ The relevant docs:
 - Migration 012 also declared `legislator_votes.people_id` and `bill_sponsorships.people_id` FKs. These are still missing in the live DB. Adding them requires T1 coordination.
 - Lesson: whenever PostgREST returns `PGRST200`, check `pg_constraint` before assuming a view/table is missing.
 
+**Update 2026-04-23**: With T1 confirmed off, migration `041_vote_sponsor_fks.sql` was applied — completes the original 012 intent. 0 orphans on either table vs `legislators.people_id`. PostgREST embeds on `bill_sponsorships`/`legislator_votes` now resolve with explicit FKs instead of relying on schema inference.
+
 ---
 
 ### 2. `candidates` table has no `filing_date` / `updated_at` timestamp ✅ DONE 2026-04-22
