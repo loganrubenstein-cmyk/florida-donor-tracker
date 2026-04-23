@@ -61,8 +61,12 @@ _STOPWORDS = {
     "FL", "FLORIDA", "STATE", "NATIONAL", "AMERICAN",
 }
 
-# Tokens shorter than this are skipped in the blocking index
-_MIN_TOKEN_LEN = 4
+# Tokens shorter than this are skipped in the blocking index.
+# Lowered 4 -> 3 2026-04-23 so 3-letter brand names (GEO, CVS, UPS, IBM,
+# AT&T -> "AT T", etc.) enter the candidate pool instead of being filtered
+# out before any scoring happens. The MATCH_THRESHOLD=82 + token_set_ratio
+# still prevents spurious matches; only the blocking index widens.
+_MIN_TOKEN_LEN = 3
 
 
 def _normalize(name: str) -> str:
