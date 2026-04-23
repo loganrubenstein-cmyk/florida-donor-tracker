@@ -106,21 +106,32 @@ export async function GET(req) {
     const slug = searchParams.get('donor_slug') || searchParams.get('slug');
     if (!slug) return NextResponse.json({ error: 'donor_slug required' }, { status: 400 });
 
-    const { data } = await db
-      .from('donor_principal_links_v')
-      .select('principal_slug, principal_name, match_score')
-      .eq('donor_slug', slug)
-      .order('match_score', { ascending: false })
-      .limit(40);
+    const [linksRes, addrRes] = await Promise.all([
+      db.from('donor_principal_links_v')
+        .select('principal_slug, principal_name, match_score')
+        .eq('donor_slug', slug)
+        .order('match_score', { ascending: false })
+        .limit(40),
+      db.from('donor_principal_address_corroboration_v')
+        .select('principal_slug')
+        .eq('donor_slug', slug),
+    ]);
+
+    const addrPrincipalSet = new Set((addrRes.data || []).map(r => r.principal_slug));
 
     // Dedupe — UNION in the view can emit the same pair twice when both
     // fuzzy_match and direct branches hit.
     const byPslug = new Map();
-    for (const r of data || []) {
+    for (const r of linksRes.data || []) {
       const score = parseFloat(r.match_score) || 0;
       const existing = byPslug.get(r.principal_slug);
       if (!existing || score > existing.score) {
-        byPslug.set(r.principal_slug, { slug: r.principal_slug, name: r.principal_name, score });
+        byPslug.set(r.principal_slug, {
+          slug:                  r.principal_slug,
+          name:                  r.principal_name,
+          score,
+          address_corroborated:  addrPrincipalSet.has(r.principal_slug),
+        });
       }
     }
     const out = Array.from(byPslug.values()).sort((a, b) => b.score - a.score).slice(0, 20);
