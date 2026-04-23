@@ -12,8 +12,8 @@ name: Weekly — Legislature Refresh
 # forwarded to step env via the composite action's explicit env map.
 
 on:
-  # schedule:
-  #   - cron: '0 9 * * 0'   # UNCOMMENT AFTER T1 REVIEW — Sundays 09:00 UTC
+  schedule:
+    - cron: '0 9 * * 0'   # Sundays 09:00 UTC — T1 reviewed + approved 2026-04-23
   workflow_dispatch:
 
 concurrency:

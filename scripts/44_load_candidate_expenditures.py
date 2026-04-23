@@ -130,7 +130,11 @@ def main() -> int:
 
     print(f"Source: {CSV_PATH} ({CSV_PATH.stat().st_size / 1e6:.1f} MB)")
 
-    conn = psycopg2.connect(DB_URL)
+    # TCP keepalives — see 41_load_contributions.py for rationale.
+    conn = psycopg2.connect(
+        DB_URL,
+        keepalives=1, keepalives_idle=30, keepalives_interval=10, keepalives_count=5,
+    )
     conn.autocommit = False
     cur = conn.cursor()
     cur.execute("SET statement_timeout = 0")

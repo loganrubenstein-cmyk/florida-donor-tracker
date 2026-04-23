@@ -339,7 +339,16 @@ def main() -> int:
     print(f"Source: {CSV_PATH}")
     print(f"Size:   {CSV_PATH.stat().st_size / 1e9:.2f} GB")
 
-    conn = psycopg2.connect(DB_URL)
+    # TCP keepalives keep the pooler from dropping the socket on long multi-hour
+    # loads. Without these, the final COUNT(*) at line ~449 hits
+    # "could not receive data from server: Connection timed out" after ~2h.
+    conn = psycopg2.connect(
+        DB_URL,
+        keepalives=1,
+        keepalives_idle=30,
+        keepalives_interval=10,
+        keepalives_count=5,
+    )
     conn.autocommit = False
     cur = conn.cursor()
     # Disable statement timeout — COPY on 250K-row chunks can take >30s on pooled connections
