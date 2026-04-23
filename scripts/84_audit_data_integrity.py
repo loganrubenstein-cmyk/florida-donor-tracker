@@ -590,10 +590,20 @@ def main():
 
     selected = set((args.only or "").upper().split(",")) if args.only else None
 
-    conn = psycopg2.connect(DB_URL)
+    # TCP keepalives: Supabase's pgbouncer pool silently drops sockets on long
+    # idle periods. Without these, a slow check can hang indefinitely waiting
+    # on a dead socket (nightly smoke was running out the 45-min workflow
+    # timeout for 2 consecutive days before this fix). statement_timeout caps
+    # any single pathologically-slow query at 10 minutes — individual checks
+    # should never need more.
+    conn = psycopg2.connect(
+        DB_URL,
+        keepalives=1, keepalives_idle=30,
+        keepalives_interval=10, keepalives_count=5,
+    )
     conn.autocommit = True
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-    cur.execute("SET statement_timeout = 0")
+    cur.execute("SET statement_timeout = '10min'")
 
     results = []
     for letter, fn in ALL_CHECKS:
