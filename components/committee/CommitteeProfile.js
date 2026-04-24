@@ -257,9 +257,13 @@ export default function CommitteeProfile({ data, annotations = {}, linkedCandida
                     {i + 1}
                   </td>
                   <td style={{ padding: '0.45rem 0.6rem', wordBreak: 'break-word' }}>
-                    <a href={`/donor/${donor.slug || slugify(donor.name)}`} style={{ color: 'var(--orange)', textDecoration: 'none' }}>
-                      {donor.name}
-                    </a>
+                    {donor.slug ? (
+                      <a href={`/donor/${donor.slug}`} style={{ color: 'var(--orange)', textDecoration: 'none' }}>
+                        {donor.name}
+                      </a>
+                    ) : (
+                      <span style={{ color: 'var(--text)' }}>{donor.name}</span>
+                    )}
                   </td>
                   <td style={{ padding: '0.45rem 0.6rem', color: TYPE_COLOR[donor.type] || 'var(--text-dim)', fontSize: '0.68rem' }}>
                     {donor.type}

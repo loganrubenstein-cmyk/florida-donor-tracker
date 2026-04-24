@@ -87,12 +87,16 @@ export default function DonorTable({ donors: rawDonors }) {
                 {rankMap.get(donor.name)}
               </td>
               <td style={{ padding: '0.55rem 0.75rem', color: 'var(--text)' }}>
-                <a href={`/donor/${donor.slug || slugify(donor.name)}`}
-                  style={{ color: 'var(--orange)', textDecoration: 'none' }}
-                  onMouseEnter={e => e.target.style.color = 'var(--teal)'}
-                  onMouseLeave={e => e.target.style.color = 'var(--text)'}>
-                  {donor.name}
-                </a>
+                {donor.slug ? (
+                  <a href={`/donor/${donor.slug}`}
+                    style={{ color: 'var(--orange)', textDecoration: 'none' }}
+                    onMouseEnter={e => e.target.style.color = 'var(--teal)'}
+                    onMouseLeave={e => e.target.style.color = 'var(--text)'}>
+                    {donor.name}
+                  </a>
+                ) : (
+                  <span>{donor.name}</span>
+                )}
               </td>
               <td style={{ padding: '0.55rem 0.75rem' }}>
                 <TypeBadge type={donor.type} />

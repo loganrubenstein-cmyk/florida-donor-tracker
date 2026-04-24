@@ -4,6 +4,7 @@ import BackLinks from '@/components/BackLinks';
 import SourceLink from '@/components/shared/SourceLink';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import EntityHeader from '@/components/shared/EntityHeader';
+import NewsBlock from '@/components/shared/NewsBlock';
 import TabbedProfile from '@/components/shared/TabbedProfile';
 import { slugify } from '@/lib/slugify';
 import { fmtMoney, fmtMoneyCompact, fmtCount, fmtAvgContribution, avgContribution } from '@/lib/fmt';
@@ -62,7 +63,20 @@ export default function PrincipalProfile({ data, compData = null }) {
 
   const location     = [data.city, data.state].filter(Boolean).join(', ');
   const industry     = data.industry && data.industry !== 'Other' ? data.industry : null;
-  const industrySlug = industry ? slugify(industry) : null;
+  // Principal.industry is more fine-grained than the /industry/[slug] directory
+  // (which uses a fixed 14-bucket set: agriculture, business-consulting, etc.).
+  // Only link when the slug exists in that directory — otherwise the label
+  // still shows, but as plain text so we don't ship dead /industry/* links.
+  const VALID_INDUSTRY_SLUGS = new Set([
+    'agriculture', 'business-consulting', 'construction', 'education',
+    'finance-insurance', 'government-public-service', 'healthcare', 'legal',
+    'not-employed', 'other', 'political-lobbying', 'real-estate',
+    'retail-hospitality', 'retired', 'technology-engineering',
+  ]);
+  const rawIndustrySlug = industry ? slugify(industry) : null;
+  const industrySlug = rawIndustrySlug && VALID_INDUSTRY_SLUGS.has(rawIndustrySlug)
+    ? rawIndustrySlug
+    : null;
 
   // Aggregate quarterly comp data by year for trend chart
   const annualSpend = compData?.by_quarter?.length > 0
@@ -410,6 +424,7 @@ export default function PrincipalProfile({ data, compData = null }) {
 
   const sourcesContent = (
     <div>
+      <NewsBlock articles={data.news || []} />
       <SectionLabel>Research</SectionLabel>
       <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
         {[
@@ -530,7 +545,15 @@ export default function PrincipalProfile({ data, compData = null }) {
         name={data.name}
         typeBadge={{ label: 'PRINCIPAL', color: 'var(--teal)' }}
         badges={[
-          ...(industry && industrySlug ? [{ label: industry, color: 'rgba(100,140,220,0.6)', href: `/industry/${industrySlug}` }] : []),
+          // Badge always renders when industry known; link only when the slug
+          // maps to a real /industry/<slug> page (see VALID_INDUSTRY_SLUGS).
+          ...(industry
+            ? [{
+                label: industry,
+                color: 'rgba(100,140,220,0.6)',
+                href: industrySlug ? `/industry/${industrySlug}` : undefined,
+              }]
+            : []),
           ...(data.donation_total > 0 ? [{ label: 'DONATION MATCH', color: 'var(--orange)' }] : []),
           ...(stateContracts.length > 0 ? [{ label: 'STATE CONTRACTOR', color: 'var(--gold)' }] : []),
         ]}
