@@ -110,6 +110,10 @@ export default function DonorsList() {
     setExporting(true);
     try {
       const params = new URLSearchParams({ q: debouncedQ, type, industry, sort: sortBy, sort_dir: sortDir, export: '1' });
+      // Apply same location filters as the visible result set so CSV export
+      // matches what users see in the table.
+      if (cityFilter)  params.set('city', cityFilter);
+      if (stateFilter) params.set('state', stateFilter);
       const res = await fetch(`/api/donors?${params}`);
       const json = await res.json();
       const rows = json.data || [];

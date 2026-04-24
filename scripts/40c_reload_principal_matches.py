@@ -21,13 +21,19 @@ import psycopg2
 from psycopg2.extras import execute_values
 
 ROOT = Path(__file__).parent.parent
+# .env.local exists locally but not in CI (where SUPABASE_DB_URL comes from
+# repository secrets via the workflow env: block). Read the file only if
+# present.
 dotenv = ROOT / ".env.local"
-for line in dotenv.read_text().split("\n"):
-    if "=" in line and not line.startswith("#"):
-        k, v = line.split("=", 1)
-        os.environ.setdefault(k.strip(), v.strip())
+if dotenv.exists():
+    for line in dotenv.read_text().split("\n"):
+        if "=" in line and not line.startswith("#"):
+            k, v = line.split("=", 1)
+            os.environ.setdefault(k.strip(), v.strip())
 
-DB_URL = os.environ["SUPABASE_DB_URL"]
+DB_URL = os.environ.get("SUPABASE_DB_URL")
+if not DB_URL:
+    sys.exit("SUPABASE_DB_URL not set (need .env.local locally or env var in CI)")
 PRIN_DIR = ROOT / "public" / "data" / "principals"
 
 
