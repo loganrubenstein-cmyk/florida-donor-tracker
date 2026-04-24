@@ -8,7 +8,10 @@ import { DATA_LAST_UPDATED } from '@/lib/dataLastUpdated'
 import { fmtMoneyCompact } from '@/lib/fmt'
 import Link from 'next/link'
 
-export const dynamic = 'force-dynamic';
+// Counters (candidate count, contributions count, totals, race leaders) are
+// expensive — exact counts across 22M rows take seconds. Update on a 5-min
+// cycle so each visitor doesn't re-pay the cost.
+export const revalidate = 300;
 
 export const metadata = {
   title: { absolute: 'Florida Influence — Follow the Money in Florida Politics' },
