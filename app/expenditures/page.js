@@ -4,7 +4,7 @@ import { fmtMoneyCompact, fmtMoney, fmtCount } from '@/lib/fmt';
 import BackLinks from '@/components/BackLinks';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 1800;
 
 export const metadata = {
   title: 'Expenditures',

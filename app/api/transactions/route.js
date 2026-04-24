@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { cachedJson } from '@/lib/cachedJson';
 import { getDb } from '@/lib/db';
 import { toCsvResponse } from '@/lib/csv';
 
@@ -155,7 +156,7 @@ export async function GET(request) {
     return toCsvResponse(csvRows, 'florida-transactions.csv');
   }
 
-  return NextResponse.json({
+  return cachedJson({
     data: rows,
     total,
     page,

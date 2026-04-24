@@ -67,7 +67,7 @@ function getElectionLookup() {
   return _electionLookup;
 }
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 const PARTY_LABEL = { REP: 'Republican', DEM: 'Democrat', NOP: 'No Party', IND: 'Independent' };
 

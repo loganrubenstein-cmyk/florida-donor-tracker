@@ -44,9 +44,12 @@ DATA_DIR       = PROJECT_ROOT / "public" / "data"
 
 GOOGLE_NEWS_RSS = "https://news.google.com/rss/search"
 
-MAX_COMMITTEES = 50
-MAX_DONORS     = 50
-MAX_CANDIDATES = 25
+MAX_COMMITTEES = 200
+MAX_DONORS     = 200
+MAX_CANDIDATES = 200
+MAX_LOBBYISTS  = 100
+MAX_PRINCIPALS = 100
+MAX_FIRMS      = 100
 REQUEST_DELAY  = 2.5    # seconds between Google News requests
 CACHE_HOURS    = 24     # skip entities fetched within this many hours
 
@@ -175,6 +178,48 @@ def load_top_entities() -> list[dict]:
                 "entity_id":   str(c["acct_num"]),
                 "entity_name": c["candidate_name"],
                 "search_name": c["candidate_name"],
+            })
+
+    # Top lobbyists (by num_principals)
+    lob_path = DATA_DIR / "lobbyists" / "index.json"
+    if lob_path.exists():
+        lobbyists = json.loads(lob_path.read_text())
+        lobbyists.sort(key=lambda x: x.get("num_principals", 0), reverse=True)
+        for l in lobbyists[:MAX_LOBBYISTS]:
+            entities.append({
+                "key":         f"lobbyist_{l['slug']}",
+                "entity_type": "lobbyist",
+                "entity_id":   l["slug"],
+                "entity_name": l["name"],
+                "search_name": l["name"],
+            })
+
+    # Top principals (by donation_total)
+    prin_path = DATA_DIR / "principals" / "index.json"
+    if prin_path.exists():
+        principals = json.loads(prin_path.read_text())
+        principals.sort(key=lambda x: x.get("donation_total", 0), reverse=True)
+        for p in principals[:MAX_PRINCIPALS]:
+            entities.append({
+                "key":         f"principal_{p['slug']}",
+                "entity_type": "principal",
+                "entity_id":   p["slug"],
+                "entity_name": p["name"],
+                "search_name": p["name"],
+            })
+
+    # Top lobbying firms (by total_comp)
+    firm_path = DATA_DIR / "lobbying_firms" / "index.json"
+    if firm_path.exists():
+        firms = json.loads(firm_path.read_text())
+        firms.sort(key=lambda x: x.get("total_comp", 0), reverse=True)
+        for f in firms[:MAX_FIRMS]:
+            entities.append({
+                "key":         f"firm_{f['slug']}",
+                "entity_type": "firm",
+                "entity_id":   f["slug"],
+                "entity_name": f["firm_name"],
+                "search_name": f["firm_name"],
             })
 
     return entities

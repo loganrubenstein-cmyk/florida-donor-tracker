@@ -5,6 +5,7 @@ import SourceLink from '@/components/shared/SourceLink';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import FreshnessBadge from '@/components/shared/FreshnessBadge';
 import EntityHeader from '@/components/shared/EntityHeader';
+import NewsBlock from '@/components/shared/NewsBlock';
 import TabbedProfile from '@/components/shared/TabbedProfile';
 import { slugify } from '@/lib/slugify';
 import { fmtMoneyCompact } from '@/lib/fmt';
@@ -300,6 +301,7 @@ export default function LobbyistProfile({ data }) {
 
   const sourcesContent = (
     <div>
+      <NewsBlock articles={data.news || []} />
       <SectionLabel>Research</SectionLabel>
       <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
         {[

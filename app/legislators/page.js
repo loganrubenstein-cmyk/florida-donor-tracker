@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import LegislatorsList from '@/components/legislators/LegislatorsList';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 1800;
 
 export const metadata = {
   title: 'Florida Legislators',

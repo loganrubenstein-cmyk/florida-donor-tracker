@@ -5,7 +5,7 @@ import { fmtCount } from '../../../lib/fmt';
 import { slugify } from '@/lib/slugify';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 1800;
 
 export const metadata = {
   title: 'Most Lobbied Bills',

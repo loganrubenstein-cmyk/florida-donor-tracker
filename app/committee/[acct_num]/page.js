@@ -6,7 +6,7 @@ import { getDb } from '@/lib/db';
 import { buildMeta } from '@/lib/seo';
 
 // Server-rendered on demand — no static file dependency
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 async function loadLinkedCandidates(acctNum) {
   const db = getDb();

@@ -11,7 +11,7 @@ import dynamicImport from 'next/dynamic';
 
 const BillMoneyMap = dynamicImport(() => import('@/components/lobbying/BillMoneyMap'), { ssr: false });
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 1800;
 
 // Generate static params for top 500 most-lobbied bills (reads committed top_bills.json)
 export async function generateStaticParams() {

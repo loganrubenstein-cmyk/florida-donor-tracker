@@ -4,7 +4,7 @@ import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import SectionHeader from '@/components/shared/SectionHeader';
 import { fmtMoneyCompact } from '@/lib/fmt';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 1800;
 
 async function getData() {
   const db = getDb();

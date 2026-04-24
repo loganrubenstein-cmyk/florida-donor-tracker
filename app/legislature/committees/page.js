@@ -5,7 +5,7 @@ import BackLinks from '@/components/BackLinks';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import SectionHeader from '@/components/shared/SectionHeader';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 1800;
 
 export const metadata = {
   title: 'Florida Legislative Committees',

@@ -3,7 +3,7 @@ import { getDb } from '@/lib/db';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import { fmtCount } from '@/lib/fmt';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 1800;
 
 export const metadata = {
   title: 'Lobbying Issue Areas',

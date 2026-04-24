@@ -4,7 +4,7 @@ import { fmtMoney, fmtMoneyCompact, fmtDate } from '@/lib/fmt';
 import { buildMeta } from '@/lib/seo';
 import BackLinks from '@/components/BackLinks';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 1800;
 
 export const metadata = buildMeta({
   title: 'Florida Federal Individual Donors',

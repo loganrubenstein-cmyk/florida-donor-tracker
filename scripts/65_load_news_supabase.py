@@ -123,8 +123,10 @@ def main() -> int:
                 etype = m.get("entity_type", "")
                 eid   = str(m.get("entity_id", "")).strip()
                 ename = m.get("entity_name", "")
-                acct  = eid if etype in ("candidate", "committee") else None
-                slug  = eid if etype == "donor" else None
+                ACCT_TYPES = {"candidate", "committee"}
+                SLUG_TYPES = {"donor", "lobbyist", "principal", "firm", "vendor"}
+                acct  = eid if etype in ACCT_TYPES else None
+                slug  = eid if etype in SLUG_TYPES else None
 
                 for art in m.get("articles", []):
                     entity_rows.append((
@@ -150,9 +152,12 @@ def main() -> int:
                 etype = d.get("entity_type", "")
                 eid   = str(d.get("entity_id", "")).strip()
                 ename = d.get("entity_name", "")
-                acct  = eid if etype in ("candidate", "committee") else None
-                slug  = eid if etype == "donor" else None
+                ACCT_TYPES = {"candidate", "committee"}
+                SLUG_TYPES = {"donor", "lobbyist", "principal", "firm", "vendor"}
+                acct  = eid if etype in ACCT_TYPES else None
+                slug  = eid if etype in SLUG_TYPES else None
 
+                source_tag = "exa" if f.stem.endswith("_exa") else "google_news"
                 for art in d.get("articles", []):
                     entity_rows.append((
                         etype, acct, slug, ename,
@@ -161,7 +166,7 @@ def main() -> int:
                         art.get("outlet") or art.get("source", ""),
                         art.get("published", ""),
                         art.get("snippet", ""),
-                        "google_news",
+                        source_tag,
                     ))
                     gn_count += 1
             print(f"by_entity/: {len(list(by_entity_dir.glob('*.json')))} files → {gn_count} article links")

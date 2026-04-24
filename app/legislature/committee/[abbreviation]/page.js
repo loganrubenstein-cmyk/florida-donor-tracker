@@ -7,7 +7,7 @@ import DataTrustBlock from '@/components/shared/DataTrustBlock';
 import { buildMeta } from '@/lib/seo';
 import { slugify } from '@/lib/slugify';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 export async function generateMetadata({ params }) {
   const result = await loadLegislativeCommittee(params.abbreviation);

@@ -33,6 +33,8 @@ DATA_DIR = PROJECT_ROOT / "public" / "data"
 MAX_COMMITTEES = 500
 MAX_DONORS     = 500
 MAX_CANDIDATES = 500
+MAX_LOBBYISTS  = 500
+MAX_PRINCIPALS = 500
 
 _STRIP_RE = re.compile(r"[^\w\s]")
 _WS_RE    = re.compile(r"\s+")
@@ -116,6 +118,28 @@ def load_candidates(max_n: int) -> list[dict]:
     return results
 
 
+def load_lobbyists(max_n: int) -> list[dict]:
+    path = DATA_DIR / "lobbyists" / "index.json"
+    if not path.exists():
+        print(f"  WARNING: {path} not found; skipping lobbyist matching")
+        return []
+    data = json.loads(path.read_text())
+    data.sort(key=lambda x: x.get("num_principals", 0), reverse=True)
+    return [{"entity_type": "lobbyist", "entity_id": d["slug"],
+             "entity_name": d["name"], "entity_slug": d["slug"]} for d in data[:max_n]]
+
+
+def load_principals(max_n: int) -> list[dict]:
+    path = DATA_DIR / "principals" / "index.json"
+    if not path.exists():
+        print(f"  WARNING: {path} not found; skipping principal matching")
+        return []
+    data = json.loads(path.read_text())
+    data.sort(key=lambda x: x.get("donation_total", 0), reverse=True)
+    return [{"entity_type": "principal", "entity_id": d["slug"],
+             "entity_name": d["name"], "entity_slug": d["slug"]} for d in data[:max_n]]
+
+
 def build_search_text(article: dict) -> str:
     """Combine title + summary into a single normalized search string."""
     parts = [article.get("title", ""), article.get("summary", "")]
@@ -136,8 +160,11 @@ def main() -> int:
     committees = load_committees(MAX_COMMITTEES)
     donors     = load_donors(MAX_DONORS)
     candidates = load_candidates(MAX_CANDIDATES)
-    entities   = committees + donors + candidates
-    print(f"  {len(committees):,} committees, {len(donors):,} donors, {len(candidates):,} candidates")
+    lobbyists  = load_lobbyists(MAX_LOBBYISTS)
+    principals = load_principals(MAX_PRINCIPALS)
+    entities   = committees + donors + candidates + lobbyists + principals
+    print(f"  {len(committees):,} committees, {len(donors):,} donors, {len(candidates):,} candidates, "
+          f"{len(lobbyists):,} lobbyists, {len(principals):,} principals")
 
     # Skip entities with very short names (e.g., "AT&T" alone would match too broadly)
     MIN_NAME_LEN = 6

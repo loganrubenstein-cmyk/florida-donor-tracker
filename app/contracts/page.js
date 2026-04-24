@@ -1,6 +1,6 @@
 import ContractsList from '@/components/contracts/ContractsList';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 1800;
 
 export const metadata = {
   title: 'Florida State Contracts',

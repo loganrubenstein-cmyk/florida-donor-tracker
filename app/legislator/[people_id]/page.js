@@ -8,7 +8,7 @@ import SourceLink from '@/components/shared/SourceLink';
 import TabbedProfile from '@/components/shared/TabbedProfile';
 import { buildMeta } from '@/lib/seo';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 export async function generateMetadata({ params }) {
   const { legislator } = await loadLegislator(params.people_id);

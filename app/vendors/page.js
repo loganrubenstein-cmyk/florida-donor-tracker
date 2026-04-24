@@ -2,7 +2,7 @@ import { buildMeta } from '@/lib/seo';
 import VendorsList from '@/components/vendors/VendorsList';
 import BackLinks from '@/components/BackLinks';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 1800;
 
 export const metadata = buildMeta({
   title: 'Vendors — Florida Political Payees',

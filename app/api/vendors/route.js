@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { cachedJson } from '@/lib/cachedJson';
 import { getDb } from '@/lib/db';
 
 const PAGE_SIZE = 50;
@@ -27,7 +28,7 @@ export async function GET(req) {
   const { data, count, error } = await query;
   if (error) return NextResponse.json({ data: [], total: 0, pages: 0, error: error.message });
 
-  return NextResponse.json({
+  return cachedJson({
     data: (data || []).map(v => ({
       slug: v.slug,
       name: v.name,

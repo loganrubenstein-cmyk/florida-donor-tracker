@@ -4,8 +4,9 @@ import { loadVendor } from '@/lib/loadVendor';
 import { fmtMoney, fmtMoneyCompact } from '@/lib/fmt';
 import { buildMeta } from '@/lib/seo';
 import BackLinks from '@/components/BackLinks';
+import NewsBlock from '@/components/shared/NewsBlock';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
@@ -28,7 +29,7 @@ export default async function VendorPage({ params }) {
   const v = await loadVendor(slug);
   if (!v) notFound();
 
-  const { entity, totals, by_committee, by_candidate, by_year, aliases } = v;
+  const { entity, totals, by_committee, by_candidate, by_year, aliases, news } = v;
   const grandTotal = Number(totals.committee_total) + Number(totals.candidate_total);
   const grandPayments = (totals.committee_payments || 0) + (totals.candidate_payments || 0);
 
@@ -113,6 +114,8 @@ export default async function VendorPage({ params }) {
           </div>
         </Section>
       )}
+
+      {news?.length > 0 && <NewsBlock articles={news} />}
 
       <div style={{ marginTop: '2rem', padding: '0.9rem', border: '1px solid var(--border)', borderRadius: '3px', fontSize: '0.76rem', color: 'var(--text-dim)' }}>
         Totals aggregate raw expenditures filed by Florida committees and candidates with the FL Division of Elections. Name matching uses exact normalization plus pg_trgm fuzzy similarity (≥0.75); look-alike vendor names are clustered under a single canonical entity.

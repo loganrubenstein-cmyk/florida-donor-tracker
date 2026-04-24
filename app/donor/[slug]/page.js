@@ -6,7 +6,7 @@ import { buildMeta } from '@/lib/seo';
 import { fmtMoneyCompact } from '@/lib/fmt';
 
 // Server-rendered on demand — no static file dependency
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
