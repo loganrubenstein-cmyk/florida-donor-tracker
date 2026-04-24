@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { buildMeta } from '@/lib/seo';
 import VendorsList from '@/components/vendors/VendorsList';
 import BackLinks from '@/components/BackLinks';
@@ -25,7 +26,9 @@ export default function VendorsPage() {
           205,254 canonical vendors aggregated from FL committee + candidate expenditures. Aliased names (e.g., &quot;FPL&quot; and &quot;Florida Power &amp; Light&quot;) are merged via exact normalization + pg_trgm fuzzy matching.
         </div>
       </div>
-      <VendorsList />
+      <Suspense fallback={<div style={{ color: 'var(--text-dim)' }}>Loading…</div>}>
+        <VendorsList />
+      </Suspense>
     </main>
   );
 }
