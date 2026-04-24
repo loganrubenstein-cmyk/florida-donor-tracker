@@ -1,6 +1,6 @@
 const DOE_URLS = {
-  candidate: ()   => 'https://dos.fl.gov/elections/candidates-committees/campaign-finance/campaign-finance-database/',
-  committee: ()   => 'https://dos.fl.gov/elections/candidates-committees/campaign-finance/campaign-finance-database/',
+  candidate: (id) => `https://dos.elections.myflorida.com/cgi-bin/TreSel.exe?account=${id}`,
+  committee: (id) => `https://dos.elections.myflorida.com/cgi-bin/TreSel.exe?account=${id}`,
   donor:     ()   => 'https://dos.fl.gov/elections/candidates-committees/campaign-finance/campaign-finance-database/',
   lobbyist:  (id) => `https://www.floridalobbyist.gov/LobbyistProfilePage/ProfilePage?id=${id}`,
   principal: (id) => `https://www.floridalobbyist.gov/CompensationReportSearch`,

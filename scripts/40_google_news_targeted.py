@@ -130,6 +130,16 @@ def is_stale(manifest: dict, key: str) -> bool:
         return True
 
 
+def lobbyist_display_name(raw: str) -> str:
+    """Convert 'BAILEY MARIO' → 'Mario Bailey' for Google News searches."""
+    parts = raw.strip().split()
+    if len(parts) >= 2:
+        last  = parts[0].title()
+        first = " ".join(p.title().rstrip(".") for p in parts[1:])
+        return f"{first} {last}"
+    return raw.title()
+
+
 def slugify_simple(name: str) -> str:
     s = re.sub(r"[^\w\s-]", "", name.lower())
     s = re.sub(r"[\s_]+", "-", s).strip("-")
@@ -187,11 +197,12 @@ def load_top_entities() -> list[dict]:
         lobbyists.sort(key=lambda x: x.get("num_principals", 0), reverse=True)
         for l in lobbyists[:MAX_LOBBYISTS]:
             entities.append({
-                "key":         f"lobbyist_{l['slug']}",
-                "entity_type": "lobbyist",
-                "entity_id":   l["slug"],
-                "entity_name": l["name"],
-                "search_name": l["name"],
+                "key":          f"lobbyist_{l['slug']}",
+                "entity_type":  "lobbyist",
+                "entity_id":    l["slug"],
+                "entity_name":  l["name"],
+                "search_name":  lobbyist_display_name(l["name"]),
+                "search_extra": "Florida lobbyist",
             })
 
     # Top principals (by donation_total)
@@ -215,11 +226,12 @@ def load_top_entities() -> list[dict]:
         firms.sort(key=lambda x: x.get("total_comp", 0), reverse=True)
         for f in firms[:MAX_FIRMS]:
             entities.append({
-                "key":         f"firm_{f['slug']}",
-                "entity_type": "firm",
-                "entity_id":   f["slug"],
-                "entity_name": f["firm_name"],
-                "search_name": f["firm_name"],
+                "key":          f"firm_{f['slug']}",
+                "entity_type":  "firm",
+                "entity_id":    f["slug"],
+                "entity_name":  f["firm_name"],
+                "search_name":  f["firm_name"],
+                "search_extra": "Florida lobbying",
             })
 
     return entities
@@ -245,9 +257,10 @@ def main(force: bool = False) -> int:
             skipped += 1
             continue
 
+        extra = entity.get("search_extra", "Florida")
         print(f"[{i}/{len(entities)}] {entity['entity_type']:12} {name[:55]}", flush=True)
 
-        articles = fetch_google_news(name)
+        articles = fetch_google_news(name, extra=extra)
         print(f"    → {len(articles)} articles")
 
         out_file = NEWS_BY_ENTITY / f"{key}.json"

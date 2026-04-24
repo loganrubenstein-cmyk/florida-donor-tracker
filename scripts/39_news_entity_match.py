@@ -40,6 +40,16 @@ _STRIP_RE = re.compile(r"[^\w\s]")
 _WS_RE    = re.compile(r"\s+")
 
 
+def lobbyist_display_name(raw: str) -> str:
+    """Convert 'BAILEY MARIO' → 'Mario Bailey' for readable matching."""
+    parts = raw.strip().split()
+    if len(parts) >= 2:
+        last  = parts[0].title()
+        first = " ".join(p.title().rstrip(".") for p in parts[1:])
+        return f"{first} {last}"
+    return raw.title()
+
+
 def normalize(text: str) -> str:
     s = text.upper()
     s = _STRIP_RE.sub(" ", s)
@@ -126,7 +136,8 @@ def load_lobbyists(max_n: int) -> list[dict]:
     data = json.loads(path.read_text())
     data.sort(key=lambda x: x.get("num_principals", 0), reverse=True)
     return [{"entity_type": "lobbyist", "entity_id": d["slug"],
-             "entity_name": d["name"], "entity_slug": d["slug"]} for d in data[:max_n]]
+             "entity_name": lobbyist_display_name(d["name"]),
+             "entity_slug": d["slug"]} for d in data[:max_n]]
 
 
 def load_principals(max_n: int) -> list[dict]:
