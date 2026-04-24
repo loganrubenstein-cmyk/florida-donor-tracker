@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { cachedJson } from '@/lib/cachedJson';
 import { getDb } from '@/lib/db';
 
 const PAGE_SIZE    = 50;
@@ -60,7 +61,7 @@ export async function GET(request) {
     slug: slugify(p.display_name),
   }));
 
-  return NextResponse.json({
+  return cachedJson({
     data: withSlugs,
     total: count || 0,
     page,

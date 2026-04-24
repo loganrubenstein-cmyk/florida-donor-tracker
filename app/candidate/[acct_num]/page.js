@@ -20,7 +20,7 @@ function getElectionLookup() {
 }
 
 // Server-rendered on demand — no static file dependency
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 export async function generateMetadata({ params }) {
   const { acct_num } = await params;

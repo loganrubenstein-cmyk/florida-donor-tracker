@@ -4,7 +4,7 @@ import { getDb } from '@/lib/db';
 import SectionHeader from '@/components/shared/SectionHeader';
 import { slugify } from '@/lib/slugify';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 1800;
 
 export const metadata = {
   title: 'Florida Legislature',

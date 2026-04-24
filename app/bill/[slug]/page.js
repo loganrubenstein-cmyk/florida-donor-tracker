@@ -5,7 +5,7 @@ import { slugify } from '@/lib/slugify';
 import { buildMeta } from '@/lib/seo';
 import DataTrustBlock from '@/components/shared/DataTrustBlock';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;

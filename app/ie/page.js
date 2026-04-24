@@ -10,7 +10,7 @@ import { getPoliticianSlugByAcctNum } from '@/lib/loadCandidate';
 
 const IEYearChart = importDynamic(() => import('@/components/ie/IEYearChart'), { ssr: false });
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 1800;
 
 export const metadata = {
   title: 'Independent Expenditures',

@@ -151,20 +151,34 @@ def main() -> int:
     conn.commit()
     print("  principal_addresses loaded")
 
-    # ── Refresh corroboration MV ────────────────────────────────────────────
-    # Migration 053 materialized the corroboration view; must refresh so
-    # consumers see the new addresses. Script 109 may still run after this and
-    # add more principal addresses, so 109 owns its own post-refresh too.
-    with conn.cursor() as cur:
-        cur.execute("SET statement_timeout = 0")
-        print("\nRefreshing donor_principal_address_corroboration_v …", flush=True)
-        try:
-            cur.execute("REFRESH MATERIALIZED VIEW CONCURRENTLY donor_principal_address_corroboration_v")
-        except psycopg2.errors.ObjectNotInPrerequisiteState:
-            # First refresh after creation cannot be CONCURRENTLY; fall back.
-            conn.rollback()
-            cur.execute("REFRESH MATERIALIZED VIEW donor_principal_address_corroboration_v")
-    conn.commit()
+    # ── Refresh dependent MVs ───────────────────────────────────────────────
+    # Two MVs need to be refreshed:
+    # - contributor_to_donor_slug_mv (migration 050): aggregates 22M
+    #   contributions rows into ~1M (contributor_name, donor_slug) pairs.
+    #   Stale until refreshed; new contributions don't reach donor_principal
+    #   _links_v otherwise.
+    # - donor_principal_address_corroboration_v (migration 053): depends on
+    #   donor_addresses + principal_addresses, both of which we just rewrote.
+    #
+    # Both refreshes use CONCURRENTLY which cannot run inside a transaction
+    # block; psycopg2 wraps each cursor.execute() in one by default. Switch
+    # the connection to autocommit explicitly for the refresh.
+    conn.autocommit = True
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SET statement_timeout = 0")
+            for mv in (
+                "contributor_to_donor_slug_mv",
+                "donor_principal_address_corroboration_v",
+            ):
+                print(f"\nRefreshing {mv} …", flush=True)
+                try:
+                    cur.execute(f"REFRESH MATERIALIZED VIEW CONCURRENTLY {mv}")
+                except psycopg2.errors.ObjectNotInPrerequisiteState:
+                    # First refresh after creation cannot be CONCURRENTLY.
+                    cur.execute(f"REFRESH MATERIALIZED VIEW {mv}")
+    finally:
+        conn.autocommit = False
 
     # ── Summary ─────────────────────────────────────────────────────────────
     with conn.cursor() as cur:

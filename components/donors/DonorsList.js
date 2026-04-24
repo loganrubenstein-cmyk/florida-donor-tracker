@@ -68,6 +68,8 @@ export default function DonorsList() {
   const [sortDir, setSortDir]       = useState('desc');
   const [page, setPage]             = useState(1);
   const [exporting, setExporting]   = useState(false);
+  const [cityFilter, setCityFilter] = useState(() => searchParams?.get('city') || '');
+  const [stateFilter, setStateFilter] = useState(() => searchParams?.get('state') || '');
 
   // Debounce search input by 300ms
   useEffect(() => {
@@ -76,7 +78,7 @@ export default function DonorsList() {
   }, [search]);
 
   // Reset to page 1 when filters change
-  useEffect(() => { setPage(1); }, [debouncedQ, type, industry, sortBy, sortDir]);
+  useEffect(() => { setPage(1); }, [debouncedQ, type, industry, sortBy, sortDir, cityFilter]);
 
   // Sync filter state to URL (skip on first mount to avoid replacing initial params)
   useEffect(() => {
@@ -86,24 +88,32 @@ export default function DonorsList() {
     if (type !== 'all') params.set('type', type);
     if (industry !== 'all') params.set('industry', industry);
     if (sortBy !== 'total_combined') params.set('sort', sortBy);
+    if (cityFilter)  params.set('city', cityFilter);
+    if (stateFilter) params.set('state', stateFilter);
     const qs = params.toString();
     router.replace(`${pathname}${qs ? '?' + qs : ''}`, { scroll: false });
-  }, [debouncedQ, type, industry, sortBy]);
+  }, [debouncedQ, type, industry, sortBy, cityFilter]);
 
   // Fetch from API
   useEffect(() => {
     setLoading(true);
     const params = new URLSearchParams({ q: debouncedQ, type, industry, sort: sortBy, sort_dir: sortDir, page });
+    if (cityFilter)  params.set('city', cityFilter);
+    if (stateFilter) params.set('state', stateFilter);
     fetch(`/api/donors?${params}`)
       .then(r => r.json())
       .then(json => { setResults(json); setLoading(false); })
       .catch(() => setLoading(false));
-  }, [debouncedQ, type, industry, sortBy, sortDir, page]);
+  }, [debouncedQ, type, industry, sortBy, sortDir, page, cityFilter]);
 
   async function handleExportCSV() {
     setExporting(true);
     try {
       const params = new URLSearchParams({ q: debouncedQ, type, industry, sort: sortBy, sort_dir: sortDir, export: '1' });
+      // Apply same location filters as the visible result set so CSV export
+      // matches what users see in the table.
+      if (cityFilter)  params.set('city', cityFilter);
+      if (stateFilter) params.set('state', stateFilter);
       const res = await fetch(`/api/donors?${params}`);
       const json = await res.json();
       const rows = json.data || [];
@@ -152,6 +162,24 @@ export default function DonorsList() {
       <div style={{ fontSize: '0.82rem', color: 'var(--text-dim)', marginTop: '-0.75rem', marginBottom: '1.25rem' }}>
         Filtered view: donors with $1K+ in aggregate contributions. Full underlying index covers every reported contributor. Source: Florida Division of Elections.
       </div>
+
+      {cityFilter && (
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1rem',
+          padding: '0.4rem 0.75rem', background: 'rgba(77,216,240,0.06)',
+          border: '1px solid rgba(77,216,240,0.2)', borderRadius: '3px',
+        }}>
+          <span style={{ fontSize: '0.75rem', color: 'var(--teal)' }}>
+            Showing donors from {cityFilter}{stateFilter ? `, ${stateFilter}` : ''}
+          </span>
+          <button
+            onClick={() => { setCityFilter(''); setStateFilter(''); }}
+            style={{ background: 'none', border: 'none', color: 'var(--text-dim)', fontSize: '0.72rem', cursor: 'pointer', padding: 0 }}
+          >
+            ✕ clear
+          </button>
+        </div>
+      )}
 
       {/* Filters */}
       <div style={{

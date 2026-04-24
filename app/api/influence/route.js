@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { cachedJson } from '@/lib/cachedJson';
 import { getDb } from '@/lib/db';
 
 export async function GET(request) {
@@ -35,7 +36,7 @@ export async function GET(request) {
   const { data, count, error } = await query;
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-  return NextResponse.json({
+  return cachedJson({
     data: data || [],
     total: count ?? 0,
     pages: Math.ceil((count ?? 0) / limit),

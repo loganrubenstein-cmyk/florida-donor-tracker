@@ -244,11 +244,31 @@ def build_principal_data(pri, reg, match, sidecar_by_principal):
             "match_score":      round(float(row["match_score"]), 1),
         })
 
-    # Sidecar also keyed by slug so variant-name principals surface any
-    # donation totals stored under a sibling spelling.
+    # Sidecar also keyed by slug. Multiple principal_name variants can collide
+    # on the same slug ("Premier Milk Inc" vs "Premier Milk, Inc"); each may
+    # have its own sidecar entry with separate donation totals + committee
+    # lists. Aggregate them so the merged profile shows the FULL donor
+    # influence, not just whichever variant happened to land first.
     sidecar_by_slug: dict = {}
     for pname, data in sidecar_by_principal.items():
-        sidecar_by_slug.setdefault(slugify(str(pname).strip()), data)
+        s = slugify(str(pname).strip())
+        existing = sidecar_by_slug.get(s)
+        if existing is None:
+            # Copy so we can mutate without affecting the source dict.
+            sidecar_by_slug[s] = {
+                "total_donated":     float(data.get("total_donated", 0) or 0),
+                "num_contributions": int(data.get("num_contributions", 0) or 0),
+                "committees":        list(data.get("committees", []) or []),
+            }
+        else:
+            existing["total_donated"]     += float(data.get("total_donated", 0) or 0)
+            existing["num_contributions"] += int(data.get("num_contributions", 0) or 0)
+            # Merge committee acct_nums uniquely (dedupe via dict-of-acct→entry)
+            seen_accts = {c.get("acct_num") for c in existing["committees"] if isinstance(c, dict)}
+            for c in (data.get("committees") or []):
+                if isinstance(c, dict) and c.get("acct_num") not in seen_accts:
+                    existing["committees"].append(c)
+                    seen_accts.add(c.get("acct_num"))
 
     index_rows = []
     profiles = {}

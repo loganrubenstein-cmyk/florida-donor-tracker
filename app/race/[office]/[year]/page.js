@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { fmtMoneyCompact } from '@/lib/fmt';
 import { FEDERAL_OFFICE_CODES } from '@/lib/officeCodes';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 const PARTY_COLOR = { REP: 'var(--republican)', DEM: 'var(--democrat)', NPA: 'var(--text-dim)' };
 

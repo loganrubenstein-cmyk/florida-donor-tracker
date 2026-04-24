@@ -10,7 +10,7 @@ import { buildMeta } from '@/lib/seo';
 
 const QuarterlyChart = lazyLoad(() => import('@/components/candidate/QuarterlyChart'), { ssr: false });
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 function fmt(n) { return n ? fmtMoneyCompact(parseFloat(n)) : '—'; }
 

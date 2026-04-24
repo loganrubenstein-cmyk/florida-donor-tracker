@@ -6,7 +6,7 @@ import { slugify } from '@/lib/slugify';
 import { getDb } from '@/lib/db';
 import { buildMeta } from '@/lib/seo';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 function loadSummary() {
   return JSON.parse(

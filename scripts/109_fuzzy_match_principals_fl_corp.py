@@ -209,11 +209,16 @@ def main() -> int:
     # ── Refresh corroboration MV ────────────────────────────────────────────
     # principal_addresses changed; the corroboration MV needs to re-run so
     # /api/follow?step=principals sees the new links on the next request.
-    with conn.cursor() as cur:
-        cur.execute("SET statement_timeout = 0")
-        print("\nRefreshing donor_principal_address_corroboration_v …", flush=True)
-        cur.execute("REFRESH MATERIALIZED VIEW CONCURRENTLY donor_principal_address_corroboration_v")
-    conn.commit()
+    # CONCURRENTLY refresh requires autocommit (cannot run inside a tx block).
+    prev_autocommit = conn.autocommit
+    conn.autocommit = True
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SET statement_timeout = 0")
+            print("\nRefreshing donor_principal_address_corroboration_v …", flush=True)
+            cur.execute("REFRESH MATERIALIZED VIEW CONCURRENTLY donor_principal_address_corroboration_v")
+    finally:
+        conn.autocommit = prev_autocommit
 
     # ── Summary ────────────────────────────────────────────────────────────
     with conn.cursor() as cur:

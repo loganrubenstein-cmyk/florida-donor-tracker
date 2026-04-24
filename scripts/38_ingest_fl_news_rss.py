@@ -44,14 +44,16 @@ NEWS_DIR     = PROJECT_ROOT / "public" / "data" / "news"
 FEED_FILE    = NEWS_DIR / "feed.jsonl"
 
 # Ordered list of FL political news RSS feeds.
-# URL verified as of 2026-04-09 — if a feed 404s, it is skipped gracefully.
+# URL verified as of 2026-04-23 — if a feed 404s, it is skipped gracefully.
 FEEDS = [
     ("Florida Politics",       "https://floridapolitics.com/feed/"),
     ("Florida Phoenix",        "https://floridaphoenix.com/feed/"),
     ("Tampa Bay Times",        "https://www.tampabay.com/arc/outboundfeeds/rss/?outputType=xml"),
     ("Florida Daily",          "https://www.floridadaily.com/feed/"),
-    # Politico blocks scrapers (403); Miami Herald times out; Tallahassee Democrat/
-    # News Service of Florida moved. Sun Sentinel blocks (403).
+    ("Florida Bulldog",        "https://www.floridabulldog.org/feed/"),
+    # Politico blocks (403); Miami Herald times out; Tallahassee Democrat/
+    # News Service of Florida moved; Sun Sentinel blocks (403);
+    # TV station RSS feeds (WFTV, Fox13, ABC Action) all 404 or return 0 entries.
     # ("Politico Florida",    "https://..."),
     # ("Miami Herald",        "https://..."),
     # ("Tallahassee Democrat","https://..."),

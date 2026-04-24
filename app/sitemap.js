@@ -1,6 +1,10 @@
 import { getDb } from '@/lib/db';
 import { listPoliticianSlugs } from '@/lib/loadCandidate';
 
+// Cache each per-type sitemap for a day. Crawlers were re-fetching the 590KB
+// politicians.xml on every visit and burning function invocations.
+export const revalidate = 86400;
+
 const BASE = 'https://floridainfluence.com';
 
 const STATIC_PAGES = [

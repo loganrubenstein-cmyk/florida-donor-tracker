@@ -10,7 +10,10 @@ import { generateSitemaps } from '@/app/sitemap';
 
 const BASE = 'https://floridainfluence.com';
 
-export const dynamic = 'force-dynamic';
+// Cache the generated index for a day. Sitemap entries change at most when a
+// new entity is added; daily refresh is plenty for crawlers and lifts the
+// per-request CPU off the function.
+export const revalidate = 86400;
 
 export async function GET() {
   const ids = await generateSitemaps();
@@ -29,7 +32,8 @@ ${entries}
     status: 200,
     headers: {
       'Content-Type': 'application/xml',
-      'Cache-Control': 'public, max-age=3600',
+      // Edge cache one day, serve stale up to a week while revalidating.
+      'Cache-Control': 'public, s-maxage=86400, stale-while-revalidate=604800',
     },
   });
 }

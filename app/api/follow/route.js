@@ -106,12 +106,18 @@ export async function GET(req) {
     const slug = searchParams.get('donor_slug') || searchParams.get('slug');
     if (!slug) return NextResponse.json({ error: 'donor_slug required' }, { status: 400 });
 
+    // Use a generous limit before client-side dedupe — donor_principal_links_v
+    // is a 3-path UNION, so a single (donor, principal) pair can produce up to
+    // 3 rows. Without enough headroom, the LIMIT can drop unique principals
+    // before we get a chance to dedupe. 200 is well above any realistic count
+    // of distinct principals per donor (FPL has 1, the noisiest donor in
+    // production has ~30).
     const [linksRes, addrRes] = await Promise.all([
       db.from('donor_principal_links_v')
         .select('principal_slug, principal_name, match_score')
         .eq('donor_slug', slug)
         .order('match_score', { ascending: false })
-        .limit(40),
+        .limit(200),
       db.from('donor_principal_address_corroboration_v')
         .select('principal_slug')
         .eq('donor_slug', slug),

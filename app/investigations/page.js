@@ -5,7 +5,7 @@ import { slugify } from '@/lib/slugify';
 import { getDb } from '@/lib/db';
 
 // Migrated to Supabase — no donors/index.json needed
-export const dynamic = 'force-dynamic';
+export const revalidate = 1800;
 
 export const metadata = {
   title: 'Investigations',
