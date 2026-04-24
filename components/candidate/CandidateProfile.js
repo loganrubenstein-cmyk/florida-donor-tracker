@@ -346,10 +346,12 @@ export default function CandidateProfile({ data, cycles = [], electionResults = 
                     <td style={{ padding: '0.45rem 0.6rem', wordBreak: 'break-word' }}>
                       {isStateMatch ? (
                         <span style={{ color: 'var(--text-dim)' }}>STATE OF FLORIDA</span>
-                      ) : (
-                        <a href={`/donor/${donor.slug || slugify(donor.name)}`} style={{ color: 'var(--orange)', textDecoration: 'none' }}>
+                      ) : donor.slug ? (
+                        <a href={`/donor/${donor.slug}`} style={{ color: 'var(--orange)', textDecoration: 'none' }}>
                           {donor.name}
                         </a>
+                      ) : (
+                        <span style={{ color: 'var(--text)' }}>{donor.name}</span>
                       )}
                     </td>
                     <td style={{ padding: '0.45rem 0.6rem', color: 'var(--text-dim)', fontSize: '0.68rem', maxWidth: '160px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
