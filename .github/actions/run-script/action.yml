@@ -22,7 +22,7 @@ runs:
   using: composite
   steps:
     - name: Setup Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: ${{ inputs.python-version }}
         cache: pip
@@ -60,9 +60,12 @@ runs:
 
     - name: Upload logs + generated data
       if: ${{ always() && inputs.upload-artifacts == 'true' }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
-        name: logs-${{ inputs.script }}
+        # Namespace by job: parallel jobs may run the same script (e.g. both
+        # expenditures jobs run 02/05), and v4+ rejects duplicate artifact
+        # names within a run with a 409.
+        name: logs-${{ github.job }}-${{ inputs.script }}
         path: |
           data/logs/*
           data/processed/*.csv

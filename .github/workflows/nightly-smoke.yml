@@ -24,7 +24,7 @@ jobs:
       issues: write
       contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Integrity audit
         uses: ./.github/actions/run-script
         with: { script: 84_audit_data_integrity.py }

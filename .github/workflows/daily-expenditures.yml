@@ -16,15 +16,12 @@ env:
   NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
 
 jobs:
-  scrape:
+  probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 300
-    permissions:
-      issues: write
-      contents: read
+    timeout-minutes: 5
+    outputs:
+      up: ${{ steps.probe.outputs.up }}
     steps:
-      - uses: actions/checkout@v4
-
       - name: Probe expenditures service
         id: probe
         run: |
@@ -40,59 +37,89 @@ jobs:
           if [ "$CODE" = "200" ]; then
             echo "up=true" >> "$GITHUB_OUTPUT"
           else
+            echo "::warning::Expenditures landing page non-200 — skipping data steps."
             echo "up=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Skip if endpoint down
-        if: steps.probe.outputs.up != 'true'
-        run: |
-          echo "::warning::Expenditures landing page non-200 — skipping data steps."
-          exit 0
+  # Committee and candidate scrapes each take hours; together they outgrew a
+  # single 5h job (candidate step was cancelled at the timeout almost daily
+  # since mid-May). Run them as parallel jobs so each gets its own window.
+  committee-expenditures:
+    needs: probe
+    if: needs.probe.outputs.up == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    permissions:
+      issues: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
 
       - name: Download committee registry
-        if: steps.probe.outputs.up == 'true'
         uses: ./.github/actions/run-script
         with:
           script: 02_download_registry.py
 
       - name: Import committee registry
-        if: steps.probe.outputs.up == 'true'
         uses: ./.github/actions/run-script
         with:
           script: 05_import_registry.py
 
       - name: Scrape committee expenditures
-        if: steps.probe.outputs.up == 'true'
         uses: ./.github/actions/run-script
         with:
           script: 04_scrape_expenditures.py
 
       - name: Import committee expenditures
-        if: steps.probe.outputs.up == 'true'
         uses: ./.github/actions/run-script
         with:
           script: 07_import_expenditures.py
 
       - name: Load committee expenditures
-        if: steps.probe.outputs.up == 'true'
         uses: ./.github/actions/run-script
         with:
           script: 43_load_expenditures.py
 
+      - name: Open issue on failure
+        if: failure()
+        uses: ./.github/actions/report-failure
+        with:
+          title: "[pipeline-failure:medium] daily-expenditures (committee)"
+          labels: pipeline-failure,severity:medium,data-update
+          primary-log: data/logs/04_scrape_expenditures.py.log
+
+  candidate-expenditures:
+    needs: probe
+    if: needs.probe.outputs.up == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    permissions:
+      issues: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Download committee registry
+        uses: ./.github/actions/run-script
+        with:
+          script: 02_download_registry.py
+
+      - name: Import committee registry
+        uses: ./.github/actions/run-script
+        with:
+          script: 05_import_registry.py
+
       - name: Scrape candidate expenditures
-        if: steps.probe.outputs.up == 'true'
         uses: ./.github/actions/run-script
         with:
           script: 35_scrape_candidate_expenditures.py
 
       - name: Import candidate expenditures
-        if: steps.probe.outputs.up == 'true'
         uses: ./.github/actions/run-script
         with:
           script: 36_import_candidate_expenditures.py
 
       - name: Load candidate expenditures
-        if: steps.probe.outputs.up == 'true'
         uses: ./.github/actions/run-script
         with:
           script: 44_load_candidate_expenditures.py
@@ -101,6 +128,6 @@ jobs:
         if: failure()
         uses: ./.github/actions/report-failure
         with:
-          title: "[pipeline-failure:medium] daily-expenditures"
+          title: "[pipeline-failure:medium] daily-expenditures (candidate)"
           labels: pipeline-failure,severity:medium,data-update
-          primary-log: data/logs/04_scrape_expenditures.py.log
+          primary-log: data/logs/35_scrape_candidate_expenditures.py.log

@@ -23,7 +23,7 @@ jobs:
     outputs:
       changed: ${{ steps.detect.outputs.changed }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Refresh quarterly comp files (conditional GET)
         uses: ./.github/actions/run-script
