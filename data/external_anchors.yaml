@@ -21,14 +21,16 @@ anchors:
   - entity_type: donor
     entity_slug: florida-power-light-company
     anchor_metric: total_contributions
-    anchor_value: 30000000
+    anchor_value: 37000000
     anchor_year: null
     tolerance_pct: 15.00
     source_citation: |
-      Miami Herald / Orlando Sentinel investigations 2019-2024 citing FL DoE
-      campaign-finance filings for FPL + NextEra Energy PAC activity. ~$30M
-      over the past two decades across state candidates + committees (state
-      only; excludes federal).
+      Updated 2026-06-10. Prior $30M anchor (Miami Herald / Orlando Sentinel
+      investigations 2019-2024) predated the May 2026 backfill of the four
+      legislative caucus campaign committees (acct 64386, 69537, 74084,
+      83518), which added ~$5.2M of historical FPL giving. Cycle-level
+      cross-check: DB 2017+2018 = $7.96M vs energyandpolicy.org reported
+      ~$8.1M for FPL's 2018 cycle. State only; excludes federal.
 
   - entity_type: donor
     entity_slug: florida-realtors
