@@ -62,7 +62,10 @@ runs:
       if: ${{ always() && inputs.upload-artifacts == 'true' }}
       uses: actions/upload-artifact@v7
       with:
-        name: logs-${{ inputs.script }}
+        # Namespace by job: parallel jobs may run the same script (e.g. both
+        # expenditures jobs run 02/05), and v4+ rejects duplicate artifact
+        # names within a run with a 409.
+        name: logs-${{ github.job }}-${{ inputs.script }}
         path: |
           data/logs/*
           data/processed/*.csv
