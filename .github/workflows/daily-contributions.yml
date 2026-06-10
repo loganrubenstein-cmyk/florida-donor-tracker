@@ -23,7 +23,7 @@ jobs:
       issues: write
       contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Download committee registry
         uses: ./.github/actions/run-script
         with:
@@ -45,6 +45,10 @@ jobs:
         uses: ./.github/actions/run-script
         with:
           script: 41_load_contributions.py
+      - name: Refresh donors_mv + reconcile
+        uses: ./.github/actions/run-script
+        with:
+          script: 85_reconcile_donor_aggregates.py
       - name: Open issue on failure
         if: failure()
         uses: ./.github/actions/report-failure

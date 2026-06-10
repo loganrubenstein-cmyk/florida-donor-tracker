@@ -22,7 +22,7 @@ runs:
   using: composite
   steps:
     - name: Setup Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: ${{ inputs.python-version }}
         cache: pip
@@ -60,7 +60,7 @@ runs:
 
     - name: Upload logs + generated data
       if: ${{ always() && inputs.upload-artifacts == 'true' }}
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: logs-${{ inputs.script }}
         path: |

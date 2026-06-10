@@ -35,7 +35,7 @@ jobs:
       issues: write
       contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: "71 import legislators"
         uses: ./.github/actions/run-script
